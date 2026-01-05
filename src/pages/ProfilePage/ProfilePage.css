@@ -1,0 +1,377 @@
+/* src/pages/ProfilePage.css */
+:root {
+  --bg-dark: #0d1117; 
+  --bg-card: #161b22; 
+  --border-color: #30363d;
+  --text-main: #c9d1d9;
+  --text-secondary: #8b949e;
+  --text-highlight: #58a6ff; 
+  --btn-bg: #21262d;
+  --btn-border: #30363d;
+  --btn-hover: #30363d;
+  --accent-green: #3fb950;
+  --accent-blue: #388bfd;
+}
+
+body {
+  background-color: var(--bg-dark);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  color: var(--text-main);
+  margin: 0;
+}
+
+/* Layout Page */
+.profile-page {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.profile-layout {
+  display: grid;
+  grid-template-columns: 296px 1fr; 
+  gap: 24px;
+}
+
+/* --- LEFT SIDEBAR --- */
+.profile-sidebar {
+  position: relative;
+}
+
+.profile-avatar-wrapper {
+  margin-bottom: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+.profile-avatar {
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  border: 1px solid var(--border-color);
+  object-fit: cover;
+  background-color: var(--bg-card);
+}
+
+.profile-names {
+  margin-bottom: 16px;
+}
+
+.profile-display-name {
+  font-size: 24px;
+  line-height: 1.25;
+  font-weight: 600;
+  color: var(--text-main);
+  display: block;
+}
+
+.profile-username {
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 300;
+  line-height: 24px;
+  color: var(--text-secondary);
+  display: block;
+}
+
+.profile-bio {
+  font-size: 16px;
+  margin-bottom: 16px;
+  color: var(--text-main);
+}
+
+.btn-edit-profile {
+  width: 100%;
+  background-color: var(--btn-bg);
+  border: 1px solid var(--btn-border);
+  color: var(--text-main);
+  padding: 5px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-bottom: 16px;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.btn-edit-profile:hover {
+  background-color: var(--btn-hover);
+  border-color: #8b949e;
+}
+
+.profile-meta {
+  margin-bottom: 16px;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+  color: var(--text-main);
+  font-size: 14px;
+}
+
+.meta-icon {
+  fill: var(--text-secondary);
+  width: 16px;
+  height: 16px;
+}
+
+.profile-stats {
+  display: flex;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+}
+
+.stat-highlight {
+  color: var(--text-main);
+  font-weight: 600;
+}
+
+.profile-stats a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.profile-stats a:hover {
+  color: var(--text-highlight);
+}
+
+.separator {
+  height: 1px;
+  background-color: var(--border-color);
+  margin: 16px 0;
+}
+
+/* --- RIGHT CONTENT --- */
+.profile-content {
+  min-width: 0; 
+}
+
+/* Pinned Items Section */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.section-title {
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--text-main);
+}
+
+.link-view-all {
+  font-size: 12px;
+  color: var(--text-highlight);
+  text-decoration: none;
+}
+
+.link-view-all:hover {
+  text-decoration: underline;
+}
+
+.pinned-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); 
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.pinned-card {
+  background-color: var(--bg-dark);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.pinned-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: var(--text-highlight); 
+}
+
+.repo-icon {
+  fill: var(--text-secondary);
+}
+
+.pinned-card-desc {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+  flex-grow: 1;
+}
+
+.pinned-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.language-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 4px;
+}
+
+/* Activity Section Layout */
+.activity-section-wrapper {
+  margin-top: 24px;
+}
+
+.activity-header {
+  margin-bottom: 8px;
+  font-size: 16px;
+  color: var(--text-main);
+}
+
+/* --- Custom List Styles --- */
+.custom-lists-container {
+  margin-top: 20px;
+}
+.custom-list-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+}
+.custom-list-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 16px;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+.custom-list-card:hover {
+  border-color: var(--text-secondary);
+}
+.list-name { color: var(--text-highlight); font-size: 16px; font-weight: 600; }
+.list-desc { font-size: 12px; color: var(--text-secondary); }
+
+/* Create List Modal */
+.modal-overlay {
+  position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+  background: rgba(0,0,0,0.7); display: flex; justify-content: center; align-items: center; z-index: 1000;
+  padding: 20px; /* Thêm padding để modal không dính sát mép màn hình */
+  box-sizing: border-box;
+}
+
+.modal-content {
+  background: var(--bg-card); 
+  border: 1px solid var(--border-color); 
+  padding: 20px; 
+  border-radius: 6px; 
+  /* [FIX] Thay vì fix cứng 400px, dùng max-width để responsive */
+  width: 100%;
+  max-width: 400px; 
+}
+
+/* --- Favorites Grid --- */
+.favorites-container {
+  margin-top: 20px;
+}
+
+.anime-grid-6 {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); 
+  gap: 20px 15px; 
+}
+
+.grid-item {
+  height: 100%;
+}
+
+.empty-text {
+  color: var(--text-secondary);
+  font-style: italic;
+  padding: 20px 0;
+}
+
+/* =========================================
+   [RESPONSIVE] MOBILE ADJUSTMENTS
+   ========================================= */
+
+@media (max-width: 768px) {
+  /* Layout chính: 1 cột */
+  .profile-layout {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .profile-page {
+    padding: 16px;
+  }
+
+  /* SIDEBAR MOBILE */
+  /* Biến sidebar thành Flexbox để xếp Avatar nằm ngang với Tên */
+  .profile-sidebar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 15px;
+  }
+
+  /* Thu nhỏ avatar */
+  .profile-avatar {
+    width: 80px; 
+    height: 80px;
+  }
+  .profile-avatar-wrapper {
+    margin-bottom: 0; /* Xóa margin dưới để căn giữa với tên */
+  }
+
+  /* Phần tên nằm bên cạnh avatar */
+  .profile-names {
+    margin-bottom: 0;
+    flex: 1; /* Chiếm phần còn lại của dòng */
+  }
+  
+  .profile-display-name {
+    font-size: 20px;
+  }
+  .profile-username {
+    font-size: 16px;
+  }
+
+  /* Các phần tử còn lại (Bio, Button, Stats) sẽ xuống dòng và full width */
+  .profile-bio, 
+  .btn-edit-profile, 
+  .profile-meta, 
+  .profile-stats,
+  .separator {
+    width: 100%;
+    flex-basis: 100%;
+  }
+  
+  .profile-bio {
+    margin-top: 5px;
+    margin-bottom: 15px;
+  }
+
+  /* Pinned Grid: 1 cột */
+  .pinned-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* GRID ANIME POSTERS */
+  /* Giảm kích thước tối thiểu để hiển thị được 3 cột trên mobile */
+  .anime-grid-6 {
+    grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
+    gap: 10px; /* Giảm gap cho gọn */
+  }
+}
