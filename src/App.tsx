@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { initSharedLogic } from '@umamusumeenjoyer/shared-logic';
 import './App.css';
 import './i18n/config'; // Import i18n configuration
@@ -14,6 +14,7 @@ import AnimeDetailPage from './pages/AnimeDetailPage/AnimeDetailPage';
 import AuthPage from './pages/AuthPage/AuthPage';
 import StaffPage from './pages/StaffPage/StaffPage';
 import AnimeSearchPage from './pages/AnimeSearch/AnimeSearchPage';
+import AnimeListSearchPage from './pages/AnimeListSearch/AnimeListSearchPage';
 
 // Xác định API base URL dựa trên environment
 const isDevelopment = import.meta.env.DEV;
@@ -75,6 +76,7 @@ function App() {
               <Route path="/signup" element={<AuthPage />} />
               <Route path="/staff/:id" element={<StaffPage />} />
               <Route path="/browse" element={<AnimeSearchPage />} />
+              <Route path="/animelist" element={<AnimeListSearchPage />} />
             </Routes>
           </main>
         </AuthProvider>
