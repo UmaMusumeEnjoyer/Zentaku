@@ -1,12 +1,13 @@
 import { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { initSharedLogic } from '@umamusumeenjoyer/shared-logic';
 import './App.css';
 import './i18n/config'; // Import i18n configuration
 import { ThemeProvider } from './context/ThemeContext';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import Header from './components/Header/Header';
 import HomePage from './pages/HomePage/HomePage';
+import HomePageLogin from './pages/HomePageLogin/HomePagelogin';
 import NewsDetailPage from './pages/NewsDetailPage/NewsDetailPage';
 import CharacterPage from './pages/CharacterPage/CharacterPage';
 import AnimeDetailPage from './pages/AnimeDetailPage/AnimeDetailPage';
@@ -34,6 +35,12 @@ initSharedLogic({
   apiBaseUrl: API_BASE_URL
 });
 
+// Component để render trang home dựa trên trạng thái đăng nhập
+const HomeRoute = () => {
+  const { user } = useAuth();
+  return user ? <HomePageLogin /> : <HomePage />;
+};
+
 function App() {
   useEffect(() => {
     // --- Thay đổi Tiêu đề (Title) ---
@@ -60,7 +67,7 @@ function App() {
           <Header />
           <main>
             <Routes>
-              <Route path="/" element={<HomePage />} />
+              <Route path="/" element={<HomeRoute />} />
               <Route path="/news/:id" element={<NewsDetailPage />} />
               <Route path="/character/:id" element={<CharacterPage />} />
               <Route path="/anime/:id" element={<AnimeDetailPage />} />

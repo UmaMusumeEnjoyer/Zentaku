@@ -78,7 +78,7 @@ const Header: React.FC = () => {
             <>
               <Link to="/animelist">{t('Header:navigation.anime_list')}</Link>
               <Link to="/profile">{t('Header:navigation.profile')}</Link>
-              <Link to="/browse">{t('Header:navigation.browse')}</Link>
+            
             </>
           )}
         </nav>
