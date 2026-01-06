@@ -24,9 +24,14 @@ import {
   HomePageLoginEN, HomePageLoginJP,
   AnimeListSearchEN, AnimeListSearchJP,
   ProfilePageEN, ProfilePageJP,
-  ActivityHistoryEN, ActivityHistoryJP
+  ActivityHistoryEN, ActivityHistoryJP,
+  EditProfileModalEN, EditProfileModalJP,
+  ProfilePagePageEN, ProfilePagePageJP,
+  ActivityFeedEN, ActivityFeedJP
 
 } from '@umamusumeenjoyer/shared-logic';
+import ActivityFeed from '../pages/ProfilePage/components/ActivityFeed';
+
 
 export { LANGUAGES };
 
@@ -58,7 +63,10 @@ i18n
         HomePageLogin: HomePageLoginEN,
         AnimeListSearch: AnimeListSearchEN,
         ProfilePage: ProfilePageEN,
-        ActivityHistory: ActivityHistoryEN
+        ActivityHistory: ActivityHistoryEN,
+        EditProfileModal: EditProfileModalEN,
+        ProfilePagePage: ProfilePagePageEN,
+        ActivityFeed: ActivityFeedEN
       },
       jp: {
         common: commonJp,
@@ -81,7 +89,10 @@ i18n
         HomePageLogin: HomePageLoginJP,
         AnimeListSearch: AnimeListSearchJP,
         ProfilePage: ProfilePageJP,
-        ActivityHistory: ActivityHistoryJP
+        ActivityHistory: ActivityHistoryJP,
+        EditProfileModal: EditProfileModalJP,
+        ProfilePagePage: ProfilePagePageJP,
+        ActivityFeed:ActivityFeedJP
       },
     },
     lng: localStorage.getItem('language') || DEFAULT_LANG,
@@ -92,6 +103,7 @@ i18n
       , 'AnimeModal', 'MainContentArea', 'AnimeDetail', 'Header'
       , 'GlobalSearch', 'Auth', 'StaffPage', 'AnimeSearch', 'AnimeSection'
       , 'HomePageLogin', 'AnimeListSearch', 'ProfilePage', 'ActivityHistory'
+      , 'EditProfileModal', 'ProfilePagePage', 'ActivityFeed'
     ],
     interpolation: {
       escapeValue: false,

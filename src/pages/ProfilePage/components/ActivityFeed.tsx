@@ -11,7 +11,7 @@ const ActivityFeed: React.FC<ActivityFeedProps> = ({ filterDate }) => {
   const { theme } = useTheme();
   const { t } = useTranslation(['ActivityFeed']);
   
-  // Kết nối ViewModel
+  // Kết nối ViewModel - Truyền hàm t vào hook
   const {
     username,
     loading,
@@ -25,7 +25,7 @@ const ActivityFeed: React.FC<ActivityFeedProps> = ({ filterDate }) => {
     getActionIconChar,
     getActionDescription,
     getTargetName
-  } = useActivityFeed(filterDate);
+  } = useActivityFeed({ filterDate, t });
 
   const handleTargetClick = (item: any) => {
     const url = getTargetUrl(item);

@@ -13,7 +13,6 @@
 }
 
 .edit-modal-content {
-    background: var(--bg-card);
     border: 1px solid var(--border-color);
     border-radius: 6px;
     width: 450px;
@@ -21,6 +20,17 @@
     display: flex;
     flex-direction: column;
     box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    transition: background-color 0.3s ease;
+}
+
+/* Dark Mode */
+.edit-modal-content.dark {
+    background: var(--bg-card);
+}
+
+/* Light Mode */
+.edit-modal-content.light {
+    background: #ffffff;
 }
 
 .edit-modal-header {
@@ -45,6 +55,11 @@
     cursor: pointer;
     font-size: 20px;
     line-height: 1;
+    transition: color 0.2s ease;
+}
+
+.btn-close-modal:hover {
+    color: var(--text-main);
 }
 
 .edit-modal-body {
@@ -55,6 +70,7 @@
 .avatar-section {
     margin-bottom: 20px;
 }
+
 .avatar-label {
     display: block;
     margin-bottom: 8px;
@@ -62,22 +78,59 @@
     font-size: 14px;
     color: var(--text-main);
 }
+
 .avatar-actions {
     display: flex;
     gap: 10px;
 }
+
 .btn-avatar-action {
     padding: 5px 12px;
     border-radius: 6px;
     border: 1px solid var(--border-color);
-    background: var(--btn-bg);
-    color: var(--text-main);
     font-size: 12px;
     cursor: pointer;
+    transition: all 0.2s ease;
 }
+
+/* Dark Mode Avatar Buttons */
+.edit-modal-content.dark .btn-avatar-action {
+    background: var(--btn-bg);
+    color: var(--text-main);
+}
+
+.edit-modal-content.dark .btn-avatar-action:hover:not(:disabled) {
+    background: #30363d;
+    border-color: #8b949e;
+}
+
+/* Light Mode Avatar Buttons */
+.edit-modal-content.light .btn-avatar-action {
+    background: #f6f8fa;
+    color: #24292f;
+}
+
+.edit-modal-content.light .btn-avatar-action:hover:not(:disabled) {
+    background: #e1e4e8;
+    border-color: #d0d7de;
+}
+
+.btn-avatar-action:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 .btn-avatar-delete {
-    color: #f85149; /* Red for delete */
-    border-color: rgba(248, 81, 73, 0.4);
+    color: #f85149 !important;
+    border-color: rgba(248, 81, 73, 0.4) !important;
+}
+
+.edit-modal-content.dark .btn-avatar-delete:hover:not(:disabled) {
+    background: rgba(248, 81, 73, 0.1);
+}
+
+.edit-modal-content.light .btn-avatar-delete:hover:not(:disabled) {
+    background: rgba(248, 81, 73, 0.05);
 }
 
 /* Form Fields */
@@ -99,15 +152,39 @@
     font-size: 14px;
     line-height: 20px;
     color: var(--text-main);
-    background-color: var(--bg-dark);
     border: 1px solid var(--border-color);
     border-radius: 6px;
     box-sizing: border-box;
+    transition: all 0.2s ease;
+}
+
+/* Dark Mode Input */
+.edit-modal-content.dark .form-input {
+    background-color: var(--bg-dark);
+}
+
+/* Light Mode Input */
+.edit-modal-content.light .form-input {
+    background-color: #ffffff;
 }
 
 .form-input:focus {
     border-color: var(--text-highlight);
     outline: none;
+}
+
+.edit-modal-content.dark .form-input:focus {
+    box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.3);
+}
+
+.edit-modal-content.light .form-input:focus {
+    box-shadow: 0 0 0 3px rgba(9, 105, 218, 0.1);
+}
+
+.username-hint {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-top: 4px;
 }
 
 .edit-modal-footer {
@@ -125,6 +202,11 @@
     color: var(--text-highlight);
     cursor: pointer;
     font-size: 14px;
+    transition: color 0.2s ease;
+}
+
+.btn-cancel:hover {
+    opacity: 0.8;
 }
 
 .btn-save {
@@ -136,6 +218,12 @@
     font-weight: 600;
     cursor: pointer;
     font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.btn-save:hover:not(:disabled) {
+    opacity: 0.9;
+    box-shadow: 0 2px 8px rgba(31, 136, 61, 0.3);
 }
 
 .btn-save:disabled {
@@ -147,4 +235,16 @@
     color: #f85149;
     font-size: 13px;
     margin-bottom: 10px;
+    padding: 8px 12px;
+    border-radius: 6px;
+}
+
+/* Dark Mode Error */
+.edit-modal-content.dark .error-msg {
+    background: rgba(248, 81, 73, 0.1);
+}
+
+/* Light Mode Error */
+.edit-modal-content.light .error-msg {
+    background: rgba(248, 81, 73, 0.05);
 }

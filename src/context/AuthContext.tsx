@@ -1,5 +1,5 @@
 // src/context/AuthContext.tsx
-import React, { createContext, useContext, useEffect, useRef, type ReactNode } from 'react';
+import  { createContext, useContext, useEffect, useRef, type ReactNode } from 'react';
 import { useAuth as useSharedAuth, type UseAuthReturn } from '@umamusumeenjoyer/shared-logic';
 import { authService } from '@umamusumeenjoyer/shared-logic';
 

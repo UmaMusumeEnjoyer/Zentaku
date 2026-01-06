@@ -15,6 +15,7 @@ import AuthPage from './pages/AuthPage/AuthPage';
 import StaffPage from './pages/StaffPage/StaffPage';
 import AnimeSearchPage from './pages/AnimeSearch/AnimeSearchPage';
 import AnimeListSearchPage from './pages/AnimeListSearch/AnimeListSearchPage';
+import ProfilePage from './pages/ProfilePage/ProfilePage';
 
 // Xác định API base URL dựa trên environment
 const isDevelopment = import.meta.env.DEV;
@@ -22,9 +23,10 @@ const API_BASE_URL = isDevelopment
   ? '/api' // Development: sử dụng Vite proxy
   : import.meta.env.VITE_API_BASE_URL ; // Production: gọi trực tiếp
 
+const VITE_BACKEND_DOMAIN =  import.meta.env.VITE_BACKEND_DOMAIN ; // Production: gọi trực tiếp
+
 // Log để debug
-console.log('Environment:', isDevelopment ? 'Development' : 'Production');
-console.log('API Base URL:', API_BASE_URL);
+
 
 // Khởi tạo shared-logic với localStorage và API base URL
 initSharedLogic({
@@ -33,7 +35,8 @@ initSharedLogic({
     setItem: (key: string, value: string) => localStorage.setItem(key, value),
     removeItem: (key: string) => localStorage.removeItem(key),
   },
-  apiBaseUrl: API_BASE_URL
+  apiBaseUrl: API_BASE_URL,
+  VITE_BACKEND_DOMAIN: VITE_BACKEND_DOMAIN
 });
 
 // Component để render trang home dựa trên trạng thái đăng nhập
@@ -77,6 +80,7 @@ function App() {
               <Route path="/staff/:id" element={<StaffPage />} />
               <Route path="/browse" element={<AnimeSearchPage />} />
               <Route path="/animelist" element={<AnimeListSearchPage />} />
+              <Route path="/profile" element={<ProfilePage />} />
             </Routes>
           </main>
         </AuthProvider>

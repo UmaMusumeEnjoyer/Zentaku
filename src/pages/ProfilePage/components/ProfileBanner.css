@@ -6,8 +6,19 @@
   margin-bottom: 20px;
   position: sticky;
   top: 0;
-  background-color: var(--bg-dark); 
   z-index: 10;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Dark Mode */
+.profile-nav-container.dark {
+  background-color: var(--bg-dark);
+}
+
+/* Light Mode */
+.profile-nav-container.light {
+  background-color: #ffffff;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05);
 }
 
 .profile-nav {
@@ -35,13 +46,21 @@
   color: var(--text-main);
   cursor: pointer;
   border-bottom: 2px solid transparent; 
-  transition: border-bottom-color 0.2s, color 0.2s;
+  transition: all 0.2s ease;
   white-space: nowrap;
 }
 
-.nav-item:hover {
+/* Dark Mode Hover */
+.profile-nav-container.dark .nav-item:hover {
   color: var(--text-highlight); 
-  background-color: rgba(255,255,255,0.03);
+  background-color: rgba(255, 255, 255, 0.03);
+  border-radius: 6px 6px 0 0;
+}
+
+/* Light Mode Hover */
+.profile-nav-container.light .nav-item:hover {
+  color: #0969da;
+  background-color: rgba(234, 238, 242, 0.5);
   border-radius: 6px 6px 0 0;
 }
 
@@ -51,14 +70,50 @@
   border-bottom-color: #f78166; 
 }
 
+/* Dark Mode Active Tab */
+.profile-nav-container.dark .nav-item.active {
+  color: var(--text-main);
+}
+
+/* Light Mode Active Tab */
+.profile-nav-container.light .nav-item.active {
+  color: #24292f;
+}
+
 .nav-icon {
   width: 16px;
   height: 16px;
-  fill: rgba(139, 148, 158, 1); 
+  transition: fill 0.2s ease;
 }
 
-.nav-item.active .nav-icon {
-  fill: var(--text-main); 
+/* Dark Mode Icon */
+.profile-nav-container.dark .nav-icon {
+  fill: rgba(139, 148, 158, 1);
+}
+
+/* Light Mode Icon */
+.profile-nav-container.light .nav-icon {
+  fill: #57606a;
+}
+
+/* Dark Mode Active Icon */
+.profile-nav-container.dark .nav-item.active .nav-icon {
+  fill: var(--text-main);
+}
+
+/* Light Mode Active Icon */
+.profile-nav-container.light .nav-item.active .nav-icon {
+  fill: #24292f;
+}
+
+/* Dark Mode Hover Icon */
+.profile-nav-container.dark .nav-item:hover .nav-icon {
+  fill: var(--text-highlight);
+}
+
+/* Light Mode Hover Icon */
+.profile-nav-container.light .nav-item:hover .nav-icon {
+  fill: #0969da;
 }
 
 /* =========================================
