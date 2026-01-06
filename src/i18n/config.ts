@@ -23,7 +23,8 @@ import {
   AnimeSectionEN, AnimeSectionJP,
   HomePageLoginEN, HomePageLoginJP,
   AnimeListSearchEN, AnimeListSearchJP,
-  ProfilePageEN, ProfilePageJP
+  ProfilePageEN, ProfilePageJP,
+  ActivityHistoryEN, ActivityHistoryJP
 
 } from '@umamusumeenjoyer/shared-logic';
 
@@ -56,7 +57,8 @@ i18n
         AnimeSection: AnimeSectionEN,
         HomePageLogin: HomePageLoginEN,
         AnimeListSearch: AnimeListSearchEN,
-        ProfilePage: ProfilePageEN
+        ProfilePage: ProfilePageEN,
+        ActivityHistory: ActivityHistoryEN
       },
       jp: {
         common: commonJp,
@@ -78,7 +80,8 @@ i18n
         AnimeSection: AnimeSectionJP,
         HomePageLogin: HomePageLoginJP,
         AnimeListSearch: AnimeListSearchJP,
-        ProfilePage: ProfilePageJP
+        ProfilePage: ProfilePageJP,
+        ActivityHistory: ActivityHistoryJP
       },
     },
     lng: localStorage.getItem('language') || DEFAULT_LANG,
@@ -88,7 +91,7 @@ i18n
       , 'RankingSection', 'CharactersSection', 'StaffSection', 'StatisticsSection'
       , 'AnimeModal', 'MainContentArea', 'AnimeDetail', 'Header'
       , 'GlobalSearch', 'Auth', 'StaffPage', 'AnimeSearch', 'AnimeSection'
-      , 'HomePageLogin', 'AnimeListSearch', 'ProfilePage'
+      , 'HomePageLogin', 'AnimeListSearch', 'ProfilePage', 'ActivityHistory'
     ],
     interpolation: {
       escapeValue: false,
