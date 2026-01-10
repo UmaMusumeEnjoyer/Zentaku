@@ -17,6 +17,14 @@ const Header: React.FC = () => {
   const { user, logout: authLogout } = useAuth();
   const { t, i18n } = useTranslation(['Header']);
 
+
+    const avatarUrl = React.useMemo(() => {
+    if (!user?.avatar_url) return DEFAULT_AVATAR;
+    if (user.avatar_url.startsWith('http')) return user.avatar_url;
+    return `${BACKEND_DOMAIN}${user.avatar_url}`;
+  }, [user?.avatar_url]);
+
+
   const isAuthenticated = !!user;
 
   // Sử dụng hook từ shared-logic
@@ -42,6 +50,7 @@ const Header: React.FC = () => {
     defaultAvatar: DEFAULT_AVATAR,
     backendDomain: BACKEND_DOMAIN,
   });
+
 
   const handleLogout = () => {
     authLogout();
@@ -100,7 +109,7 @@ const Header: React.FC = () => {
               <div className="user-menu-container">
                 <div className="user-avatar-trigger" onClick={toggleDropdown}>
                   <img
-                    src={getAvatarUrl(user?.avatar_url)}
+                    src={avatarUrl}
                     alt="User Avatar"
                     className="user-avatar-img"
                   />

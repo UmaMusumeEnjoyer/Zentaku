@@ -3,6 +3,8 @@ import './ProfilePage.css';
 import { useProfilePage, type UserProfile } from '@umamusumeenjoyer/shared-logic';
 import { useTheme } from '../../context/ThemeContext';
 import { useTranslation } from 'react-i18next';
+import { useAuth as useAuthContext } from '../../context/AuthContext'; // new import
+
 
 // Components
 import ProfileBanner from './components/ProfileBanner'; 
@@ -17,6 +19,8 @@ const ProfilePage: React.FC = () => {
   
   // Kết nối ThemeContext
   const { theme } = useTheme();
+
+    const { updateUserInState: syncAuthUser } = useAuthContext();
 
   // Kết nối ViewModel
   const {
@@ -41,6 +45,13 @@ const ProfilePage: React.FC = () => {
     showCreateModal, setShowCreateModal, newListData, creating, 
     handleCreateListSubmit, handleNewListInputChange
   } = useProfilePage();
+
+   React.useEffect(() => {
+    // keep AuthContext (Header) in sync when editing own profile
+    if (isOwnProfile && userProfile) {
+      syncAuthUser(userProfile);
+    }
+  }, [isOwnProfile, userProfile, syncAuthUser]);
 
   // Helper Component nhỏ cho UI badge
   const PrivateBadge = () => (

@@ -1,5 +1,5 @@
 // src/context/AuthContext.tsx
-import  { createContext, useContext, useEffect, useRef, type ReactNode } from 'react';
+import  { createContext, useContext, useEffect, useRef, type ReactNode, useMemo } from 'react';
 import { useAuth as useSharedAuth, type UseAuthReturn } from '@umamusumeenjoyer/shared-logic';
 import { authService } from '@umamusumeenjoyer/shared-logic';
 
@@ -37,7 +37,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (refreshTimerRef.current) {
       clearInterval(refreshTimerRef.current);
     }
-
     // Refresh mỗi 25 phút (trước khi token hết hạn)
     refreshTimerRef.current = window.setInterval(() => {
       const token = localStorage.getItem('authToken');
@@ -91,8 +90,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authLogic.user]);
 
+  const contextValue = useMemo(() => ({
+    ...authLogic,
+    // Explicitly include user to ensure it's in dependencies
+    user: authLogic.user,
+  }), [authLogic, authLogic.user]);
+
   return (
-    <AuthContext.Provider value={authLogic}>
+    <AuthContext.Provider value={contextValue}>
       {children}
     </AuthContext.Provider>
   );
