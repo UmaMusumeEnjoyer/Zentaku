@@ -2,6 +2,9 @@ import React from 'react';
 import { useUserItem } from '@umamusumeenjoyer/shared-logic';
 import type { UserItemProps } from '@umamusumeenjoyer/shared-logic';
 
+const BACKEND_DOMAIN = import.meta.env.VITE_BACKEND_DOMAIN;
+const DEFAULT_AVATAR = import.meta.env.VITE_DEFAULT_AVATAR_URL;
+
 const UserItem: React.FC<UserItemProps> = ({ 
   user, 
   roleIcon, 
@@ -12,7 +15,9 @@ const UserItem: React.FC<UserItemProps> = ({
 }) => {
   const { displayAvatar } = useUserItem(
     user.username, 
-    user.avatar || user.avatar_url
+    user.avatar_url,
+    DEFAULT_AVATAR,
+    BACKEND_DOMAIN
   );
 
   return (
