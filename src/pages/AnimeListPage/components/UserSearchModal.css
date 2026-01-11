@@ -1,0 +1,239 @@
+/* src/components/UserSearchModal.css */
+
+/* Overlay & Animation giống AddAnimeModal */
+.user-modal-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background-color: rgba(0, 0, 0, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  backdrop-filter: blur(5px);
+  animation: fadeIn 0.2s ease-out;
+}
+
+/* Content nhỏ hơn AnimeModal một chút vì info user ít hơn */
+.user-modal-content {
+  background-color: #1a202c;
+  width: 90%;
+  max-width: 600px; /* Nhỏ gọn hơn */
+  height: 80vh;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+}
+
+/* Header */
+.user-modal-header {
+  padding: 16px 24px;
+  background-color: #1e293b;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.user-search-input {
+  width: 100%;
+  height: 44px;
+  padding-left: 44px;
+  padding-right: 15px;
+  background-color: #0f172a;
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 8px;
+  color: #fff;
+  font-size: 1rem;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.user-search-input:focus {
+  border-color: #3db4f2;
+  box-shadow: 0 0 0 3px rgba(61, 180, 242, 0.2);
+}
+
+.user-modal-body {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 20px;
+  background-color: #101622;
+}
+
+/* Scrollbar styling */
+.user-modal-body::-webkit-scrollbar { width: 8px; }
+.user-modal-body::-webkit-scrollbar-track { background: #0f172a; }
+.user-modal-body::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+
+/* USER LIST GRID */
+.user-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* User Card Item */
+.user-card-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #1e293b;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  transition: all 0.2s;
+}
+
+.user-card-item:hover {
+  border-color: #3db4f2;
+  background-color: #263345;
+}
+
+.user-card-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-card-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #334155;
+}
+
+.user-card-name {
+  font-weight: 600;
+  color: #f1f5f9;
+  margin: 0;
+}
+
+.user-card-handle {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  margin: 0;
+}
+
+/* Button logic */
+.btn-invite {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Style cho nút khi thêm Editor */
+.btn-invite.editor {
+  background-color: #e85d75; /* Red/Pink ish */
+  color: white;
+}
+.btn-invite.editor:hover { background-color: #d1435b; }
+
+/* Style cho nút khi thêm Viewer */
+.btn-invite.viewer {
+  background-color: #3db4f2; /* Blue */
+  color: white;
+}
+.btn-invite.viewer:hover { background-color: #269ccf; }
+
+/* Style Disabled/Success */
+.btn-invite:disabled {
+  background-color: #334155;
+  color: #64748b;
+  cursor: not-allowed;
+}
+
+/* Helper Text */
+.modal-helper-text {
+  color: #64748b;
+  text-align: center;
+  margin-top: 40px;
+  font-style: italic;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.98); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* =========================================
+   [RESPONSIVE] MOBILE ADJUSTMENTS
+   ========================================= */
+
+@media (max-width: 768px) {
+  .user-modal-content {
+    width: 95%; 
+    max-width: none;
+    height: 90vh; 
+    border-radius: 8px;
+  }
+
+  /* 1. Header: Chuyển về Relative để định vị nút X */
+  .user-modal-header {
+    padding: 16px;
+    position: relative; /* Quan trọng để nút X bám theo header */
+    display: block;     /* Dùng block để input chiếm full dòng dễ dàng */
+  }
+
+  /* 2. Input: Full width và chừa chỗ bên phải cho nút X */
+  .user-search-input {
+    width: 100%;
+    font-size: 16px; /* Chống zoom trên iOS */
+    padding-left: 40px; /* Chỗ cho icon Search bên trái */
+    padding-right: 45px; /* [QUAN TRỌNG] Chừa chỗ cho nút X bên phải */
+    box-sizing: border-box;
+    height: 44px; /* Đảm bảo chiều cao cố định */
+  }
+
+  /* 3. Nút Close (X): Định vị tuyệt đối vào góc phải */
+  /* Lưu ý: Class có thể là .close-btn hoặc thẻ button bên trong header */
+  .user-modal-header .close-btn,
+  .user-modal-header button {
+    position: absolute;
+    top: 16px;   /* Căn bằng với padding-top của header */
+    right: 16px; /* Căn bằng với padding-right của header */
+    width: 44px; /* Chiều rộng bằng chiều cao input để cân đối */
+    height: 44px; /* Chiều cao bằng input */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10; /* Nổi lên trên input */
+    background-color: transparent; /* Đảm bảo nền trong suốt */
+  }
+
+  /* 4. Body và các phần khác */
+  .user-modal-body {
+    padding: 16px;
+  }
+  
+  .user-card-item {
+    padding: 12px;
+    flex-direction: column; 
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .user-card-info {
+    width: 100%;
+  }
+
+  .btn-invite {
+    width: 100%;
+    justify-content: center;
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+}

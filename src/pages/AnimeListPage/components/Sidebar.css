@@ -1,0 +1,205 @@
+/* src/components/Sidebar.css */
+.sidebar {
+  background-color: transparent;
+  padding-top: 20px;
+}
+
+.sidebar-section {
+  margin-bottom: 32px;
+}
+
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.sidebar-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #94a3b8; /* Slate 400 */
+}
+
+.add-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  background-color: #1e293b;
+  border: none;
+  color: #cbd5e1;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.add-btn:hover {
+  background-color: #334155;
+}
+
+.sidebar-user-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.user-name {
+  font-weight: 600;
+  color: #e2e8f0;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.user-handle {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  margin: 0;
+}
+
+.role-icon {
+  color: #64748b;
+  font-size: 1.25rem;
+}
+
+/* Thêm vào cuối file Sidebar.css */
+.empty-text {
+  font-size: 0.85rem;
+  color: #475569;
+  font-style: italic;
+  margin-top: -8px;
+  margin-bottom: 16px;
+}
+
+/* Thêm vào cuối file Sidebar.css */
+
+.remove-member-btn {
+  background: transparent;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  opacity: 0.6; /* Làm mờ đi một chút để đỡ rối mắt */
+}
+
+.sidebar-user-item:hover .remove-member-btn {
+  opacity: 1; /* Hiện rõ khi hover vào user */
+}
+
+.remove-member-btn:hover {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: #ef4444; /* Màu đỏ khi hover */
+}
+
+.remove-member-btn .material-symbols-outlined {
+  font-size: 18px; /* Icon nhỏ gọn */
+}
+
+/* ... Các code cũ giữ nguyên ... */
+
+/* [UPDATE] Style cho User Item của chính người dùng đang đăng nhập */
+.sidebar-user-item.current-user {
+  background: rgba(61, 180, 242, 0.1); /* Màu xanh nhạt */
+  border: 1px solid rgba(61, 180, 242, 0.3);
+  border-radius: 8px;
+  padding: 8px 12px; /* Thêm padding vì có border */
+  margin-left: -12px; /* Căn chỉnh lại để không bị thụt vào so với các item khác */
+  margin-right: -12px;
+  width: calc(100% + 24px);
+}
+
+.you-badge {
+  font-size: 0.7rem;
+  background-color: #3db4f2; /* Màu xanh nổi bật */
+  color: #0b1622;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Điều chỉnh lại nút remove khi nằm trong item current-user */
+.sidebar-user-item.current-user .remove-member-btn {
+  margin-right: -4px;
+}
+
+/* ... Các code cũ phần empty-text, remove-member-btn giữ nguyên ... */
+/* =========================================
+   [RESPONSIVE] MOBILE ADJUSTMENTS
+   ========================================= */
+
+@media (max-width: 768px) {
+  .sidebar {
+    padding-top: 10px;
+  }
+  
+  .sidebar-section {
+    margin-bottom: 24px;
+    background-color: rgba(255,255,255,0.02); /* Thêm nền nhẹ để tách biệt khu vực */
+    padding: 12px;
+    border-radius: 8px;
+  }
+
+  .sidebar-header {
+    margin-bottom: 12px;
+  }
+
+  /* Nút Add to hơn để dễ chạm */
+  .add-btn {
+    width: 36px;
+    height: 36px;
+  }
+
+  .sidebar-user-item {
+    margin-bottom: 12px;
+    padding: 4px 0; /* Tăng khoảng cách chạm */
+  }
+
+  .user-avatar {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .user-name {
+    font-size: 0.9rem;
+  }
+
+  /* Nút xóa thành viên: Luôn hiện rõ trên mobile (vì không có hover chuột) */
+  .remove-member-btn {
+    opacity: 1; 
+    padding: 8px; /* Tăng vùng bấm */
+    background-color: rgba(255, 255, 255, 0.05); /* Nền nhẹ để dễ nhận biết là nút */
+    border-radius: 6px;
+  }
+  
+  /* Điều chỉnh lại item của chính mình */
+  .sidebar-user-item.current-user {
+    margin-left: 0;
+    margin-right: 0;
+    width: 100%;
+    box-sizing: border-box; /* Để padding không làm vỡ khung */
+  }
+}

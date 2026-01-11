@@ -16,6 +16,7 @@ import StaffPage from './pages/StaffPage/StaffPage';
 import AnimeSearchPage from './pages/AnimeSearch/AnimeSearchPage';
 import AnimeListSearchPage from './pages/AnimeListSearch/AnimeListSearchPage';
 import ProfilePage from './pages/ProfilePage/ProfilePage';
+import AnimeListPage from './pages/AnimeListPage/AnimeListPage';
 
 // Xác định API base URL dựa trên environment
 const isDevelopment = import.meta.env.DEV;
@@ -61,7 +62,7 @@ function App() {
       link.href = url;
     };
 
-    updateFavicon('/Gemini_Generated_Image_eg5d1qeg5d1qeg5d (1).ico');
+    updateFavicon('/app_logo.ico');
   }, []);
 
   return (
@@ -81,6 +82,7 @@ function App() {
               <Route path="/browse" element={<AnimeSearchPage />} />
               <Route path="/animelist" element={<AnimeListSearchPage />} />
               <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/list/:id" element={<AnimeListPage />} />
             </Routes>
           </main>
         </AuthProvider>

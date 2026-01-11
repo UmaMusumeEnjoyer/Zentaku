@@ -1,0 +1,231 @@
+/* src/components/RequestList.css */
+
+/* 1. CONTAINER STYLE */
+.request-list-container {
+  margin-top: 24px;
+  background-color: #151f2e; /* --bg-card: Khớp với màu nền các card khác */
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #334155; /* --slate-700 */
+  transition: all 0.2s ease;
+}
+
+/* Hiệu ứng khi có request: Dùng viền xanh chủ đạo thay vì vàng */
+.request-list-container.has-pending {
+  border-color: rgba(61, 180, 242, 0.5); /* --accent-blue opacity */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* 2. HEADER (SUMMARY) */
+.request-summary {
+  padding: 14px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  background-color: transparent;
+  transition: background-color 0.2s;
+}
+
+.request-summary:hover {
+  background-color: rgba(255, 255, 255, 0.03); /* Hover nhẹ nhàng */
+}
+
+.summary-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  color: #edf1f5; /* --text-highlight */
+  font-size: 0.9rem;
+  letter-spacing: 0.02em;
+}
+
+/* Badge số lượng: Chuyển sang màu xanh chủ đạo */
+.badge-count {
+  background-color: #3db4f2; /* --accent-blue */
+  color: #0b1622; /* --bg-dark (Text màu tối trên nền xanh sáng) */
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 6px; /* Bo góc nhẹ thay vì tròn vo */
+  min-width: 20px;
+  text-align: center;
+}
+
+.toggle-icon {
+  color: #64748b; /* --text-muted */
+  font-size: 1.2rem;
+  transition: transform 0.3s ease;
+}
+
+.toggle-icon.expanded {
+  transform: rotate(180deg);
+  color: #94a3b8; /* --text-secondary */
+}
+
+/* 3. EXPANDED CONTENT */
+.request-content {
+  border-top: 1px solid #334155;
+  background-color: #0b1622; /* --bg-dark: Tối hơn header một chút */
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.req-group {
+  padding-bottom: 4px;
+}
+
+.req-section-title {
+  padding: 16px 16px 8px;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #64748b; /* --text-muted */
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* 4. REQUEST ITEM */
+.request-item {
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(51, 65, 85, 0.5); /* Slate 700 opacity */
+  transition: background 0.2s;
+}
+
+.request-item:hover {
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+.request-item:last-child {
+  border-bottom: none;
+}
+
+.req-user-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.req-username {
+  font-weight: 600;
+  color: #3db4f2; /* --accent-blue */
+  font-size: 0.9rem;
+}
+
+.req-time {
+  font-size: 0.75rem;
+  color: #64748b; /* --text-muted */
+}
+
+.req-msg {
+  font-size: 0.85rem;
+  color: #94a3b8; /* --text-secondary */
+  font-style: italic;
+  margin-bottom: 12px;
+  line-height: 1.4;
+  padding-left: 8px;
+  border-left: 2px solid #334155; /* Đường kẻ chỉ dẫn nhỏ bên trái message */
+}
+
+/* 5. ACTION BUTTONS (Subtle Style) */
+.req-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-req-action {
+  flex: 1;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.2s;
+  background-color: transparent; /* Nền trong suốt mặc định */
+}
+
+/* Nút Accept: Màu xanh lá nhưng dạng trong suốt + viền */
+.btn-accept {
+  color: #4cca51; /* --accent-green */
+  border: 1px solid rgba(76, 202, 81, 0.3);
+  background-color: rgba(76, 202, 81, 0.05);
+}
+
+.btn-accept:hover {
+  background-color: rgba(76, 202, 81, 0.15);
+  border-color: #4cca51;
+}
+
+/* Nút Reject: Màu đỏ dạng trong suốt + viền */
+.btn-reject {
+  color: #ef4444; /* --red-500 */
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  background-color: rgba(239, 68, 68, 0.05);
+}
+
+.btn-reject:hover {
+  background-color: rgba(239, 68, 68, 0.15);
+  border-color: #ef4444;
+}
+/* =========================================
+   [RESPONSIVE] MOBILE ADJUSTMENTS
+   ========================================= */
+
+@media (max-width: 768px) {
+  /* 1. Container bên ngoài */
+  .request-list-container {
+    margin-top: 15px;
+    border-radius: 8px; /* Bo góc ít hơn chút cho gọn */
+  }
+
+  /* 2. Header Summary (Phần bấm để mở rộng) */
+  .request-summary {
+    padding: 12px;
+  }
+
+  .summary-title {
+    font-size: 0.85rem;
+  }
+
+  /* 3. Item Request bên trong */
+  .request-item {
+    padding: 12px;
+  }
+
+  .req-user-row {
+    flex-direction: row; /* Vẫn giữ ngang */
+    align-items: flex-start; /* Căn trên để nếu tên dài xuống dòng */
+    gap: 10px;
+  }
+
+  .req-username {
+    font-size: 0.9rem;
+    /* Xử lý tên dài */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 60%; 
+  }
+
+  /* 4. Nút bấm hành động (Accept/Reject) */
+  .req-actions {
+    gap: 8px;
+  }
+
+  .btn-req-action {
+    padding: 10px 0; /* Tăng chiều cao vùng bấm cho dễ chạm */
+    font-size: 0.85rem;
+  }
+}

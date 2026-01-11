@@ -1,0 +1,119 @@
+.likers-modal {
+  width: 100%;
+  max-width: 400px;
+  background-color: var(--bg-card);
+  border-radius: 12px;
+  border: 1px solid var(--slate-600);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  color: white;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--slate-700);
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.likers-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.liker-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--bg-section);
+  transition: background 0.2s;
+}
+
+.liker-item:hover {
+  background-color: var(--bg-section);
+}
+
+.user-icon {
+  color: var(--text-muted);
+  background: var(--bg-search);
+  padding: 8px;
+  border-radius: 50%;
+}
+
+.liker-username {
+  font-weight: 600;
+  color: var(--text-highlight);
+}
+
+.verified-icon {
+  font-size: 1rem;
+  color: var(--accent-blue);
+}
+
+.modal-footer-info {
+  padding: 12px 20px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  text-align: center;
+  border-top: 1px solid var(--slate-700);
+}
+
+/* Modal Overlay chung (nếu chưa có trong file css global) */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(2px);
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+.close-btn:hover { color: white; }
+
+/* =========================================
+   [RESPONSIVE] MOBILE ADJUSTMENTS
+   ========================================= */
+
+@media (max-width: 768px) {
+  .likers-modal {
+    width: 90%;
+    /* Giới hạn chiều cao theo màn hình thay vì px cứng */
+    max-height: 80vh; 
+    display: flex;
+    flex-direction: column;
+  }
+
+  .likers-list {
+    /* List tự co giãn nhưng không vượt quá màn hình */
+    max-height: unset; 
+    flex: 1;
+    overflow-y: auto;
+  }
+  
+  .liker-item {
+    padding: 12px 16px;
+  }
+  
+  .modal-header {
+    padding: 12px 16px;
+  }
+}
