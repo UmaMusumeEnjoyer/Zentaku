@@ -4,6 +4,7 @@ import type { UserSearchModalProps } from '@umamusumeenjoyer/shared-logic';
 import UserSearchResultItem from './UserSearchResultItem';
 import './UserSearchModal.css';
 
+
 const UserSearchModal: React.FC<UserSearchModalProps> = ({
   isOpen,
   onClose,

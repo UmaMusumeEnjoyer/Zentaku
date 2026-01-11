@@ -2,6 +2,10 @@ import React from 'react';
 import { useUserSearchResultItem } from '@umamusumeenjoyer/shared-logic';
 import type { UserSearchResultItemProps } from '@umamusumeenjoyer/shared-logic';
 
+// Lấy biến môi trường từ Vite
+const BACKEND_DOMAIN = import.meta.env.VITE_BACKEND_DOMAIN;
+const DEFAULT_AVATAR = import.meta.env.VITE_DEFAULT_AVATAR_URL;
+
 const UserSearchResultItem: React.FC<UserSearchResultItemProps> = ({
   user,
   currentMembers,
@@ -9,12 +13,20 @@ const UserSearchResultItem: React.FC<UserSearchResultItemProps> = ({
   isProcessing,
   onAddUser
 }) => {
+  // CẬP NHẬT: Truyền thêm DEFAULT_AVATAR và BACKEND_DOMAIN vào hook
   const {
     displayAvatar,
     isOwner,
     buttonState,
     statusText,
-  } = useUserSearchResultItem(user, currentMembers, isEditorMode, isProcessing);
+  } = useUserSearchResultItem(
+    user, 
+    currentMembers, 
+    isEditorMode, 
+    isProcessing, 
+    DEFAULT_AVATAR, // Tham số thứ 5: Avatar mặc định
+    BACKEND_DOMAIN  // Tham số thứ 6: Domain backend để nối chuỗi URL
+  );
 
   return (
     <div className="user-card-item">
