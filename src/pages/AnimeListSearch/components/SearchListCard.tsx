@@ -1,12 +1,14 @@
 import React from 'react';
 import { FaHeart, FaListAlt } from 'react-icons/fa';
 import { type SearchListCardProps } from '@umamusumeenjoyer/shared-logic';
+import { useNavigate } from 'react-router-dom';
 import { useSearchListCard } from '@umamusumeenjoyer/shared-logic';
 import '../AnimeListSearchPage.css';
 
 const SearchListCard: React.FC<SearchListCardProps> = ({ listData }) => {
-  const { handleCardClick, cardColor } = useSearchListCard(listData);
-
+  
+  const navigate = useNavigate();
+  const { handleCardClick, cardColor } = useSearchListCard(listData, navigate);
   return (
     <div 
       className="anime-list-card" 

@@ -1,12 +1,14 @@
 import React from 'react';
 import { FaHeart, FaLayerGroup } from 'react-icons/fa';
 import { type AnimeListCardProps } from '@umamusumeenjoyer/shared-logic';
+import { useNavigate } from 'react-router-dom';
 import { useAnimeListCard } from '@umamusumeenjoyer/shared-logic';
 import { useTranslation } from 'react-i18next';
 import '../AnimeListSearchPage.css';
 
 const AnimeListCard: React.FC<AnimeListCardProps> = ({ listData }) => {
   const { t } = useTranslation(['AnimeListSearch']);
+  const navigate = useNavigate();
   
   const { 
     handleCardClick, 
@@ -14,7 +16,7 @@ const AnimeListCard: React.FC<AnimeListCardProps> = ({ listData }) => {
     username, 
     coverImages, 
     placeholderAvatar 
-  } = useAnimeListCard(listData);
+  } = useAnimeListCard(listData, navigate);
 
   return (
     <div 
