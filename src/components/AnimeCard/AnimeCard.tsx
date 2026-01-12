@@ -48,7 +48,7 @@ const AnimeCard: React.FC<AnimeCardProps> = ({ anime }) => {
 
           {displayInfo && (
             <div className="airing-info">
-              <p className="episode-time">{displayInfo}</p>
+              <p className="episode-time"></p>
             </div>
           )}
         </div>
