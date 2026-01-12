@@ -11,7 +11,7 @@ const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({ isOpen, onClose }
   const { t } = useTranslation(['GlobalSearch']);
 
   const handleUserSelect = (username: string) => {
-    navigate(`/profile/${username}`);
+    navigate(`/user/${username}`);
   };
 
   const { 

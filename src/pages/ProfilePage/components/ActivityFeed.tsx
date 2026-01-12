@@ -6,14 +6,13 @@ import { useTheme } from '../../../context/ThemeContext';
 import { useTranslation } from 'react-i18next';
 import './ActivityFeed.css';
 
-const ActivityFeed: React.FC<ActivityFeedProps> = ({ filterDate }) => {
+const ActivityFeed: React.FC<ActivityFeedProps> = ({username, filterDate }) => {
   const navigate = useNavigate();
   const { theme } = useTheme();
   const { t } = useTranslation(['ActivityFeed']);
   
   // Kết nối ViewModel - Truyền hàm t vào hook
   const {
-    username,
     loading,
     displayItems,
     canLoadMore,
@@ -25,7 +24,7 @@ const ActivityFeed: React.FC<ActivityFeedProps> = ({ filterDate }) => {
     getActionIconChar,
     getActionDescription,
     getTargetName
-  } = useActivityFeed({ filterDate, t });
+  } = useActivityFeed({ username ,filterDate, t });
 
   const handleTargetClick = (item: any) => {
     const url = getTargetUrl(item);

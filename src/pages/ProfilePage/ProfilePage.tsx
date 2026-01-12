@@ -4,6 +4,7 @@ import { useProfilePage, type UserProfile } from '@umamusumeenjoyer/shared-logic
 import { useTheme } from '../../context/ThemeContext';
 import { useTranslation } from 'react-i18next';
 import { useAuth as useAuthContext } from '../../context/AuthContext'; // new import
+import { useParams } from 'react-router-dom';
 
 
 // Components
@@ -16,6 +17,8 @@ import EditProfileModal from './components/EditProfileModal';
 const ProfilePage: React.FC = () => {
   // i18n
   const { t } = useTranslation('ProfilePagePage');
+
+  const { username } = useParams<{ username: string }>();
   
   // Kết nối ThemeContext
   const { theme } = useTheme();
@@ -44,7 +47,7 @@ const ProfilePage: React.FC = () => {
     showEditModal, setShowEditModal, handleUpdateSuccess,
     showCreateModal, setShowCreateModal, newListData, creating, 
     handleCreateListSubmit, handleNewListInputChange
-  } = useProfilePage();
+  } = useProfilePage(username);
 
    React.useEffect(() => {
     // keep AuthContext (Header) in sync when editing own profile
@@ -128,13 +131,17 @@ const ProfilePage: React.FC = () => {
                     <div className="section-title">{t('overview.contributions.title', { count: totalContributions })}</div>
                  </div>
                  <ActivityHistory 
+                    username={targetUsername}
                     onTotalCountChange={setTotalContributions}
                     selectedDate={selectedDate}
                     onDateSelect={handleDateSelect}
                  />
               </div>
               <div className="activity-section-wrapper">
-                 <ActivityFeed filterDate={selectedDate || undefined} />
+                 <ActivityFeed 
+                  username={targetUsername}
+                  filterDate={selectedDate || undefined} 
+                 />
               </div>
             </>
           )}

@@ -80,6 +80,7 @@ function App() {
               <Route path="/browse" element={<AnimeSearchPage />} />
               <Route path="/animelist" element={<AnimeListSearchPage />} />
               <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/user/:username" element={<ProfilePage />} />
               <Route path="/list/:id" element={<AnimeListPage />} />
             </Routes>
           </main>
