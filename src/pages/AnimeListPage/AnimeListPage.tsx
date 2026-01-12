@@ -1,5 +1,6 @@
 import React from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next'; // Import hook
 import { useAnimeListPage } from '@umamusumeenjoyer/shared-logic';
 
 // Import Child Components
@@ -15,13 +16,14 @@ import RequestList from './components/RequestList';
 import './AnimeListPage.css';
 
 const AnimeListPage: React.FC = () => {
+  const { t } = useTranslation(['animeListPage']); // Khởi tạo hook dịch
   const { id } = useParams<{ id: string }>();
   const location = useLocation();
-  const navigate = useNavigate(); // [FIX] Get navigate from React Router
+  const navigate = useNavigate();
 
   const {
     currentUsername,
-    currentPermission, // [FIX] Destructure currentPermission
+    currentPermission,
     canEdit,
     isViewer,
     listInfo,
@@ -64,7 +66,7 @@ const AnimeListPage: React.FC = () => {
     handleOpenAddViewer,
     handleUserAdded,
     handleRemoveMember,
-  } = useAnimeListPage(id || '', location.state, navigate); // [FIX] Pass navigate
+  } = useAnimeListPage(id || '', location.state, navigate);
 
   return (
     <div className="page-container">
@@ -78,7 +80,7 @@ const AnimeListPage: React.FC = () => {
               <input
                 type="text"
                 className="search-input"
-                placeholder="Search in this list..."
+                placeholder={t('animeListPage.searchPlaceholder')}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -87,7 +89,7 @@ const AnimeListPage: React.FC = () => {
 
           <div className="anime-lists-container">
             {loading ? (
-              <div className="loading-state">Loading anime details...</div>
+              <div className="loading-state">{t('animeListPage.loading')}</div>
             ) : Object.keys(groupedAnime).length > 0 ? (
               <>
                 {canEdit && !currentUserHasItems && (
@@ -95,7 +97,7 @@ const AnimeListPage: React.FC = () => {
                     <div className="user-group-header">
                       <div className="user-group-title">
                         <span className="material-symbols-outlined">person</span>
-                        <h3>Added by {currentUsername}</h3>
+                        <h3>{t('animeListPage.emptyState.userTitle', { user: currentUsername })}</h3>
                       </div>
                     </div>
                     <div style={{
@@ -109,14 +111,14 @@ const AnimeListPage: React.FC = () => {
                       border: '1px dashed rgba(255, 255, 255, 0.1)'
                     }}>
                       <p style={{ color: '#94a3b8', marginBottom: '16px', fontSize: '0.95rem' }}>
-                        You haven't added any anime to this list yet.
+                        {t('animeListPage.emptyState.noAnimeYet')}
                       </p>
                       <button
                         className="btn btn-primary"
                         onClick={() => setShowAddModal(true)}
                       >
                         <span className="material-symbols-outlined" style={{ marginRight: '5px' }}>add</span>
-                        Add Anime Now
+                        {t('animeListPage.emptyState.addAnimeButton')}
                       </button>
                     </div>
                   </div>
@@ -152,14 +154,14 @@ const AnimeListPage: React.FC = () => {
               </>
             ) : (
               <div className="empty-state">
-                <p>This list is empty.</p>
+                <p>{t('animeListPage.emptyState.listEmpty')}</p>
                 {canEdit && (
                   <button
                     className="btn btn-primary"
                     style={{ marginTop: '16px' }}
                     onClick={() => setShowAddModal(true)}
                   >
-                    Add Anime Now
+                    {t('animeListPage.emptyState.addAnimeButton')}
                   </button>
                 )}
               </div>
@@ -172,10 +174,10 @@ const AnimeListPage: React.FC = () => {
             {listInfo.is_owner ? (
               <>
                 <button className="btn btn-secondary" onClick={handleEditListClick}>
-                  Edit List Details
+                  {t('animeListPage.sidebarActions.editDetails')}
                 </button>
                 <button className="btn btn-danger" onClick={handleDeleteList}>
-                  Delete List
+                  {t('animeListPage.sidebarActions.deleteList')}
                 </button>
               </>
             ) : isViewer ? (
@@ -184,7 +186,7 @@ const AnimeListPage: React.FC = () => {
                 onClick={handleOpenEditRequest}
               >
                 <span className="material-symbols-outlined">edit_note</span>
-                Request Edit Access
+                {t('animeListPage.sidebarActions.requestEdit')}
               </button>
             ) : !currentPermission && (
               <button
@@ -193,7 +195,7 @@ const AnimeListPage: React.FC = () => {
                 style={{ backgroundColor: 'var(--accent-green)' }}
               >
                 <span className="material-symbols-outlined">person_add</span>
-                Join Request
+                {t('animeListPage.sidebarActions.joinRequest')}
               </button>
             )}
           </div>
@@ -244,11 +246,14 @@ const AnimeListPage: React.FC = () => {
         isOpen={showRequestModal}
         onClose={() => setShowRequestModal(false)}
         onSubmit={handleSubmitRequest}
-        title={requestType === 'join' ? "Join Request" : "Edit Access Request"}
+        title={requestType === 'join' 
+          ? t('animeListPage.requestModal.joinTitle') 
+          : t('animeListPage.requestModal.editTitle')
+        }
         placeholder={
           requestType === 'join'
-            ? "Hello, I would like to join this list as a contributor..."
-            : "Please describe why you need edit permission..."
+            ? t('animeListPage.requestModal.joinPlaceholder')
+            : t('animeListPage.requestModal.editPlaceholder')
         }
         isLoading={isSubmittingRequest}
       />

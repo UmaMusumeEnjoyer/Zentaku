@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next'; // Import hook
 import { useUserItem } from '@umamusumeenjoyer/shared-logic';
 import type { UserItemProps } from '@umamusumeenjoyer/shared-logic';
 
@@ -13,6 +14,7 @@ const UserItem: React.FC<UserItemProps> = ({
   canRemove, 
   isCurrentUser 
 }) => {
+  const { t } = useTranslation(['userItem']); // Khởi tạo hook dịch
   const { displayAvatar } = useUserItem(
     user.username, 
     user.avatar_url,
@@ -27,7 +29,7 @@ const UserItem: React.FC<UserItemProps> = ({
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
             <p className="user-name">{user.username}</p>
-            {isCurrentUser && <span className="you-badge">You</span>}
+            {isCurrentUser && <span className="you-badge">{t('userItem.youBadge')}</span>}
           </div>
           <p className="user-handle">@{user.username}</p> 
         </div>
@@ -44,7 +46,7 @@ const UserItem: React.FC<UserItemProps> = ({
           <button 
             className="remove-member-btn"
             onClick={() => onRemove(user.username)}
-            title="Remove member"
+            title={t('userItem.removeMember')}
           >
             <span className="material-symbols-outlined">close</span>
           </button>

@@ -1,9 +1,9 @@
 import React from 'react';
+import { useTranslation, Trans } from 'react-i18next'; // Import hook và component Trans
 import { useUserSearchModal } from '@umamusumeenjoyer/shared-logic';
 import type { UserSearchModalProps } from '@umamusumeenjoyer/shared-logic';
 import UserSearchResultItem from './UserSearchResultItem';
 import './UserSearchModal.css';
-
 
 const UserSearchModal: React.FC<UserSearchModalProps> = ({
   isOpen,
@@ -13,6 +13,7 @@ const UserSearchModal: React.FC<UserSearchModalProps> = ({
   onUserAdded,
   currentMembers = []
 }) => {
+  const { t } = useTranslation(['userSearchModal']); // Khởi tạo hook dịch
   const {
     searchTerm,
     results,
@@ -39,7 +40,8 @@ const UserSearchModal: React.FC<UserSearchModalProps> = ({
             </span>
             <input 
               className="user-search-input"
-              placeholder={`Search user to add as ${roleType}...`}
+              // Sử dụng interpolation để truyền roleType vào placeholder
+              placeholder={t('userSearchModal.placeholder', { role: roleType })}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               autoFocus
@@ -52,17 +54,23 @@ const UserSearchModal: React.FC<UserSearchModalProps> = ({
 
         {/* BODY */}
         <div className="user-modal-body">
-          {loading && <div className="modal-loading">Searching users...</div>}
+          {loading && <div className="modal-loading">{t('userSearchModal.searching')}</div>}
 
           {!loading && results.length === 0 && !searchTerm && (
             <div className="modal-helper-text">
-              Type a username to invite them as a 
-              <strong style={{color: isEditorMode ? '#e85d75' : '#3db4f2'}}> {roleType}</strong>.
+              {/* Sử dụng Trans để xử lý text có format HTML/Style */}
+              <Trans
+                i18nKey="userSearchModal.instruction"
+                values={{ role: roleType }}
+                components={{ 
+                  bold: <strong style={{color: isEditorMode ? '#e85d75' : '#3db4f2'}} /> 
+                }}
+              />
             </div>
           )}
           
           {!loading && results.length === 0 && searchTerm && (
-            <div className="modal-helper-text">No users found.</div>
+            <div className="modal-helper-text">{t('userSearchModal.noResults')}</div>
           )}
 
           <div className="user-grid">

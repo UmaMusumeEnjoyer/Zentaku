@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next'; // Import hook
 import { useUserSearchResultItem } from '@umamusumeenjoyer/shared-logic';
 import type { UserSearchResultItemProps } from '@umamusumeenjoyer/shared-logic';
 
@@ -13,7 +14,7 @@ const UserSearchResultItem: React.FC<UserSearchResultItemProps> = ({
   isProcessing,
   onAddUser
 }) => {
-  // CẬP NHẬT: Truyền thêm DEFAULT_AVATAR và BACKEND_DOMAIN vào hook
+  const { t } = useTranslation(['userSearchModal']); // Khởi tạo hook dịch
   const {
     displayAvatar,
     isOwner,
@@ -24,9 +25,19 @@ const UserSearchResultItem: React.FC<UserSearchResultItemProps> = ({
     currentMembers, 
     isEditorMode, 
     isProcessing, 
-    DEFAULT_AVATAR, // Tham số thứ 5: Avatar mặc định
-    BACKEND_DOMAIN  // Tham số thứ 6: Domain backend để nối chuỗi URL
+    DEFAULT_AVATAR, 
+    BACKEND_DOMAIN
   );
+
+const getStatusDisplay = () => {
+    if (isOwner) return `${t('userSearchResultItem.currently')}: ${t('userSearchResultItem.status.owner')}`;
+    if (!statusText) return `${t('userSearchResultItem.assign')}: ${isEditorMode ? t('userSearchResultItem.status.editor') : t('userSearchResultItem.status.viewer')}`;
+    
+    // Map statusText từ hook
+    const roleKey = statusText.toLowerCase(); 
+    const roleLabel = t(`userSearchResultItem.status.${roleKey}`, { defaultValue: statusText });
+    return `${t('userSearchResultItem.currently')}: ${roleLabel}`;
+  };
 
   return (
     <div className="user-card-item">
@@ -38,7 +49,7 @@ const UserSearchResultItem: React.FC<UserSearchResultItemProps> = ({
             {user.email_verified && (
               <span className="material-symbols-outlined" 
                 style={{fontSize: '14px', color: '#3db4f2', marginLeft: '4px', verticalAlign: 'middle'}}
-                title="Verified Email">
+                title={t('userSearchResultItem.verifiedEmail')}>
                 verified
               </span>
             )}
@@ -46,7 +57,9 @@ const UserSearchResultItem: React.FC<UserSearchResultItemProps> = ({
           
           <p className="user-card-handle">
             <span style={{color: '#94a3b8', fontStyle: isOwner ? 'italic' : 'normal'}}>
-              {statusText}
+              {/* statusText đến từ logic hook, nếu cần dịch statusText, 
+                  bạn cần xử lý trong hook hoặc map giá trị ở đây */}
+              {getStatusDisplay()}
             </span>
           </p>
         </div>
@@ -56,7 +69,7 @@ const UserSearchResultItem: React.FC<UserSearchResultItemProps> = ({
         className={`btn-invite ${buttonState.className}`} 
         onClick={() => onAddUser(user)}
         disabled={buttonState.isDisabled}
-        title={isOwner ? "Cannot modify Owner" : ""}
+        title={isOwner ? t('userSearchResultItem.cannotModifyOwner') : ""}
       >
         {isProcessing ? (
           <span className="material-symbols-outlined spin-icon" style={{fontSize: '18px'}}>sync</span>
@@ -65,7 +78,7 @@ const UserSearchResultItem: React.FC<UserSearchResultItemProps> = ({
             <span className="material-symbols-outlined" style={{fontSize: '18px'}}>
               {buttonState.icon}
             </span>
-            {buttonState.text}
+            {t(`userSearchResultItem.actions.${buttonState.text}`)}
           </>
         )}
       </button>

@@ -1,10 +1,12 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next'; // Import hook
 import { useListHeader } from '@umamusumeenjoyer/shared-logic';
 import type { ListHeaderProps } from '@umamusumeenjoyer/shared-logic';
 import LikersModal from './LikersModal';
 import './ListHeader.css';
 
 const ListHeader: React.FC<ListHeaderProps> = ({ listInfo, listId }) => {
+  const { t } = useTranslation(['listHeader']); // Khởi tạo hook dịch
   const {
     isLiked,
     likeCount,
@@ -26,7 +28,7 @@ const ListHeader: React.FC<ListHeaderProps> = ({ listInfo, listId }) => {
         )}
         {listInfo.is_private && (
           <div className="private-badge-wrapper">
-            <span className="count-badge private-badge">Private</span>
+            <span className="count-badge private-badge">{t('listHeader.private')}</span>
           </div>
         )}
       </div>
@@ -37,7 +39,7 @@ const ListHeader: React.FC<ListHeaderProps> = ({ listInfo, listId }) => {
           className={`action-btn like-btn ${isLiked ? 'liked' : ''}`} 
           onClick={handleToggleLike}
           disabled={isLoadingLike}
-          title={isLiked ? "Unlike" : "Like"}
+          title={isLiked ? t('listHeader.unlike') : t('listHeader.like')}
         >
           <span className={`material-symbols-outlined heart-icon ${isLiked ? 'filled' : ''}`}>
             favorite
@@ -48,11 +50,11 @@ const ListHeader: React.FC<ListHeaderProps> = ({ listInfo, listId }) => {
         <button 
           className={`action-btn count-btn ${listInfo.is_owner ? 'clickable' : ''}`}
           onClick={listInfo.is_owner ? handleViewLikers : undefined}
-          title={listInfo.is_owner ? "View who liked this list" : ""}
+          title={listInfo.is_owner ? t('listHeader.viewLikers') : ""}
           disabled={!listInfo.is_owner && likeCount === 0}
         >
           <span className="count-number">{likeCount}</span>
-          <span className="count-label">Likes</span>
+          <span className="count-label">{t('listHeader.likesLabel')}</span>
         </button>
       </div>
 

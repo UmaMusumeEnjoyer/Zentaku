@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next'; // Import hook
 import { useUserAnimeGroup } from '@umamusumeenjoyer/shared-logic';
 import type { UserAnimeGroupProps } from '@umamusumeenjoyer/shared-logic';
 import AnimeCard from '../../../components/AnimeCard/AnimeCard';
@@ -17,6 +18,7 @@ const UserAnimeGroup: React.FC<UserAnimeGroupProps> = ({
   onConfirmDelete, 
   onSelectAnime 
 }) => {
+  const { t } = useTranslation(['userAnimeGroup']); // Khởi tạo hook dịch
   const {
     hasEditPermission,
     shouldRender,
@@ -32,13 +34,14 @@ const UserAnimeGroup: React.FC<UserAnimeGroupProps> = ({
       <div className="user-group-header">
         <div className="user-group-title">
           <span className="material-symbols-outlined">person</span>
-          <h3>Added by {user}</h3>
+          {/* Sử dụng interpolation để truyền tên user */}
+          <h3>{t('userAnimeGroup.addedBy', { user })}</h3>
           <span className="count-badge">{animeCount}</span>
           
           {hasEditPermission && !deleteMode && (
             <button 
               className="btn-add-circle" 
-              title="Add Anime to this list"
+              title={t('userAnimeGroup.addAnimeTitle')}
               onClick={onOpenAddModal} 
             >
               <span className="material-symbols-outlined">add</span>
@@ -52,19 +55,20 @@ const UserAnimeGroup: React.FC<UserAnimeGroupProps> = ({
               <button 
                 className="btn-icon-only text-danger"
                 onClick={onToggleDeleteMode}
-                title="Delete items"
+                title={t('userAnimeGroup.deleteItemsTitle')}
               >
                 <span className="material-symbols-outlined">delete</span>
               </button>
             ) : (
               <div className="delete-actions-group">
+                {/* Sử dụng interpolation để hiển thị số lượng đã chọn */}
                 <span className="selection-count">
-                  {selectedAnimeIds.length} selected
+                  {t('userAnimeGroup.selectedCount', { count: selectedAnimeIds.length })}
                 </span>
                 <button 
                   className="btn-icon-only text-secondary"
                   onClick={onToggleDeleteMode}
-                  title="Cancel"
+                  title={t('userAnimeGroup.cancelTitle')}
                   disabled={isDeleting}
                 >
                   <span className="material-symbols-outlined">close</span>
@@ -72,7 +76,7 @@ const UserAnimeGroup: React.FC<UserAnimeGroupProps> = ({
                 <button 
                   className="btn-confirm-delete"
                   onClick={onConfirmDelete}
-                  title="Confirm Delete"
+                  title={t('userAnimeGroup.confirmDeleteTitle')}
                   disabled={isDeleting || selectedAnimeIds.length === 0}
                 >
                   {isDeleting ? (
@@ -80,7 +84,7 @@ const UserAnimeGroup: React.FC<UserAnimeGroupProps> = ({
                   ) : (
                     <>
                       <span className="material-symbols-outlined">check</span>
-                      <span>Confirm</span>
+                      <span>{t('userAnimeGroup.confirmText')}</span>
                     </>
                   )}
                 </button>

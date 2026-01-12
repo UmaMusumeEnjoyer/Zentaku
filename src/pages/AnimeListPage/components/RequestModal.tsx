@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next'; // Import hook
 import { useRequestModal } from '@umamusumeenjoyer/shared-logic';
 import type { RequestModalProps } from '@umamusumeenjoyer/shared-logic';
 import './RequestModal.css';
@@ -11,6 +12,7 @@ const RequestModal: React.FC<RequestModalProps> = ({
   placeholder, 
   isLoading 
 }) => {
+  const { t } = useTranslation(['requestModal']); // Khởi tạo hook dịch
   const {
     message,
     handleMessageChange,
@@ -29,6 +31,7 @@ const RequestModal: React.FC<RequestModalProps> = ({
     <div className="modal-overlay" onClick={handleOverlayClick}>
       <div className="modal-content request-modal" onClick={e => e.stopPropagation()}>
         <div className="modal-header">
+          {/* Title được truyền từ props, nên cha component sẽ chịu trách nhiệm dịch title này */}
           <h3>{title}</h3>
           <button className="close-btn" onClick={onClose}>
             <span className="material-symbols-outlined">close</span>
@@ -36,11 +39,12 @@ const RequestModal: React.FC<RequestModalProps> = ({
         </div>
         
         <div className="modal-body">
-          <p className="input-label">Message (Optional):</p>
+          <p className="input-label">{t('requestModal.messageLabel')}</p>
           <textarea 
             className="request-message-input"
             rows={4}
-            placeholder={placeholder || "Why do you want to join/edit this list?"}
+            // Nếu không có placeholder truyền vào, dùng translation mặc định
+            placeholder={placeholder || t('requestModal.defaultPlaceholder')}
             value={message}
             onChange={(e) => handleMessageChange(e.target.value)}
             disabled={isLoading}
@@ -53,14 +57,14 @@ const RequestModal: React.FC<RequestModalProps> = ({
             onClick={onClose} 
             disabled={isLoading}
           >
-            Cancel
+            {t('requestModal.cancel')}
           </button>
           <button 
             className="btn btn-primary" 
             onClick={() => handleSubmit(onSubmit)}
             disabled={isLoading}
           >
-            {isLoading ? 'Sending...' : 'Send Request'}
+            {isLoading ? t('requestModal.sending') : t('requestModal.sendRequest')}
           </button>
         </div>
       </div>

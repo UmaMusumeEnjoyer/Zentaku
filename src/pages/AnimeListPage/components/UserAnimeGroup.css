@@ -69,13 +69,13 @@
 .grid-item-wrapper.selected .check-icon { color: var(--red-500); transform: scale(1.2); }
 
 .anime-grid-row {
-  display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px;
+  display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px;
 }
-.grid-item { height: 340px; }
+.grid-item { height: 400px; }
 
-@media (max-width: 1200px) { .anime-grid-row { grid-template-columns: repeat(4, 1fr); } }
-@media (max-width: 900px) { .anime-grid-row { grid-template-columns: repeat(3, 1fr); } }
-@media (max-width: 600px) { .anime-grid-row { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 1200px) { .anime-grid-row { grid-template-columns: repeat(5, 1fr); } }
+@media (max-width: 900px) { .anime-grid-row { grid-template-columns: repeat(4, 1fr); } }
+@media (max-width: 600px) { .anime-grid-row { grid-template-columns: repeat(3, 1fr); } }
 
 /* src/pages/AnimeList/components/UserAnimeGroup.css */
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next'; // Import hook
 import { useEditListModal } from '@umamusumeenjoyer/shared-logic';
 import type { EditListModalProps } from '@umamusumeenjoyer/shared-logic';
 import './EditListModal.css';
@@ -10,6 +11,7 @@ const EditListModal: React.FC<EditListModalProps> = ({
   initialData, 
   onUpdateSuccess 
 }) => {
+  const { t } = useTranslation(['editListModal']); // Khởi tạo hook dịch
   const {
     formData,
     isSubmitting,
@@ -22,7 +24,8 @@ const EditListModal: React.FC<EditListModalProps> = ({
     try {
       await handleSubmit();
     } catch (error) {
-      alert("An error occurred while updating the list.");
+      // Dịch thông báo lỗi
+      alert(t('editListModal.updateError'));
     }
   };
 
@@ -45,36 +48,36 @@ const EditListModal: React.FC<EditListModalProps> = ({
   return (
     <div className="edit-list-overlay" onClick={handleOverlayClick}>
       <div className="edit-list-content" onClick={(e) => e.stopPropagation()}>
-        <h2 className="edit-list-title">Edit List Details</h2>
+        <h2 className="edit-list-title">{t('editListModal.title')}</h2>
         <form onSubmit={handleFormSubmit}>
           
           <div className="form-group">
-            <label>List Name</label>
+            <label>{t('editListModal.listName')}</label>
             <input 
               type="text" 
               name="list_name" 
               value={formData.list_name} 
               onChange={handleInputChangeWrapper} 
-              placeholder="Enter list name..."
+              placeholder={t('editListModal.listNamePlaceholder')}
               required 
               disabled={isSubmitting}
             />
           </div>
 
           <div className="form-group">
-            <label>Description</label>
+            <label>{t('editListModal.description')}</label>
             <textarea 
               name="description" 
               value={formData.description} 
               onChange={handleInputChangeWrapper} 
-              placeholder="Enter a description..."
+              placeholder={t('editListModal.descriptionPlaceholder')}
               disabled={isSubmitting}
             />
           </div>
 
           <div className="form-row">
             <div className="form-group">
-              <label>Theme Color</label>
+              <label>{t('editListModal.themeColor')}</label>
               <div className="color-input-wrapper">
                 <input 
                   type="color" 
@@ -96,7 +99,7 @@ const EditListModal: React.FC<EditListModalProps> = ({
                   onChange={handleInputChangeWrapper}
                   disabled={isSubmitting}
                 />
-                Private List
+                {t('editListModal.privateList')}
               </label>
             </div>
           </div>
@@ -108,14 +111,14 @@ const EditListModal: React.FC<EditListModalProps> = ({
               onClick={onClose}
               disabled={isSubmitting}
             >
-              Cancel
+              {t('editListModal.cancel')}
             </button>
             <button 
               type="submit" 
               className="btn-submit"
               disabled={isSubmitting}
             >
-              {isSubmitting ? 'Saving...' : 'Save Changes'}
+              {isSubmitting ? t('editListModal.saving') : t('editListModal.saveChanges')}
             </button>
           </div>
         </form>

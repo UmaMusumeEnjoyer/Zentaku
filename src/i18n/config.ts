@@ -27,10 +27,22 @@ import {
   ActivityHistoryEN, ActivityHistoryJP,
   EditProfileModalEN, EditProfileModalJP,
   ProfilePagePageEN, ProfilePagePageJP,
-  ActivityFeedEN, ActivityFeedJP
+  ActivityFeedEN, ActivityFeedJP,
+  addAnimeModalEN, addAnimeModalJP,
+  editListModalEN, editListModalJP,
+  likersModalEN, likersModalJP,
+  listHeaderEN, listHeaderJP,
+  requestListEN, requestListJP,
+  requestModalEN, requestModalJP,
+  sidebarEN, sidebarJP,
+  userAnimeGroupEN, userAnimeGroupJP,
+  userItemEN, userItemJP,
+  userSearchModalEN, userSearchModalJP,
+  animeListPageEN, animeListPageJP
 
 } from '@umamusumeenjoyer/shared-logic';
-import ActivityFeed from '../pages/ProfilePage/components/ActivityFeed';
+
+
 
 
 export { LANGUAGES };
@@ -66,7 +78,18 @@ i18n
         ActivityHistory: ActivityHistoryEN,
         EditProfileModal: EditProfileModalEN,
         ProfilePagePage: ProfilePagePageEN,
-        ActivityFeed: ActivityFeedEN
+        ActivityFeed: ActivityFeedEN,
+        addAnimeModal: addAnimeModalEN,
+        editListModal: editListModalEN,
+        likersModal: likersModalEN,
+        listHeader: listHeaderEN,
+        requestList: requestListEN,
+        requestModal : requestModalEN,
+        sidebar: sidebarEN,
+        userAnimeGroup: userAnimeGroupEN,
+        userItem: userItemEN,
+        userSearchModal: userSearchModalEN,
+        animeListPage: animeListPageEN
       },
       jp: {
         common: commonJp,
@@ -92,7 +115,18 @@ i18n
         ActivityHistory: ActivityHistoryJP,
         EditProfileModal: EditProfileModalJP,
         ProfilePagePage: ProfilePagePageJP,
-        ActivityFeed:ActivityFeedJP
+        ActivityFeed:ActivityFeedJP,
+        addAnimeModal: addAnimeModalJP,
+        editListModal: editListModalJP,
+        likersModal: likersModalJP,
+        listHeader: listHeaderJP,
+        requestList: requestListJP,
+        requestModal: requestModalJP,
+        sidebar: sidebarJP,
+        userAnimeGroup: userAnimeGroupJP,
+        userItem: userItemJP,
+        userSearchModal: userSearchModalJP,
+        animeListPage: animeListPageJP
       },
     },
     lng: localStorage.getItem('language') || DEFAULT_LANG,
@@ -104,6 +138,8 @@ i18n
       , 'GlobalSearch', 'Auth', 'StaffPage', 'AnimeSearch', 'AnimeSection'
       , 'HomePageLogin', 'AnimeListSearch', 'ProfilePage', 'ActivityHistory'
       , 'EditProfileModal', 'ProfilePagePage', 'ActivityFeed'
+      , 'addAnimeModal', 'editListModal', 'likersModal', 'listHeader', 'requestList', 'requestModal', 'sidebar'
+      , 'userAnimeGroup', 'userItem', 'userSearchModal', 'animeListPage'
     ],
     interpolation: {
       escapeValue: false,

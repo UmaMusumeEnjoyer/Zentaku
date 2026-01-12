@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAddAnimeModal } from '@umamusumeenjoyer/shared-logic';
 import type { AddAnimeModalProps } from '@umamusumeenjoyer/shared-logic';
 import AnimeCard from '../../../components/AnimeCard/AnimeCard';
@@ -10,6 +11,7 @@ const AddAnimeModal: React.FC<AddAnimeModalProps> = ({
   onAddAnime, 
   currentList = [] 
 }) => {
+  const { t } = useTranslation(['addAnimeModal']);
   const {
     userData,
     globalResults,
@@ -20,7 +22,7 @@ const AddAnimeModal: React.FC<AddAnimeModalProps> = ({
     handleSearchAction,
     handleInputChange,
     handleAddClick,
-    formatStatusTitle,
+    // formatStatusTitle, // Không cần dùng hàm này nữa vì đã dùng i18n
     getAnimeState,
     mapAnimeData,
   } = useAddAnimeModal(isOpen, currentList);
@@ -57,7 +59,7 @@ const AddAnimeModal: React.FC<AddAnimeModalProps> = ({
             handleAddClick(anime, onAddAnime);
           }}
           disabled={isAdding || isAdded}
-          title={isAdded ? "Already in this list" : "Add to list"}
+          title={isAdded ? t('addAnimeModal.alreadyInList') : t('addAnimeModal.addToList')}
         >
           {isAdding ? (
             <span className="material-symbols-outlined spin-icon">progress_activity</span>
@@ -88,7 +90,7 @@ const AddAnimeModal: React.FC<AddAnimeModalProps> = ({
             <input
               type="text"
               className="modal-search-input"
-              placeholder="Search anime to add..."
+              placeholder={t('addAnimeModal.searchPlaceholder')}
               value={searchTerm}
               onChange={(e) => handleInputChange(e.target.value)}
               onKeyDown={handleKeyDown}
@@ -104,14 +106,14 @@ const AddAnimeModal: React.FC<AddAnimeModalProps> = ({
           {loading ? (
             <div className="modal-loading">
               <span className="material-symbols-outlined spin-icon" style={{marginRight: '10px'}}>progress_activity</span>
-              {isGlobalSearch ? "Searching database..." : "Loading your library..."}
+              {isGlobalSearch ? t('addAnimeModal.searchingDatabase') : t('addAnimeModal.loadingLibrary')}
             </div>
           ) : (
             <>
               {isGlobalSearch ? (
                 <div className="modal-section">
                   <h3 className="section-title">
-                    Search Results
+                    {t('addAnimeModal.searchResults')}
                     <span className="count-badge">{globalResults.length}</span>
                   </h3>
                   {globalResults.length > 0 ? (
@@ -119,7 +121,9 @@ const AddAnimeModal: React.FC<AddAnimeModalProps> = ({
                       {globalResults.map(anime => renderAnimeCard(anime))}
                     </div>
                   ) : (
-                    <div className="modal-error">No results found for "{searchTerm}"</div>
+                    <div className="modal-error">
+                        {t('addAnimeModal.noResults', { searchTerm })}
+                    </div>
                   )}
                 </div>
               ) : (
@@ -133,7 +137,11 @@ const AddAnimeModal: React.FC<AddAnimeModalProps> = ({
                     return (
                       <div key={status} className="modal-section">
                         <h3 className="section-title">
-                          {formatStatusTitle(status)}
+                          {/* Sử dụng logic tương tự HomePagelogin.
+                              Giả sử biến 'status' có giá trị là: 'watching', 'planning', 'completed', 'dropped', 'onHold'
+                              Chúng ta sẽ gọi key tương ứng trong file json.
+                          */}
+                          {t(`addAnimeModal.sections.${status}`)}
                           <span className="count-badge">{normalizedItems.length}</span>
                         </h3>
 
@@ -144,7 +152,7 @@ const AddAnimeModal: React.FC<AddAnimeModalProps> = ({
                     );
                   })
                 ) : (
-                  <div className="modal-error">Could not load library data.</div>
+                  <div className="modal-error">{t('addAnimeModal.loadError')}</div>
                 )
               )}
             </>

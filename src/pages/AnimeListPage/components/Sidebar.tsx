@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next'; // Import hook
 import { useSidebar } from '@umamusumeenjoyer/shared-logic';
 import type { SidebarProps } from '@umamusumeenjoyer/shared-logic';
 import UserItem from './UserItem';
@@ -10,6 +11,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   onAddViewer, 
   onRemoveMember 
 }) => {
+  const { t } = useTranslation(['sidebar']); // Khởi tạo hook dịch
   const {
     currentUsername,
     isCurrentUserOwner,
@@ -21,9 +23,9 @@ const Sidebar: React.FC<SidebarProps> = ({
     return (
       <aside className="sidebar">
         <div className="sidebar-section">
-          <h3 className="sidebar-title">Members</h3>
+          <h3 className="sidebar-title">{t('sidebar.members')}</h3>
           <p style={{ color: '#64748b', fontSize: '0.9rem', fontStyle: 'italic' }}>
-            Loading members...
+            {t('sidebar.loading')}
           </p>
         </div>
       </aside>
@@ -37,11 +39,11 @@ const Sidebar: React.FC<SidebarProps> = ({
       {/* 1. OWNER SECTION */}
       {owner && (
         <div className="sidebar-section">
-          <h3 className="sidebar-title">Owner</h3>
+          <h3 className="sidebar-title">{t('sidebar.owner')}</h3>
           <UserItem 
             user={owner} 
             roleIcon="verified_user" 
-            iconTitle="List Owner" 
+            iconTitle={t('sidebar.ownerRole')} 
             canRemove={false}
             isCurrentUser={owner.username === currentUsername}
           />
@@ -51,9 +53,12 @@ const Sidebar: React.FC<SidebarProps> = ({
       {/* 2. EDITORS SECTION */}
       <div className="sidebar-section">
         <div className="sidebar-header">
-          <h3 className="sidebar-title">Editors ({editors.length})</h3>
+          {/* Sử dụng interpolation để hiển thị số lượng */}
+          <h3 className="sidebar-title">
+            {t('sidebar.editorsHeader', { count: editors.length })}
+          </h3>
           {isCurrentUserOwner && (
-            <button className="add-btn" onClick={onAddEditor} title="Invite new Editor">
+            <button className="add-btn" onClick={onAddEditor} title={t('sidebar.inviteEditor')}>
               <span className="material-symbols-outlined">add</span>
             </button>
           )}
@@ -65,14 +70,14 @@ const Sidebar: React.FC<SidebarProps> = ({
                 key={editor.user_id || editor.username} 
                 user={editor} 
                 roleIcon="edit" 
-                iconTitle="Can edit content"
+                iconTitle={t('sidebar.editorRole')}
                 canRemove={isCurrentUserOwner} 
                 onRemove={onRemoveMember}
                 isCurrentUser={editor.username === currentUsername}
               />
             ))
           ) : (
-            <p className="empty-text">No editors yet.</p>
+            <p className="empty-text">{t('sidebar.noEditors')}</p>
           )}
         </div>
       </div>
@@ -80,9 +85,11 @@ const Sidebar: React.FC<SidebarProps> = ({
       {/* 3. VIEWERS SECTION */}
       <div className="sidebar-section">
         <div className="sidebar-header">
-          <h3 className="sidebar-title">Viewers ({viewers.length})</h3>
+          <h3 className="sidebar-title">
+            {t('sidebar.viewersHeader', { count: viewers.length })}
+          </h3>
           {isCurrentUserOwner && (
-            <button className="add-btn" onClick={onAddViewer} title="Invite new Viewer">
+            <button className="add-btn" onClick={onAddViewer} title={t('sidebar.inviteViewer')}>
               <span className="material-symbols-outlined">add</span>
             </button>
           )}
@@ -94,14 +101,14 @@ const Sidebar: React.FC<SidebarProps> = ({
                 key={viewer.user_id || viewer.username} 
                 user={viewer} 
                 roleIcon="visibility" 
-                iconTitle="Can view only"
+                iconTitle={t('sidebar.viewerRole')}
                 canRemove={isCurrentUserOwner}
                 onRemove={onRemoveMember}
                 isCurrentUser={viewer.username === currentUsername}
               />
             ))
           ) : (
-            <p className="empty-text">No viewers yet.</p>
+            <p className="empty-text">{t('sidebar.noViewers')}</p>
           )}
         </div>
       </div>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next'; // Import hook
 import { useRequestList } from '@umamusumeenjoyer/shared-logic';
 import type { RequestListProps, ListRequest } from '@umamusumeenjoyer/shared-logic';
 import './RequestList.css';
@@ -9,6 +10,7 @@ const RequestList: React.FC<RequestListProps> = ({
   onReject, 
   currentMembers = [] 
 }) => {
+  const { t } = useTranslation(['requestList']); // Khởi tạo hook dịch
   const {
     isExpanded,
     categorizedRequests,
@@ -42,7 +44,7 @@ const RequestList: React.FC<RequestListProps> = ({
               }}
             >
               <span className="material-symbols-outlined" style={{fontSize: '16px'}}>check</span>
-              Accept
+              {t('requestList.accept')}
             </button>
           )}
           
@@ -54,7 +56,7 @@ const RequestList: React.FC<RequestListProps> = ({
             }}
           >
             <span className="material-symbols-outlined" style={{fontSize: '16px'}}>close</span>
-            Reject
+            {t('requestList.reject')}
           </button>
         </div>
       </div>
@@ -70,7 +72,7 @@ const RequestList: React.FC<RequestListProps> = ({
       <div className="request-summary" onClick={toggleExpanded}>
         <div className="summary-title">
           <span className="material-symbols-outlined" style={{color: '#facc15'}}>notifications_active</span>
-          Pending Requests
+          {t('requestList.pendingRequests')}
           <span className="badge-count">{totalCount}</span>
         </div>
         <span className={`material-symbols-outlined toggle-icon ${isExpanded ? 'expanded' : ''}`}>
@@ -86,7 +88,7 @@ const RequestList: React.FC<RequestListProps> = ({
             <div className="req-group">
               <div className="req-section-title">
                 <span className="material-symbols-outlined" style={{fontSize: '16px'}}>person_add</span>
-                Join Requests
+                {t('requestList.joinRequests')}
               </div>
               {categorizedRequests.joinRequests.map(renderRequestItem)}
             </div>
@@ -97,7 +99,7 @@ const RequestList: React.FC<RequestListProps> = ({
             <div className="req-group">
               <div className="req-section-title">
                 <span className="material-symbols-outlined" style={{fontSize: '16px'}}>edit_note</span>
-                Edit Access Requests
+                {t('requestList.editAccessRequests')}
               </div>
               {categorizedRequests.editRequests.map(renderRequestItem)}
             </div>
