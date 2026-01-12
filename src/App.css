@@ -1,36 +1,25 @@
-/* src/App.css */
-body {
-  background-color: #0B1622; /* Màu nền tối */
-  color: #c2c2c2;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  margin: 0;
-}
+/* XÓA ĐOẠN BODY Ở ĐÂY ĐI VÌ NÓ ĐÃ CÓ BÊN INDEX.CSS RỒI */
 
 .App {
-  margin: 0 auto;   /* Tự động căn giữa theo chiều ngang */
-  width: 100%;      /* Đảm bảo chiếm hết chiều rộng cho phép */
-  overflow-x: hidden; /* Ngăn chặn thanh cuộn ngang ngoài ý muốn */
+  margin: 0 auto;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 .main-content-container {
   max-width: 1400px; 
   margin-left: auto;
   margin-right: auto;
-  
-  /* Mặc định cho PC/Tablet to: Giữ nguyên 50px */
   padding-left: 50px;
   padding-right: 50px;
+  /* Nếu bạn muốn khung này có màu nền phụ, dùng biến: */
+  /* background-color: var(--clr-surface-a0); */
 }
 
-/* --- THÊM MỚI: RESPONSIVE CHO MOBILE & TABLET --- */
-/* Khi màn hình nhỏ hơn 768px (iPad dọc, điện thoại) */
 @media (max-width: 768px) {
   .main-content-container {
-    padding-left: 16px;  /* Giảm từ 50px xuống 16px để tiết kiệm chỗ */
+    padding-left: 16px;
     padding-right: 16px;
     width: 100%;
   }
 }
-

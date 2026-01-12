@@ -1,5 +1,6 @@
-/* src/components/CharactersSection.css */
-.characters-grid {
+/* src/components/MainContent/Characters_section/CharactersSection.module.css */
+
+.charactersGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
@@ -7,7 +8,7 @@
 }
 
 @media (max-width: 1024px) {
-  .characters-grid {
+  .charactersGrid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
@@ -16,8 +17,8 @@
    [RESPONSIVE] MOBILE ADJUSTMENTS
    ========================================= */
 @media (max-width: 768px) {
-  .characters-grid {
-    /* Bắt buộc 1 cột trên mobile để thẻ đủ rộng hiển thị giống hình mẫu */
+  .charactersGrid {
+    /* Bắt buộc 1 cột trên mobile */
     grid-template-columns: minmax(0, 1fr) !important; 
     gap: 12px !important;
   }

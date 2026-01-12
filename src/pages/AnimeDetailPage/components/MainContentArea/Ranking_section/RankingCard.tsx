@@ -1,9 +1,12 @@
-// src/components/RankingCard.tsx
+// src/components/MainContent/Ranking_section/RankingCard.tsx
 import React from 'react';
 import type { Ranking } from '@umamusumeenjoyer/shared-logic';
 import { useTranslation } from 'react-i18next';
-import { useTheme } from '../../../../../context/ThemeContext';
-import './RankingCard.css';
+// 1. Import CSS Module
+import styles from './RankingCard.module.css';
+
+// 2. Xóa import useTheme vì không cần thiết nữa
+// import { useTheme } from '../../../../../context/ThemeContext';
 
 interface RankingCardProps {
   ranking: Ranking;
@@ -11,9 +14,8 @@ interface RankingCardProps {
 
 const RankingCard: React.FC<RankingCardProps> = ({ ranking }) => {
   const { t } = useTranslation('RankingSection');
-  const { theme } = useTheme(); // Sử dụng theme từ context
+  // const { theme } = useTheme(); -> Đã xóa
 
-  // Chọn icon dựa trên loại xếp hạng
   const getIcon = () => {
     switch (ranking.type) {
       case 'RATED':
@@ -25,7 +27,6 @@ const RankingCard: React.FC<RankingCardProps> = ({ ranking }) => {
     }
   };
 
-  // Tạo chuỗi mô tả xếp hạng dùng Interpolation
   const getContextText = () => {
     const translatedSeason = ranking.season 
       ? t(`ranking.season.${ranking.season.toLowerCase()}`) 
@@ -40,9 +41,10 @@ const RankingCard: React.FC<RankingCardProps> = ({ ranking }) => {
   };
 
   return (
-    <div className={`ranking-card ranking-card--${theme}`}>
-      <span className="ranking-icon">{getIcon()}</span>
-      <span className="ranking-text">{getContextText()}</span>
+    // 3. Sử dụng class từ module
+    <div className={styles.rankingCard}>
+      <span className={styles.rankingIcon}>{getIcon()}</span>
+      <span className={styles.rankingText}>{getContextText()}</span>
     </div>
   );
 };

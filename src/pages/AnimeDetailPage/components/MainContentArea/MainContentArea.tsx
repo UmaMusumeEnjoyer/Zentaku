@@ -1,23 +1,23 @@
 // src/components/MainContent/MainContentArea.tsx
 import React from 'react';
-import './MainContentArea.css';
+// 1. Import CSS Module
+import styles from './MainContentArea.module.css';
 import { useAnimeStats } from '@umamusumeenjoyer/shared-logic';
-import { useTheme } from '../../../../context/ThemeContext';
-import { useTranslation } from 'react-i18next'; // Import translation hook
+// 2. Xóa import useTheme
+// import { useTheme } from '../../../../context/ThemeContext';
+import { useTranslation } from 'react-i18next';
 import type { 
   Ranking,
   StatusItem,
   ScoreItem
 } from '@umamusumeenjoyer/shared-logic';
 
-// Import sub-components
 import CharactersSection from './Characters_section/CharactersSection';
 import StaffSection from './Staffs_section/StaffSection';
 import RankingsSection from './Ranking_section/RankingsSection';
 import StatusDistribution from './Statistics_section/StatusDistribution'; 
 import ScoreDistribution from './Statistics_section/ScoreDistribution'; 
 
-// Local type definitions
 interface TrailerInfo {
   id: string;
   site: string;
@@ -44,13 +44,13 @@ interface TrailerProps {
 
 // UI Helper Components
 const Section: React.FC<SectionProps> = ({ title, children }) => (
-  <section className="content-section">
-    <h3 className="section-title">{title}</h3>
+  // 3. Sử dụng class từ module
+  <section className={styles.contentSection}>
+    <h3 className={styles.sectionTitle}>{title}</h3>
     {children}
   </section>
 );
 
-// Refactored Trailer component to support i18n
 const Trailer: React.FC<TrailerProps> = ({ trailerInfo }) => {
   const { t } = useTranslation(['MainContentArea']);
 
@@ -62,7 +62,7 @@ const Trailer: React.FC<TrailerProps> = ({ trailerInfo }) => {
   const embedUrl = `${youtubeBaseUrl}/${trailerInfo.id}`;
   
   return (
-    <div className="trailer-container">
+    <div className={styles.trailerContainer}>
       <iframe
         src={embedUrl}
         title={t('MainContentArea:trailer.iframe_title')}
@@ -76,17 +76,15 @@ const Trailer: React.FC<TrailerProps> = ({ trailerInfo }) => {
 
 // Main Component
 const MainContentArea: React.FC<MainContentAreaProps> = ({ anime }) => {
-  // Call hooks
   const { stats, loading, error } = useAnimeStats(anime.id);
-  const { theme } = useTheme();
+  // const { theme } = useTheme(); -> Đã xóa
   
-  // Initialize translation hook
   const { t } = useTranslation(['MainContentArea', 'common']);
 
   if (loading) {
     return (
-      <main className={`main-content-area ${theme}`}>
-        <div className="loading-container">
+      <main className={styles.mainContentArea}>
+        <div className={styles.loadingContainer}>
           <p>{t('common:loading_stats')}</p>
         </div>
       </main>
@@ -95,10 +93,8 @@ const MainContentArea: React.FC<MainContentAreaProps> = ({ anime }) => {
 
   if (error) {
     return (
-      <main className={`main-content-area ${theme}`}>
-        <div className="error-container">
-          {/* Assuming error message from backend is English, 
-              or you map it to a key. Here we wrap it in a generic structure. */}
+      <main className={styles.mainContentArea}>
+        <div className={styles.errorContainer}>
           <p>{t('common:error', { message: error })}</p>
         </div>
       </main>
@@ -106,9 +102,8 @@ const MainContentArea: React.FC<MainContentAreaProps> = ({ anime }) => {
   }
 
   return (
-    <main className={`main-content-area ${theme}`}>
-      {/* Section titles are now translated using t()
-      */}
+    // 4. Áp dụng style module
+    <main className={styles.mainContentArea}>
       <Section title={t('MainContentArea:sections.characters')}>
         <CharactersSection animeId={anime.id} />
       </Section>
@@ -121,7 +116,7 @@ const MainContentArea: React.FC<MainContentAreaProps> = ({ anime }) => {
         <RankingsSection rankings={(stats?.rankings as Ranking[]) || []} />
       </Section>
       
-      <div className="distribution-container">
+      <div className={styles.distributionContainer}>
         <Section title={t('MainContentArea:sections.status_distribution')}>
           <StatusDistribution distribution={(stats?.status_distribution as StatusItem[]) || []} />
         </Section>
@@ -137,4 +132,4 @@ const MainContentArea: React.FC<MainContentAreaProps> = ({ anime }) => {
   );
 };
 
-export default MainContentArea;
+export default MainContentArea; 

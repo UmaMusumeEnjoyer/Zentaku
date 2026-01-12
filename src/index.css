@@ -1,23 +1,30 @@
 @import url('https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300..700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
 
-/* --- THÊM MỚI: QUAN TRỌNG CHO RESPONSIVE --- */
 *, *::before, *::after {
-  box-sizing: border-box; /* Giúp padding không làm phình to kích thước phần tử */
+  box-sizing: border-box;
 }
 
 img, video, iframe {
-  max-width: 100%; /* Đảm bảo media không bao giờ tràn màn hình */
-  height: auto;    /* Giữ tỉ lệ khung hình */
+  max-width: 100%;
+  height: auto;
   display: block;
 }
-/* -------------------------------------------- */
 
+/* --- CẤU HÌNH MÀU SẮC CHÍNH TẠI ĐÂY --- */
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
+  
+  /* QUAN TRỌNG: Sử dụng biến từ theme.css */
+  background-color: var(--app-bg); 
+  color: var(--app-text);
+  
+  /* Giúp chuyển màu mượt mà */
+  transition: background-color 0.3s, color 0.3s;
+  
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -26,4 +33,3 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
-

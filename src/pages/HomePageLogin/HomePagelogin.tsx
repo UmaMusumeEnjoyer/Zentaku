@@ -1,36 +1,37 @@
-import React, { useEffect } from 'react';
+import React from 'react'; // Xóa useEffect nếu không dùng
 import AnimeSection from './components/AnimeSection'; 
 import { useHomePagelogin } from '@umamusumeenjoyer/shared-logic';
-import { useTheme } from '../../context/ThemeContext';
+// 1. Xóa import useTheme
+// import { useTheme } from '../../context/ThemeContext';
 import { useTranslation } from 'react-i18next';
-import './HomePagelogin.css';
+
+// 2. Import CSS Module
+import styles from './HomePagelogin.module.css';
 
 const HomePagelogin: React.FC = () => {
-  const { theme } = useTheme();
+  // const { theme } = useTheme(); -> Đã xóa
   const { t, i18n } = useTranslation(['HomePageLogin']);
   const { animeLists, loading, allListsAreEmpty } = useHomePagelogin();
 
-  // Dùng i18n.language để force re-render
   const currentLanguage = i18n.language;
-
-  // Debug: Kiểm tra ngôn ngữ và translation
-
 
   if (loading) {
     return (
-      <div className="loading-container" data-theme={theme}>
+      // 3. Xóa prop data-theme và dùng styles module
+      <div className={styles['loading-container']}>
         <h2>{t('HomePageLogin:loading.message')}</h2>
       </div>
     );
   }
 
   return (
-    <div className="homepage-login-wrapper" data-theme={theme}>
-      <div className="main-content-container">
-        <main className="main-content">
+    // 4. Áp dụng styles module cho wrapper
+    <div className={styles['homepage-login-wrapper']}>
+      <div className={styles['main-content-container']}>
+        <main className={styles['main-content']}>
           
           {allListsAreEmpty ? (
-            <div className="empty-state">
+            <div className={styles['empty-state']}>
               <h2>{t('HomePageLogin:emptyState.title')}</h2>
               <p>
                 {t('HomePageLogin:emptyState.description')} <br />

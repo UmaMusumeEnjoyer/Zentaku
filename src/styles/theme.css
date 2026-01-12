@@ -1,0 +1,175 @@
+/* src/styles/theme.css */
+
+/* ========================================================================
+   LAYER 1: PRIMITIVE COLORS (ĐỊNH NGHĨA MÃ MÀU GỐC)
+   Đây là nơi chứa bảng màu thô. Khi đổi Theme, giá trị các biến này sẽ tự thay đổi.
+   ======================================================================== */
+
+/* --- 1.1 DEFAULT THEME (LIGHT MODE) --- */
+:root {
+  /* Base colors */
+  --clr-dark-a0: #000000;
+  --clr-light-a0: #ffffff;
+
+  /* Theme primary colors (Màu xanh dương đậm của Light Mode) */
+  --clr-primary-a0: #2b76d9;
+  --clr-primary-a10: #2b68be;
+  --clr-primary-a20: #295ba4;
+  --clr-primary-a30: #274e8b;
+  --clr-primary-a40: #244173;
+  --clr-primary-a50: #20355b;
+
+  /* Theme surface colors (Nền trắng/xám sáng) */
+  --clr-surface-a0: #ffffff; /* Trắng tinh */
+  --clr-surface-a10: #f0f0f0;
+  --clr-surface-a20: #e1e1e1;
+  --clr-surface-a30: #d3d3d3;
+  --clr-surface-a40: #c5c5c5;
+  --clr-surface-a50: #b6b6b6;
+
+  /* Theme tonal surface colors (Card/Panel tones) */
+  --clr-surface-tonal-a0: #edf0fc;
+  --clr-surface-tonal-a10: #e0e3ee;
+  --clr-surface-tonal-a20: #d4d6df;
+  --clr-surface-tonal-a30: #c7c9d1;
+  --clr-surface-tonal-a40: #bbbdc3;
+  --clr-surface-tonal-a50: #afb0b5;
+
+  /* Status Colors */
+  --clr-success-a0: #1b7f5c; --clr-success-a10: #28be8a; --clr-success-a20: #58dbad;
+  --clr-warning-a0: #b8871f; --clr-warning-a10: #dfae44; --clr-warning-a20: #ebca85;
+  --clr-danger-a0: #b13535; --clr-danger-a10: #d06262; --clr-danger-a20: #e29d9d;
+  --clr-info-a0: #1e56a3;    --clr-info-a10: #347ada;    --clr-info-a20: #74a4e6;
+
+  --glass-bg: rgba(255, 255, 255, 0.75);
+  --glass-border: rgba(255, 255, 255, 0.4);
+}
+
+/* --- 1.2 DARK MODE OVERRIDES (Ghi đè giá trị khi bật Dark Mode) --- */
+[data-theme='dark'] {
+  /* Theme primary colors (Màu xanh sáng hơn để nổi trên nền tối) */
+  --clr-primary-a0: #0084ff;
+  --clr-primary-a10: #4a91ff;
+  --clr-primary-a20: #6b9dff;
+  --clr-primary-a30: #85abff;
+  --clr-primary-a40: #9cb8ff;
+  --clr-primary-a50: #b2c6ff;
+
+  /* Theme surface colors (Nền tối) */
+  --clr-surface-a0: #202225; /* Đen xám (Nền chính) */
+  --clr-surface-a10: #353739;
+  --clr-surface-a20: #292b2f;
+  --clr-surface-a30: #626366;
+  --clr-surface-a40: #7a7b7e;
+  --clr-surface-a50: #939496;
+
+  /* Theme tonal surface colors */
+  --clr-surface-tonal-a0: #252b38;
+  --clr-surface-tonal-a10: #3a3f4b;
+  --clr-surface-tonal-a20: #505460;
+  --clr-surface-tonal-a30: #666a75;
+  --clr-surface-tonal-a40: #7e828a;
+  --clr-surface-tonal-a50: #9799a0;
+  
+  /* Status Colors (Giữ nguyên hoặc chỉnh sáng hơn nếu cần) */
+  --clr-success-a0: #22946e; --clr-success-a10: #47d5a6; --clr-success-a20: #9ae8ce;
+  --clr-warning-a0: #a87a2a; --clr-warning-a10: #d7ac61; --clr-warning-a20: #ecd7b2;
+  --clr-danger-a0: #9c2121;  --clr-danger-a10: #d94a4a;  --clr-danger-a20: #eb9e9e;
+  --clr-info-a0: #21498a;    --clr-info-a10: #4077d1;    --clr-info-a20: #92b2e5;
+
+  --glass-bg: rgba(26, 32, 44, 0.75);
+  --glass-border: rgba(255, 255, 255, 0.1);
+}
+
+/* ========================================================================
+   LAYER 2: SEMANTIC TOKENS (ĐỊNH NGHĨA THEO CHỨC NĂNG)
+   HÃY DÙNG CÁC BIẾN DƯỚI ĐÂY TRONG FILE COMPONENT CỦA BẠN
+   ======================================================================== */
+
+:root {
+  /* ------------------------------------------------------------
+     [A] BACKGROUNDS - MÀU NỀN
+     Dùng cho: body, thẻ div bao ngoài, card, sidebar
+     ------------------------------------------------------------ */
+  
+  /* Nền chính của toàn bộ trang Web (Body) */
+  --bg-app: var(--clr-surface-a0);
+
+  /* Nền của các khối nội dung nổi (Card, Sidebar, Modal) */
+  --bg-panel: var(--clr-surface-a20);
+
+  /* Nền khi hover vào một item (ví dụ item trong danh sách) */
+  --bg-hover: var(--clr-surface-a30);
+
+  /* Nền phụ, dùng cho các khối trích dẫn hoặc code block */
+  --bg-subtle: var(--clr-surface-tonal-a10);
+
+
+  /* ------------------------------------------------------------
+     [B] TYPOGRAPHY - MÀU CHỮ
+     Dùng cho: h1, h2, p, span, i
+     ------------------------------------------------------------ */
+  
+  /* Màu chữ chính (Tiêu đề, nội dung quan trọng) 
+     - Light mode: Đen (#000000)
+     - Dark mode: Trắng (#ffffff) */
+  /* Lưu ý: Ta dùng biến logic đảo ngược ở đây */
+  --text-primary: var(--clr-dark-a0); 
+  
+  /* Màu chữ phụ (Mô tả, ngày tháng) - Dùng màu xám trung tính */
+  --text-secondary: var(--clr-surface-tonal-a50);
+  
+  /* Màu chữ bị disable hoặc rất mờ */
+  --text-disabled: var(--clr-surface-a50);
+
+  /* Màu chữ hiển thị trên nền nút Primary (Thường là trắng) */
+  --text-on-primary: var(--clr-light-a0);
+
+
+  /* ------------------------------------------------------------
+     [C] COMPONENTS & BUTTONS - NÚT BẤM VÀ TƯƠNG TÁC
+     Dùng cho: button, input border, link
+     ------------------------------------------------------------ */
+
+  /* --- Primary Button (Nút chính màu xanh) --- */
+  --btn-primary-bg: var(--clr-primary-a0);
+  --btn-primary-bg-hover: var(--clr-primary-a10);
+  --btn-primary-text: var(--clr-light-a0);
+
+  /* --- Borders (Đường viền) --- */
+  --border-subtle: var(--clr-surface-a20); /* Viền mờ cho card */
+  --border-focus: var(--clr-primary-a0);   /* Viền khi click vào input */
+
+  /* --- Feedback (Thông báo) --- */
+  --status-success: var(--clr-success-a10);
+  --status-error: var(--clr-danger-a10);
+  --status-warning: var(--clr-warning-a10);
+}
+
+/* Override riêng cho Typography trong Dark Mode 
+   (Vì màu chữ phải đảo ngược: Nền đen thì chữ trắng) */
+[data-theme='dark'] {
+  --text-primary: var(--clr-light-a0); /* Chữ thành màu trắng */
+  --text-secondary: var(--clr-surface-tonal-a40); /* Giữ nguyên hoặc chỉnh sáng hơn */
+}
+
+
+/* ========================================================================
+   LAYER 3: GLOBAL BASE STYLES
+   ======================================================================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  /* Kích hoạt màu sắc Semantic */
+  background-color: var(--bg-app);
+  color: var(--text-primary);
+  
+  /* Hiệu ứng chuyển mượt khi toggle */
+  transition: background-color 0.3s ease, color 0.3s ease;
+  
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}

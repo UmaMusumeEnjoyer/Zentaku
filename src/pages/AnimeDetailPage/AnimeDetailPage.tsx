@@ -2,27 +2,26 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useAnimeDetail } from '@umamusumeenjoyer/shared-logic';
-import { useTheme } from '../../context/ThemeContext';
-import './AnimeDetailPage.css';
+// 1. Xóa import useTheme
+// import { useTheme } from '../../context/ThemeContext';
 
-// Import các component con (Đường dẫn tùy thuộc vào cấu trúc thư mục của bạn)
+// 2. Import CSS Modules
+import styles from './AnimeDetailPage.module.css';
+
 import SummarySection from './components/MainContentArea/Summary_section/SummarySection';
 import InfoSidebar from './components/InfoSidebar/InfoSidebar';
 import MainContentArea from './components/MainContentArea/MainContentArea';
 
 const AnimeDetailPage: React.FC = () => {
-  // 1. Lấy animeId từ URL params
   const { id } = useParams<{ id: string }>();
   
-  // 2. Gọi hook để lấy dữ liệu và trạng thái
+  // 3. Xóa destructuring theme
   const { anime, loading, error, hasBanner } = useAnimeDetail(id);
-  const { theme } = useTheme();
 
-  // 2. Xử lý các trạng thái Loading / Error
   if (loading) {
     return (
-      <div className={`anime-detail-page-loading ${theme}`}>
-        {/* Bạn có thể thay bằng component LoadingSpinner đẹp hơn */}
+      // Áp dụng class từ module và biến CSS toàn cục (đã define trong css)
+      <div className={`${styles.pageWrapper} ${styles.loadingState}`}>
         Loading...
       </div>
     );
@@ -30,34 +29,33 @@ const AnimeDetailPage: React.FC = () => {
 
   if (error || !anime) {
     return (
-      <div className={`anime-detail-page-error ${theme}`}>
+      <div className={`${styles.pageWrapper} ${styles.errorState}`}>
         {error || "Anime not found"}
       </div>
     );
   }
 
-  // 3. Render UI chính
   return (
-    <div className={`anime-detail-page ${theme}`}>
-      {/* CHỈ RENDER BANNER KHI CÓ DỮ LIỆU (Logic đã được tính trong hook) */}
+    // 4. Áp dụng styles.pageWrapper để lấy màu nền var(--bg-app)
+    <div className={styles.pageWrapper}>
+      
       {hasBanner && (
         <div 
-          className="banner-image" 
+          className={styles.bannerImage} 
           style={{ backgroundImage: `url(${anime.banner_image})` }}
         ></div>
       )}
 
-      <div className="main-content-container">
-        <div className="content-wrapper">
+      <div className={styles.mainContentContainer}>
+        <div className={styles.contentWrapper}>
           
-          {/* Summary Section: Phần header thông tin chính */}
           <SummarySection anime={anime as any} hasBanner={hasBanner} />
           
-          <div className="detail-body-grid">
-            {/* Cột trái: Thông tin chi tiết (Info Sidebar) */}
+          <div className={styles.gridContainer}>
+            {/* Cột trái */}
             <InfoSidebar anime={anime as any} />
             
-            {/* Cột phải: Nội dung chính (Characters, Staff, Stats...) */}
+            {/* Cột phải */}
             <MainContentArea anime={anime as any} />
           </div>
           

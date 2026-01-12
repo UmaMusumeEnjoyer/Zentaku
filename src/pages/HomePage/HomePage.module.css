@@ -1,0 +1,568 @@
+/* src/pages/HomePage/HomePage.module.css */
+
+/* Wrapper chính cho cả trang */
+.homePage {
+  width: 100%;
+  min-height: 100vh;
+  /* REFACTOR: Sử dụng biến nền chính */
+  background-color: var(--bg-app);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Loading State */
+.loadingState {
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+  min-height: 100vh;
+  color: var(--text-primary); 
+  font-size: 1.5rem;
+  background-color: var(--bg-app);
+}
+
+/* Typography Global Reset for this module */
+.homePage h1, 
+.homePage h2, 
+.homePage h3, 
+.homePage h4 {
+  margin-top: 0;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.homePage h2 {
+  font-size: 2.5rem;
+  text-align: center;
+  margin-bottom: 2.5rem;
+  font-weight: 700;
+}
+
+.sectionPadding {
+  padding: 4rem 5%;
+}
+
+/* =========================================
+   PHẦN 1: HERO SECTION
+   ========================================= */
+.heroSection {
+    /* REFACTOR: Sử dụng bg-subtle để làm nổi bật so với nền app */
+    background-color: var(--bg-subtle);
+    padding: 6rem 5%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 3rem;
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.heroContent {
+    flex: 1;
+    min-width: 400px;
+    max-width: 600px;
+    color: var(--text-primary);
+}
+
+.heroContent h1 {
+    font-size: 3.8rem;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+}
+
+.heroContent p {
+    font-size: 1.3rem;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+.heroImage {
+    flex: 1;
+    min-width: 300px;
+    text-align: right;
+}
+
+.heroImage img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* =========================================
+   PHẦN 2: FEATURES SECTION
+   ========================================= */
+.featuresSection {
+    /* REFACTOR: Sử dụng bg-panel để tạo khối khác biệt */
+    background-color: var(--bg-panel);
+    padding: 5rem 5%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4rem;
+}
+
+.featuresTextContent {
+    flex: 1;
+    min-width: 350px;
+    max-width: 550px;
+    color: var(--text-primary);
+}
+
+.featuresLabel {
+    display: inline-block;
+    /* REFACTOR: Dùng bg-subtle cho label */
+    background-color: var(--bg-subtle);
+    color: var(--text-primary);
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+    border: 1px solid var(--border-subtle);
+}
+
+.featuresTextContent h2 {
+    text-align: left;
+    font-size: 2.8rem;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 1.5rem;
+    color: var(--text-primary);
+}
+
+.featuresIntro {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 3rem;
+}
+
+.featureItem {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 2.5rem;
+    gap: 1.5rem;
+}
+
+.featureIcon {
+    font-size: 1.8rem;
+    /* Brand color (Success Green) - Giữ nguyên Hex hoặc dùng biến Brand */
+    color: #28a745; 
+    background-color: var(--bg-subtle);
+    padding: 0.8rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    flex-shrink: 0;
+    border: 1px solid var(--border-subtle);
+}
+
+.featureDetails h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+}
+
+.featureDetails p {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+.featuresImage {
+    flex: 1;
+    min-width: 300px;
+    text-align: center;
+}
+
+.featuresImage img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* =========================================
+   PHẦN 3: VIDEO SECTION
+   ========================================= */
+.videoSection {
+  position: relative;
+  width: 100%;
+  height: 76vh;
+  min-height: 80vh; 
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0; 
+}
+
+.videoBackground {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: cover;
+  z-index: 1;
+}
+
+.videoOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* Giữ nguyên overlay tối để đảm bảo độ tương phản cho video */
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 2;
+}
+
+.contentContainer {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 5%;
+  box-sizing: border-box;
+}
+
+.textContainer {
+  max-width: 50%;
+}
+
+.textContainer h3 {
+  font-size: 3rem;
+  /* Luôn là màu trắng vì nằm trên overlay tối của video */
+  color: #ffffff; 
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.textContainer p {
+  font-size: 1.2rem;
+  color: #e2e8f0; /* Màu xám sáng cho text trên nền tối */
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.signUpButton {
+  /* REFACTOR: Button Primary variables */
+  background-color: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: bold;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.signUpButton:hover {
+  filter: brightness(1.1);
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* =========================================
+   PHẦN 4: TRENDING SECTION
+   ========================================= */
+.trendingSection {
+  background-color: var(--bg-subtle);
+  border-top: 1px solid var(--border-subtle);
+  padding: 4rem 5%;
+}
+
+.animeGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+.animeCard {
+  /* REFACTOR: Panel background */
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  text-decoration: none;
+  color: var(--text-primary);
+}
+
+@media (hover: hover) {
+  .animeCard:hover {
+    transform: translateY(-10px);
+    /* REFACTOR: Hover background */
+    background-color: var(--bg-subtle);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  }
+}
+
+.animeCard img {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+}
+
+.cardContent {
+  padding: 1.5rem;
+}
+
+.cardContent h3 {
+  font-size: 1.4rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.cardContent p {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.cardButton {
+  display: inline-block;
+  margin-top: 1rem;
+  font-weight: bold;
+  color: var(--btn-primary-bg); /* Dùng màu brand cho text link */
+  transition: color 0.3s;
+}
+
+.animeCard:hover .cardButton {
+  filter: brightness(1.2);
+}
+
+/* =========================================
+   PHẦN 5: GENRE SECTION
+   ========================================= */
+.genreSection {
+  background-color: var(--bg-app);
+  padding: 4rem 5%;
+}
+
+.genreChips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.genreChip {
+  padding: 0.75rem 1.75rem;
+  /* REFACTOR: Chip dùng nền subtle */
+  background: var(--bg-subtle);
+  color: var(--text-primary);
+  border: 1px solid var(--border-subtle);
+  text-decoration: none;
+  border-radius: 50px;
+  font-weight: 500;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.genreChip:hover {
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  transform: scale(1.1);
+  border-color: var(--btn-primary-bg);
+}
+
+/* =========================================
+   PHẦN 6: LATEST NEWS SECTION
+   ========================================= */
+.latestNewsSection {
+  background-color: var(--bg-subtle);
+  padding: 4rem 5%;
+}
+
+.newsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+}
+
+.newsArticle {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.newsArticle img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+}
+
+.newsContent {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.newsContent h4 {
+  font-size: 1.3rem;
+  margin-bottom: 0.75rem;
+  color: var(--text-primary);
+}
+
+.newsContent p {
+  color: var(--text-secondary);
+  line-height: 1.5;
+  flex-grow: 1;
+}
+
+.readMoreLink {
+  color: var(--btn-primary-bg);
+  text-decoration: none;
+  font-weight: bold;
+  align-self: flex-start;
+  margin-top: 1rem;
+}
+
+.readMoreLink:hover {
+  text-decoration: underline;
+}
+
+/* =========================================
+   FOOTER
+   ========================================= */
+.footer {
+  padding: 2.5rem 5%;
+  background: var(--bg-panel);
+  text-align: center;
+  color: var(--text-secondary);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.footerLinks {
+  margin-bottom: 1rem;
+}
+
+.footerLinks a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  margin: 0 1rem;
+  transition: color 0.3s;
+}
+
+.footerLinks a:hover {
+  color: var(--btn-primary-bg);
+}
+
+.footer p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+/* =========================================
+   RESPONSIVE ADJUSTMENTS
+   ========================================= */
+@media (max-width: 992px) {
+    .heroSection {
+        flex-direction: column;
+        text-align: center;
+    }
+    .heroContent {
+        max-width: 100%;
+        min-width: auto;
+    }
+    .heroImage {
+        order: -1; 
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+    
+    .featuresSection {
+        flex-direction: column;
+        text-align: center;
+    }
+    .featuresTextContent h2 {
+        text-align: center;
+    }
+    .featureItem {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .contentContainer {
+        flex-direction: column;
+        text-align: center;
+        justify-content: center;
+        gap: 20px;
+    }
+    .textContainer {
+        max-width: 100%;
+    }
+    .textContainer h3 {
+        font-size: 2.2rem;
+    }
+    .signUpButton {
+        width: 100%;
+        padding: 12px;
+        text-align: center;
+    }
+
+    .animeGrid {
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 12px;
+    }
+    
+    .animeCard img {
+        height: 220px;
+    }
+    
+    .cardContent {
+        padding: 10px;
+    }
+    .cardContent h3 {
+        font-size: 1rem;
+    }
+    .cardContent p {
+        display: none; 
+    }
+    
+    .videoSection {
+        height: auto; 
+        padding-bottom: 40px;
+    }
+
+    .heroContent h1 {
+        font-size: 2.5rem;
+    }
+    .featuresTextContent h2 {
+        font-size: 2.2rem;
+    }
+    
+    .featuresTextContent, .featuresImage, .heroImage {
+        min-width: 100%;
+    }
+}

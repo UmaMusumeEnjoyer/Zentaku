@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { initSharedLogic } from '@umamusumeenjoyer/shared-logic';
 import './App.css';
 import './i18n/config'; // Import i18n configuration
-import { ThemeProvider } from './context/ThemeContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Header from './components/Header/Header';
 import HomePage from './pages/HomePage/HomePage';
@@ -66,7 +65,6 @@ function App() {
   }, []);
 
   return (
-    <ThemeProvider>
       <Router>
         <AuthProvider>
           <Header />
@@ -87,7 +85,6 @@ function App() {
           </main>
         </AuthProvider>
       </Router>
-    </ThemeProvider>
   );
 }
 

@@ -1,0 +1,90 @@
+/* src/components/MainContent/Staffs_section/StaffCard.module.css */
+
+.staffCard {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  
+  /* REFACTOR: Sử dụng biến nền panel */
+  background-color: var(--bg-panel);
+  border-radius: 6px;
+  height: 80px;
+  overflow: hidden;
+  padding-right: 15px; 
+  
+  /* REFACTOR: Thêm viền để đồng bộ */
+  border: 1px solid var(--border-subtle);
+  
+  transition: background-color 0.3s ease;
+}
+
+.staffAvatar {
+  width: 55px;
+  height: 100%;
+  object-fit: cover;
+  flex-shrink: 0; 
+}
+
+.noImagePlaceholder {
+  flex-shrink: 0;
+  width: 55px;
+  height: 100%;
+  
+  /* REFACTOR: Sử dụng màu nền phụ */
+  background-color: var(--bg-subtle);
+  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  /* REFACTOR: Màu chữ phụ */
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+.staffDetails {
+  padding: 5px 0;
+  flex: 1;      
+  min-width: 0; 
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.staffName {
+  /* REFACTOR: Màu chữ chính */
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin: 0 0 4px 0;
+  
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.staffRole {
+  /* REFACTOR: Màu chữ phụ */
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  margin: 0;
+  
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* =========================================
+   [RESPONSIVE] MOBILE ADJUSTMENTS
+   ========================================= */
+
+@media (max-width: 768px) {
+  .staffCard {
+    gap: 12px;
+  }
+  
+  .staffName {
+    font-size: 0.95rem; 
+  }
+}

@@ -3,25 +3,18 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useHomeLogic } from '@umamusumeenjoyer/shared-logic';
 import { useTranslation } from 'react-i18next';
-import './HomePage.css';
+// 1. Import CSS Module
+import styles from './HomePage.module.css';
 
 const HomePage: React.FC = () => {
-  // Sử dụng custom hook từ shared-logic
   const { trendingAnime, genres, latestNews, isLoading } = useHomeLogic();
   const { t } = useTranslation(['HomePage', 'common']);
 
-  // Hiển thị loading state
   if (isLoading) {
     return (
-      <div className="homePage">
-        <div style={{ 
-          display: 'flex', 
-          justifyContent: 'center', 
-          alignItems: 'center', 
-          minHeight: '100vh',
-          color: '#fff',
-          fontSize: '1.5rem'
-        }}>
+      // 2. Sử dụng class loading từ module
+      <div className={styles.homePage}>
+        <div className={styles.loadingState}>
           {t('common:loading')}
         </div>
       </div>
@@ -29,56 +22,56 @@ const HomePage: React.FC = () => {
   }
 
   return (
-    <div className="homePage">
+    // 3. Áp dụng styles module cho toàn bộ trang
+    <div className={styles.homePage}>
 
-
-      {/* --- PHẦN MỚI 1: Hero Section (Giống như ảnh bạn cung cấp) --- */}
-      <section className="heroSection">
-        <div className="heroContent">
+      {/* --- PHẦN 1: Hero Section --- */}
+      <section className={styles.heroSection}>
+        <div className={styles.heroContent}>
           <h1 dangerouslySetInnerHTML={{ __html: t('HomePage:hero.title') }}></h1>
           <p>{t('HomePage:hero.subtitle')}</p>
         </div>
-        <div className="heroImage">
+        <div className={styles.heroImage}>
           <img src="/images/dashboard.png" alt="Dashboard statistics" />
         </div>
       </section>
 
-      {/* --- PHẦN MỚI 3: Features Section --- */}
-      <section className="featuresSection">
-        <div className="featuresTextContent">
-          <span className="featuresLabel">{t('HomePage:features.label')}</span>
+      {/* --- PHẦN 2: Features Section --- */}
+      <section className={styles.featuresSection}>
+        <div className={styles.featuresTextContent}>
+          <span className={styles.featuresLabel}>{t('HomePage:features.label')}</span>
           <h2 dangerouslySetInnerHTML={{ __html: t('HomePage:features.title') }}></h2>
-          <p className="featuresIntro">{t('HomePage:features.intro')}</p>
+          <p className={styles.featuresIntro}>{t('HomePage:features.intro')}</p>
 
-          <div className="featureItem">
-            <div className="featureIcon">
+          <div className={styles.featureItem}>
+            <div className={styles.featureIcon}>
               <i className="fas fa-shield-alt"></i>
             </div>
-            <div className="featureDetails">
+            <div className={styles.featureDetails}>
               <h3>{t('HomePage:features.exploration.title')}</h3>
               <p>{t('HomePage:features.exploration.desc')}</p>
             </div>
           </div>
 
-          <div className="featureItem">
-            <div className="featureIcon">
+          <div className={styles.featureItem}>
+            <div className={styles.featureIcon}>
               <i className="fas fa-chart-line"></i>
             </div>
-            <div className="featureDetails">
+            <div className={styles.featureDetails}>
               <h3>{t('HomePage:features.analytics.title')}</h3>
               <p>{t('HomePage:features.analytics.desc')}</p>
             </div>
           </div>
         </div>
-        <div className="featuresImage">
+        <div className={styles.featuresImage}>
           <img src="/images/laptop-dashboard.png" alt="Laptop showing data analytics" />
         </div>
       </section>
 
-      {/* --- PHẦN 1 CŨ: Video Call-to-Action --- */}
-      <section className="videoSection">
+      {/* --- PHẦN 3: Video Call-to-Action --- */}
+      <section className={styles.videoSection}>
         <video
-          className="videoBackground"
+          className={styles.videoBackground}
           autoPlay
           loop
           muted
@@ -87,58 +80,58 @@ const HomePage: React.FC = () => {
           <source src="/videos/phainonH264.mp4" type="video/mp4" />
           {t('common:video_unsupported')}
         </video>
-        <div className="videoOverlay"></div>
-        <div className="contentContainer">
-          <div className="textContainer">
+        <div className={styles.videoOverlay}></div>
+        <div className={styles.contentContainer}>
+          <div className={styles.textContainer}>
             <h3>{t('HomePage:community_cta.title')}</h3>
             <p>{t('HomePage:community_cta.desc')}</p>
           </div>
           <div>
-            <Link to="/signup" className="signUpButton">{t('common:buttons.sign_up')}</Link>
+            <Link to="/signup" className={styles.signUpButton}>{t('common:buttons.sign_up')}</Link>
           </div>
         </div>
       </section>
 
-      {/* --- PHẦN 2: Trending Now Section --- */}
-      <section className="trendingSection">
+      {/* --- PHẦN 4: Trending Now Section --- */}
+      <section className={styles.trendingSection}>
         <h2>{t('HomePage:sections.popular')}</h2>
-        <div className="animeGrid">
+        <div className={styles.animeGrid}>
           {trendingAnime.map(anime => (
-            <Link to={`/anime/${anime.id}`} key={anime.id} className="animeCard">
+            <Link to={`/anime/${anime.id}`} key={anime.id} className={styles.animeCard}>
               <img src={anime.img} alt={anime.title} />
-              <div className="cardContent">
+              <div className={styles.cardContent}>
                 <h3>{anime.title}</h3>
                 <p>{anime.desc}</p>
-                <span className="cardButton">{t('common:buttons.learn_more')}</span>
+                <span className={styles.cardButton}>{t('common:buttons.learn_more')}</span>
               </div>
             </Link>
           ))}
         </div>
       </section>
 
-      {/* --- PHẦN 3: Explore by Genre Section --- */}
-      <section className="genreSection">
+      {/* --- PHẦN 5: Explore by Genre Section --- */}
+      <section className={styles.genreSection}>
         <h2>{t('HomePage:sections.genres')}</h2>
-        <div className="genreChips">
+        <div className={styles.genreChips}>
           {genres.map(genre => (
-            <Link to={`/genre/${genre.toLowerCase()}`} key={genre} className="genreChip">
+            <Link to={`/genre/${genre.toLowerCase()}`} key={genre} className={styles.genreChip}>
               {genre}
             </Link>
           ))}
         </div>
       </section>
 
-      {/* --- PHẦN 4: Latest News Section --- */}
-      <section className="latestNewsSection">
+      {/* --- PHẦN 6: Latest News Section --- */}
+      <section className={styles.latestNewsSection}>
         <h2>{t('HomePage:sections.latest_news')}</h2>
-        <div className="newsGrid">
+        <div className={styles.newsGrid}>
           {latestNews.map(news => (
-            <article key={news.id} className="newsArticle">
+            <article key={news.id} className={styles.newsArticle}>
               <img src={news.img} alt={news.title} />
-              <div className="newsContent">
+              <div className={styles.newsContent}>
                 <h4>{news.title}</h4>
                 <p>{news.snippet}</p>
-                <Link to={`/news/${news.id}`} className="readMoreLink">
+                <Link to={`/news/${news.id}`} className={styles.readMoreLink}>
                   {t('common:buttons.read_more')} &rarr;
                 </Link>
               </div>
@@ -147,9 +140,9 @@ const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* --- PHẦN 5: Footer --- */}
-      <footer className="footer">
-        <div className="footerLinks">
+      {/* --- PHẦN 7: Footer --- */}
+      <footer className={styles.footer}>
+        <div className={styles.footerLinks}>
           <Link to="/about">{t('common:footer.about_us')}</Link>
           <Link to="/contact">{t('common:footer.contact')}</Link>
           <Link to="/privacy">{t('common:footer.privacy_policy')}</Link>

@@ -1,5 +1,6 @@
-/* src/components/StaffSection.css */
-.staff-grid {
+/* src/components/MainContent/Staffs_section/StaffSection.module.css */
+
+.staffGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr); /* Tạo layout 3 cột */
   gap: 20px;
@@ -7,14 +8,14 @@
 
 /* Responsive */
 @media (max-width: 1024px) {
-  .staff-grid {
+  .staffGrid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 768px) {
-  .staff-grid {
+  .staffGrid {
     grid-template-columns: 1fr;
-    gap: 12px; /* [TỐI ƯU] Giảm khoảng cách để danh sách gọn hơn trên mobile */
+    gap: 12px; /* Giảm khoảng cách để danh sách gọn hơn trên mobile */
   }
 }

@@ -1,31 +1,32 @@
-// src/components/Staff/StaffCard.tsx
+// src/components/MainContent/Staffs_section/StaffCard.tsx
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import type { StaffCardProps } from '@umamusumeenjoyer/shared-logic'; // Import types
-import './StaffCard.css';
+import type { StaffCardProps } from '@umamusumeenjoyer/shared-logic'; 
+// 1. Import CSS Module
+import styles from './StaffCard.module.css';
 
 const StaffCard: React.FC<StaffCardProps> = ({ staffMember }) => {
   const { t } = useTranslation(['StaffSection', 'common']);
 
-  // Logic hiển thị (View Logic)
   const hasDefaultImage = staffMember.image?.includes('default.jpg');
   
   return (
-    <div className="staff-card">
+    // 2. Sử dụng class từ module
+    <div className={styles.staffCard}>
       {hasDefaultImage ? (
-        <div className="no-image-placeholder">
+        <div className={styles.noImagePlaceholder}>
           <span>{t('common:staff.no_image')}</span>
         </div>
       ) : (
         <img 
           src={staffMember.image} 
           alt={staffMember.name_full} 
-          className="staff-avatar" 
+          className={styles.staffAvatar} 
         />
       )}
-      <div className="staff-details">
-        <p className="staff-name">{staffMember.name_full}</p>
-        <p className="staff-role">{staffMember.role}</p>
+      <div className={styles.staffDetails}>
+        <p className={styles.staffName}>{staffMember.name_full}</p>
+        <p className={styles.staffRole}>{staffMember.role}</p>
       </div>
     </div>
   );

@@ -1,0 +1,89 @@
+/* src/components/MainContent/MainContentArea.module.css */
+
+.mainContentArea {
+  flex: 1;
+  min-width: 0;
+  /* Đảm bảo text hiển thị đúng màu theo theme */
+  color: var(--text-primary);
+}
+
+.contentSection {
+  /* Định nghĩa style cơ bản cho section nếu cần */
+  margin-bottom: 20px;
+}
+
+.sectionTitle {
+  /* REFACTOR: Sử dụng biến màu chữ chính */
+  color: var(--text-primary);
+  font-size: 1.2rem;
+  margin: 0 0 15px 0;
+  
+  /* REFACTOR: Sử dụng biến viền */
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 10px;
+  transition: color 0.3s ease, border-color 0.3s ease;
+}
+
+/* --- Trailer Styles --- */
+.trailerContainer {
+  position: relative;
+  padding-bottom: 56.25%; /* Tỷ lệ 16:9 */
+  height: 0;
+  overflow: hidden;
+  border-radius: 8px;
+  background-color: #000; /* Giữ màu đen cho khung video */
+}
+
+.trailerContainer iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.loadingContainer p,
+.errorContainer p {
+  color: var(--text-primary);
+  text-align: center;
+  margin-top: 20px;
+  transition: color 0.3s ease;
+}
+
+/* =========================================
+   DISTRIBUTION CONTAINER - CHIA ĐỀU 50/50
+   ========================================= */
+.distributionContainer {
+  display: flex;
+  gap: 30px;
+}
+
+/* Chọn tất cả các section con trực tiếp để chia đều */
+.distributionContainer > * {
+  flex: 1; 
+  min-width: 0; 
+}
+
+/* =========================================
+   [RESPONSIVE] MOBILE ADJUSTMENTS
+   ========================================= */
+
+@media (max-width: 768px) {
+  /* 1. Xử lý phần chia cột */
+  .distributionContainer {
+    flex-direction: column; 
+    gap: 20px;
+  }
+  
+  .distributionContainer > * {
+    flex: none; 
+    width: 100%;
+  }
+
+  /* 2. Tinh chỉnh tiêu đề */
+  .sectionTitle {
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+  }
+}

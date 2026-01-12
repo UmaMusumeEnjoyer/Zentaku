@@ -1,0 +1,39 @@
+/* src/components/MainContent/Ranking_section/RankingsSection.module.css */
+
+.rankingsGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  transition: background-color 0.3s ease;
+}
+
+/* Styling cho thông báo không có rankings */
+.noRankingsMessage {
+  padding: 20px;
+  text-align: center;
+  border-radius: 8px;
+  
+  /* REFACTOR: Sử dụng biến nền và viền */
+  background-color: var(--bg-panel);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+  
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* =========================================
+   [RESPONSIVE] MOBILE ADJUSTMENTS
+   ========================================= */
+
+@media (max-width: 768px) {
+  .rankingsGrid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  
+  .noRankingsMessage {
+    padding: 15px;
+    font-size: 0.9rem;
+  }
+}

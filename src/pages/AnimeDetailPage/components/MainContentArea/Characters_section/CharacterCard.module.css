@@ -1,0 +1,126 @@
+/* src/components/MainContent/Characters_section/CharacterCard.module.css */
+
+.characterCard {
+  display: flex;
+  justify-content: space-between;
+  
+  /* REFACTOR: Sử dụng biến nền panel */
+  background-color: var(--bg-panel);
+  border-radius: 6px;
+  overflow: hidden;
+  
+  height: auto; 
+  min-height: 80px;
+  
+  /* REFACTOR: Sử dụng biến viền */
+  border: 1px solid var(--border-subtle);
+  width: 100%;
+  transition: background-color 0.3s ease;
+}
+
+.cardLink {
+  flex: 1; 
+  display: flex;
+  align-items: center;
+  text-decoration: none; 
+  color: inherit; 
+  transition: background-color 0.2s ease;
+  min-width: 0;
+ 
+}
+
+.cardLink:hover {
+  /* REFACTOR: Sử dụng biến bg-subtle cho trạng thái hover */
+  background-color: var(--bg-subtle);
+}
+
+.vaPart {
+  justify-content: flex-end;
+}
+
+.personInfo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%; 
+  height: 100%;
+}
+
+.personAvatar {
+  width: 55px;
+  align-self: stretch; 
+  height: auto;
+  object-fit: cover;
+  flex-shrink: 0; 
+}
+
+.personDetails {
+  padding: 5  px 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+}
+
+.personName {
+  /* REFACTOR: Màu chữ chính */
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin: 0 0 4px 0;
+  
+  white-space: normal; 
+  overflow: visible;
+  text-overflow: clip;
+  word-wrap: break-word; 
+  line-height: 1.3;
+}
+
+.personRole {
+  /* REFACTOR: Màu chữ phụ */
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  margin: 0;
+  text-transform: capitalize;
+  
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+}
+
+.vaInfo {
+  justify-content: flex-end; 
+  text-align: right;
+  flex-direction: row; 
+}
+
+.vaDetails {
+  padding-right: 10px; 
+  padding-left: 0;
+}
+
+/* =========================================
+   [RESPONSIVE] MOBILE ADJUSTMENTS
+   ========================================= */
+
+@media (max-width: 768px) {
+  .characterCard {
+    min-height: 64px; 
+  }
+
+  .personAvatar {
+    width: 48px;
+  }
+  
+  .personInfo {
+    gap: 8px;
+  }
+
+  .personName {
+    font-size: 0.85rem;
+  }
+
+  .personRole {
+    font-size: 0.75rem;
+  }
+}

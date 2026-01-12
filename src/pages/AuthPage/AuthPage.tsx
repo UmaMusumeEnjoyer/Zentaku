@@ -7,32 +7,29 @@ import { faGooglePlusG, faFacebookF, faGithub, faLinkedinIn } from '@fortawesome
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-// Import Hook và useAuth từ context
 import { useAuthPage } from '@umamusumeenjoyer/shared-logic';
 import { useAuth } from '../../context/AuthContext';
-import { useTheme } from '../../context/ThemeContext';
-import { useTranslation } from 'react-i18next'; // Import translation hook
+// 1. Xóa import useTheme vì không cần thiết nữa
+// import { useTheme } from '../../context/ThemeContext';
+import { useTranslation } from 'react-i18next';
 
 const AuthPage: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { login } = useAuth();
-  const { theme } = useTheme();
   
-  // Initialize translation hook with 'Auth' namespace
+  // const { theme } = useTheme(); -> Đã xóa
+
   const { t } = useTranslation(['Auth']);
 
-  // Xác định initial path và verification token
   const initialPath = location.pathname === '/signup' ? 'signup' : 'login';
   const verificationToken = searchParams.get('token');
 
-  // Tạo loginCallback wrapper để convert từ LoginCredentials sang email/password
   const loginCallback = async (email: string, password: string) => {
     return await login({ email, password });
   };
 
-  // Lấy tất cả logic và state từ Hook với callbacks
   const {
     isActive,
     registerData,
@@ -63,10 +60,11 @@ const AuthPage: React.FC = () => {
   );
 
   return (
-    <div className={styles.authPageWrapper} data-theme={theme}>
+    // 2. Xóa prop data-theme, CSS biến tự xử lý
+    <div className={styles.authPageWrapper}>
       <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} />
       
-      <div className={`${styles.container} ${isActive ? styles.active : ''}`} data-theme={theme} id="container">
+      <div className={`${styles.container} ${isActive ? styles.active : ''}`} id="container">
         
         {/* --- FORM ĐĂNG KÝ (SIGN UP) --- */}
         <div className={`${styles.formContainer} ${styles.signUp}`}>
@@ -155,7 +153,7 @@ const AuthPage: React.FC = () => {
         <div className={styles.toggleContainer}>
           <div className={styles.toggle}>
             
-            {/* Panel Trái: Hiển thị khi đang ở Form Register -> Bấm để về Login */}
+            {/* Panel Trái: Về Login */}
             <div className={`${styles.togglePanel} ${styles.toggleLeft}`}>
               <h1>{t('Auth:toggle.welcome_back')}</h1>
               <button className={styles.hidden} onClick={handleLoginClick}>
@@ -163,7 +161,7 @@ const AuthPage: React.FC = () => {
               </button>
             </div>
             
-            {/* Panel Phải: Hiển thị khi đang ở Form Login -> Bấm để qua Register */}
+            {/* Panel Phải: Qua Register */}
             <div className={`${styles.togglePanel} ${styles.toggleRight}`}>
               <h1>{t('Auth:toggle.hello_friend')}</h1>
               <button className={styles.hidden} onClick={handleRegisterClick}>

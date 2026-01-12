@@ -1,41 +1,41 @@
-// src/features/anime/components/ScoreDistribution.tsx
+// src/components/MainContent/Statistics_section/ScoreDistribution.tsx
 import React from 'react';
 import type { ScoreDistributionProps } from '@umamusumeenjoyer/shared-logic';
 import { useScoreDistribution } from '@umamusumeenjoyer/shared-logic';
-import { useTranslation } from 'react-i18next'; // Import hook
-import { useTheme } from '../../../../../context/ThemeContext';
-import './ScoreDistribution.css';
+import { useTranslation } from 'react-i18next';
+// 1. Import CSS Module
+import styles from './ScoreDistribution.module.css';
+// 2. Xóa useTheme
+// import { useTheme } from '../../../../../context/ThemeContext';
 
 const ScoreDistribution: React.FC<ScoreDistributionProps> = ({ distribution }) => {
   const { maxAmount, getScoreColor } = useScoreDistribution(distribution);
-  const { theme } = useTheme();
+  // const { theme } = useTheme(); -> Đã xóa
   
-  // Khởi tạo translation hook
   const { t } = useTranslation(['StatisticsSection', 'common']);
 
   if (!distribution || distribution.length === 0) {
-    // Thay thế text cứng bằng key
     return <p>{t('StatisticsSection:score_distribution.no_data')}</p>;
   }
 
   return (
-    <div className={`score-dist-container ${theme}`}>
-      <div className="score-chart">
+    // 3. Sử dụng class từ module
+    <div className={styles.container}>
+      <div className={styles.scoreChart}>
         {distribution.map(({ score, amount }) => (
-          <div key={score} className="chart-bar-item">
-            <span className="bar-amount">{amount.toLocaleString()}</span>
-            <div className="bar-element-container">
+          <div key={score} className={styles.chartBarItem}>
+            <span className={styles.barAmount}>{amount.toLocaleString()}</span>
+            <div className={styles.barElementContainer}>
               <div
-                className="bar-element"
+                className={styles.barElement}
                 style={{
                   height: maxAmount > 0 ? `${(amount / maxAmount) * 100}%` : '0%',
                   backgroundColor: getScoreColor(score),
                 }}
-                // Thêm tooltip đơn giản để hỗ trợ trải nghiệm người dùng
                 title={`${score}: ${t('common:users_count', { count: amount })}`}
               ></div>
             </div>
-            <span className="bar-score">{score}</span>
+            <span className={styles.barScore}>{score}</span>
           </div>
         ))}
       </div>

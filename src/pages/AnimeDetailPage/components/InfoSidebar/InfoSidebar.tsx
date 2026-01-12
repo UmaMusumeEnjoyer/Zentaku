@@ -1,20 +1,18 @@
 // src/components/InfoSidebar/InfoSidebar.tsx
 import React from 'react';
-import './InfoSidebar.css';
+// 1. Xóa import css thường, thay bằng module
+import styles from './InfoSidebar.module.css';
 import type { InfoSidebarProps } from '@umamusumeenjoyer/shared-logic';
 import { useInfoSidebar } from '@umamusumeenjoyer/shared-logic';
-import { useTheme } from '../../../../context/ThemeContext';
-import { useTranslation } from 'react-i18next'; // Import hook
+// 2. Xóa useTheme vì không cần dùng biến theme trong JS nữa
+// import { useTheme } from '../../../../context/ThemeContext';
+import { useTranslation } from 'react-i18next';
 import { InfoBlock, InfoListBlock } from './InfoComponents';
 
-
-
 const InfoSidebar: React.FC<InfoSidebarProps> = ({ anime }) => {
-  // Lấy các hàm helper và dữ liệu đã tính toán từ Hook
-  const { formatDate, airingString } = useInfoSidebar(anime);
-  const { theme } = useTheme();
+  const { airingString } = useInfoSidebar(anime);
+  // const { theme } = useTheme(); -> Đã xóa
   
-  // Khởi tạo translation hook
   const { t, i18n } = useTranslation(['AnimeDetail', 'common']);
 
   const formatDateByLanguage = (dateString?: string) => {
@@ -24,13 +22,11 @@ const InfoSidebar: React.FC<InfoSidebarProps> = ({ anime }) => {
         const currentLang = i18n.language;
         
         if (currentLang === 'jp') {
-            // Format Nhật: YYYY年MM月DD日
             const year = date.getFullYear();
             const month = date.getMonth() + 1;
             const day = date.getDate();
             return `${year}年${month}月${day}日`;
         } else {
-            // Format Anh: Month DD, YYYY
             return date.toLocaleDateString('en-US', { 
                 year: 'numeric', 
                 month: 'long', 
@@ -40,7 +36,8 @@ const InfoSidebar: React.FC<InfoSidebarProps> = ({ anime }) => {
     };
 
   return (
-    <aside className={`info-sidebar ${theme}`}>
+    // 3. Sử dụng styles.sidebar thay vì nối chuỗi theme
+    <aside className={styles.sidebar}>
       {/* Các thông tin đặc biệt cần xử lý logic */}
       <InfoBlock 
         label={t('AnimeDetail:sidebar.airing')} 
@@ -59,13 +56,10 @@ const InfoSidebar: React.FC<InfoSidebarProps> = ({ anime }) => {
       />
       <InfoBlock 
         label={t('AnimeDetail:sidebar.episode_duration')} 
-        // Thay thế "mins" cứng bằng translation
         value={anime.duration ? `${anime.duration} ${t('common:time.mins')}` : null} 
       />
       <InfoBlock 
         label={t('AnimeDetail:sidebar.status')} 
-        // Lưu ý: Giá trị status (RELEASING, FINISHED...) vẫn đang hiển thị tiếng Anh/Code
-        // Bạn có thể map lại nếu cần (ví dụ: t(`AnimeDetail:status.${anime.airing_status}`))
         value={anime.airing_status?.replace(/_/g, ' ')} 
       />
       

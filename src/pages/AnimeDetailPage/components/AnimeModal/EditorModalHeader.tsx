@@ -1,6 +1,7 @@
 // src/components/EditorModal/EditorModalHeader.tsx
 import React from 'react';
 import type { EditorModalHeaderProps } from '@umamusumeenjoyer/shared-logic';
+import styles from './EditorModal.module.css'; // Import cùng file module
 
 const EditorModalHeader: React.FC<EditorModalHeaderProps> = ({ 
   anime, 
@@ -10,22 +11,22 @@ const EditorModalHeader: React.FC<EditorModalHeaderProps> = ({
   toggleFavorite 
 }) => {
   return (
-    <div className="editor-modal-header">
-      <button className="editor-modal-btn-close" onClick={onClose}>×</button>
+    <div className={styles.header}>
+      <button className={styles.btnClose} onClick={onClose}>×</button>
       
-      <div className="editor-modal-header-info">
-        <img src={anime.cover_image} alt="thumb" className="editor-modal-thumb" />
-        <span className="editor-modal-anime-title">{anime.name_romaji}</span>
+      <div className={styles.headerInfo}>
+        <img src={anime.cover_image} alt="thumb" className={styles.thumb} />
+        <span className={styles.animeTitle}>{anime.name_romaji}</span>
       </div>
       
-      <div className="editor-modal-header-actions">
+      <div className={styles.headerActions}>
         <button 
-          className={`editor-modal-btn-icon ${isFavorite ? 'active' : ''}`} 
+          className={`${styles.btnIcon} ${isFavorite ? styles.btnIconActive : ''}`} 
           onClick={toggleFavorite}
         >
           ♥
         </button>
-        <button className="editor-modal-btn-save" onClick={onSave}>Save</button>
+        <button className={styles.btnSave} onClick={onSave}>Save</button>
       </div>
     </div>
   );

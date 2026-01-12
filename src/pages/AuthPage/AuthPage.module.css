@@ -1,33 +1,38 @@
-/* src/components/AuthPage.module.css */
+/* src/pages/Auth/AuthPage.module.css */
 
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
 
 /* =========================================
-   DARK MODE (DEFAULT)
+   BASE STYLES (Variables applied)
    ========================================= */
 
-/* Wrapper để căn giữa component trên trang */
+/* Wrapper */
 .authPageWrapper {
     display: flex;
     align-items: center;
     justify-content: center;
     min-height: calc(100vh - 80px);
-    background-color: #152232;
+    /* REFACTOR: Nền App */
+    background-color: var(--bg-app);
     font-family: 'Montserrat', sans-serif;
     transition: background-color 0.3s ease;
 }
 
+/* Container chính */
 .container {
-    background-color: #1A2838;
+    /* REFACTOR: Nền Panel */
+    background-color: var(--bg-panel);
     border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.35);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     position: relative;
     overflow: hidden;
     width: 768px;
     max-width: 100%;
     min-height: 520px;
-    color: #c2c2c2;
+    /* REFACTOR: Chữ phụ */
+    color: var(--text-secondary);
     transition: all 0.3s ease;
+    border: 1px solid var(--border-subtle);
 }
 
 .container p {
@@ -42,7 +47,7 @@
 }
 
 .container a {
-    color: #c2c2c2;
+    color: var(--text-secondary);
     font-size: 13px;
     text-decoration: none;
     margin: 15px 0 10px;
@@ -50,11 +55,12 @@
 }
 
 .container a:hover {
-    color: #3DB4F2;
+    color: #3DB4F2; /* Brand Color giữ nguyên */
 }
 
+/* Buttons */
 .container button {
-    background-color: #3578E5;
+    background-color: #3578E5; /* Brand Color */
     color: #fff;
     font-size: 12px;
     padding: 10px 45px;
@@ -81,8 +87,9 @@
     background-color: rgba(255, 255, 255, 0.1);
 }
 
+/* Form Styles */
 .container form {
-    background-color: #1A2838;
+    background-color: var(--bg-panel);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -91,12 +98,15 @@
     height: 100%;
 }
 
+/* Inputs */
 .container input[type="text"],
 .container input[type="email"],
 .container input[type="password"] {
-    background-color: #101a28;
-    color: #c2c2c2;
-    border: 1px solid #344051;
+    /* REFACTOR: Nền input subtle */
+    background-color: var(--bg-subtle);
+    color: var(--text-primary);
+    border: 1px solid var(--border-subtle);
+    
     margin: 8px 0;
     padding: 10px 15px;
     font-size: 13px;
@@ -111,12 +121,13 @@
     box-shadow: 0 0 0 2px rgba(61, 180, 242, 0.2);
 }
 
+/* Social Icons */
 .socialIcons {
     margin: 20px 0;
 }
 
 .socialIcons a {
-    border: 1px solid #444;
+    border: 1px solid var(--border-subtle);
     border-radius: 20%;
     display: inline-flex;
     justify-content: center;
@@ -124,12 +135,12 @@
     margin: 0 3px;
     width: 40px;
     height: 40px;
-    color: #c2c2c2;
+    color: var(--text-secondary);
     transition: all 0.2s ease;
 }
 
 .socialIcons a:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: var(--bg-subtle);
     border-color: #3DB4F2;
     color: #3DB4F2;
 }
@@ -139,69 +150,11 @@
     align-items: center;
     margin-top: 10px;
     font-size: 13px;
+    color: var(--text-secondary);
 }
 
 .terms input[type="checkbox"] {
     margin-right: 10px;
-}
-
-/* =========================================
-   LIGHT MODE
-   ========================================= */
-
-.authPageWrapper[data-theme="light"] {
-    background-color: #f0f2f5;
-}
-
-.container[data-theme="light"] {
-    background-color: #ffffff;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
-    color: #1a202c;
-}
-
-.container[data-theme="light"] a {
-    color: #4a5568;
-}
-
-.container[data-theme="light"] a:hover {
-    color: #3DB4F2;
-}
-
-.container[data-theme="light"] button.hidden {
-    border-color: #1a202c;
-    color: #1a202c;
-}
-
-.container[data-theme="light"] button.hidden:hover {
-    background-color: rgba(0, 0, 0, 0.05);
-}
-
-.container[data-theme="light"] form {
-    background-color: #ffffff;
-}
-
-.container[data-theme="light"] input[type="text"],
-.container[data-theme="light"] input[type="email"],
-.container[data-theme="light"] input[type="password"] {
-    background-color: #f8fafc;
-    color: #1a202c;
-    border: 1px solid #e2e8f0;
-}
-
-.container[data-theme="light"] input:focus {
-    border-color: #3DB4F2;
-    box-shadow: 0 0 0 2px rgba(61, 180, 242, 0.1);
-}
-
-.container[data-theme="light"] .socialIcons a {
-    border-color: #cbd5e0;
-    color: #4a5568;
-}
-
-.container[data-theme="light"] .socialIcons a:hover {
-    background-color: rgba(0, 0, 0, 0.05);
-    border-color: #3DB4F2;
-    color: #3DB4F2;
 }
 
 /* =========================================
@@ -272,6 +225,7 @@
 }
 
 .toggle {
+    /* Giữ nguyên Gradient Brand */
     background: linear-gradient(to right, #3db4f2, #3578E5);
     height: 100%;
     color: #fff;
@@ -336,14 +290,10 @@
         max-width: 420px;
         min-height: 550px;
         border-radius: 16px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         margin: 0;
         display: flex;
         flex-direction: column;
-    }
-
-    .container[data-theme="light"] {
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
     }
 
     .formContainer {
@@ -405,13 +355,10 @@
         border-radius: 0;
         transform: none !important;
         z-index: 10;
-        background: linear-gradient(to right, #2c3e50, #1A2838);
-        border-top: 1px solid rgba(255,255,255,0.1);
-    }
-
-    .container[data-theme="light"] .toggleContainer {
-        background: linear-gradient(to right, #e2e8f0, #cbd5e0);
-        border-top: 1px solid rgba(0,0,0,0.1);
+        
+        /* REFACTOR: Mobile Toggle Gradient dùng biến */
+        background: linear-gradient(to right, var(--bg-subtle), var(--bg-panel));
+        border-top: 1px solid var(--border-subtle);
     }
 
     .container.active .toggleContainer {
@@ -451,14 +398,9 @@
         padding: 8px 20px;
         font-size: 12px;
         background: transparent;
-        border: 1px solid rgba(255,255,255,0.3);
-        color: #fff;
+        border: 1px solid var(--text-secondary);
+        color: var(--text-primary);
         width: auto;
-    }
-
-    .container[data-theme="light"] .togglePanel button {
-        border-color: rgba(0,0,0,0.2);
-        color: #1a202c;
     }
 
     .toggleRight {
@@ -487,21 +429,13 @@
 
     .toggleRight::before {
         content: "Need account?";
-        color: #c2c2c2;
+        color: var(--text-secondary);
         font-size: 13px;
-    }
-
-    .container[data-theme="light"] .toggleRight::before {
-        color: #4a5568;
     }
 
     .toggleLeft::before {
         content: "Has account?";
-        color: #c2c2c2;
+        color: var(--text-secondary);
         font-size: 13px;
-    }
-
-    .container[data-theme="light"] .toggleLeft::before {
-        color: #4a5568;
     }
 }

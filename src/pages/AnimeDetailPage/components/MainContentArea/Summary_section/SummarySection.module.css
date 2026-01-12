@@ -1,30 +1,29 @@
-/* src/components/SummarySection.css */
+/* src/components/SummarySection.module.css */
 
-.summary-section {
+.summarySection {
   display: flex;
   gap: 30px;
   margin-top: -80px; /* Mặc định kéo lên trên banner */
   position: relative;
   padding-bottom: 30px;
-  border-bottom: 1px solid #2d3748;
+  
+  /* REFACTOR: Sử dụng biến viền */
+  border-bottom: 1px solid var(--border-subtle);
+  
   z-index: 10; /* Đảm bảo nổi lên trên các thành phần khác */
   transition: border-color 0.3s ease;
 }
 
-.summary-section.light {
-  border-bottom-color: #d0d0d0;
-}
-
 /* Khi không có banner, dùng margin-top bình thường */
-.summary-section.no-banner {
+.noBanner {
   margin-top: 30px;
 }
 
-.summary-left {
+.summaryLeft {
   flex: 0 0 215px; /* Chiều rộng cố định */
 }
 
-.summary-cover {
+.summaryCover {
   width: 100%;
   border-radius: 8px;
   margin-bottom: 10px;
@@ -32,7 +31,8 @@
   display: block;
 }
 
-.summary-left .btn {
+/* Button Styles - Giữ nguyên hoặc có thể tách ra file riêng nếu muốn tái sử dụng */
+.btn {
   width: 100%;
   margin-bottom: 5px;
   border: none;
@@ -42,34 +42,41 @@
   font-weight: bold;
   cursor: pointer;
   color: white;
+  transition: background-color 0.2s ease;
 }
 
-.summary-left .btn-watching {
+.btnWatching {
+  /* Brand color - Giữ nguyên */
   background-color: #3DB4F2;
 }
 
-.summary-right {
-  padding-top: 100px; /* Đẩy text xuống cho cân đối trên PC */
-  flex: 1; /* [THÊM] Để text chiếm hết phần còn lại */
+.btnWatching:hover {
+  background-color: #6bccf7;
 }
 
-.summary-section.no-banner .summary-right {
+.summaryRight {
+  padding-top: 100px; /* Đẩy text xuống cho cân đối trên PC */
+  flex: 1; /* Để text chiếm hết phần còn lại */
+}
+
+/* Khi không có banner thì không cần đẩy text xuống */
+.noBanner .summaryRight {
   padding-top: 0; 
 }
 
-.summary-right .anime-tagline {
+.animeTagline {
   font-style: italic;
-  color: #a0aec0;
+  /* REFACTOR: Màu chữ phụ */
+  color: var(--text-secondary);
+  
   margin: 0 0 5px 0;
   transition: color 0.3s ease;
 }
 
-.summary-section.light .anime-tagline {
-  color: #666;
-}
-
-.summary-right .anime-title-main {
-  color: #fff;
+.animeTitleMain {
+  /* REFACTOR: Màu chữ chính */
+  color: var(--text-primary);
+  
   font-size: 2.5rem;
   margin: 0 0 15px 0;
   word-wrap: break-word;
@@ -78,19 +85,12 @@
   transition: color 0.3s ease;
 }
 
-.summary-section.light .anime-title-main {
-  color: #1a1a1a;
-}
-
-.summary-right .anime-description {
+.animeDescription {
   line-height: 1.6;
   font-size: 0.95rem;
-  color: #c2c2c2;
+  /* REFACTOR: Màu chữ phụ/nội dung */
+  color: var(--text-secondary);
   transition: color 0.3s ease;
-}
-
-.summary-section.light .anime-description {
-  color: #444;
 }
 
 /* =========================================
@@ -98,12 +98,11 @@
    ========================================= */
 
 @media (max-width: 768px) {
-  .summary-section {
-    flex-direction: row; /* Xếp chồng dọc */
-    align-items: flex-start;    /* Căn giữa poster */
+  .summarySection {
+    flex-direction: row; 
+    align-items: flex-start;    
     
     /* Điều chỉnh vị trí đè banner trên mobile */
-    /* Banner mobile cao 200px, nên kéo lên khoảng -80px là đẹp */
     margin-top: -80px; 
     
     gap: 15px;
@@ -111,51 +110,47 @@
     padding-left: 10px;
   }
 
-  .summary-left {
+  .summaryLeft {
     flex: 0 0 150px; 
-        width: 150px;
-        
-        /* Reset lại display */
-        display: block;
+    width: 150px;
+    display: block;
   }
   
   /* Nút bấm trên mobile */
-  .summary-left .btn {
+  .btn {
     padding: 6px 10px;
     font-size: 0.8rem;
     white-space: nowrap;
   }
 
-  .summary-right {
-flex: 1; /* Chiếm hết không gian còn lại bên phải */
-    min-width: 0; /* [QUAN TRỌNG] Giúp text wrap đúng cách trong Flexbox */
+  .summaryRight {
+    flex: 1; 
+    min-width: 0; 
     
-    /* [QUAN TRỌNG] Đẩy text xuống 85px để nó nằm dưới mép banner 
-       (vì margin-top là -80px nên phần đầu section đang nằm trong banner) */
+    /* Đẩy text xuống 85px để nó nằm dưới mép banner */
     padding-top: 85px; 
     
     text-align: left;
   }
 
-  .summary-right .anime-title-main {
-    font-size: 1.3rem; /* Giảm size chữ tiêu đề */
+  .animeTitleMain {
+    font-size: 1.3rem; 
     line-height: 1.25;
     margin-bottom: 8px;
   }
 
-  .summary-right .anime-tagline {
+  .animeTagline {
     font-size: 0.8rem;
     margin-bottom: 4px;
     opacity: 0.8;
   }
   
-  /* Ẩn bớt description nếu quá dài hoặc chỉnh lại căn lề */
-  .summary-right .anime-description {
-    text-align: left; /* Description vẫn nên căn trái cho dễ đọc */
+  .animeDescription {
+    text-align: left;
     font-size: 0.85rem;
     line-height: 1.4;
     
-    /* Giới hạn số dòng description trên mobile để không quá dài (Tùy chọn) */
+    /* Giới hạn số dòng description trên mobile */
     display: -webkit-box;
     -webkit-line-clamp: 4;
     -webkit-box-orient: vertical;

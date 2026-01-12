@@ -1,0 +1,89 @@
+/* src/components/InfoSidebar/InfoSidebar.module.css */
+
+.sidebar {
+  flex: 0 0 225px; 
+  width: 225px;
+  /* REFACTOR: Dùng biến nền panel */
+  background-color: var(--bg-panel); 
+  padding: 20px;
+  border-radius: 8px;
+  height: fit-content;
+  transition: background-color 0.3s ease;
+}
+
+.block {
+  margin-bottom: 15px;
+}
+
+.label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  /* REFACTOR: Màu chữ chính */
+  color: var(--text-primary); 
+  margin: 0 0 4px 0;
+  transition: color 0.3s ease;
+}
+
+.value {
+  font-size: 0.9rem;
+  /* REFACTOR: Màu chữ phụ */
+  color: var(--text-secondary);
+  margin: 0;
+  text-transform: capitalize;
+  transition: color 0.3s ease;
+}
+
+.listItem {
+  margin-bottom: 2px;
+}
+
+/* Airing highlight styles */
+.airingLabel,
+.airingValue {
+  /* Brand color - Giữ nguyên Hex */
+  color: #3DB4F2;
+}
+
+/* =========================================
+   [RESPONSIVE] MOBILE ADJUSTMENTS
+   ========================================= */
+
+@media (max-width: 768px) {
+  .sidebar {
+    flex: none; 
+    width: 100%;
+    height: auto;
+    display: grid;
+    /* Grid 2 hàng, tự động thêm cột -> Scroll ngang */
+    grid-template-rows: repeat(2, min-content);
+    grid-auto-flow: column;
+    gap: 12px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 10px 0 15px 0;
+    
+    /* Ẩn scrollbar */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  
+  .sidebar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Block layout trên mobile */
+  .block {
+    margin-bottom: 0; 
+    width: 160px;
+    min-width: 160px;
+    
+    /* REFACTOR: Dùng bg-subtle thay vì rgba cứng để tương thích cả 2 mode */
+    background-color: var(--bg-subtle);
+    
+    padding: 10px;
+    border-radius: 8px;
+    white-space: normal;
+    box-sizing: border-box;
+    transition: background-color 0.3s ease;
+  }
+}

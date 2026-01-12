@@ -1,18 +1,11 @@
-/* src/pages/HomePageLogin/HomePagelogin.css */
+/* src/pages/HomePageLogin/HomePagelogin.module.css */
 
 .homepage-login-wrapper {
   min-height: 100vh;
+  /* REFACTOR: Sử dụng biến nền chính của App */
+  background-color: var(--bg-app);
+  color: var(--text-primary);
   transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.homepage-login-wrapper[data-theme="dark"] {
-  background-color: #000233;
-  color: #ffffff;
-}
-
-.homepage-login-wrapper[data-theme="light"] {
-  background-color: #f7fafc;
-  color: #1a202c;
 }
 
 .main-content-container {
@@ -31,17 +24,10 @@
   justify-content: center;
   padding: 50px;
   min-height: 100vh;
+  /* REFACTOR: Đồng bộ với nền App */
+  background-color: var(--bg-app);
+  color: var(--text-primary);
   transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.loading-container[data-theme="dark"] {
-  background-color: #0f1419;
-  color: #ffffff;
-}
-
-.loading-container[data-theme="light"] {
-  background-color: #f7fafc;
-  color: #1a202c;
 }
 
 /* Empty State */
@@ -52,19 +38,15 @@
   flex-direction: column;
   align-items: center;
   gap: 20px;
-}
-
-.homepage-login-wrapper[data-theme="dark"] .empty-state {
-  color: #cbd5e0;
-}
-
-.homepage-login-wrapper[data-theme="light"] .empty-state {
-  color: #4a5568;
+  /* REFACTOR: Màu chữ phụ cho phần mô tả */
+  color: var(--text-secondary);
 }
 
 .empty-state h2 {
   font-size: 2rem;
   margin-bottom: 0;
+  /* REFACTOR: Tiêu đề dùng màu chính */
+  color: var(--text-primary);
 }
 
 .empty-state p {

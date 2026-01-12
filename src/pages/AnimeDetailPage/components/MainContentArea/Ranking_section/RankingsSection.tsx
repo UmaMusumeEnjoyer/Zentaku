@@ -1,11 +1,13 @@
-// src/components/RankingsSection.tsx
+// src/components/MainContent/Ranking_section/RankingsSection.tsx
 import React from 'react';
 import RankingCard from './RankingCard';
 import { useRankingFilter } from '@umamusumeenjoyer/shared-logic';
 import type { Ranking } from '@umamusumeenjoyer/shared-logic';
 import { useTranslation } from 'react-i18next';
-import { useTheme } from '../../../../../context/ThemeContext';
-import './RankingsSection.css';
+// 1. Import CSS Module
+import styles from './RankingsSection.module.css';
+// 2. Xóa import useTheme
+// import { useTheme } from '../../../../../context/ThemeContext';
 
 interface RankingsSectionProps {
   rankings: Ranking[] | undefined;
@@ -13,17 +15,21 @@ interface RankingsSectionProps {
 
 const RankingsSection: React.FC<RankingsSectionProps> = ({ rankings }) => {
   const { t } = useTranslation('RankingSection');
-  const { theme } = useTheme(); // Sử dụng theme từ context
+  // const { theme } = useTheme(); -> Đã xóa
   const filteredRankings = useRankingFilter(rankings);
 
   if (!filteredRankings || filteredRankings.length === 0) {
-    return <p className={`no-rankings-message no-rankings-message--${theme}`}>
-      {t('ranking.no_available')}
-    </p>;
+    // 3. Sử dụng class module cho thông báo lỗi
+    return (
+      <p className={styles.noRankingsMessage}>
+        {t('ranking.no_available')}
+      </p>
+    );
   }
 
   return (
-    <div className={`rankings-grid rankings-grid--${theme}`}>
+    // 4. Sử dụng class module cho grid
+    <div className={styles.rankingsGrid}>
       {filteredRankings.map(rank => (
         <RankingCard key={rank.id} ranking={rank} />
       ))}

@@ -1,0 +1,77 @@
+/* src/pages/AnimeDetail/AnimeDetailPage.module.css */
+
+/* Wrapper chính bao quanh cả trang */
+.pageWrapper {
+  min-height: 100vh;
+  /* REFACTOR: Sử dụng biến nền toàn cục */
+  background-color: var(--bg-app);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  padding-bottom: 40px; /* Thêm padding đáy để không bị sát lề */
+}
+
+/* Loading & Error States */
+.loadingState,
+.errorState {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 50vh;
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+}
+
+/* Banner */
+.bannerImage {
+  height: 380px; 
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 100%; 
+  /* Thêm hiệu ứng fade nhẹ phía dưới banner để hòa vào nền (tùy chọn) */
+  mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+}
+
+.mainContentContainer {
+  /* Giới hạn độ rộng nội dung nếu cần, tương tự HomePage */
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.contentWrapper {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 1400px; /* Giới hạn độ rộng tối đa để layout không bị quá bè */
+  padding: 0 50px;
+}
+
+/* Grid Layout chia 2 cột */
+.gridContainer {
+  display: flex;
+  gap: 30px; 
+  margin-top: 30px;
+  align-items: flex-start; 
+}
+
+/* =========================================
+   [RESPONSIVE] MOBILE ADJUSTMENTS
+   ========================================= */
+
+@media (max-width: 768px) {
+  .bannerImage {
+    height: 200px; 
+  }
+
+  .gridContainer {
+    flex-direction: column; 
+    gap: 20px;
+    margin-top: 10px; 
+  }
+
+  .contentWrapper {
+    padding: 0 16px; 
+  }
+}

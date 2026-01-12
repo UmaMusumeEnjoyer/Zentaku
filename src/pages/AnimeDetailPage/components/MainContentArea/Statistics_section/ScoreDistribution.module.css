@@ -1,0 +1,79 @@
+/* src/components/MainContent/Statistics_section/ScoreDistribution.module.css */
+
+.container {
+  /* REFACTOR: Sử dụng biến nền panel */
+  background-color: var(--bg-panel);
+  border-radius: 8px;
+  padding: 20px;
+  height: 200px; 
+  transition: background-color 0.3s ease;
+  
+  /* REFACTOR: Thêm viền để đồng bộ */
+  border: 1px solid var(--border-subtle);
+}
+
+.scoreChart {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end; 
+  height: 100%;
+  width: 100%;
+}
+
+.chartBarItem {
+  display: flex;
+  flex-direction: column; 
+  align-items: center;
+  height: 100%;
+  flex: 1; 
+}
+
+.barAmount {
+  font-size: 0.8rem;
+  /* REFACTOR: Màu chữ phụ */
+  color: var(--text-secondary);
+  margin-bottom: 5px;
+  transition: color 0.3s ease;
+}
+
+.barElementContainer {
+  width: 50%;
+  height: 100%;
+  display: flex;
+  align-items: flex-end; 
+  margin-bottom: 5px;
+}
+
+.barElement {
+  width: 100%;
+  border-radius: 5px;
+  transition: height 0.3s ease-out; 
+}
+
+.barScore {
+  font-size: 0.85rem;
+  font-weight: bold;
+  /* REFACTOR: Màu chữ chính */
+  color: var(--text-primary);
+  transition: color 0.3s ease;
+}
+
+/* =========================================
+   [RESPONSIVE] MOBILE ADJUSTMENTS
+   ========================================= */
+
+@media (max-width: 768px) {
+  .container {
+    padding: 10px 5px; 
+    height: 180px;      
+  }
+
+  .barElementContainer {
+    width: 70%; 
+  }
+
+  .barAmount, 
+  .barScore {
+    font-size: 0.7rem; 
+  }
+}

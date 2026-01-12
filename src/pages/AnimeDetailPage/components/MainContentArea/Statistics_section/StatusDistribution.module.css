@@ -1,0 +1,109 @@
+/* src/components/MainContent/Statistics_section/StatusDistribution.module.css */
+
+.container {
+  /* REFACTOR: Sử dụng biến nền panel */
+  background-color: var(--bg-panel);
+  border-radius: 8px;
+  padding: 20px;
+  transition: background-color 0.3s ease;
+  
+  /* REFACTOR: Thêm viền để đồng bộ */
+  border: 1px solid var(--border-subtle);
+}
+
+.statusLegend {
+  display: flex;
+  flex-wrap: wrap; 
+  gap: 10px;
+  margin-bottom: 15px;
+  justify-content: center;
+}
+
+.legendItem {
+  text-align: center;
+  flex: 0 1 auto; 
+  min-width: 90px; 
+  max-width: 150px; 
+}
+
+.legendButton {
+  width: 100%;
+  border: none;
+  color: white; /* Giữ màu trắng vì nền nút là màu trạng thái đậm */
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+  text-transform: capitalize;
+  cursor: pointer; 
+  transition: opacity 0.2s ease;
+}
+
+.legendButton:hover {
+  opacity: 0.85;
+}
+
+.legendUsers {
+  font-size: 0.85rem;
+  /* REFACTOR: Màu chữ phụ */
+  color: var(--text-secondary);
+  margin: 0;
+  transition: color 0.3s ease;
+}
+
+.statusProgressBar {
+  display: flex;
+  width: 100%;
+  height: 20px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progressSegment {
+  height: 100%;
+  transition: width 0.3s ease; 
+}
+
+/* =========================================
+   [RESPONSIVE] MOBILE ADJUSTMENTS
+   ========================================= */
+
+@media (max-width: 768px) {
+  .container {
+    padding: 15px;
+  }
+
+  .statusLegend {
+    gap: 8px;
+    justify-content: center; 
+  }
+
+  .legendItem {
+    flex: 0 1 calc(33.333% - 8px); 
+    min-width: 80px;
+    max-width: 120px;
+  }
+
+  .legendButton {
+    font-size: 0.8rem;
+    padding: 6px 4px;
+    margin-bottom: 4px;
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis; 
+  }
+  
+  .legendUsers {
+    font-size: 0.75rem;
+  }
+}
+
+/* Tablet adjustments */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .legendItem {
+    flex: 0 1 calc(25% - 10px); 
+    min-width: 85px;
+    max-width: 130px;
+  }
+}

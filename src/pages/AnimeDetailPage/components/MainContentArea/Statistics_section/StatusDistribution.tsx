@@ -1,40 +1,37 @@
-// src/features/anime/components/StatusDistribution.tsx
+// src/components/MainContent/Statistics_section/StatusDistribution.tsx
 import React from 'react';
 import type { StatusDistributionProps } from '@umamusumeenjoyer/shared-logic';
 import { useStatusDistribution } from '@umamusumeenjoyer/shared-logic';
-import { useTranslation } from 'react-i18next'; // Import hook
-import { useTheme } from '../../../../../context/ThemeContext';
-import './StatusDistribution.css';
+import { useTranslation } from 'react-i18next';
+// 1. Import CSS Module
+import styles from './StatusDistribution.module.css';
+// 2. Xóa useTheme
+// import { useTheme } from '../../../../../context/ThemeContext';
 
 const StatusDistribution: React.FC<StatusDistributionProps> = ({ distribution }) => {
   const { sortedDistribution, totalUsers, getStatusColor } = useStatusDistribution(distribution);
-  const { theme } = useTheme();
+  // const { theme } = useTheme(); -> Đã xóa
   
-  // Khởi tạo translation hook
   const { t } = useTranslation(['StatisticsSection', 'common']);
 
   if (!distribution || distribution.length === 0) {
-    // Thay thế text cứng bằng key
     return <p>{t('StatisticsSection:status_distribution.no_data')}</p>;
   }
 
   return (
-    <div className={`status-dist-container ${theme}`}>
-      {/* Phần Legend (Chú thích) */}
-      <div className="status-legend">
+    // 3. Sử dụng class từ module
+    <div className={styles.container}>
+      {/* Phần Legend */}
+      <div className={styles.statusLegend}>
         {sortedDistribution.map(({ status, amount }) => (
-          <div key={status} className="legend-item">
+          <div key={status} className={styles.legendItem}>
             <button 
-              className="legend-button" 
+              className={styles.legendButton} 
               style={{ backgroundColor: getStatusColor(status) }}
             >
-              {/* Lưu ý: 'status' thường là dữ liệu động từ API (Watching, Completed...), 
-                  nếu muốn dịch cả status này, bạn cần một mapping key riêng hoặc BE trả về key. 
-                  Hiện tại tôi giữ nguyên hiển thị status gốc. */}
               {status}
             </button>
-            {/* Sử dụng interpolation để hiển thị số lượng user + từ 'Users' đã dịch */}
-            <p className="legend-users">
+            <p className={styles.legendUsers}>
               {t('common:users_count', { count: amount })}
             </p>
           </div>
@@ -42,16 +39,15 @@ const StatusDistribution: React.FC<StatusDistributionProps> = ({ distribution })
       </div>
 
       {/* Phần Progress Bar */}
-      <div className="status-progress-bar">
+      <div className={styles.statusProgressBar}>
         {sortedDistribution.map(({ status, amount }) => (
           <div
             key={status}
-            className="progress-segment"
+            className={styles.progressSegment}
             style={{
               width: totalUsers > 0 ? `${(amount / totalUsers) * 100}%` : '0%',
               backgroundColor: getStatusColor(status),
             }}
-            // Thêm title để hover xem chi tiết (Accessibility)
             title={`${status}: ${t('common:users_count', { count: amount })}`}
           ></div>
         ))}

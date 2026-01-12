@@ -2,10 +2,12 @@
 import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useTheme } from '../../context/ThemeContext';
-import './AnimeCard.css';
+// 1. Xóa useTheme vì không cần dùng biến theme trong JS nữa
+// import { useTheme } from '../../context/ThemeContext';
 
-// Import logic và type từ thư viện vừa tạo
+// 2. Import CSS Modules
+import styles from './AnimeCard.module.css';
+
 import type { AnimeData } from '@umamusumeenjoyer/shared-logic';
 import { 
   getAnimeTitle, 
@@ -13,42 +15,45 @@ import {
   getAnimeDisplayInfo 
 } from '@umamusumeenjoyer/shared-logic';
 
-// Định nghĩa Props cho Component
 interface AnimeCardProps {
   anime: AnimeData;
 }
 
 const AnimeCard: React.FC<AnimeCardProps> = ({ anime }) => {
-  const { theme } = useTheme();
+  // const { theme } = useTheme(); -> Đã xóa
   const { i18n } = useTranslation();
   
-  // Lấy ngôn ngữ hiện tại
   const currentLanguage = i18n.language as 'en' | 'jp';
   
-  // Gọi các hàm logic để lấy dữ liệu - useMemo để re-calculate khi language thay đổi
   const title = useMemo(() => getAnimeTitle(anime, currentLanguage), [anime, currentLanguage]);
   const linkId = useMemo(() => getAnimeLinkId(anime), [anime]);
   const displayInfo = useMemo(() => getAnimeDisplayInfo(anime), [anime]);
 
-  // Logic class giao diện
-  const detailsClass = displayInfo ? 'anime-details' : 'anime-details no-info';
+  // 3. Xử lý logic class name với module
+  // Kết hợp class 'anime-details' và 'no-info' (nếu có)
+  const detailsClass = displayInfo 
+    ? styles['anime-details'] 
+    : `${styles['anime-details']} ${styles['no-info']}`;
 
   return (
-    <Link to={`/anime/${linkId}`} className="anime-card-link">
-      <div className={`anime-card anime-card--${theme}`} title={title}>
+    <Link to={`/anime/${linkId}`} className={styles['anime-card-link']}>
+      {/* 4. Xóa class logic theo theme, chỉ dùng class gốc từ module */}
+      <div className={styles['anime-card']} title={title}>
         <img 
           src={anime.cover_image} 
           alt={title} 
-          className="anime-poster" 
+          className={styles['anime-poster']} 
           loading="lazy"
         />
         
         <div className={detailsClass}>
-          <h3 className="anime-title-text">{title}</h3>
+          <h3 className={styles['anime-title-text']}>{title}</h3>
 
           {displayInfo && (
-            <div className="airing-info">
-              <p className="episode-time"></p>
+            <div className={styles['airing-info']}>
+              <p className={styles['episode-time']}>
+                {/* Logic hiển thị thời gian đang để trống trong code gốc, giữ nguyên */}
+              </p>
             </div>
           )}
         </div>

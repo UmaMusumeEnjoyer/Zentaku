@@ -1,0 +1,55 @@
+/* src/components/MainContent/Ranking_section/RankingCard.module.css */
+
+.rankingCard {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  border-radius: 8px;
+  padding: 12px 20px;
+  flex: 1 1 auto;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  
+  /* REFACTOR: Sử dụng biến nền và màu chữ hệ thống */
+  background-color: var(--bg-panel);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+  
+  /* Shadow nhẹ giúp tách biệt card */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.rankingCard:hover {
+  /* REFACTOR: Hover chuyển sang màu nền phụ */
+  background-color: var(--bg-subtle);
+  transform: translateY(-2px); /* Hiệu ứng nổi nhẹ khi hover */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.rankingIcon {
+  font-size: 1.2rem;
+  flex-shrink: 0; 
+}
+
+.rankingText {
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-transform: capitalize;
+  /* REFACTOR: Màu chữ chính */
+  color: var(--text-primary);
+  transition: color 0.3s ease;
+}
+
+/* =========================================
+   [RESPONSIVE] MOBILE ADJUSTMENTS
+   ========================================= */
+
+@media (max-width: 768px) {
+  .rankingCard {
+    padding: 10px 15px;
+    gap: 10px;
+  }
+
+  .rankingText {
+    font-size: 0.85rem;
+  }
+}

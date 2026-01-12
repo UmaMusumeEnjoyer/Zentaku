@@ -1,15 +1,15 @@
-// src/components/Staff/StaffSection.tsx
+// src/components/MainContent/Staffs_section/StaffSection.tsx
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import StaffCard from './StaffCard';
-import { useStaffData } from '@umamusumeenjoyer/shared-logic'; // Import Hook
-import type { StaffSectionProps } from '@umamusumeenjoyer/shared-logic';   // Import Types
-import './StaffSection.css';
+import { useStaffData } from '@umamusumeenjoyer/shared-logic'; 
+import type { StaffSectionProps } from '@umamusumeenjoyer/shared-logic';
+// 1. Import CSS Module
+import styles from './StaffSection.module.css';
 
 const StaffSection: React.FC<StaffSectionProps> = ({ animeId }) => {
   const { t } = useTranslation(['StaffSection', 'common']);
   
-  // Sử dụng Custom Hook để lấy dữ liệu
   const { staff, loading } = useStaffData(animeId);
 
   if (loading) {
@@ -21,7 +21,8 @@ const StaffSection: React.FC<StaffSectionProps> = ({ animeId }) => {
   }
 
   return (
-    <div className="staff-grid">
+    // 2. Sử dụng class từ module
+    <div className={styles.staffGrid}>
       {staff.map((member) => (
         <StaffCard key={member.id} staffMember={member} />
       ))}

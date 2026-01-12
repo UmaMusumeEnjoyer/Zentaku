@@ -1,12 +1,11 @@
 // src/components/EditorModal/EditorModal.tsx
 import React from 'react';
-import './EditorModal.css';
+import styles from './EditorModal.module.css'; // Import Module CSS
 import EditorModalHeader from './EditorModalHeader';
 import EditorModalForm from './EditorModalForm';
 import EditorModalFooter from './EditorModalFooter';
-import { useEditorModal } from '@umamusumeenjoyer/shared-logic';
-import { useTheme } from '../../../../context/ThemeContext';
-import type { EditorModalProps } from '@umamusumeenjoyer/shared-logic';
+import { useEditorModal, type EditorModalProps } from '@umamusumeenjoyer/shared-logic';
+// Xóa import useTheme
 
 const EditorModal: React.FC<EditorModalProps> = ({ 
   anime, 
@@ -17,7 +16,6 @@ const EditorModal: React.FC<EditorModalProps> = ({
   initialData 
 }) => {
   
-  // 1. Lấy logic từ Hook
   const {
     formData,
     isEditMode,
@@ -27,15 +25,14 @@ const EditorModal: React.FC<EditorModalProps> = ({
     handleDeleteClick
   } = useEditorModal(anime, initialData, onSave, onDelete, onClose);
 
-  const { theme } = useTheme();
+  // Xóa const { theme } = useTheme();
 
   if (!isOpen) return null;
 
   return (
-    <div className="editor-modal-overlay" onClick={onClose}>
-      <div className={`editor-modal-content ${theme}`} onClick={e => e.stopPropagation()}>
+    <div className={styles.overlay} onClick={onClose}>
+      <div className={styles.content} onClick={e => e.stopPropagation()}>
         
-        {/* Header: Chứa nút Save và Favorite */}
         <EditorModalHeader 
           anime={anime}
           onClose={onClose}
@@ -44,15 +41,13 @@ const EditorModal: React.FC<EditorModalProps> = ({
           toggleFavorite={toggleFavorite}
         />
 
-        <div className="editor-modal-body">
-          {/* Form: Chứa các input fields */}
+        <div className={styles.body}>
           <EditorModalForm 
             formData={formData}
             handleChange={handleChange}
             isEditMode={isEditMode}
           />
           
-          {/* Footer: Chỉ hiện nút xóa khi đang ở chế độ Edit */}
           {isEditMode && <EditorModalFooter onDelete={handleDeleteClick} />}
         </div>
       

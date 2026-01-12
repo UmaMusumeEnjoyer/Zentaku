@@ -1,24 +1,4 @@
-/* =========================================
-   THEME VARIABLES
-   ========================================= */
-
-.anime-card--dark {
-  --card-bg: #152232;
-  --card-bg-hover: #1a2838;
-  --card-title-color: #e5e7eb;
-  --card-info-color: #a0aec0;
-  --card-shadow: rgba(0, 0, 0, 0.2);
-  --card-shadow-hover: rgba(0, 0, 0, 0.3);
-}
-
-.anime-card--light {
-  --card-bg: #ffffff;
-  --card-bg-hover: #f7fafc;
-  --card-title-color: #2d3748;
-  --card-info-color: #718096;
-  --card-shadow: rgba(0, 0, 0, 0.08);
-  --card-shadow-hover: rgba(0, 0, 0, 0.15);
-}
+/* src/components/AnimeCard.module.css */
 
 /* =========================================
    BASE STYLES
@@ -34,21 +14,28 @@
 .anime-card {
   display: flex;
   flex-direction: column; 
-  background-color: var(--card-bg);
+  /* REFACTOR: Dùng biến toàn cục */
+  background-color: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  
   border-radius: 8px;
   overflow: hidden;
-  transition: transform 0.2s ease-in-out, background-color 0.3s ease, box-shadow 0.2s ease;
+  transition: transform 0.2s ease-in-out, background-color 0.3s ease, box-shadow 0.2s ease, border-color 0.3s ease;
   height: 100%; 
   width: 100%;
   min-width: 0;
-  box-shadow: 0 2px 8px var(--card-shadow);
+  
+  /* Giữ shadow nhẹ để tạo độ nổi */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 @media (hover: hover) {
   .anime-card:hover {
     transform: translateY(-5px);
-    background-color: var(--card-bg-hover);
-    box-shadow: 0 4px 12px var(--card-shadow-hover);
+    /* REFACTOR: Hover dùng bg-subtle */
+    background-color: var(--bg-subtle);
+    border-color: #3db4f2; /* Brand color cho border khi hover */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   }
 }
 
@@ -71,7 +58,7 @@
   width: 100%;
 }
 
-.anime-details.no-info { 
+.no-info { 
   justify-content: center; 
   padding: 8px 12px; 
 }
@@ -80,7 +67,9 @@
   margin: 0 0 6px 0; 
   font-size: 0.9rem; 
   font-weight: 600;
-  color: var(--card-title-color);
+  /* REFACTOR: Màu chữ chính */
+  color: var(--text-primary);
+  
   line-height: 1.3; 
   display: -webkit-box;
   -webkit-line-clamp: 2; 
@@ -92,7 +81,7 @@
   transition: color 0.3s ease;
 }
 
-.anime-details.no-info .anime-title-text { 
+.no-info .anime-title-text { 
   margin-bottom: 0; 
 }
 
@@ -106,7 +95,8 @@
   margin: 0 0 4px 0; 
   font-size: 0.75rem; 
   font-weight: 500; 
-  color: var(--card-info-color);
+  /* REFACTOR: Màu chữ phụ */
+  color: var(--text-secondary);
   transition: color 0.3s ease;
 }
 
@@ -115,7 +105,7 @@
    ========================================= */
 @media (max-width: 768px) {
   .anime-card {
-    box-shadow: 0 1px 4px var(--card-shadow);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
   }
 
   .anime-details {
