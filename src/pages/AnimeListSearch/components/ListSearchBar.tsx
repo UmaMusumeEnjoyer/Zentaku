@@ -3,7 +3,8 @@ import { FaSearch } from 'react-icons/fa';
 import { type ListSearchBarProps } from '@umamusumeenjoyer/shared-logic';
 import { useListSearchBar } from '@umamusumeenjoyer/shared-logic';
 import { useTranslation } from 'react-i18next';
-import '../AnimeListSearchPage.css';
+// [CHANGE] Import styles from module
+import styles from '../AnimeListSearchPage.module.css';
 
 const ListSearchBar: React.FC<ListSearchBarProps> = ({ onSearch }) => {
   const { t } = useTranslation(['AnimeListSearch']);
@@ -16,10 +17,10 @@ const ListSearchBar: React.FC<ListSearchBarProps> = ({ onSearch }) => {
   } = useListSearchBar(onSearch);
 
   return (
-    <div className="list-search-bar container">
-      <div className="ls-search-group">
+    <div className={`${styles.listSearchBar} ${styles.container}`}>
+      <div className={styles.lsSearchGroup}>
         <label>{t('AnimeListSearch:search_bar.label')}</label>
-        <div className="ls-search-box">
+        <div className={styles.lsSearchBox}>
           <input
             type="text"
             placeholder={t('AnimeListSearch:search_bar.placeholder')}
@@ -28,7 +29,7 @@ const ListSearchBar: React.FC<ListSearchBarProps> = ({ onSearch }) => {
             onKeyDown={handleKeyDown}
           />
           <div 
-            className="ls-search-btn" 
+            className={styles.lsSearchBtn} 
             onClick={handleSearchAction}
             role="button"
             tabIndex={0}

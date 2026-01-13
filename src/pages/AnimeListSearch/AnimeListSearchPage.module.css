@@ -1,0 +1,342 @@
+/* src/pages/AnimeListSearch/AnimeListSearchPage.module.css */
+
+/* =========================================
+   GLOBAL LAYOUT
+   ========================================= */
+
+.animeListSearchPage {
+  background-color: var(--bg-app);
+  color: var(--text-primary);
+  font-family: 'Overpass', sans-serif;
+  min-height: 100vh;
+  padding-bottom: 50px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.container {
+  max-width: 1250px;
+  margin: 0 auto;
+  padding: 0 30px;
+}
+
+/* Header Text */
+.listPageHeader {
+  padding-top: 40px;
+  margin-bottom: 20px;
+}
+
+.listPageHeader h1 {
+  color: var(--text-primary);
+  font-size: 2rem;
+  margin-bottom: 5px;
+  transition: color 0.3s ease;
+}
+
+.listPageHeader p {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  transition: color 0.3s ease;
+}
+
+/* =========================================
+   LIST SEARCH BAR
+   ========================================= */
+
+.listSearchBar {
+  display: grid;
+  grid-template-columns: 1fr max-content;
+  gap: 20px;
+  align-items: end;
+  margin-bottom: 40px;
+}
+
+.lsSearchGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.lsSearchGroup label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-left: 2px;
+  transition: color 0.3s ease;
+}
+
+.lsSearchBox {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.lsSearchBox input {
+  width: 100%;
+  height: 44px;
+  padding-left: 45px;
+  padding-right: 15px;
+  
+  /* [THEME] Input dùng nền Panel */
+  background-color: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  box-shadow: 0 4px 6px var(--card-shadow, rgba(0, 0, 0, 0.1));
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.lsSearchBox input:focus {
+  /* [THEME] Focus effect */
+  background-color: var(--bg-subtle);
+  border-color: var(--btn-primary-bg);
+  box-shadow: 0 0 0 2px var(--filter-focus-ring, rgba(100, 37, 208, 0.2));
+}
+
+.lsSearchBtn {
+  position: absolute;
+  left: 12px;
+  color: var(--text-secondary);
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: color 0.3s ease;
+}
+
+/* =========================================
+   SECTION & GRID
+   ========================================= */
+
+.sectionTitle {
+  font-size: 1.2rem;
+  color: var(--text-primary);
+  margin-bottom: 20px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: color 0.3s ease;
+}
+
+.topListsSection {
+  /* Giữ layout container */
+}
+
+.sectionHeader {
+  /* Layout header nếu cần */
+}
+
+.listsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+  gap: 25px;
+}
+
+/* =========================================
+   ANIME LIST CARD
+   ========================================= */
+
+.animeListCard {
+  background-color: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.3s ease;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+}
+
+.animeListCard:hover {
+  background-color: var(--bg-hover, var(--bg-subtle));
+  border-color: var(--btn-primary-bg);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Preview Images Area */
+.alcPreview {
+  height: 160px;
+  display: flex;
+  position: relative;
+  background-color: var(--bg-subtle); /* Placeholder color */
+  transition: background-color 0.3s ease;
+}
+
+.alcCover {
+  flex: 1;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  border-right: 1px solid rgba(0,0,0,0.1); /* Nhẹ nhàng hơn cho viền ảnh */
+}
+.alcCover:last-child { border-right: none; }
+
+.alcOverlay {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+  padding: 10px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.alcCount {
+  font-size: 0.8rem;
+  color: #fff; /* Luôn trắng vì nằm trên overlay tối */
+  background-color: rgba(0,0,0,0.6);
+  padding: 3px 8px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Info Area */
+.alcInfo {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.alcTitle {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--text-primary);
+  font-weight: 600;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  transition: color 0.3s ease;
+}
+
+.alcMeta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  transition: color 0.3s ease;
+}
+
+.alcMeta.noAvatar {
+  justify-content: flex-end;
+}
+
+.alcUser {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.alcAvatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--border-subtle);
+}
+
+.alcLikes {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.heartIcon {
+  color: #E84F63; /* Giữ màu Brand Heart */
+  font-size: 0.9rem;
+}
+
+/* =========================================
+   SEARCH LIST CARD (COLOR PREVIEW)
+   ========================================= */
+
+.alcColorPreview {
+  height: 160px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  /* background-color set inline */
+  transition: opacity 0.2s;
+}
+
+.alcColorPreview:hover {
+  opacity: 0.9;
+}
+
+.alcColorIcon {
+  font-size: 3rem;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.alcDescription {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin: 5px 0 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.searchResultsSection > p {
+  color: var(--text-secondary);
+}
+
+/* =========================================
+   [RESPONSIVE] MOBILE ADJUSTMENTS
+   ========================================= */
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 15px;
+  }
+
+  .listPageHeader {
+    padding-top: 20px; 
+    margin-bottom: 15px;
+  }
+  
+  .listPageHeader h1 {
+    font-size: 1.6rem;
+  }
+
+  /* Search Bar */
+  .listSearchBar {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-bottom: 25px;
+    align-items: stretch;
+  }
+  
+  .lsSearchGroup {
+    width: 100%;
+  }
+
+  /* Grid */
+  .listsGrid {
+    grid-template-columns: 1fr; 
+    gap: 15px;
+  }
+
+  /* Card */
+  .alcPreview, .alcColorPreview {
+    height: 140px; 
+  }
+  
+  .alcTitle {
+    font-size: 0.95rem;
+  }
+
+  .animeListCard:hover {
+    transform: none;
+  }
+}

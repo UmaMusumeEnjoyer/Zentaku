@@ -3,7 +3,8 @@ import { FaHeart, FaListAlt } from 'react-icons/fa';
 import { type SearchListCardProps } from '@umamusumeenjoyer/shared-logic';
 import { useNavigate } from 'react-router-dom';
 import { useSearchListCard } from '@umamusumeenjoyer/shared-logic';
-import '../AnimeListSearchPage.css';
+// [CHANGE] Import styles
+import styles from '../AnimeListSearchPage.module.css';
 
 const SearchListCard: React.FC<SearchListCardProps> = ({ listData }) => {
   
@@ -11,38 +12,31 @@ const SearchListCard: React.FC<SearchListCardProps> = ({ listData }) => {
   const { handleCardClick, cardColor } = useSearchListCard(listData, navigate);
   return (
     <div 
-      className="anime-list-card" 
+      className={styles.animeListCard} 
       onClick={handleCardClick}
       style={{ cursor: 'pointer' }}
     >
       {/* KHU VỰC MÀU */}
       <div 
-        className="alc-color-preview" 
+        className={styles.alcColorPreview} 
         style={{ backgroundColor: cardColor }}
       >
-        <FaListAlt className="alc-color-icon" />
+        <FaListAlt className={styles.alcColorIcon} />
       </div>
 
       {/* THÔNG TIN LIST */}
-      <div className="alc-info">
-        <h3 className="alc-title">{listData.list_name}</h3>
+      <div className={styles.alcInfo}>
+        <h3 className={styles.alcTitle}>{listData.list_name}</h3>
         
         {listData.description && (
-             <p style={{
-                 fontSize: '0.8rem', 
-                 color: '#8BA0B2', 
-                 margin: '5px 0 0',
-                 overflow: 'hidden',
-                 textOverflow: 'ellipsis',
-                 whiteSpace: 'nowrap'
-             }}>
+             <p className={styles.alcDescription}>
                  {listData.description}
              </p>
         )}
 
-        <div className="alc-meta no-avatar">
-          <div className="alc-likes">
-            <FaHeart className="heart-icon"/> {listData.like_count ?? 0}
+        <div className={`${styles.alcMeta} ${styles.noAvatar}`}>
+          <div className={styles.alcLikes}>
+            <FaHeart className={styles.heartIcon}/> {listData.like_count ?? 0}
           </div>
         </div>
       </div>
