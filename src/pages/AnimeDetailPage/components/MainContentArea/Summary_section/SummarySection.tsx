@@ -33,7 +33,7 @@ const SummarySection: React.FC<SummarySectionProps> = ({ anime, hasBanner }) => 
       return t(`AnimeModal:status_options.${watchStatus}`);
     }
     
-    return t('AnimeModal:labels.add_to_list') || 'Add to List'; // Dịch nút mặc định
+    return t('AnimeModal:status_options.default') || 'Add to List'; // Dịch nút mặc định
   }, [isLoadingStatus, isFollowing, watchStatus, t]);
 
   // Logic class cho wrapper chính

@@ -16,6 +16,7 @@
   min-height: 100vh;
   padding-bottom: 50px;
   transition: background-color 0.3s ease, color 0.3s ease;
+  padding: 0 100px;
 }
 
 .container {
