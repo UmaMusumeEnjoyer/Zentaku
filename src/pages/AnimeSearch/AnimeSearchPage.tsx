@@ -1,7 +1,8 @@
 import React from 'react';
 import { FaArrowLeft } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
-import './AnimeSearchPage.css';
+// [CHANGE] Import styles from module
+import styles from './AnimeSearchPage.module.css';
 
 // Import Components
 import HeroSection from './components/HeroSection';
@@ -11,6 +12,9 @@ import AnimeCard from '../../components/AnimeCard/AnimeCard';
 
 // Import Hook Logic
 import { useAnimeSearchPage } from '@umamusumeenjoyer/shared-logic';
+// [NOTE] useTheme không còn cần thiết để lấy giá trị 'theme' string cho class name nữa, 
+// nhưng vẫn giữ nếu component con cần context này. 
+// Trong trường hợp này, ta có thể bỏ destruct { theme } nếu không dùng logic gì khác.
 import { useTheme } from '../../context/ThemeContext';
 
 // Import Static Data
@@ -23,7 +27,8 @@ import {
 } from '@umamusumeenjoyer/shared-logic';
 
 const AnimeSearchPage: React.FC = () => {
-  const { theme } = useTheme();
+  // [CHANGE] Class name giờ tự động handle theo CSS variables, không cần string template theme
+  const { theme } = useTheme(); 
   const { t } = useTranslation('AnimeSearch');
   
   const {
@@ -40,44 +45,46 @@ const AnimeSearchPage: React.FC = () => {
   } = useAnimeSearchPage();
 
   return (
-    <div className={`anime-search-page anime-search-page--${theme}`}>
+    // [CHANGE] Sử dụng styles.animeSearchPage thay vì className string
+    // Thuộc tính data-theme vẫn giữ để hỗ trợ debug hoặc global overrides nếu cần
+    <div className={styles.animeSearchPage} data-theme={theme}>
       <HeroSection slides={heroList} />
       
       <FilterBar onSearch={handleSearch} activeFilters={currentFilters} />
 
-      <div className="page-content">
+      <div className={styles.pageContent}>
         {isSearching ? (
           // --- VIEW: SEARCH MODE ---
-          <div className="container anime-section">
+          <div className={`${styles.container} ${styles.animeSection}`}>
             
-            <div className="search-results-header">
-              <h2 className="section-title">{viewTitle}</h2>
-              <button className="back-btn" onClick={handleBackToHome}>
+            <div className={styles.searchResultsHeader}>
+              <h2 className={styles.sectionTitle}>{viewTitle}</h2>
+              <button className={styles.backBtn} onClick={handleBackToHome}>
                 <FaArrowLeft /> {t('searchResults.back')}
               </button>
             </div>
             
-            <div className="anime-grid">
+            <div className={styles.animeGrid}>
               {searchResults.length > 0 ? (
                 searchResults.map((anime, index) => (
-                  <div key={`${anime.id}-${index}`} className="grid-item">
+                  <div key={`${anime.id}-${index}`} className={styles.gridItem}>
                     <AnimeCard anime={anime} />
                   </div>
                 ))
               ) : (
                 !loading && (
-                  <div className="no-results-message">
+                  <div className={styles.noResultsMessage}>
                     {t('searchResults.noResults')}
                   </div>
                 )
               )}
             </div>
 
-            {loading && <div className="loading-message">{t('searchResults.loading')}</div>}
+            {loading && <div className={styles.loadingMessage}>{t('searchResults.loading')}</div>}
 
             {!loading && canLoadMore && searchResults.length > 0 && (
-              <div className="load-more-container">
-                <button className="btn-see-more" onClick={handleLoadMore}>
+              <div className={styles.loadMoreContainer}>
+                <button className={styles.btnSeeMore} onClick={handleLoadMore}>
                   {t('searchResults.seeMore')}
                 </button>
               </div>

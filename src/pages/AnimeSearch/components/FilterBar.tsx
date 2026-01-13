@@ -2,7 +2,8 @@
 
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import './FilterBar.css';
+// [CHANGE] Import styles from module
+import styles from './FilterBar.module.css';
 import { FaSearch, FaSyncAlt } from 'react-icons/fa';
 import { 
   filterData, 
@@ -26,28 +27,31 @@ const FilterBar: React.FC<FilterBarProps> = ({ onSearch, activeFilters }) => {
   } = useFilterBar({ onSearch, activeFilters: activeFilters??undefined});
 
   return (
-    <div className={`filter-bar container filter-bar--${theme}`}>
+    // [CHANGE] Use styles.filterBar and data-theme attribute
+    <div className={styles.filterBar} data-theme={theme}>
       {/* 1. SEARCH */}
-      <div className="filter-group filter-search">
+      <div className={`${styles.filterGroup} ${styles.filterSearch}`}>
         <label>{t('filterBar.labels.search')}</label>
-        <div className="search-box">
+        <div className={styles.searchBox}>
           <input
             type="text"
+            className={styles.searchInput}
             placeholder={t('filterBar.placeholder.search')}
             value={filters.keyword}
             onChange={(e) => handleInputChange(e.target.value)}
             onKeyDown={handleKeyDown}
           />
-          <div className="search-btn" onClick={handleSearchAction}>
+          <div className={styles.searchBtn} onClick={handleSearchAction}>
             <FaSearch />
           </div>
         </div>
       </div>
 
       {/* 2. GENRES */}
-      <div className="filter-group filter-genres">
+      <div className={`${styles.filterGroup} ${styles.filterGenres}`}>
         <label>{t('filterBar.labels.genres')}</label>
         <select 
+          className={styles.selectInput}
           value={filters.genre} 
           onChange={(e) => handleFilterChange('genre', e.target.value)}
         >
@@ -64,9 +68,10 @@ const FilterBar: React.FC<FilterBarProps> = ({ onSearch, activeFilters }) => {
       </div>
 
       {/* 3. YEAR */}
-      <div className="filter-group filter-year">
+      <div className={`${styles.filterGroup} ${styles.filterYear}`}>
         <label>{t('filterBar.labels.year')}</label>
         <select 
+          className={styles.selectInput}
           value={filters.year} 
           onChange={(e) => handleFilterChange('year', e.target.value)}
         >
@@ -78,9 +83,10 @@ const FilterBar: React.FC<FilterBarProps> = ({ onSearch, activeFilters }) => {
       </div>
 
       {/* 4. SEASON */}
-      <div className="filter-group filter-season">
+      <div className={`${styles.filterGroup} ${styles.filterSeason}`}>
         <label>{t('filterBar.labels.season')}</label>
         <select 
+          className={styles.selectInput}
           value={filters.season} 
           onChange={(e) => handleFilterChange('season', e.target.value)}
         >
@@ -94,9 +100,10 @@ const FilterBar: React.FC<FilterBarProps> = ({ onSearch, activeFilters }) => {
       </div>
 
       {/* 5. FORMAT */}
-      <div className="filter-group filter-format">
+      <div className={`${styles.filterGroup} ${styles.filterFormat}`}>
         <label>{t('filterBar.labels.format')}</label>
         <select 
+          className={styles.selectInput}
           value={filters.format} 
           onChange={(e) => handleFilterChange('format', e.target.value)}
         >
@@ -110,9 +117,10 @@ const FilterBar: React.FC<FilterBarProps> = ({ onSearch, activeFilters }) => {
       </div>
 
       {/* 6. STATUS */}
-      <div className="filter-group filter-status">
+      <div className={`${styles.filterGroup} ${styles.filterStatus}`}>
         <label>{t('filterBar.labels.status')}</label>
         <select 
+          className={styles.selectInput}
           value={filters.status} 
           onChange={(e) => handleFilterChange('status', e.target.value)}
         >
@@ -126,9 +134,10 @@ const FilterBar: React.FC<FilterBarProps> = ({ onSearch, activeFilters }) => {
       </div>
 
       {/* 7. SORT */}
-      <div className="filter-group filter-sort">
+      <div className={`${styles.filterGroup} ${styles.filterSort}`}>
         <label>{t('filterBar.labels.sort')}</label>
         <select 
+          className={styles.selectInput}
           value={filters.sort} 
           onChange={(e) => handleFilterChange('sort', e.target.value)}
         >
@@ -141,10 +150,10 @@ const FilterBar: React.FC<FilterBarProps> = ({ onSearch, activeFilters }) => {
       </div>
 
       {/* 8. CLEAR BUTTON */}
-      <div className="filter-group filter-clear" style={{ display: 'flex', alignItems: 'flex-end' }}>
+      <div className={styles.filterGroup} style={{ display: 'flex', alignItems: 'flex-end' }}>
         <button 
           onClick={handleClear}
-          className="btn-clear-filter"
+          className={styles.btnClearFilter}
           title={t('filterBar.buttons.clearTitle')}
         >
           <FaSyncAlt style={{ marginRight: '5px' }} /> 

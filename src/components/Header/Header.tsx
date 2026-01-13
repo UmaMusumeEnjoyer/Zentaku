@@ -1,7 +1,8 @@
 // src/components/Header/Header.tsx
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import './Header.css';
+// [CHANGE] Import styles from module
+import styles from './Header.module.css';
 import GlobalSearchModal from '../GlobalSearch/GlobalSearch';
 import { useTheme } from '../../context/ThemeContext';
 import { useAuth } from '../../context/AuthContext';
@@ -17,17 +18,14 @@ const Header: React.FC = () => {
   const { user, logout: authLogout } = useAuth();
   const { t, i18n } = useTranslation(['Header']);
 
-
-    const avatarUrl = React.useMemo(() => {
+  const avatarUrl = React.useMemo(() => {
     if (!user?.avatar_url) return DEFAULT_AVATAR;
     if (user.avatar_url.startsWith('http')) return user.avatar_url;
     return `${BACKEND_DOMAIN}${user.avatar_url}`;
   }, [user?.avatar_url]);
 
-
   const isAuthenticated = !!user;
 
-  // Sử dụng hook từ shared-logic
   const {
     isDropdownOpen,
     isSearchModalOpen,
@@ -50,7 +48,6 @@ const Header: React.FC = () => {
     backendDomain: BACKEND_DOMAIN,
   });
 
-
   const handleLogout = () => {
     authLogout();
     navigate('/login');
@@ -63,23 +60,22 @@ const Header: React.FC = () => {
     return timeString;
   };
 
-  // Language change handler
   const handleLanguageChange = (lang: string) => {
     i18n.changeLanguage(lang);
   };
 
   return (
     <>
-      <header className="app-header" data-theme={theme}>
-        <div className="header-left">
-          <div className="logo">
+      <header className={styles.appHeader} data-theme={theme}>
+        <div className={styles.headerLeft}>
+          <div className={styles.logo}>
             <Link to="/">
-              <img src="/images/app_logo.png" alt="Logo" className="logo-img" />
+              <img src="/images/app_logo.png" alt="Logo" className={styles.logoImg} />
             </Link>
           </div>
         </div>
 
-        <nav className="header-center">
+        <nav className={styles.headerCenter}>
           <Link to="/">{t('Header:navigation.home')}</Link>
           <Link to="/browse">{t('Header:navigation.browse')}</Link>
           {isAuthenticated && (
@@ -91,11 +87,11 @@ const Header: React.FC = () => {
           )}
         </nav>
 
-        <div className="header-right">
+        <div className={styles.headerRight}>
           {isAuthenticated ? (
             <>
               <button
-                className="btn-search"
+                className={styles.btnSearch}
                 aria-label={t('Header:accessibility.search')}
                 onClick={openSearchModal}
               >
@@ -105,48 +101,48 @@ const Header: React.FC = () => {
                 </svg>
               </button>
 
-              <div className="user-menu-container">
-                <div className="user-avatar-trigger" onClick={toggleDropdown}>
+              <div className={styles.userMenuContainer}>
+                <div className={styles.userAvatarTrigger} onClick={toggleDropdown}>
                   <img
                     src={avatarUrl}
                     alt="User Avatar"
-                    className="user-avatar-img"
+                    className={styles.userAvatarImg}
                   />
                   {notificationCount > 0 && (
-                    <span className="notification-badge">
+                    <span className={styles.notificationBadge}>
                       {notificationCount > 99 ? '99+' : notificationCount}
                     </span>
                   )}
                 </div>
 
                 {isDropdownOpen && (
-                  <div className="dropdown-menu">
-                    <div className="mobile-nav-group">
-                      <Link to="/" className="dropdown-item" onClick={toggleDropdown}>
+                  <div className={styles.dropdownMenu}>
+                    <div className={styles.mobileNavGroup}>
+                      <Link to="/" className={styles.dropdownItem} onClick={toggleDropdown}>
                         {t('Header:navigation.home')}
                       </Link>
-                      <Link to="/browse" className="dropdown-item" onClick={toggleDropdown}>
+                      <Link to="/browse" className={styles.dropdownItem} onClick={toggleDropdown}>
                         {t('Header:navigation.browse')}
                       </Link>
-                      <Link to="/animelist" className="dropdown-item" onClick={toggleDropdown}>
+                      <Link to="/animelist" className={styles.dropdownItem} onClick={toggleDropdown}>
                         {t('Header:navigation.anime_list')}
                       </Link>
-                      <div className="dropdown-divider"></div>
+                      <div className={styles.dropdownDivider}></div>
                     </div>
 
-                    <Link to="/profile" className="dropdown-item" onClick={toggleDropdown}>
+                    <Link to="/profile" className={styles.dropdownItem} onClick={toggleDropdown}>
                       {t('Header:user_menu.profile')}
                     </Link>
                     
-                    <button className="dropdown-item" onClick={openNotificationModal}>
+                    <button className={styles.dropdownItem} onClick={openNotificationModal}>
                       {t('Header:user_menu.notifications')}
                       {notificationCount > 0 && (
-                        <span className="dropdown-badge">{notificationCount}</span>
+                        <span className={styles.dropdownBadge}>{notificationCount}</span>
                       )}
                     </button>
 
                     {/* Settings Button */}
-                    <button className="dropdown-item" onClick={openSettingsModal}>
+                    <button className={styles.dropdownItem} onClick={openSettingsModal}>
                       {t('Header:user_menu.settings')}
                     </button>
 
@@ -155,7 +151,7 @@ const Header: React.FC = () => {
                         handleLogout();
                         toggleDropdown();
                       }}
-                      className="dropdown-item btn-dropdown-logout"
+                      className={`${styles.dropdownItem} ${styles.btnDropdownLogout}`}
                     >
                       {t('Header:buttons.logout')}
                     </button>
@@ -165,10 +161,10 @@ const Header: React.FC = () => {
             </>
           ) : (
             <>
-              <Link to="/login" className="btn-login">
+              <Link to="/login" className={styles.btnLogin}>
                 {t('Header:buttons.login')}
               </Link>
-              <Link to="/signup" className="btn-signup">
+              <Link to="/signup" className={styles.btnSignup}>
                 {t('Header:buttons.sign_up')}
               </Link>
             </>
@@ -180,35 +176,34 @@ const Header: React.FC = () => {
 
       {/* Notification Modal */}
       {isNotiModalOpen && (
-        <div className="noti-modal-overlay" onClick={closeNotificationModal}>
-          <div className="noti-modal-content" data-theme={theme} onClick={(e) => e.stopPropagation()}>
-            <div className="noti-header">
+        <div className={styles.notiModalOverlay} onClick={closeNotificationModal}>
+          <div className={styles.notiModalContent} data-theme={theme} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.notiHeader}>
               <h3>{t('Header:notifications.title')}</h3>
-              <button className="btn-close-noti" onClick={closeNotificationModal}>
+              <button className={styles.btnCloseNoti} onClick={closeNotificationModal}>
                 &times;
               </button>
             </div>
-            <div className="noti-list">
+            <div className={styles.notiList}>
               {notifications.length > 0 ? (
                 notifications.map((noti) => (
-                  <div key={noti.notification_id} className="noti-item">
-                    <div className="noti-icon">
-                      {/* [REF] Đổi cứng màu #3DB4F2 thành biến var(--btn-primary-bg) */}
+                  <div key={noti.notification_id} className={styles.notiItem}>
+                    <div className={styles.notiIcon}>
                       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--btn-primary-bg)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
                         <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
                       </svg>
                     </div>
-                    <div className="noti-info">
-                      <p className="noti-text">
+                    <div className={styles.notiInfo}>
+                      <p className={styles.notiText}>
                         <strong>{t('Header:notifications.episode')} {noti.episode_number}</strong>
-                        <span className="anime-title-highlight">
+                        <span className={styles.animeTitleHighlight}>
                           {noti.anime_title || `${t('Header:notifications.anime_id')}: ${noti.anilist_id}`}
                         </span>
                       </p>
-                      <div className="noti-meta-row">
-                        <span className="noti-time">{t('Header:notifications.sent')}: {formatDateTime(noti.sent_at)}</span>
-                        <span className={`noti-countdown ${getRelativeTime(noti.airing_at) === 'Aired' ? 'aired' : ''}`}>
+                      <div className={styles.notiMetaRow}>
+                        <span className={styles.notiTime}>{t('Header:notifications.sent')}: {formatDateTime(noti.sent_at)}</span>
+                        <span className={`${styles.notiCountdown} ${getRelativeTime(noti.airing_at) === 'Aired' ? styles.aired : ''}`}>
                           <svg style={{ marginRight: '4px', marginBottom: '-1px' }} xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <circle cx="12" cy="12" r="10"></circle>
                             <polyline points="12 6 12 12 16 14"></polyline>
@@ -220,7 +215,7 @@ const Header: React.FC = () => {
                   </div>
                 ))
               ) : (
-                <p className="noti-empty">{t('Header:notifications.empty')}</p>
+                <p className={styles.notiEmpty}>{t('Header:notifications.empty')}</p>
               )}
             </div>
           </div>
@@ -229,23 +224,23 @@ const Header: React.FC = () => {
 
       {/* Settings Modal */}
       {isSettingsModalOpen && (
-        <div className="settings-modal-overlay" onClick={closeSettingsModal}>
-          <div className="settings-modal-content" data-theme={theme} onClick={(e) => e.stopPropagation()}>
-            <div className="settings-header">
+        <div className={styles.settingsModalOverlay} onClick={closeSettingsModal}>
+          <div className={styles.settingsModalContent} data-theme={theme} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.settingsHeader}>
               <h3>{t('Header:settings.title')}</h3>
-              <button className="btn-close-settings" onClick={closeSettingsModal}>
+              <button className={styles.btnCloseSettings} onClick={closeSettingsModal}>
                 &times;
               </button>
             </div>
             
-            <div className="settings-body">
+            <div className={styles.settingsBody}>
               {/* Theme Section */}
-              <div className="settings-section">
-                <h4 className="settings-section-title">{t('Header:settings.theme.title')}</h4>
-                <p className="settings-section-description">{t('Header:settings.theme.description')}</p>
-                <div className="settings-options">
+              <div className={styles.settingsSection}>
+                <h4 className={styles.settingsSectionTitle}>{t('Header:settings.theme.title')}</h4>
+                <p className={styles.settingsSectionDescription}>{t('Header:settings.theme.description')}</p>
+                <div className={styles.settingsOptions}>
                   <button
-                    className={`settings-option-btn ${theme === 'dark' ? 'active' : ''}`}
+                    className={`${styles.settingsOptionBtn} ${theme === 'dark' ? styles.active : ''}`}
                     onClick={() => theme === 'light' && toggleTheme()}
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -254,7 +249,7 @@ const Header: React.FC = () => {
                     <span>{t('Header:settings.theme.dark')}</span>
                   </button>
                   <button
-                    className={`settings-option-btn ${theme === 'light' ? 'active' : ''}`}
+                    className={`${styles.settingsOptionBtn} ${theme === 'light' ? styles.active : ''}`}
                     onClick={() => theme === 'dark' && toggleTheme()}
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -274,22 +269,22 @@ const Header: React.FC = () => {
               </div>
 
               {/* Language Section */}
-              <div className="settings-section">
-                <h4 className="settings-section-title">{t('Header:settings.language.title')}</h4>
-                <p className="settings-section-description">{t('Header:settings.language.description')}</p>
-                <div className="settings-options">
+              <div className={styles.settingsSection}>
+                <h4 className={styles.settingsSectionTitle}>{t('Header:settings.language.title')}</h4>
+                <p className={styles.settingsSectionDescription}>{t('Header:settings.language.description')}</p>
+                <div className={styles.settingsOptions}>
                   <button
-                    className={`settings-option-btn ${i18n.language === 'en' ? 'active' : ''}`}
+                    className={`${styles.settingsOptionBtn} ${i18n.language === 'en' ? styles.active : ''}`}
                     onClick={() => handleLanguageChange('en')}
                   >
-                    <span className="language-flag">🇬🇧</span>
+                    <span className={styles.languageFlag}>🇬🇧</span>
                     <span>{t('Header:settings.language.english')}</span>
                   </button>
                   <button
-                    className={`settings-option-btn ${i18n.language === 'jp' ? 'active' : ''}`}
+                    className={`${styles.settingsOptionBtn} ${i18n.language === 'jp' ? styles.active : ''}`}
                     onClick={() => handleLanguageChange('jp')}
                   >
-                    <span className="language-flag">🇯🇵</span>
+                    <span className={styles.languageFlag}>🇯🇵</span>
                     <span>{t('Header:settings.language.japanese')}</span>
                   </button>
                 </div>

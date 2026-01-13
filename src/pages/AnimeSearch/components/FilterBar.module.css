@@ -1,0 +1,245 @@
+/* src/pages/AnimeSearch/components/FilterBar.module.css */
+
+/* =========================================
+   BASE STYLES
+   ========================================= */
+
+.filterBar {
+  display: grid;
+  grid-template-columns: 1fr repeat(6, max-content) max-content;
+  gap: 20px;
+  align-items: end;
+  margin-bottom: 35px;
+  width: 100%;
+  padding: 0 150px;
+}
+
+.filterGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.filterGroup label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  /* [THEME] */
+  color: var(--text-secondary);
+  margin-left: 2px;
+  white-space: nowrap;
+}
+
+/* =========================================
+   SEARCH STYLES
+   ========================================= */
+
+.filterSearch { 
+  width: 100%;
+}
+
+.searchBox { 
+  position: relative; 
+  width: 100%; 
+  display: flex;      
+  align-items: center;
+}
+
+.searchInput {
+  width: 100%; 
+  height: 40px; 
+  padding-left: 40px; 
+  padding-right: 15px;
+  
+  /* [THEME] Input Background & Border */
+  background-color: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  
+  border-radius: 6px;
+  font-weight: 600; 
+  font-size: 0.85rem;
+  outline: none; 
+  box-sizing: border-box; 
+  transition: all 0.2s ease;
+}
+
+.searchInput::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.7;
+}
+
+.searchBtn {
+  position: absolute;
+  left: 5px;           
+  top: 50%;            
+  transform: translateY(-50%); 
+  width: 30px;         
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  /* [THEME] Icon Color */
+  color: var(--text-secondary);
+  
+  cursor: pointer;
+  z-index: 10;         
+  border-radius: 50%;  
+  transition: all 0.2s;
+}
+
+.searchBtn:hover {
+  color: var(--btn-primary-bg);
+  background-color: var(--bg-subtle);
+}
+
+.searchBtn svg {
+  font-size: 0.9rem;
+}
+
+/* =========================================
+   SELECT STYLES
+   ========================================= */
+
+.selectInput {
+  height: 40px; 
+  padding: 0 35px 0 15px;
+  
+  /* [THEME] Select Styling */
+  background-color: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  
+  border-radius: 6px;
+  font-weight: 600; 
+  font-size: 0.85rem;
+  outline: none; 
+  cursor: pointer;
+  appearance: none; 
+  -webkit-appearance: none;
+  
+  /* Using a generic SVG arrow encoded */
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23888888%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+  background-repeat: no-repeat; 
+  background-position: right 12px top 50%; 
+  background-size: 10px auto;
+  transition: all 0.2s ease;
+}
+
+.selectInput option { 
+  background-color: var(--bg-panel);
+  color: var(--text-primary);
+}
+
+/* =========================================
+   INDIVIDUAL FILTER WIDTHS
+   ========================================= */
+
+.filterGenres select { min-width: 140px; }
+.filterYear select { min-width: 100px; }
+.filterSeason select { min-width: 110px; }
+.filterFormat select { min-width: 110px; }
+.filterStatus select { min-width: 120px; }
+.filterSort select { min-width: 130px; }
+
+/* =========================================
+   HOVER & FOCUS STATES
+   ========================================= */
+
+.searchInput:focus, 
+.selectInput:hover, 
+.selectInput:focus {
+  /* [THEME] Focus state */
+  border-color: var(--btn-primary-bg);
+  background-color: var(--bg-subtle);
+}
+
+/* =========================================
+   CLEAR BUTTON
+   ========================================= */
+
+.btnClearFilter {
+  height: 40px; 
+  padding: 0 15px;
+  
+  /* [THEME] Primary Button */
+  background-color: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  
+  border: none;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+}
+
+.btnClearFilter:hover {
+  /* Use explicit hover var if available, else opacity or filter */
+  opacity: 0.9;
+}
+
+/* =========================================
+   RESPONSIVE DESIGN
+   ========================================= */
+
+/* Laptop/Tablet (Dưới 1400px) */
+@media (max-width: 1400px) {
+  .filterBar {
+    grid-template-columns: repeat(4, 1fr); 
+  }
+  .filterSearch { 
+    grid-column: 1 / -1; 
+  }
+}
+
+/* Tablet dọc (Dưới 900px) - Grid 3 Cột */
+@media (max-width: 900px) {
+  .filterBar {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 15px;
+  }
+  .filterSearch { 
+    grid-column: 1 / -1 !important; 
+  }
+  
+  .btnClearFilter {
+    grid-column: 3 / 4 !important;
+    width: 100%;
+    margin-top: 5px;
+  }
+}
+
+/* Mobile (Dưới 600px) - Grid 2 Cột */
+@media (max-width: 600px) {
+  .filterBar { 
+    grid-template-columns: 1fr 1fr !important;
+    gap: 12px; 
+    margin-bottom: 20px;
+  }
+
+  .filterSearch { 
+    grid-column: 1 / -1 !important; 
+  }
+  
+  .btnClearFilter {
+    grid-column: 2 / 3 !important;
+    width: 100%;
+    margin-top: 5px;
+  }
+
+  .searchInput,
+  .selectInput {
+    font-size: 13px;
+    height: 38px;
+  }
+  
+  .filterGroup label {
+    font-size: 0.75rem;
+    margin-bottom: 2px;
+  }
+}

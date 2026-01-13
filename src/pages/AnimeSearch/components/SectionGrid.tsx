@@ -4,7 +4,7 @@ import AnimeCard from '../../../components/AnimeCard/AnimeCard';
 import { type SectionGridProps } from '@umamusumeenjoyer/shared-logic';
 import { useSectionGrid } from '@umamusumeenjoyer/shared-logic';
 import { useTheme } from '../../../context/ThemeContext';
-import './SectionGrid.css';
+import styles from './SectionGrid.module.css';
 
 const SectionGrid: React.FC<SectionGridProps> = ({ title, data, onViewAll }) => {
   // Kết nối ViewModel, Theme và i18n
@@ -17,23 +17,23 @@ const SectionGrid: React.FC<SectionGridProps> = ({ title, data, onViewAll }) => 
   }
 
   return (
-    <div className={`container anime-section ${theme}`}>
-      <div className="section-header">
-        <h2 className="section-title">{title}</h2>
+    <div className={styles.animeSection} data-theme={theme}>
+      <div className={styles.sectionHeader}>
+        <h2 className={styles.sectionTitle}>{title}</h2>
         
         {/* Nút View All với i18n */}
         <a 
           href="#!" 
-          className="view-all-btn" 
+          className={styles.viewAllBtn} 
           onClick={handleViewAllClick}
         >
           {t('buttons.view_all')}
         </a>
       </div>
 
-      <div className="anime-grid">
+      <div className={styles.animeGrid}>
         {data.map((anime) => (
-          <div key={anime.id} className="grid-item">
+          <div key={anime.id} className={styles.gridItem}>
             {/* Truyền toàn bộ object anime vào component con */}
             <AnimeCard anime={anime} />
           </div>

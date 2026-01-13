@@ -1,43 +1,18 @@
-/* =========================================
-   THEME VARIABLES
-   ========================================= */
-
-.anime-search-page--dark {
-  --page-bg: #0B1622;
-  --page-text: #9FADBD;
-  --section-title-color: #8BA0B2;
-  --back-btn-color: #8BA0B2;
-  --back-btn-hover: #E84F63;
-  --see-more-border: #2d3748;
-  --see-more-text: #a0aec0;
-  --see-more-hover-bg: #2d3748;
-  --see-more-hover-border: #4a5568;
-  --loading-text: #fff;
-  --no-results-text: #9FADBD;
-}
-
-.anime-search-page--light {
-  --page-bg: #f5f7fa;
-  --page-text: #2d3748;
-  --section-title-color: #4a5568;
-  --back-btn-color: #5a6c7d;
-  --back-btn-hover: #E84F63;
-  --see-more-border: #cbd5e0;
-  --see-more-text: #4a5568;
-  --see-more-hover-bg: #e2e8f0;
-  --see-more-hover-border: #a0aec0;
-  --loading-text: #2d3748;
-  --no-results-text: #718096;
-}
+/* src/pages/AnimeSearch/AnimeSearchPage.module.css */
 
 /* =========================================
    BASE STYLES
    ========================================= */
 
-.anime-search-page {
-  background-color: var(--page-bg);
-  color: var(--page-text);
+.animeSearchPage {
+  /* [REFACTOR] Thay --page-bg bằng biến toàn cục */
+  background-color: var(--bg-app);
+  /* [REFACTOR] Thay --page-text bằng biến toàn cục */
+  color: var(--text-primary);
+  
+  /* [RESTORED] Khôi phục font-family từ file gốc */
   font-family: 'Overpass', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  
   min-height: 100vh;
   padding-bottom: 50px;
   transition: background-color 0.3s ease, color 0.3s ease;
@@ -57,17 +32,22 @@
    LOAD MORE BUTTON
    ========================================= */
 
-.load-more-container {
+.loadMoreContainer {
   display: flex;
   justify-content: center;
   margin-top: 40px;
   width: 100%;
 }
 
-.btn-see-more {
+.btnSeeMore {
   background-color: transparent;
-  border: 2px solid var(--see-more-border);
-  color: var(--see-more-text);
+  
+  /* [REFACTOR] Viền nút: var(--border-subtle) thay vì --see-more-border */
+  border: 2px solid var(--border-subtle);
+  
+  /* [REFACTOR] Chữ nút: var(--text-secondary) thay vì --see-more-text */
+  color: var(--text-secondary);
+  
   padding: 10px 30px;
   font-size: 0.95rem;
   font-weight: 600;
@@ -76,14 +56,16 @@
   transition: all 0.2s ease;
 }
 
-.btn-see-more:hover {
-  background-color: var(--see-more-hover-bg);
-  color: var(--loading-text);
-  border-color: var(--see-more-hover-border);
+.btnSeeMore:hover {
+  /* [REFACTOR] Hover: Dùng màu nền phụ và chữ chính */
+  background-color: var(--bg-subtle);
+  color: var(--text-primary);
+  border-color: var(--text-primary); /* Hoặc giữ nguyên logic đổi màu viền */
+  
   transform: translateY(-2px);
 }
 
-.btn-see-more:active {
+.btnSeeMore:active {
   transform: translateY(0);
 }
 
@@ -91,7 +73,7 @@
    SEARCH RESULTS HEADER
    ========================================= */
 
-.search-results-header {
+.searchResultsHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -99,19 +81,27 @@
   margin-bottom: 25px;
 }
 
-.search-results-header .section-title {
-  color: var(--section-title-color);
+.sectionTitle {
+  /* [REFACTOR] Màu tiêu đề: var(--text-primary) thay vì --section-title-color */
+  color: var(--text-primary);
   transition: color 0.3s ease;
+  
+  /* Giữ nguyên các thuộc tính mặc định nếu cần */
+  margin: 0;
+  font-size: 1.5rem;
 }
 
 /* Back Button */
-.back-btn {
+.backBtn {
   display: flex;
   align-items: center;
   gap: 8px;
   background-color: transparent;
   border: none;
-  color: var(--back-btn-color);
+  
+  /* [REFACTOR] Màu nút back: var(--text-secondary) */
+  color: var(--text-secondary);
+  
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
@@ -119,28 +109,45 @@
   transition: all 0.2s ease;
 }
 
-.back-btn:hover {
-  color: var(--back-btn-hover);
+.backBtn:hover {
+  /* [REFACTOR] Hover: Dùng màu Brand (Primary) thay vì mã hex cứng #E84F63 */
+  color: var(--btn-primary-bg); 
   transform: translateX(-3px);
 }
 
-.back-btn svg {
+.backBtn svg {
   font-size: 0.9rem;
 }
 
 /* =========================================
-   MESSAGES
+   MESSAGES & GRID
    ========================================= */
 
-.loading-message {
-  color: var(--loading-text);
+/* [ADDED] File gốc không định nghĩa Grid cho Desktop (có thể do dùng chung class).
+   Ở đây thêm vào để đảm bảo Module hoạt động độc lập.
+*/
+.animeGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+/* Class bọc ngoài thẻ Card để giữ layout */
+.gridItem {
+  display: block;
+}
+
+.loadingMessage {
+  /* [REFACTOR] Màu loading: var(--text-secondary) */
+  color: var(--text-secondary);
   text-align: center;
   margin: 20px 0;
   transition: color 0.3s ease;
 }
 
-.no-results-message {
-  color: var(--no-results-text);
+.noResultsMessage {
+  /* [REFACTOR] Màu no-result: var(--text-secondary) */
+  color: var(--text-secondary);
   grid-column: 1 / -1;
   text-align: center;
   margin-top: 20px;
@@ -152,7 +159,7 @@
    ========================================= */
 
 @media (max-width: 768px) {
-  .anime-search-page {
+  .animeSearchPage {
     padding-bottom: 30px;
   }
 
@@ -161,15 +168,15 @@
     max-width: 100%;
   }
 
-  .search-results-header {
+  .searchResultsHeader {
     margin-bottom: 15px;
     align-items: center;
     flex-direction: row; 
     gap: 10px;
   }
 
-  .search-results-header h1,
-  .search-results-header h2 {
+  /* [RESTORED] Khôi phục logic cắt chữ (ellipsis) cho tiêu đề trên mobile */
+  .sectionTitle {
     font-size: 1.25rem;
     margin: 0;
     line-height: 1.3;
@@ -179,17 +186,17 @@
     flex: 1;
   }
 
-  .back-btn {
+  .backBtn {
     font-size: 0.9rem;
     padding: 8px 5px 8px 0;
     white-space: nowrap;
   }
 
-  .load-more-container {
+  .loadMoreContainer {
     margin-top: 30px;
   }
 
-  .btn-see-more {
+  .btnSeeMore {
     width: 100%;
     padding: 12px 0;
     font-size: 0.9rem;
@@ -198,7 +205,8 @@
     align-items: center;
   }
 
-  .anime-grid, .search-results-grid {
+  /* [RESTORED] Layout 2 cột cho Mobile */
+  .animeGrid {
     display: grid;
     grid-template-columns: repeat(2, 1fr) !important; 
     gap: 15px 10px; 

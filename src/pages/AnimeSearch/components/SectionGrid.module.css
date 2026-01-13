@@ -1,49 +1,37 @@
-/* =========================================
-   THEME VARIABLES
-   ========================================= */
-
-.anime-section.light {
-  --section-title-color: #4a5568;
-  --view-all-color: #5a6c7d;
-  --view-all-hover-color: #2d3748;
-  --view-all-hover-bg: #e2e8f0;
-}
-
-.anime-section.dark {
-  --section-title-color: #8BA0B2;
-  --view-all-color: #8BA0B2;
-  --view-all-hover-color: #ffffff;
-  --view-all-hover-bg: #151f2e;
-}
+/* src/components/SectionGrid/SectionGrid.module.css */
 
 /* =========================================
    SECTION GRID STYLES
    ========================================= */
 
-.anime-section {
+.animeSection {
   margin-bottom: 50px;
+  padding: 0 150px;
+  /* [THEME] Context colors provided by parent or global vars */
 }
 
-.section-header {
+.sectionHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
 }
 
-.section-title {
+.sectionTitle {
   font-size: 1rem;
   font-weight: 700;
-  color: var(--section-title-color);
+  /* [THEME] */
+  color: var(--text-primary);
   text-transform: capitalize;
   letter-spacing: 0.5px;
   transition: color 0.3s ease;
 }
 
-.view-all-btn {
+.viewAllBtn {
   font-size: 0.85rem;
   font-weight: 600;
-  color: var(--view-all-color);
+  /* [THEME] */
+  color: var(--text-secondary);
   text-decoration: none;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -55,12 +43,13 @@
   border-radius: 4px;
 }
 
-.view-all-btn:hover {
-  color: var(--view-all-hover-color);
-  background-color: var(--view-all-hover-bg);
+.viewAllBtn:hover {
+  /* [THEME] */
+  color: var(--text-primary);
+  background-color: var(--bg-subtle);
 }
 
-.anime-grid {
+.animeGrid {
   display: grid;
   /* Mặc định cho Mobile/Tablet: Giảm minmax xuống một chút (150px) để linh hoạt */
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -69,12 +58,12 @@
 
 /* [MỚI] Media query dành cho Desktop để ép cứng 6 cột */
 @media (min-width: 1100px) {
-  .anime-grid {
+  .animeGrid {
     grid-template-columns: repeat(6, 1fr);
   }
 }
 
-.grid-item {
+.gridItem {
   min-width: 0;
   height: 100%;
 }
@@ -84,13 +73,13 @@
    ========================================= */
 
 @media (max-width: 768px) {
-  .anime-section {
+  .animeSection {
     margin-bottom: 30px; 
     padding: 0 10px; 
   }
 
   /* [CHỈNH SỬA MẠNH] Ép buộc layout hàng ngang */
-  .section-header {
+  .sectionHeader {
     display: flex !important;
     flex-direction: row !important;
     justify-content: space-between !important;
@@ -99,14 +88,14 @@
     margin-bottom: 15px;
   }
 
-  .section-title {
+  .sectionTitle {
     font-size: 1.1rem; 
     margin: 0 !important;
     flex: 1;
     text-align: left;
   }
 
-  .view-all-btn {
+  .viewAllBtn {
     font-size: 0.75rem;
     padding: 6px 12px;
     white-space: nowrap;
@@ -115,7 +104,7 @@
     flex-shrink: 0; 
   }
 
-  .anime-grid {
+  .animeGrid {
     grid-template-columns: repeat(2, 1fr);
     gap: 15px 10px; 
   }

@@ -2,7 +2,8 @@ import React from 'react';
 //import { Link } from 'react-router-dom';
 import { type HeroSectionProps } from '@umamusumeenjoyer/shared-logic';
 import { useHeroSection } from '@umamusumeenjoyer/shared-logic';
-import './HeroSection.css';
+// [CHANGE] Import styles from module
+import styles from './HeroSection.module.css';
 
 const HeroSection: React.FC<HeroSectionProps> = ({ slides }) => {
   // Kết nối với ViewModel
@@ -14,27 +15,29 @@ const HeroSection: React.FC<HeroSectionProps> = ({ slides }) => {
   }
 
   return (
-    <div className="hero-slider">
+    <div className={styles.heroSlider}>
       {slides.map((slide, index) => (
         <div
-          className={index === current ? 'slide active' : 'slide'}
+          className={`${styles.slide} ${index === current ? styles.active : ''}`}
           key={slide.id}
         >
           {index === current && (
             <>
-              <div className="hero-background">
+              <div className={styles.heroBackground}>
                 <img src={slide.bannerUrl} alt={slide.title} />
-                <div className="hero-overlay"></div>
+                <div className={styles.heroOverlay}></div>
               </div>
 
-              <div className="hero-content container">
-                <h1 className="hero-title">{slide.title}</h1>
-                <p className="hero-description">{slide.description}</p>
+              {/* [CHANGE] Kết hợp class local styles.container và styles.heroContent */}
+              <div className={`${styles.heroContent} ${styles.container}`}>
+                <h1 className={styles.heroTitle}>{slide.title}</h1>
+                <p className={styles.heroDescription}>{slide.description}</p>
                 
-                <div className="hero-actions">
+                <div className={styles.heroActions}>
+                  {/* Example button commented out in original file, updated classes just in case */}
                   {/* <Link 
                     to={`/anime/${slide.id}`} 
-                    className="btn btn-primary"
+                    className={`${styles.btn} ${styles.btnPrimary}`}
                     style={{ textDecoration: 'none' }}
                   >
                     <i className="fas fa-play"></i> See details
@@ -46,12 +49,12 @@ const HeroSection: React.FC<HeroSectionProps> = ({ slides }) => {
         </div>
       ))}
 
-      <div className="slider-dots">
+      <div className={styles.sliderDots}>
         {slides.map((_, index) => (
           <div
             key={index}
             onClick={() => moveDot(index)}
-            className={current === index ? "dot active" : "dot"}
+            className={`${styles.dot} ${current === index ? styles.active : ''}`}
             role="button"
             tabIndex={0}
             aria-label={`Go to slide ${index + 1}`}

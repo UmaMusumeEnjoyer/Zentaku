@@ -1,13 +1,16 @@
+/* src/components/HeroSection/HeroSection.module.css */
+
 /* =========================================
    HERO SLIDER STYLES
    ========================================= */
 
-.hero-slider {
+.heroSlider {
   position: relative;
-  height: 450px;
-  max-width: 1400px;
-  margin: 0 auto 30px auto;
-  background-color: #000;
+  height: 400px;
+  max-width: 1600px;
+  margin: 0 150px 30px 150px;
+  /* Dùng màu panel làm nền backup nếu ảnh chưa load */
+  background-color: var(--bg-panel);
   display: flex;
 }
 
@@ -23,12 +26,12 @@
   align-items: flex-end;
 }
 
-.slide.active { 
+.active { 
   opacity: 1; 
   z-index: 1; 
 }
 
-.hero-background { 
+.heroBackground { 
   position: absolute; 
   top: 0; 
   left: 0; 
@@ -37,18 +40,19 @@
   z-index: 1; 
 }
 
-.hero-background img { 
+.heroBackground img { 
   width: 100%; 
   height: 100%; 
   object-fit: cover; 
 }
 
-.hero-overlay { 
+.heroOverlay { 
   position: absolute; 
   top: 0; 
   left: 0; 
   width: 100%; 
   height: 100%; 
+  /* Giữ nguyên gradient tối để làm nền cho chữ trắng */
   background: linear-gradient(
     90deg, 
     rgba(11, 22, 34, 0.95) 0%, 
@@ -57,31 +61,34 @@
   );
 }
 
-.hero-content { 
+.heroContent { 
   position: relative; 
   z-index: 10; 
   width: 100%; 
   margin-bottom: 40px; 
 }
 
-.hero-title { 
-  font-size: 2.5rem; 
-  font-weight: 800; 
-  color: #fff; 
-  margin-bottom: 15px; 
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); 
-}
-
-.hero-content.container { 
+/* Helper container class */
+.container { 
   padding: 0 40px; 
   width: 100%; 
   max-width: 100%; 
 }
 
-.hero-description { 
+.heroTitle { 
+  font-size: 2.5rem; 
+  font-weight: 800; 
+  /* Luôn giữ màu trắng để tương phản với overlay tối */
+  color: #fff; 
+  margin-bottom: 15px; 
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); 
+}
+
+.heroDescription { 
   max-width: 600px; 
   font-size: 0.95rem; 
   line-height: 1.6; 
+  /* Màu xám sáng cho mô tả */
   color: #e5e7eb; 
   margin-bottom: 25px; 
   display: -webkit-box; 
@@ -91,12 +98,12 @@
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); 
 }
 
-.hero-actions { 
+.heroActions { 
   display: flex; 
   gap: 15px; 
 }
 
-.slider-dots { 
+.sliderDots { 
   position: absolute; 
   bottom: 20px; 
   right: 40px; 
@@ -121,6 +128,7 @@
   box-shadow: 0 0 8px rgba(255, 255, 255, 0.6); 
 }
 
+/* Button Styles */
 .btn { 
   padding: 10px 24px; 
   border-radius: 6px; 
@@ -139,9 +147,10 @@
   transform: translateY(-2px); 
 }
 
-.btn-primary { 
-  background-color: #6425D0; 
-  color: white; 
+.btnPrimary { 
+  /* [THEME] Sử dụng biến màu brand */
+  background-color: var(--btn-primary-bg);
+  color: var(--btn-primary-text); 
 }
 
 /* =========================================
@@ -149,22 +158,22 @@
    ========================================= */
 
 @media (max-width: 768px) {
-  .hero-slider {
+  .heroSlider {
     height: 300px; 
     margin-bottom: 20px;
   }
 
-  .hero-overlay {
+  .heroOverlay {
     background: linear-gradient(0deg, rgba(11, 22, 34, 1) 0%, rgba(11, 22, 34, 0.4) 100%);
   }
 
-  .hero-content.container {
+  .container {
     padding: 0 20px;
     width: 100%;
     margin-bottom: 20px;
   }
 
-  .hero-title {
+  .heroTitle {
     font-size: 1.5rem;
     margin-bottom: 10px;
     line-height: 1.2;
@@ -174,14 +183,14 @@
     overflow: hidden;
   }
 
-  .hero-description {
+  .heroDescription {
     font-size: 0.85rem;
     line-height: 1.4;
     margin-bottom: 15px;
     -webkit-line-clamp: 3;
   }
 
-  .hero-actions {
+  .heroActions {
     gap: 10px;
   }
 
@@ -190,7 +199,7 @@
     font-size: 0.8rem;
   }
 
-  .slider-dots {
+  .sliderDots {
     right: auto;
     left: 50%;
     transform: translateX(-50%);

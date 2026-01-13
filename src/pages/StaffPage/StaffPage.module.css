@@ -36,7 +36,7 @@
 .pageWrapper {
     background-color: var(--bg-primary);
     color: var(--text-secondary);
-    padding: 40px 0;
+    padding: 40px 100px;
     font-family: 'Montserrat', sans-serif;
     min-height: 100vh;
     transition: background-color 0.3s ease, color 0.3s ease;

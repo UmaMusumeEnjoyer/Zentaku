@@ -1,18 +1,17 @@
-/* src/components/Header/Header.css */
+/* src/components/Header/Header.module.css */
 
 /* =========================================
    GLOBAL HEADER
    ========================================= */
-.app-header {
+.appHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 10px 250px;
   
-  /* [THEME] Sử dụng biến Semantic */
+  /* [THEME] */
   background-color: var(--bg-panel);
-  border-bottom: 1px solid var(--border-subtle); /* Thêm border để tách biệt header */
-  /* Dùng biến shadow nếu có, hoặc giữ nguyên rgba mờ */
+  border-bottom: 1px solid var(--border-subtle);
   box-shadow: 0 2px 4px var(--card-shadow, rgba(0,0,0,0.1));
   
   position: relative;
@@ -21,50 +20,46 @@
   transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
-.header-left .logo a {
+/* Nested selectors cần dùng class từ module */
+.headerLeft .logo a {
   display: flex;
   align-items: center;
 }
 
-.header-left .logo-img {
+.logoImg {
   height: 50px;
   width: auto;
   object-fit: contain;
   transition: transform 0.2s;
 }
 
-.header-center {
+.headerCenter {
   display: flex;
   align-items: center;
   gap: 20px;
 }
 
-.header-center a {
-  /* [THEME] Màu chữ phụ */
+.headerCenter a {
   color: var(--text-secondary);
   text-decoration: none;
   font-size: 1rem;
   transition: color 0.2s;
 }
 
-.header-center a:hover {
-  /* [THEME] Hover sáng lên màu chính */
+.headerCenter a:hover {
   color: var(--text-primary);
 }
 
-/* Link active state có thể thêm vào sau nếu cần */
-
-.header-right {
+.headerRight {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-.btn-theme,
-.btn-search {
+.btnTheme,
+.btnSearch {
   background: none;
   border: none;
-  /* [THEME] */
   color: var(--text-secondary);
   font-size: 1.2rem;
   cursor: pointer;
@@ -75,14 +70,13 @@
   justify-content: center;
 }
 
-.btn-theme:hover,
-.btn-search:hover {
-  /* [THEME] Màu brand primary */
+.btnTheme:hover,
+.btnSearch:hover {
   color: var(--btn-primary-bg);
 }
 
 /* Authentication Buttons */
-.btn-login, .btn-signup {
+.btnLogin, .btnSignup {
   padding: 8px 16px;
   border-radius: 4px;
   text-decoration: none;
@@ -90,40 +84,37 @@
   transition: all 0.2s;
 }
 
-.btn-login {
-  /* [THEME] */
+.btnLogin {
   color: var(--text-secondary);
   background: transparent;
   border: 1px solid var(--border-subtle);
 }
 
-.btn-login:hover {
-  /* [THEME] */
+.btnLogin:hover {
   color: var(--text-primary);
   border-color: var(--text-primary);
 }
 
-.btn-signup {
-  /* [THEME] Solid Primary Button */
+.btnSignup {
   color: var(--btn-primary-text);
   background: var(--btn-primary-bg);
   border: 1px solid var(--btn-primary-bg);
 }
 
-.btn-signup:hover {
-  background: var(--btn-primary-bg-hover);
+.btnSignup:hover {
+  background: var(--btn-primary-bg-hover, var(--btn-primary-bg)); /* Fallback nếu chưa có hover var */
 }
 
 /* =========================================
    USER MENU & DROPDOWN
    ========================================= */
-.user-menu-container {
+.userMenuContainer {
   position: relative;
   display: flex;
   align-items: center;
 }
 
-.user-avatar-trigger {
+.userAvatarTrigger {
   padding: 0;
   display: flex;
   cursor: pointer;
@@ -131,7 +122,7 @@
   position: relative;
 }
 
-.user-avatar-img {
+.userAvatarImg {
   width: 40px;
   height: 40px;
   border-radius: 5px;
@@ -140,18 +131,16 @@
   transition: border-color 0.2s;
 }
 
-.user-avatar-trigger:hover .user-avatar-img {
-  /* [THEME] */
+.userAvatarTrigger:hover .userAvatarImg {
   border-color: var(--btn-primary-bg);
 }
 
-.notification-badge {
+.notificationBadge {
   position: absolute;
   top: -5px;
   right: -5px;
-  /* [THEME] Error/Notification Color */
   background-color: var(--status-error);
-  color: white; /* Luôn là trắng trên nền đỏ */
+  color: white;
   font-size: 0.75rem;
   font-weight: bold;
   min-width: 18px;
@@ -160,7 +149,6 @@
   align-items: center;
   justify-content: center;
   border-radius: 10px;
-  /* [THEME] Border trùng màu nền panel để tạo khoảng cách */
   border: 2px solid var(--bg-panel);
   padding: 0 4px;
   z-index: 102;
@@ -174,14 +162,12 @@
 }
 
 /* Dropdown Menu */
-.dropdown-menu {
+.dropdownMenu {
   position: absolute;
   top: 130%;
   right: 0;
-  /* [THEME] */
   background-color: var(--bg-panel);
   border: 1px solid var(--border-subtle);
-  
   min-width: 150px;
   border-radius: 8px;
   box-shadow: 0 4px 12px var(--card-shadow, rgba(0, 0, 0, 0.3));
@@ -192,9 +178,8 @@
   animation: fadeIn 0.2s ease-in-out;
 }
 
-.dropdown-menu .dropdown-item {
+.dropdownItem {
   text-align: left;
-  /* [THEME] */
   color: var(--text-secondary);
   padding: 10px 20px;
   border-radius: 0;
@@ -209,17 +194,16 @@
   transition: all 0.2s;
 }
 
-.dropdown-menu .dropdown-item:hover {
-  /* [THEME] Hover Background */
-  background-color: var(--bg-hover);
+.dropdownItem:hover {
+  background-color: var(--bg-hover, #f0f0f0);
   color: var(--btn-primary-bg);
 }
 
-.dropdown-menu .btn-dropdown-logout:hover {
+.btnDropdownLogout:hover {
   color: var(--status-error);
 }
 
-.dropdown-badge {
+.dropdownBadge {
   margin-left: 8px;
   background-color: var(--status-error);
   color: white;
@@ -228,254 +212,25 @@
   border-radius: 10px;
 }
 
-.mobile-nav-group {
+.mobileNavGroup {
   display: none;
 }
 
-.dropdown-divider {
+.dropdownDivider {
   height: 1px;
   background-color: var(--border-subtle);
   margin: 4px 0;
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* =========================================
    NOTIFICATION MODAL
    ========================================= */
-.noti-modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.6); /* Overlay giữ nguyên màu tối */
-  z-index: 2000;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  animation: fadeIn 0.2s ease-out;
-}
-
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Modal Content */
-.noti-modal-content {
-  /* [THEME] */
-  background-color: var(--bg-panel);
-  border: 1px solid var(--border-subtle);
-  color: var(--text-primary);
-  
-  width: 400px;
-  max-width: 90%;
-  max-height: 80vh;
-  border-radius: 12px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  animation: slideUp 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
-  transition: background-color 0.3s ease;
-}
-
-/* Modal Header */
-.noti-header {
-  padding: 15px 20px;
-  /* [THEME] Dùng bg-subtle cho header để tách biệt với list */
-  background-color: var(--bg-subtle);
-  border-bottom: 1px solid var(--border-subtle);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  transition: background-color 0.3s ease;
-}
-
-.noti-header h3 {
-  margin: 0;
-  color: var(--text-primary);
-  font-size: 1.1rem;
-}
-
-/* Close Button */
-.btn-close-noti {
-  background: none;
-  border: none;
-  color: var(--text-secondary);
-  font-size: 1.5rem;
-  cursor: pointer;
-  padding: 0;
-  line-height: 1;
-  transition: color 0.2s;
-}
-
-.btn-close-noti:hover {
-  color: var(--text-primary);
-}
-
-/* List */
-.noti-list {
-  flex: 1;
-  overflow-y: auto;
-  padding: 10px 0;
-  background-color: var(--bg-panel);
-}
-
-/* Custom Scrollbar using theme vars (Optional but good) */
-.noti-list::-webkit-scrollbar {
-  width: 6px;
-}
-.noti-list::-webkit-scrollbar-track {
-  background: var(--bg-subtle);
-}
-.noti-list::-webkit-scrollbar-thumb {
-  background: var(--border-subtle);
-  border-radius: 3px;
-}
-
-/* Item */
-.noti-item {
-  padding: 15px 20px;
-  border-bottom: 1px solid var(--border-subtle);
-  display: flex;
-  gap: 15px;
-  transition: background-color 0.2s;
-}
-
-.noti-item:hover {
-  background-color: var(--bg-hover);
-}
-
-.noti-item:last-child {
-  border-bottom: none;
-}
-
-/* Notification Item Elements */
-.noti-icon {
-  display: flex;
-  align-items: flex-start;
-  padding-top: 2px;
-  /* SVG color is handled in React or via stroke styling below */
-  color: var(--btn-primary-bg);
-}
-
-.noti-info {
-  flex: 1;
-}
-
-/* Text */
-.noti-text {
-  margin: 0 0 8px 0;
-  color: var(--text-secondary);
-  font-size: 0.95rem;
-  line-height: 1.5;
-}
-
-.noti-text strong {
-  color: var(--text-primary);
-}
-
-.anime-title-highlight {
-  color: var(--btn-primary-bg);
-  font-weight: 600;
-  font-size: 1rem;
-  display: inline-block;
-  margin-left: 4px;
-}
-
-/* Meta Row */
-.noti-meta-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.8rem;
-  padding-top: 4px;
-  border-top: 1px dashed var(--border-subtle);
-}
-
-/* Time */
-.noti-time {
-  color: var(--text-secondary);
-  font-style: italic;
-  opacity: 0.8;
-}
-
-/* Countdown Badge */
-.noti-countdown {
-  /* Warning Color for upcoming */
-  color: var(--status-warning);
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  background-color: var(--bg-subtle); 
-  padding: 2px 6px;
-  border-radius: 4px;
-}
-
-.noti-countdown.aired {
-  /* Success Color for aired */
-  color: var(--status-success);
-  background-color: var(--bg-subtle);
-}
-
-/* Empty State */
-.noti-empty {
-  text-align: center;
-  color: var(--text-secondary);
-  padding: 30px;
-  font-style: italic;
-}
-
-/* =========================================
-   MOBILE RESPONSIVE
-   ========================================= */
-@media (max-width: 768px) {
-  .app-header {
-    padding: 10px 16px;
-  }
-
-  .header-center {
-    display: none !important;
-  }
-
-  .mobile-nav-group {
-    display: flex !important;
-    flex-direction: column;
-    width: 100%;
-  }
-
-  .dropdown-menu {
-    width: 180px;
-    top: 140%;
-  }
-
-  .noti-modal-content {
-    width: 95%;
-    max-height: 85vh;
-  }
-}
-
-/* =========================================
-   SETTINGS MODAL
-   ========================================= */
-.settings-modal-overlay {
+.notiModalOverlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -489,13 +244,167 @@
   animation: fadeIn 0.2s ease-out;
 }
 
-/* Modal Content */
-.settings-modal-content {
-  /* [THEME] */
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.notiModalContent {
   background-color: var(--bg-panel);
   border: 1px solid var(--border-subtle);
   color: var(--text-primary);
-  
+  width: 400px;
+  max-width: 90%;
+  max-height: 80vh;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: slideUp 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+  transition: background-color 0.3s ease;
+}
+
+.notiHeader {
+  padding: 15px 20px;
+  background-color: var(--bg-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background-color 0.3s ease;
+}
+
+.btnCloseNoti {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  transition: color 0.2s;
+}
+
+.btnCloseNoti:hover {
+  color: var(--text-primary);
+}
+
+.notiList {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px 0;
+  background-color: var(--bg-panel);
+}
+
+.notiList::-webkit-scrollbar { width: 6px; }
+.notiList::-webkit-scrollbar-track { background: var(--bg-subtle); }
+.notiList::-webkit-scrollbar-thumb { background: var(--border-subtle); border-radius: 3px; }
+
+.notiItem {
+  padding: 15px 20px;
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  gap: 15px;
+  transition: background-color 0.2s;
+}
+
+.notiItem:hover {
+  background-color: var(--bg-hover, #f5f5f5);
+}
+
+.notiItem:last-child {
+  border-bottom: none;
+}
+
+.notiIcon {
+  display: flex;
+  align-items: flex-start;
+  padding-top: 2px;
+  color: var(--btn-primary-bg);
+}
+
+.notiInfo {
+  flex: 1;
+}
+
+.notiText {
+  margin: 0 0 8px 0;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.notiText strong {
+  color: var(--text-primary);
+}
+
+.animeTitleHighlight {
+  color: var(--btn-primary-bg);
+  font-weight: 600;
+  font-size: 1rem;
+  display: inline-block;
+  margin-left: 4px;
+}
+
+.notiMetaRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  padding-top: 4px;
+  border-top: 1px dashed var(--border-subtle);
+}
+
+.notiTime {
+  color: var(--text-secondary);
+  font-style: italic;
+  opacity: 0.8;
+}
+
+.notiCountdown {
+  color: var(--status-warning);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  background-color: var(--bg-subtle); 
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.notiCountdown.aired {
+  color: var(--status-success);
+  background-color: var(--bg-subtle);
+}
+
+.notiEmpty {
+  text-align: center;
+  color: var(--text-secondary);
+  padding: 30px;
+  font-style: italic;
+}
+
+/* =========================================
+   SETTINGS MODAL
+   ========================================= */
+.settingsModalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 2000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.settingsModalContent {
+  background-color: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
   width: 500px;
   max-width: 90%;
   max-height: 80vh;
@@ -508,8 +417,7 @@
   transition: background-color 0.3s ease;
 }
 
-/* Header */
-.settings-header {
+.settingsHeader {
   padding: 20px 24px;
   background-color: var(--bg-subtle);
   border-bottom: 1px solid var(--border-subtle);
@@ -518,15 +426,14 @@
   align-items: center;
 }
 
-.settings-header h3 {
+.settingsHeader h3 {
   margin: 0;
   color: var(--text-primary);
   font-size: 1.2rem;
   font-weight: 600;
 }
 
-/* Close Button */
-.btn-close-settings {
+.btnCloseSettings {
   background: none;
   border: none;
   color: var(--text-secondary);
@@ -537,71 +444,57 @@
   transition: color 0.2s;
 }
 
-.btn-close-settings:hover {
+.btnCloseSettings:hover {
   color: var(--text-primary);
 }
 
-/* Body */
-.settings-body {
+.settingsBody {
   flex: 1;
   overflow-y: auto;
   padding: 24px;
   background-color: var(--bg-panel);
 }
 
-/* Scrollbar */
-.settings-body::-webkit-scrollbar {
-  width: 6px;
-}
-.settings-body::-webkit-scrollbar-track {
-  background: var(--bg-subtle);
-}
-.settings-body::-webkit-scrollbar-thumb {
-  background: var(--border-subtle);
-  border-radius: 3px;
-}
+.settingsBody::-webkit-scrollbar { width: 6px; }
+.settingsBody::-webkit-scrollbar-track { background: var(--bg-subtle); }
+.settingsBody::-webkit-scrollbar-thumb { background: var(--border-subtle); border-radius: 3px; }
 
-/* Settings Section */
-.settings-section {
+.settingsSection {
   margin-bottom: 32px;
 }
 
-.settings-section:last-child {
+.settingsSection:last-child {
   margin-bottom: 0;
 }
 
-.settings-section-title {
+.settingsSectionTitle {
   margin: 0 0 8px 0;
   color: var(--text-primary);
   font-size: 1rem;
   font-weight: 600;
 }
 
-.settings-section-description {
+.settingsSectionDescription {
   margin: 0 0 16px 0;
   color: var(--text-secondary);
   font-size: 0.875rem;
   line-height: 1.5;
 }
 
-/* Options Container */
-.settings-options {
+.settingsOptions {
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
 }
 
-/* Option Button */
-.settings-option-btn {
+.settingsOptionBtn {
   flex: 1;
   min-width: 140px;
   padding: 16px;
-  /* [THEME] */
   background-color: var(--bg-subtle);
   border: 2px solid var(--border-subtle);
   border-radius: 8px;
   color: var(--text-secondary);
-  
   font-size: 0.95rem;
   font-weight: 500;
   cursor: pointer;
@@ -612,64 +505,88 @@
   transition: all 0.2s ease;
 }
 
-.settings-option-btn:hover {
-  background-color: var(--bg-hover);
+.settingsOptionBtn:hover {
+  background-color: var(--bg-hover, #eee);
   border-color: var(--btn-primary-bg);
   color: var(--text-primary);
 }
 
-.settings-option-btn svg {
+.settingsOptionBtn svg {
   transition: transform 0.2s ease;
 }
 
-.settings-option-btn:hover svg {
+.settingsOptionBtn:hover svg {
   transform: scale(1.1);
 }
 
-/* Active State */
-.settings-option-btn.active {
+.active {
   background-color: var(--btn-primary-bg);
   border-color: var(--btn-primary-bg);
   color: var(--btn-primary-text);
 }
 
-.settings-option-btn.active svg {
+.active svg {
   color: var(--btn-primary-text);
 }
 
-/* Language Flag */
-.language-flag {
+.languageFlag {
   font-size: 1.5rem;
   line-height: 1;
 }
 
-/* Mobile Responsive Settings */
+/* =========================================
+   MOBILE RESPONSIVE
+   ========================================= */
 @media (max-width: 768px) {
-  .settings-modal-content {
+  .appHeader {
+    padding: 10px 16px;
+  }
+
+  .headerCenter {
+    display: none !important;
+  }
+
+  .mobileNavGroup {
+    display: flex !important;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .dropdownMenu {
+    width: 180px;
+    top: 140%;
+  }
+
+  .notiModalContent {
+    width: 95%;
+    max-height: 85vh;
+  }
+  
+  .settingsModalContent {
     width: 95%;
     max-height: 85vh;
   }
 
-  .settings-body {
+  .settingsBody {
     padding: 20px;
   }
 
-  .settings-section {
+  .settingsSection {
     margin-bottom: 24px;
   }
 
-  .settings-options {
+  .settingsOptions {
     flex-direction: column;
   }
 
-  .settings-option-btn {
+  .settingsOptionBtn {
     min-width: 100%;
     flex-direction: row;
     justify-content: flex-start;
     padding: 12px 16px;
   }
 
-  .language-flag {
+  .languageFlag {
     font-size: 1.25rem;
   }
 }

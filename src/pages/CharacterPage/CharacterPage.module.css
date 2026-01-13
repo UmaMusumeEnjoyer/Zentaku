@@ -2,7 +2,7 @@
 .pageWrapper {
     /* XÓA background-color ở đây vì sẽ để body handle */
     color: #c2c2c2;
-    padding: 40px 50px;
+    padding: 40px 100px;
     font-family: 'Montserrat', sans-serif;
     min-height: 100vh;
     position: relative;
