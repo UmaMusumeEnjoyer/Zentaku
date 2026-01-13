@@ -1,0 +1,217 @@
+/* src/pages/ProfilePage/components/EditProfileModal.module.css */
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  /* Overlay màu tối mờ giữ nguyên để tập trung sự chú ý */
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  /* [THEME] Nền Modal là Panel */
+  background-color: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  width: 450px;
+  max-width: 90%;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 8px 24px var(--card-shadow, rgba(0,0,0,0.5));
+  transition: background-color 0.3s ease;
+  /* [THEME] Chữ chính */
+  color: var(--text-primary);
+}
+
+.modalHeader {
+  padding: 16px;
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modalTitle {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.btnCloseModal {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 20px;
+  line-height: 1;
+  transition: color 0.2s ease;
+}
+
+.btnCloseModal:hover {
+  color: var(--text-primary);
+}
+
+.modalBody {
+  padding: 16px;
+}
+
+/* Avatar Section */
+.avatarSection {
+  margin-bottom: 20px;
+}
+
+.avatarLabel {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+.avatarActions {
+  display: flex;
+  gap: 10px;
+}
+
+.btnAvatarAction {
+  padding: 5px 12px;
+  border-radius: 6px;
+  
+  /* [THEME] Nút phụ: Nền subtle */
+  background-color: var(--bg-subtle);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btnAvatarAction:hover:not(:disabled) {
+  background-color: var(--bg-hover);
+  border-color: var(--text-secondary);
+}
+
+.btnAvatarAction:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btnAvatarDelete {
+  /* [THEME] Màu đỏ lỗi/xóa */
+  color: var(--status-error);
+  border-color: var(--status-error);
+  background-color: transparent;
+}
+
+.btnAvatarDelete:hover:not(:disabled) {
+  background-color: var(--bg-hover); 
+  opacity: 0.8;
+}
+
+/* Form Fields */
+.formGroup {
+  margin-bottom: 16px;
+}
+
+.formLabel {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+.formInput {
+  width: 100%;
+  padding: 5px 12px;
+  font-size: 14px;
+  line-height: 20px;
+  
+  /* [THEME] Input dùng nền App để nổi bật trên nền Panel */
+  background-color: var(--bg-app);
+  color: var(--text-primary);
+  border: 1px solid var(--border-subtle);
+  
+  border-radius: 6px;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+.formInput:focus {
+  /* [THEME] Focus dùng màu Brand */
+  border-color: var(--btn-primary-bg);
+  outline: none;
+  box-shadow: 0 0 0 3px var(--filter-focus-ring, rgba(100, 37, 208, 0.3));
+}
+
+.usernameHint {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+.modalFooter {
+  padding: 16px;
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.btnCancel {
+  padding: 5px 16px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 14px;
+  transition: color 0.2s ease;
+}
+
+.btnCancel:hover {
+  color: var(--text-primary);
+}
+
+.btnSave {
+  padding: 5px 16px;
+  
+  /* [THEME] Nút chính */
+  background-color: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  
+  border: 1px solid transparent;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.btnSave:hover:not(:disabled) {
+  opacity: 0.9;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.btnSave:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.errorMsg {
+  /* [THEME] Màu lỗi */
+  color: var(--status-error);
+  border: 1px solid var(--status-error);
+  font-size: 13px;
+  margin-bottom: 10px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  background-color: transparent; 
+}

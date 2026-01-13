@@ -1,0 +1,191 @@
+/* src/components/ActivityFeed/ActivityFeed.module.css */
+
+/* =========================================
+   THEME CONFIG FOR TIMELINE ICONS
+   ========================================= */
+.feedContainer[data-theme="dark"] {
+  --icon-add: #3fb950;
+  --icon-update: #388bfd;
+  --icon-default: #8b949e;
+  --icon-text: #0d1117;
+}
+
+.feedContainer[data-theme="light"] {
+  --icon-add: #48bb78;
+  --icon-update: #4299e1;
+  --icon-default: #718096;
+  --icon-text: #ffffff;
+}
+
+/* =========================================
+   FEED STRUCTURE
+   ========================================= */
+
+.feedContainer {
+  width: 100%;
+  padding-left: 10px; 
+}
+
+.feedRow {
+  display: flex;
+  gap: 16px;
+  position: relative;
+  padding-bottom: 24px; 
+}
+
+/* Timeline vertical line logic */
+.feedTimeline {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 16px; 
+  flex-shrink: 0;
+}
+
+.feedIconCircle {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: bold;
+  
+  /* [THEME] Màu chữ bên trong icon */
+  color: var(--icon-text);
+  
+  z-index: 2;
+  margin-top: 4px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Specific Action Colors */
+.feedIconAdd { 
+  background-color: var(--icon-add); 
+}
+
+.feedIconUpdate { 
+  background-color: var(--icon-update); 
+}
+
+.feedIconDefault { 
+  background-color: var(--icon-default); 
+}
+
+.feedLine {
+  flex-grow: 1;
+  width: 2px;
+  /* [THEME] Màu đường kẻ timeline */
+  background-color: var(--border-subtle);
+  margin-top: 4px;
+  transition: background-color 0.3s ease;
+}
+
+/* Content */
+.feedContentWrapper {
+  flex: 1;
+  padding-top: 2px; 
+  min-width: 0;
+}
+
+.feedHeader {
+  font-size: 14px;
+  line-height: 1.5;
+  /* [THEME] Chữ chính */
+  color: var(--text-primary);
+  word-wrap: break-word;
+  transition: color 0.3s ease;
+}
+
+.feedUser {
+  font-weight: 600;
+  margin-right: 4px;
+  /* [THEME] Tên user là chữ chính */
+  color: var(--text-primary);
+  transition: color 0.3s ease;
+}
+
+.feedAction {
+  /* [THEME] Mô tả hành động là chữ phụ */
+  color: var(--text-secondary);
+  margin-right: 4px;
+  transition: color 0.3s ease;
+}
+
+.feedTarget {
+  font-weight: 600;
+  /* [THEME] Tên đối tượng (Anime/List) là chữ chính */
+  color: var(--text-primary);
+  cursor: pointer;
+  margin-right: 8px;
+  transition: color 0.3s ease;
+}
+
+.feedTarget:hover {
+  /* [THEME] Hover link dùng màu brand */
+  color: var(--btn-primary-bg);
+  text-decoration: underline;
+}
+
+.feedTime {
+  font-size: 12px;
+  /* [THEME] Thời gian là chữ phụ */
+  color: var(--text-secondary);
+  display: block;
+  margin-top: 4px;
+  transition: color 0.3s ease;
+}
+
+/* Loading state */
+.feedLoading {
+  /* [THEME] */
+  color: var(--text-secondary);
+  padding: 20px 10px;
+  text-align: center;
+  transition: color 0.3s ease;
+}
+
+/* Empty state */
+.feedEmpty {
+  /* [THEME] */
+  color: var(--text-secondary);
+  transition: color 0.3s ease;
+}
+
+/* Load More Button */
+.btnLoadMore {
+  width: 100%;
+  padding: 8px;
+  background: transparent;
+  
+  /* [THEME] Border và Text */
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: all 0.3s ease;
+}
+
+.btnLoadMore:hover {
+  /* [THEME] Hover hiệu ứng */
+  background-color: var(--bg-subtle);
+  color: var(--text-primary);
+  border-color: var(--text-primary);
+}
+
+/* =========================================
+   [RESPONSIVE] MOBILE ADJUSTMENTS
+   ========================================= */
+@media (max-width: 768px) {
+  .feedRow {
+    gap: 12px;
+  }
+  
+  .feedHeader {
+    font-size: 13px;
+  }
+}

@@ -31,7 +31,7 @@
 
 @media (hover: hover) {
   .anime-card:hover {
-    transform: translateY(-5px);
+    
     /* REFACTOR: Hover dùng bg-subtle */
     background-color: var(--bg-subtle);
     border-color: #3db4f2; /* Brand color cho border khi hover */

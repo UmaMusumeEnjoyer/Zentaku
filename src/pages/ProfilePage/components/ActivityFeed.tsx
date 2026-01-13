@@ -4,14 +4,15 @@ import { useActivityFeed } from '@umamusumeenjoyer/shared-logic';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../../../context/ThemeContext';
 import { useTranslation } from 'react-i18next';
-import './ActivityFeed.css';
+// [CHANGE] Import styles from module
+import styles from './ActivityFeed.module.css';
 
-const ActivityFeed: React.FC<ActivityFeedProps> = ({username, filterDate }) => {
+const ActivityFeed: React.FC<ActivityFeedProps> = ({ username, filterDate }) => {
   const navigate = useNavigate();
   const { theme } = useTheme();
   const { t } = useTranslation(['ActivityFeed']);
   
-  // Kết nối ViewModel - Truyền hàm t vào hook
+  // Kết nối ViewModel
   const {
     loading,
     displayItems,
@@ -24,20 +25,31 @@ const ActivityFeed: React.FC<ActivityFeedProps> = ({username, filterDate }) => {
     getActionIconChar,
     getActionDescription,
     getTargetName
-  } = useActivityFeed({ username ,filterDate, t });
+  } = useActivityFeed({ username, filterDate, t });
 
   const handleTargetClick = (item: any) => {
     const url = getTargetUrl(item);
     navigate(url);
   };
 
+  // Helper function để map class từ logic cũ sang module class mới
+  const getModuleActionClass = (actionTypeClass: string) => {
+    // Giả sử getActionClass trả về chuỗi như 'feed-icon-add' hoặc 'feed-icon-update'
+    // Ta cần map nó sang styles.feedIconAdd
+    if (actionTypeClass.includes('add')) return styles.feedIconAdd;
+    if (actionTypeClass.includes('update')) return styles.feedIconUpdate;
+    return styles.feedIconDefault;
+  };
+
   // --- Render Loading ---
-  if (loading) return <div className="feed-loading" data-theme={theme}>{t('ActivityFeed:loading')}</div>;
+  if (loading) {
+    return <div className={styles.feedLoading} data-theme={theme}>{t('ActivityFeed:loading')}</div>;
+  }
   
   // --- Render Empty State ---
   if (!hasActivity) {
     return (
-      <div className="feed-empty" data-theme={theme} style={{textAlign: 'left', paddingLeft: '10px'}}>
+      <div className={styles.feedEmpty} data-theme={theme} style={{textAlign: 'left', paddingLeft: '10px'}}>
         {filterDate 
           ? t('ActivityFeed:empty_state.no_activity_on_date', { date: filterDate })
           : t('ActivityFeed:empty_state.no_activity')
@@ -48,31 +60,33 @@ const ActivityFeed: React.FC<ActivityFeedProps> = ({username, filterDate }) => {
 
   // --- Render List ---
   return (
-    <div className="feed-container" data-theme={theme}>
+    // [CHANGE] Sử dụng styles.feedContainer và data-theme
+    <div className={styles.feedContainer} data-theme={theme}>
       {displayItems.map((item, index) => {
         const isLast = index === displayItems.length - 1;
+        const actionClass = getActionClass(item.action_type);
 
         return (
-          <div key={item.id} className="feed-row">
+          <div key={item.id} className={styles.feedRow}>
             {/* Timeline Column */}
-            <div className="feed-timeline">
-               <div className={`feed-icon-circle ${getActionClass(item.action_type)}`}>
+            <div className={styles.feedTimeline}>
+               <div className={`${styles.feedIconCircle} ${getModuleActionClass(actionClass)}`}>
                    {getActionIconChar(item.action_type)}
                </div>
-               {!isLast && <div className="feed-line"></div>}
+               {!isLast && <div className={styles.feedLine}></div>}
             </div>
 
             {/* Content Column */}
-            <div className="feed-content-wrapper">
-                <div className="feed-header">
-                    <span className="feed-user">{username}</span>
+            <div className={styles.feedContentWrapper}>
+                <div className={styles.feedHeader}>
+                    <span className={styles.feedUser}>{username}</span>
                     
-                    <span className="feed-action">
+                    <span className={styles.feedAction}>
                         {getActionDescription(item.action_type)}
                     </span>
                     
                     <span 
-                        className="feed-target clickable" 
+                        className={styles.feedTarget}
                         onClick={() => handleTargetClick(item)}
                         role="button"
                         tabIndex={0}
@@ -80,7 +94,7 @@ const ActivityFeed: React.FC<ActivityFeedProps> = ({username, filterDate }) => {
                         {getTargetName(item)}
                     </span>
                     
-                    <span className="feed-time">{formatTimeAgo(item.ago_seconds)}</span>
+                    <span className={styles.feedTime}>{formatTimeAgo(item.ago_seconds)}</span>
                 </div>
             </div>
           </div>
@@ -88,7 +102,7 @@ const ActivityFeed: React.FC<ActivityFeedProps> = ({username, filterDate }) => {
       })}
 
       {canLoadMore && (
-        <button className="btn-load-more" onClick={handleLoadMore}>
+        <button className={styles.btnLoadMore} onClick={handleLoadMore}>
           {t('ActivityFeed:buttons.load_more')}
         </button>
       )}

@@ -3,7 +3,8 @@ import { type ActivityHistoryProps } from '@umamusumeenjoyer/shared-logic';
 import { useActivityHistory } from '@umamusumeenjoyer/shared-logic';
 import { useTheme } from '../../../context/ThemeContext';
 import { useTranslation } from 'react-i18next';
-import './ActivityHistory.css';
+// [CHANGE] Import styles from module
+import styles from './ActivityHistory.module.css';
 
 const ActivityHistory: React.FC<ActivityHistoryProps> = ({ 
   username,
@@ -26,19 +27,17 @@ const ActivityHistory: React.FC<ActivityHistoryProps> = ({
     getLevelClass 
   } = useActivityHistory(username,onTotalCountChange);
 
-  // Format date theo ngôn ngữ (tương tự formatDateByLanguage trong StaffPage)
+  // Format date theo ngôn ngữ
   const formatDateByLanguage = (dateString: string) => {
     const date = new Date(dateString);
     const currentLang = i18n.language;
     
     if (currentLang === 'jp') {
-      // Format Nhật: YYYY年MM月DD日
       const year = date.getFullYear();
       const month = date.getMonth() + 1;
       const day = date.getDate();
       return `${year}年${month}月${day}日`;
     } else {
-      // Format Anh: Month DD, YYYY
       return date.toLocaleDateString('en-US', { 
         year: 'numeric', 
         month: 'long', 
@@ -48,26 +47,36 @@ const ActivityHistory: React.FC<ActivityHistoryProps> = ({
   };
 
   if (loading) {
-    return <div className="heatmap-container">{t('loading')}</div>;
+    // [CHANGE] Use module class
+    return <div className={styles.heatmapContainer}>{t('loading')}</div>;
   }
 
   return (
-    <div className={`heatmap-wrapper ${theme}`}>
-      <div className="heatmap-container">
-        <div className="heatmap-grid">
+    // [CHANGE] Use styles.heatmapWrapper and data-theme
+    <div className={styles.heatmapWrapper} data-theme={theme}>
+      <div className={styles.heatmapContainer}>
+        <div className={styles.heatmapGrid}>
             {yearWeeks.map((week, wIndex) => (
-                <div key={wIndex} className="heatmap-col">
+                <div key={wIndex} className={styles.heatmapCol}>
                     {week.map((day) => {
                         // Ẩn ngày tương lai
                         if (day.isFuture) return null;
                         
                         const count = heatmapCounts[day.date] || 0;
                         const isSelected = selectedDate === day.date;
+                        
+                        // [NOTE] getLevelClass trả về string dạng 'level-0', 'level-1'...
+                        // Ta cần map nó vào styles['level-0']
+                        const levelClassName = styles[getLevelClass(count)];
 
                         return (
                             <div 
                                 key={day.date}
-                                className={`heatmap-cell ${getLevelClass(count)} ${isSelected ? 'selected-day' : ''}`}
+                                className={`
+                                  ${styles.heatmapCell} 
+                                  ${levelClassName} 
+                                  ${isSelected ? styles.selectedDay : ''}
+                                `}
                                 title={`${formatDateByLanguage(day.date)}: ${count} ${t('tooltip.activities')}`}
                                 onClick={() => onDateSelect && onDateSelect(day.date)}
                             />
@@ -79,13 +88,13 @@ const ActivityHistory: React.FC<ActivityHistoryProps> = ({
       </div>
       
       {/* Legend Area */}
-       <div className="heatmap-legend">
+       <div className={styles.heatmapLegend}>
            <span>{t('legend.less')}</span>
-           <div className="heatmap-cell level-0"></div>
-           <div className="heatmap-cell level-1"></div>
-           <div className="heatmap-cell level-2"></div>
-           <div className="heatmap-cell level-3"></div>
-           <div className="heatmap-cell level-4"></div>
+           <div className={`${styles.heatmapCell} ${styles['level-0']}`}></div>
+           <div className={`${styles.heatmapCell} ${styles['level-1']}`}></div>
+           <div className={`${styles.heatmapCell} ${styles['level-2']}`}></div>
+           <div className={`${styles.heatmapCell} ${styles['level-3']}`}></div>
+           <div className={`${styles.heatmapCell} ${styles['level-4']}`}></div>
            <span>{t('legend.more')}</span>
        </div>
     </div>

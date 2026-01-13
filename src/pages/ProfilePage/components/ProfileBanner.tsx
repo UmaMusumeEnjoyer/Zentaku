@@ -1,16 +1,14 @@
 import React from 'react';
-import './ProfileBanner.css';
+// [CHANGE] Import styles from module
+import styles from './ProfileBanner.module.css';
 import { type ProfileBannerProps } from '@umamusumeenjoyer/shared-logic';
 import { useProfileBanner } from '@umamusumeenjoyer/shared-logic';
-import { useTheme } from '../../../context/ThemeContext';
+// [NOTE] Không cần dùng theme string nữa vì CSS Modules tự handle qua var()
+// import { useTheme } from '../../../context/ThemeContext';
 import { useTranslation } from 'react-i18next';
 
 const ProfileBanner: React.FC<ProfileBannerProps> = ({ activeTab, onTabChange }) => {
-  // i18n
   const { t } = useTranslation('ProfilePagePage');
-  
-  // Kết nối ThemeContext
-  const { theme } = useTheme();
   
   // Kết nối ViewModel
   const { tabs, handleTabClick } = useProfileBanner(onTabChange);
@@ -27,17 +25,19 @@ const ProfileBanner: React.FC<ProfileBannerProps> = ({ activeTab, onTabChange })
   };
 
   return (
-    <div className={`profile-nav-container ${theme}`}>
-      <nav className="profile-nav">
+    // [CHANGE] Class name đơn giản, không cần nối chuỗi theme
+    <div className={styles.profileNavContainer}>
+      <nav className={styles.profileNav}>
         {tabs.map((tab) => (
           <div 
             key={tab.key}
-            className={`nav-item ${activeTab === tab.key ? 'active' : ''}`}
+            // [CHANGE] Kết hợp class active
+            className={`${styles.navItem} ${activeTab === tab.key ? styles.active : ''}`}
             onClick={() => handleTabClick(tab.key)}
             role="button"
             tabIndex={0}
           >
-            <svg className="nav-icon" viewBox="0 0 16 16">
+            <svg className={styles.navIcon} viewBox="0 0 16 16">
               <path fillRule="evenodd" d={tab.iconPath}></path>
             </svg>
             {getTabLabel(tab.key)}

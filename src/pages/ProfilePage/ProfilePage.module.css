@@ -1,0 +1,431 @@
+/* src/pages/ProfilePage/ProfilePage.module.css */
+
+/* =========================================
+   LAYOUT & BASE
+   ========================================= */
+
+.profilePage {
+  background-color: var(--bg-app);
+  color: var(--text-primary);
+  min-height: 100vh;
+  /* Font family thường được define ở global, nhưng giữ lại nếu cần override */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+}
+
+.profileContainer {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.profileLayout {
+  display: grid;
+  grid-template-columns: 296px 1fr; 
+  gap: 24px;
+}
+
+/* =========================================
+   LEFT SIDEBAR
+   ========================================= */
+.profileSidebar {
+  position: relative;
+}
+
+.profileAvatarWrapper {
+  margin-bottom: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+.profileAvatar {
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  border: 1px solid var(--border-subtle);
+  object-fit: cover;
+  background-color: var(--bg-panel);
+}
+
+.profileNames {
+  margin-bottom: 16px;
+}
+
+.profileDisplayName {
+  font-size: 24px;
+  line-height: 1.25;
+  font-weight: 600;
+  color: var(--text-primary);
+  display: block;
+}
+
+.profileUsername {
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 300;
+  line-height: 24px;
+  color: var(--text-secondary);
+  display: block;
+}
+
+.profileBio {
+  font-size: 16px;
+  margin-bottom: 16px;
+  color: var(--text-primary);
+}
+
+/* Edit Profile Button */
+.btnEditProfile {
+  width: 100%;
+  background-color: var(--bg-subtle);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  padding: 5px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-bottom: 16px;
+  transition: background-color 0.2s, border-color 0.2s;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.btnEditProfile:hover {
+  background-color: var(--bg-hover);
+  border-color: var(--text-secondary);
+}
+
+/* Meta Info (Joined Date, etc.) */
+.profileMeta {
+  margin-bottom: 16px;
+}
+
+.metaItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+  color: var(--text-primary);
+  font-size: 14px;
+}
+
+.metaIcon {
+  fill: var(--text-secondary);
+  width: 16px;
+  height: 16px;
+}
+
+.separator {
+  height: 1px;
+  background-color: var(--border-subtle);
+  margin: 16px 0;
+}
+
+/* Badges */
+.badgeSection {
+  margin-bottom: 16px;
+}
+
+.badgeTitle {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 16px;
+}
+
+.staffBadge {
+  border: 1px solid var(--border-subtle);
+  border-radius: 20px;
+  padding: 2px 8px;
+  font-size: 12px;
+  color: #a371f7; /* Giữ màu tím đặc trưng cho staff */
+  display: inline-block;
+  margin-top: 8px;
+}
+
+/* =========================================
+   RIGHT CONTENT
+   ========================================= */
+.profileContent {
+  min-width: 0; 
+}
+
+.activitySectionWrapper {
+  margin-top: 24px;
+}
+
+/* Section Headers */
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.sectionTitle {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.linkViewAll {
+  font-size: 12px;
+  color: var(--btn-primary-bg);
+  text-decoration: none;
+}
+
+.linkViewAll:hover {
+  text-decoration: underline;
+}
+
+/* =========================================
+   CUSTOM LISTS & FAVORITES
+   ========================================= */
+.customListsContainer,
+.favoritesContainer {
+  margin-top: 20px;
+}
+
+.customListGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+}
+
+.customListCard {
+  background-color: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  padding: 16px;
+  cursor: pointer;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+
+.customListCard:hover {
+  border-color: var(--text-secondary);
+  background-color: var(--bg-hover);
+}
+
+.listName { 
+  color: var(--text-primary); 
+  font-size: 16px; 
+  font-weight: 600;
+  margin: 0 0 4px 0;
+  display: flex;
+  align-items: center;
+}
+
+.listDesc { 
+  font-size: 12px; 
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.listMeta {
+  margin-top: 8px;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+/* Private Badge */
+.privateBadge {
+  font-size: 10px;
+  margin-left: 8px;
+  border: 1px solid var(--border-subtle);
+  padding: 2px 6px;
+  border-radius: 10px;
+  color: var(--text-secondary);
+  vertical-align: middle;
+  font-weight: normal;
+}
+
+.emptyText {
+  color: var(--text-secondary);
+  font-style: italic;
+  padding: 20px 0;
+}
+
+/* Anime Grid for Favorites */
+.animeGrid6 {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); 
+  gap: 20px 15px; 
+}
+
+.gridItem {
+  height: 100%;
+}
+
+/* =========================================
+   CREATE LIST MODAL (Refactored from inline)
+   ========================================= */
+.modalOverlay {
+  position: fixed; 
+  top: 0; 
+  left: 0; 
+  width: 100vw; 
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.7); 
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+  z-index: 1000;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.modalContent {
+  background: var(--bg-panel); 
+  border: 1px solid var(--border-subtle); 
+  padding: 20px; 
+  border-radius: 6px; 
+  width: 100%;
+  max-width: 400px; 
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
+
+.modalTitle {
+  margin-top: 0;
+  margin-bottom: 16px;
+  color: var(--text-primary);
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.formGroup {
+  margin-bottom: 15px;
+}
+
+.formLabel {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--text-primary);
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.formInput,
+.formTextarea {
+  width: 100%;
+  padding: 8px 12px;
+  background: var(--bg-app); 
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 0.9rem;
+  font-family: inherit;
+}
+
+.formInput:focus,
+.formTextarea:focus {
+  outline: none;
+  border-color: var(--btn-primary-bg);
+}
+
+.formCheckboxGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.btnCancel {
+  padding: 8px 16px;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.btnCancel:hover {
+  color: var(--text-primary);
+  background-color: var(--bg-subtle);
+}
+
+.btnCreate {
+  padding: 8px 16px;
+  background: var(--status-success, #238636); /* Fallback green if var missing */
+  border: none;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.btnCreate:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* =========================================
+   RESPONSIVE MOBILE
+   ========================================= */
+
+@media (max-width: 768px) {
+  .profileContainer {
+    padding: 16px;
+  }
+
+  .profileLayout {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  /* Sidebar Mobile */
+  .profileSidebar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .profileAvatar {
+    width: 80px; 
+    height: 80px;
+  }
+  .profileAvatarWrapper {
+    margin-bottom: 0;
+  }
+
+  .profileNames {
+    margin-bottom: 0;
+    flex: 1;
+  }
+  
+  .profileDisplayName {
+    font-size: 20px;
+  }
+  .profileUsername {
+    font-size: 16px;
+  }
+
+  .profileBio, 
+  .btnEditProfile, 
+  .profileMeta, 
+  .separator,
+  .badgeSection {
+    width: 100%;
+    flex-basis: 100%;
+  }
+  
+  .profileBio {
+    margin-top: 5px;
+    margin-bottom: 15px;
+  }
+
+  .animeGrid6 {
+    grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
+    gap: 10px;
+  }
+}

@@ -96,7 +96,7 @@
   --bg-app: var(--clr-surface-a0);
 
   /* Nền của các khối nội dung nổi (Card, Sidebar, Modal) */
-  --bg-panel: var(--clr-surface-a20);
+  --bg-panel: var(--clr-surface-tonal-a0);
 
   /* Nền khi hover vào một item (ví dụ item trong danh sách) */
   --bg-hover: var(--clr-surface-a30);
