@@ -169,8 +169,9 @@
 }
 
 .anime-list-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    background-color: var(--bg-subtle);
+    border-color: #3db4f2; /* Brand color cho border khi hover */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .anime-list-search-page[data-theme="light"] .anime-list-card:hover {

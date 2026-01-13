@@ -3,7 +3,8 @@ import { Link, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useNewsDetailLogic } from '@umamusumeenjoyer/shared-logic';
 import { useTheme } from '../../context/ThemeContext';
-import './NewsDetail.css';
+// [CHANGE] Import styles module
+import styles from './NewsDetail.module.css';
 
 const NewsDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -13,47 +14,48 @@ const NewsDetailPage: React.FC = () => {
 
   if (isNotFound || !newsItem) {
     return (
-      <div className={`news-page-container ${theme}`}>
-        <section className="news-detail-content not-found">
+      <div className={styles.newsPageContainer} data-theme={theme}>
+        <section className={`${styles.newsDetailContent} ${styles.notFound}`}>
           <h2>{t('news_detail.not_found.title')}</h2>
           <p>{t('news_detail.not_found.message', { id })}</p>
-          <Link to="/">{t('news_detail.not_found.back_home')}</Link>
+          {/* Reuse backLink style for consistency */}
+          <Link to="/" className={styles.backLink}>{t('news_detail.not_found.back_home')}</Link>
         </section>
       </div>
     );
   }
 
   return (
-    <div className={`news-page-container ${theme}`}>
-      <section className="news-detail-content">
-        <div className="news-header-bar">
+    <div className={styles.newsPageContainer} data-theme={theme}>
+      <section className={styles.newsDetailContent}>
+        <div className={styles.newsHeaderBar}>
           <h1>{newsItem.title}</h1>
         </div>
 
-        <div className="news-body">
+        <div className={styles.newsBody}>
           <img 
             src={newsItem.img} 
             alt={newsItem.title} 
-            className="news-image" 
+            className={styles.newsImage} 
           />
           
-          <div className="fullContent">
+          <div className={styles.fullContent}>
             {contentParagraphs.map((paragraph, index) => (
               <p key={index}>{paragraph}</p>
             ))}
           </div>
 
           {newsItem.featuredQuote && (
-            <blockquote className="special-quote">
+            <blockquote className={styles.specialQuote}>
               {newsItem.featuredQuote}
               {newsItem.quoteAttribution && (
-                <span className="attribution">{newsItem.quoteAttribution}</span>
+                <span className={styles.attribution}>{newsItem.quoteAttribution}</span>
               )}
             </blockquote>
           )}
         </div>
         
-        <Link to="/" className="backLink">
+        <Link to="/" className={styles.backLink}>
           &larr; {t('news_detail.navigation.back_to_list')}
         </Link>
       </section>

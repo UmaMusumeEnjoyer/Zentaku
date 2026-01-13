@@ -1,0 +1,198 @@
+/* src/pages/NewsDetail/NewsDetail.module.css */
+
+/* Container bọc toàn bộ trang */
+.newsPageContainer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 24px 16px;
+  
+  /* [THEME] Nền trang */
+  background-color: var(--bg-app);
+  
+  min-height: 80vh;
+  transition: background-color 0.3s ease;
+}
+
+.newsDetailContent {
+  width: 100%;
+  max-width: 960px;
+  
+  /* [THEME] Nền Card */
+  background-color: var(--bg-panel);
+  /* [THEME] Shadow nếu có biến, hoặc giữ nguyên rgba */
+  box-shadow: 0 4px 12px var(--card-shadow, rgba(0, 0, 0, 0.05));
+  
+  border-radius: 5px;
+  overflow: hidden;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.newsHeaderBar {
+  /* [THEME] Chuyển sang nền phụ để đồng bộ Light/Dark */
+  background-color: var(--bg-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+  
+  padding: 14px 24px;
+  transition: background-color 0.3s ease;
+}
+
+.newsHeaderBar h1 {
+  /* [THEME] Chữ chính */
+  color: var(--text-primary);
+  
+  text-align: center;
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  line-height: 1.4;
+}
+
+.newsBody {
+  padding: 24px 32px 32px 32px;
+}
+
+.newsImage {
+  max-width: 650px;
+  width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto 24px auto;
+  border-radius: 5px;
+  object-fit: cover;
+  
+  /* [THEME] Viền ảnh */
+  border: 1px solid var(--border-subtle);
+  transition: border-color 0.3s ease;
+}
+
+/* Nội dung bài viết */
+.fullContent p {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  
+  /* [THEME] Chữ chính */
+  color: var(--text-primary);
+  text-align:left;
+  padding-left: 110px;
+  margin-bottom: 16px;
+  transition: color 0.3s ease;
+}
+
+/* Link quay lại */
+.backLink {
+  display: inline-block;
+  padding: 0 32px 32px 32px;
+  text-decoration: none;
+  
+  /* [THEME] Màu brand */
+  color: var(--btn-primary-bg);
+  
+  font-weight: 500;
+  font-size: 1rem;
+  transition: color 0.2s;
+}
+
+.backLink:hover {
+  /* Có thể làm đậm hơn hoặc giữ nguyên, ở đây dùng opacity hoặc filter để đơn giản */
+  opacity: 0.8;
+}
+
+/* Not Found State */
+.notFound {
+  padding: 40px;
+  text-align: center;
+}
+
+.notFound h2 {
+  margin-bottom: 16px;
+  color: var(--status-error);
+  transition: color 0.3s ease;
+}
+
+.notFound p {
+  margin-bottom: 24px;
+  color: var(--text-secondary);
+  transition: color 0.3s ease;
+}
+
+/* Quote Styles */
+.specialQuote {
+  /* [THEME] Nền phụ */
+  background-color: var(--bg-subtle);
+  
+  /* [THEME] Viền nhấn brand */
+  border-left: 5px solid var(--btn-primary-bg);
+  
+  margin: 24px 0;
+  padding: 16px 24px;
+  font-style: italic;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  
+  /* [THEME] Chữ phụ cho quote */
+  color: var(--text-secondary);
+  
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.attribution {
+  display: block;
+  text-align: right;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 1rem;
+  
+  /* [THEME] Tên tác giả quote là chữ chính */
+  color: var(--text-primary);
+  
+  margin-top: 12px;
+  transition: color 0.3s ease;
+}
+
+.attribution::before {
+  content: "— ";
+}
+
+/* =========================================
+   [RESPONSIVE] MOBILE ADJUSTMENTS
+   ========================================= */
+
+@media (max-width: 768px) {
+  .newsPageContainer {
+    padding: 12px;
+  }
+
+  .newsHeaderBar {
+    padding: 12px 16px;
+  }
+  
+  .newsHeaderBar h1 {
+    font-size: 1.3rem;
+    text-align: left;
+  }
+
+  .newsBody {
+    padding: 20px 16px; 
+  }
+
+  .fullContent p {
+    font-size: 1rem; 
+    line-height: 1.6;
+    margin-bottom: 12px;
+  }
+
+  .specialQuote {
+    padding: 12px 16px;
+    margin: 16px 0;
+    font-size: 1rem;
+    border-left-width: 4px;
+  }
+  
+  .backLink {
+    padding: 0 16px 20px 16px;
+    font-size: 0.95rem;
+  }
+}
