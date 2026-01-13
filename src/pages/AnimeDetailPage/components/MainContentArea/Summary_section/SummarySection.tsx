@@ -1,18 +1,22 @@
 // src/components/SummarySection.tsx
-import React from 'react';
+import React, {useMemo} from 'react';
 import EditorModal from '../../AnimeModal/EditorModal'; 
 // 1. Import CSS Module
 import styles from './SummarySection.module.css';
 import type { SummarySectionProps } from '@umamusumeenjoyer/shared-logic';
 import { useSummarySection } from '@umamusumeenjoyer/shared-logic';
+import { useTranslation } from 'react-i18next';
 // 2. Xóa import useTheme vì không cần thiết nữa
 // import { useTheme } from '../../../../../context/ThemeContext';
 
 const SummarySection: React.FC<SummarySectionProps> = ({ anime, hasBanner }) => {
+  const { t } = useTranslation(['AnimeModal']);
   const {
     isModalOpen,
     currentStatusData,
-    buttonLabel,
+    watchStatus,      
+    isLoadingStatus,  
+    isFollowing,
     handleBtnClick,
     handleCloseModal,
     handleSave,
@@ -20,6 +24,17 @@ const SummarySection: React.FC<SummarySectionProps> = ({ anime, hasBanner }) => 
   } = useSummarySection(anime);
 
   // const { theme } = useTheme(); -> Đã xóa
+  const buttonLabel = useMemo(() => {
+    if (isLoadingStatus) return 'Loading...'; // Bạn có thể dùng t('common:loading') nếu muốn
+    
+    if (isFollowing && watchStatus) {
+      // Ghép chuỗi để khớp với key trong file ngôn ngữ JSON
+      // Ví dụ: t('AnimeModal:status_options.watching')
+      return t(`AnimeModal:status_options.${watchStatus}`);
+    }
+    
+    return t('AnimeModal:labels.add_to_list') || 'Add to List'; // Dịch nút mặc định
+  }, [isLoadingStatus, isFollowing, watchStatus, t]);
 
   // Logic class cho wrapper chính
   const sectionClass = !hasBanner 
