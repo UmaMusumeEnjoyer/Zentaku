@@ -1,0 +1,244 @@
+/* src/components/UserAnimeGroup/UserAnimeGroup.module.css */
+
+.userGroupSection {
+  margin-bottom: 40px;
+  background-color: var(--clr-surface-tonal-a10); /* Card Background */
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid var(--border-subtle);
+  transition: background-color 0.2s;
+}
+
+.userGroupHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.userGroupTitle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-primary);
+}
+
+.userGroupTitle h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+/* --- Add Button (Green Circle) --- */
+.btnAddCircle {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  color: #4cca51; /* Brand Green - Giữ nguyên hoặc dùng var(--accent-green) */
+  cursor: pointer;
+  margin-left: 10px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s, text-shadow 0.2s;
+}
+
+.btnAddCircle:hover {
+  text-shadow: 0 0 10px rgba(76, 202, 81, 0.6);
+  background: transparent;
+  transform: scale(1.1);
+}
+
+.btnAddCircle span {
+  font-size: 26px;
+  font-weight: 700;
+}
+
+/* --- Delete Mode Controls --- */
+.userActionsControls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btnIconOnly {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+  color: var(--text-secondary); /* Default icon color */
+}
+
+.btnIconOnly:hover {
+  background: var(--bg-subtle);
+  color: var(--text-primary);
+}
+
+/* Text Colors Utility */
+.textDanger {
+  color: #ef4444; /* Red 500 */
+}
+.textDanger:hover {
+  color: #dc2626; /* Red 600 */
+}
+
+.textSecondary {
+  color: var(--text-secondary);
+}
+
+/* Delete Actions Group */
+.deleteActionsGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--bg-subtle);
+  padding: 4px 8px;
+  border-radius: 20px;
+  animation: fadeIn 0.2s ease-in-out;
+  border: 1px solid var(--border-subtle);
+}
+
+.selectionCount {
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  font-weight: 600;
+  margin-right: 4px;
+}
+
+.btnConfirmDelete {
+  background-color: #dc2626; /* Red 600 */
+  color: white;
+  border: none;
+  padding: 6px 16px;
+  border-radius: 16px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: opacity 0.2s;
+}
+
+.btnConfirmDelete:disabled {
+  background-color: var(--border-subtle);
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Grid Layout */
+.animeGridRow {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 16px;
+}
+
+.gridItem {
+  height: 350px; /* Desktop height constraint */
+}
+
+/* Grid Item Wrapper & Overlay */
+.gridItemWrapper {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.2s;
+}
+
+.gridItemWrapper.deleteMode {
+  cursor: pointer;
+}
+
+.gridItemWrapper.selected {
+  outline: 3px solid #ef4444; /* Red 500 */
+  transform: scale(0.96);
+}
+
+.deleteOverlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.3); /* Overlay tối luôn cần semi-transparent black */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 5;
+}
+
+.gridItemWrapper.selected .deleteOverlay {
+  background-color: rgba(220, 38, 38, 0.2);
+}
+
+.checkIcon {
+  font-size: 48px;
+  color: rgba(255, 255, 255, 0.7);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.gridItemWrapper.selected .checkIcon {
+  color: #ef4444;
+  transform: scale(1.2);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 1200px) {
+  .animeGridRow { grid-template-columns: repeat(5, 1fr); }
+}
+@media (max-width: 900px) {
+  .animeGridRow { grid-template-columns: repeat(4, 1fr); }
+}
+@media (max-width: 600px) {
+  .animeGridRow { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* Mobile Adjustments */
+@media (max-width: 768px) {
+  .userGroupSection {
+    padding: 16px;
+    margin-bottom: 24px;
+  }
+
+  .userGroupHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .userGroupTitle h3 {
+    font-size: 1.1rem;
+  }
+  
+  .userActionsControls {
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 5px;
+  }
+
+  /* Grid Anime: Tối ưu chiều cao thẻ trên mobile */
+  .animeGridRow {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  
+  .gridItem {
+    height: auto;
+    aspect-ratio: 2/3; /* Tỉ lệ chuẩn poster */
+    min-height: 220px;
+  }
+
+  .btnAddCircle {
+    padding: 8px;
+  }
+}

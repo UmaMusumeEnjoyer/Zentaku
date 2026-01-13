@@ -1,0 +1,85 @@
+/* src/components/Sidebar/Sidebar.module.css */
+
+.sidebar {
+  background-color: transparent;
+  padding-top: 20px;
+}
+
+.sidebarSection {
+  margin-bottom: 32px;
+}
+
+.sidebarHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.sidebarTitle {
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+}
+
+.addBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  background-color: var(--bg-subtle);
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.addBtn:hover {
+  background-color: var(--border-subtle); /* Darker/Lighter subtle var */
+  color: var(--text-primary);
+}
+
+.userList {
+  /* Container cho list, nếu cần style thêm */
+}
+
+.emptyText {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-style: italic;
+  margin-top: -8px;
+  margin-bottom: 16px;
+}
+
+.loadingText {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .sidebar {
+    padding-top: 10px;
+  }
+  
+  .sidebarSection {
+    margin-bottom: 24px;
+    background-color: var(--bg-subtle); /* Nền nhẹ tách biệt khu vực trên mobile */
+    padding: 12px;
+    border-radius: 8px;
+  }
+
+  .sidebarHeader {
+    margin-bottom: 12px;
+  }
+
+  .addBtn {
+    width: 36px;
+    height: 36px;
+  }
+}

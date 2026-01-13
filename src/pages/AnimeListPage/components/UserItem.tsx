@@ -1,7 +1,10 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next'; // Import hook
+import { useTranslation } from 'react-i18next';
 import { useUserItem } from '@umamusumeenjoyer/shared-logic';
 import type { UserItemProps } from '@umamusumeenjoyer/shared-logic';
+
+// Import CSS Module
+import styles from './UserItem.module.css';
 
 const BACKEND_DOMAIN = import.meta.env.VITE_BACKEND_DOMAIN;
 const DEFAULT_AVATAR = import.meta.env.VITE_DEFAULT_AVATAR_URL;
@@ -14,7 +17,7 @@ const UserItem: React.FC<UserItemProps> = ({
   canRemove, 
   isCurrentUser 
 }) => {
-  const { t } = useTranslation(['userItem']); // Khởi tạo hook dịch
+  const { t } = useTranslation(['userItem']);
   const { displayAvatar } = useUserItem(
     user.username, 
     user.avatar_url,
@@ -23,28 +26,28 @@ const UserItem: React.FC<UserItemProps> = ({
   );
 
   return (
-    <div className={`sidebar-user-item ${isCurrentUser ? 'current-user' : ''}`}>
-      <div className="user-info">
-        <img src={displayAvatar} alt={user.username} className="user-avatar" />
+    <div className={`${styles.userItem} ${isCurrentUser ? styles.currentUser : ''}`}>
+      <div className={styles.userInfo}>
+        <img src={displayAvatar} alt={user.username} className={styles.userAvatar} />
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <p className="user-name">{user.username}</p>
-            {isCurrentUser && <span className="you-badge">{t('userItem.youBadge')}</span>}
+            <p className={styles.userName}>{user.username}</p>
+            {isCurrentUser && <span className={styles.youBadge}>{t('userItem.youBadge')}</span>}
           </div>
-          <p className="user-handle">@{user.username}</p> 
+          <p className={styles.userHandle}>@{user.username}</p> 
         </div>
       </div>
       
       <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
         {roleIcon && (
-          <span className="material-symbols-outlined role-icon" title={iconTitle}>
+          <span className={`material-symbols-outlined ${styles.roleIcon}`} title={iconTitle}>
             {roleIcon}
           </span>
         )}
         
         {canRemove && onRemove && (
           <button 
-            className="remove-member-btn"
+            className={styles.removeMemberBtn}
             onClick={() => onRemove(user.username)}
             title={t('userItem.removeMember')}
           >

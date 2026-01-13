@@ -1,0 +1,225 @@
+/* src/components/RequestList/RequestList.module.css */
+
+/* 1. CONTAINER STYLE */
+.requestListContainer {
+  margin-top: 24px;
+  background-color: var(--bg-panel);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+  transition: all 0.2s ease;
+  color: var(--text-primary);
+}
+
+/* Hiệu ứng khi có request: Dùng viền xanh (Brand color) */
+.hasPending {
+  border-color: rgba(61, 180, 242, 0.5); /* Blue hex with opacity */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* 2. HEADER (SUMMARY) */
+.requestSummary {
+  padding: 14px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  background-color: transparent;
+  transition: background-color 0.2s;
+}
+
+.requestSummary:hover {
+  background-color: var(--bg-subtle);
+}
+
+.summaryTitle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  letter-spacing: 0.02em;
+}
+
+/* Badge số lượng: Giữ màu Brand Blue */
+.badgeCount {
+  background-color: #3db4f2;
+  color: #0b1622; /* Text tối trên nền xanh sáng */
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 6px;
+  min-width: 20px;
+  text-align: center;
+}
+
+.toggleIcon {
+  color: var(--text-secondary);
+  font-size: 1.2rem;
+  transition: transform 0.3s ease;
+}
+
+.expanded {
+  transform: rotate(180deg);
+  color: var(--text-secondary);
+}
+
+/* 3. EXPANDED CONTENT */
+.requestContent {
+  border-top: 1px solid var(--border-subtle);
+  background-color: var(--bg-subtle); /* Dùng bg-subtle để tách biệt với bg-panel của card */
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.reqGroup {
+  padding-bottom: 4px;
+}
+
+.reqSectionTitle {
+  padding: 16px 16px 8px;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* 4. REQUEST ITEM */
+.requestItem {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-subtle);
+  transition: background 0.2s;
+}
+
+.requestItem:hover {
+  background-color: rgba(255, 255, 255, 0.02); /* Giữ hiệu ứng nhẹ */
+}
+
+.requestItem:last-child {
+  border-bottom: none;
+}
+
+.reqUserRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.reqUsername {
+  font-weight: 600;
+  color: #3db4f2; /* Brand Blue */
+  font-size: 0.9rem;
+}
+
+.reqTime {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.reqMsg {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-style: italic;
+  margin-bottom: 12px;
+  line-height: 1.4;
+  padding-left: 8px;
+  border-left: 2px solid var(--border-subtle);
+}
+
+/* 5. ACTION BUTTONS */
+.reqActions {
+  display: flex;
+  gap: 10px;
+}
+
+.btnReqAction {
+  flex: 1;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.2s;
+  background-color: transparent;
+}
+
+/* Nút Accept: Màu xanh lá (Status Color) */
+.btnAccept {
+  color: #4cca51;
+  border: 1px solid rgba(76, 202, 81, 0.3);
+  background-color: rgba(76, 202, 81, 0.05);
+}
+
+.btnAccept:hover {
+  background-color: rgba(76, 202, 81, 0.15);
+  border-color: #4cca51;
+}
+
+/* Nút Reject: Màu đỏ (Status Color) */
+.btnReject {
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  background-color: rgba(239, 68, 68, 0.05);
+}
+
+.btnReject:hover {
+  background-color: rgba(239, 68, 68, 0.15);
+  border-color: #ef4444;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .requestListContainer {
+    margin-top: 15px;
+    border-radius: 8px;
+  }
+
+  .requestSummary {
+    padding: 12px;
+  }
+
+  .summaryTitle {
+    font-size: 0.85rem;
+  }
+
+  .requestItem {
+    padding: 12px;
+  }
+
+  .reqUserRow {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .reqUsername {
+    font-size: 0.9rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 60%; 
+  }
+
+  .reqActions {
+    gap: 8px;
+  }
+
+  .btnReqAction {
+    padding: 10px 0;
+    font-size: 0.85rem;
+  }
+}

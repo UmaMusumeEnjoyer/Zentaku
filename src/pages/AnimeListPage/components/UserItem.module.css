@@ -1,0 +1,127 @@
+/* src/components/Sidebar/UserItem.module.css */
+
+.userItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  transition: background-color 0.2s;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.userAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--border-subtle);
+}
+
+.userName {
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.userHandle {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.roleIcon {
+  color: var(--text-secondary);
+  font-size: 1.25rem;
+}
+
+/* Remove Button */
+.removeMemberBtn {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  opacity: 0.6;
+}
+
+/* Hover logic cho user item tác động lên nút remove */
+.userItem:hover .removeMemberBtn {
+  opacity: 1;
+}
+
+.removeMemberBtn:hover {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: #ef4444; /* Status Red */
+}
+
+.removeMemberBtn span {
+  font-size: 18px;
+}
+
+/* Current User Styling */
+.currentUser {
+  background: rgba(61, 180, 242, 0.1); /* Brand Blue Transparent */
+  border: 1px solid rgba(61, 180, 242, 0.3);
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-left: -12px;
+  margin-right: -12px;
+  width: calc(100% + 24px);
+}
+
+.currentUser .removeMemberBtn {
+  margin-right: -4px;
+}
+
+.youBadge {
+  font-size: 0.7rem;
+  background-color: #3db4f2; /* Brand Blue */
+  color: #0b1622; /* Text on bright badge - keep dark */
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .userItem {
+    margin-bottom: 12px;
+    padding: 4px 0;
+  }
+
+  .userAvatar {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .userName {
+    font-size: 0.9rem;
+  }
+
+  .removeMemberBtn {
+    opacity: 1; 
+    padding: 8px;
+    background-color: var(--bg-subtle);
+    border-radius: 6px;
+  }
+  
+  .currentUser {
+    margin-left: 0;
+    margin-right: 0;
+    width: 100%;
+    box-sizing: border-box;
+  }
+}

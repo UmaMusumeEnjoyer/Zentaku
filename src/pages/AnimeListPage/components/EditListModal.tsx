@@ -1,8 +1,10 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next'; // Import hook
+import { useTranslation } from 'react-i18next';
 import { useEditListModal } from '@umamusumeenjoyer/shared-logic';
 import type { EditListModalProps } from '@umamusumeenjoyer/shared-logic';
-import './EditListModal.css';
+
+// Import CSS Module
+import styles from './EditListModal.module.css';
 
 const EditListModal: React.FC<EditListModalProps> = ({ 
   isOpen, 
@@ -11,7 +13,7 @@ const EditListModal: React.FC<EditListModalProps> = ({
   initialData, 
   onUpdateSuccess 
 }) => {
-  const { t } = useTranslation(['editListModal']); // Khởi tạo hook dịch
+  const { t } = useTranslation(['editListModal']);
   const {
     formData,
     isSubmitting,
@@ -24,7 +26,6 @@ const EditListModal: React.FC<EditListModalProps> = ({
     try {
       await handleSubmit();
     } catch (error) {
-      // Dịch thông báo lỗi
       alert(t('editListModal.updateError'));
     }
   };
@@ -46,12 +47,12 @@ const EditListModal: React.FC<EditListModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="edit-list-overlay" onClick={handleOverlayClick}>
-      <div className="edit-list-content" onClick={(e) => e.stopPropagation()}>
-        <h2 className="edit-list-title">{t('editListModal.title')}</h2>
+    <div className={styles.editListOverlay} onClick={handleOverlayClick}>
+      <div className={styles.editListContent} onClick={(e) => e.stopPropagation()}>
+        <h2 className={styles.editListTitle}>{t('editListModal.title')}</h2>
         <form onSubmit={handleFormSubmit}>
           
-          <div className="form-group">
+          <div className={styles.formGroup}>
             <label>{t('editListModal.listName')}</label>
             <input 
               type="text" 
@@ -64,7 +65,7 @@ const EditListModal: React.FC<EditListModalProps> = ({
             />
           </div>
 
-          <div className="form-group">
+          <div className={styles.formGroup}>
             <label>{t('editListModal.description')}</label>
             <textarea 
               name="description" 
@@ -75,10 +76,10 @@ const EditListModal: React.FC<EditListModalProps> = ({
             />
           </div>
 
-          <div className="form-row">
-            <div className="form-group">
+          <div className={styles.formRow}>
+            <div className={styles.formGroup}>
               <label>{t('editListModal.themeColor')}</label>
-              <div className="color-input-wrapper">
+              <div className={styles.colorInputWrapper}>
                 <input 
                   type="color" 
                   name="color" 
@@ -86,12 +87,12 @@ const EditListModal: React.FC<EditListModalProps> = ({
                   onChange={handleInputChangeWrapper}
                   disabled={isSubmitting}
                 />
-                <span className="color-value">{formData.color}</span>
+                <span className={styles.colorValue}>{formData.color}</span>
               </div>
             </div>
 
-            <div className="checkbox-group">
-              <label className="checkbox-label">
+            <div className={styles.checkboxGroup}>
+              <label className={styles.checkboxLabel}>
                 <input 
                   type="checkbox" 
                   name="is_private" 
@@ -104,10 +105,10 @@ const EditListModal: React.FC<EditListModalProps> = ({
             </div>
           </div>
 
-          <div className="edit-list-actions">
+          <div className={styles.editListActions}>
             <button 
               type="button" 
-              className="btn-cancel" 
+              className={styles.btnCancel} 
               onClick={onClose}
               disabled={isSubmitting}
             >
@@ -115,7 +116,7 @@ const EditListModal: React.FC<EditListModalProps> = ({
             </button>
             <button 
               type="submit" 
-              className="btn-submit"
+              className={styles.btnSubmit}
               disabled={isSubmitting}
             >
               {isSubmitting ? t('editListModal.saving') : t('editListModal.saveChanges')}

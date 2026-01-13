@@ -1,9 +1,11 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next'; // Import hook
+import { useTranslation } from 'react-i18next';
 import { useUserAnimeGroup } from '@umamusumeenjoyer/shared-logic';
 import type { UserAnimeGroupProps } from '@umamusumeenjoyer/shared-logic';
 import AnimeCard from '../../../components/AnimeCard/AnimeCard';
-import './UserAnimeGroup.css';
+
+// Import CSS Module
+import styles from './UserAnimeGroup.module.css';
 
 const UserAnimeGroup: React.FC<UserAnimeGroupProps> = ({ 
   user, 
@@ -18,7 +20,7 @@ const UserAnimeGroup: React.FC<UserAnimeGroupProps> = ({
   onConfirmDelete, 
   onSelectAnime 
 }) => {
-  const { t } = useTranslation(['userAnimeGroup']); // Khởi tạo hook dịch
+  const { t } = useTranslation(['userAnimeGroup']);
   const {
     hasEditPermission,
     shouldRender,
@@ -30,17 +32,18 @@ const UserAnimeGroup: React.FC<UserAnimeGroupProps> = ({
   if (!shouldRender) return null;
 
   return (
-    <div className="user-group-section">
-      <div className="user-group-header">
-        <div className="user-group-title">
+    <div className={styles.userGroupSection}>
+      <div className={styles.userGroupHeader}>
+        <div className={styles.userGroupTitle}>
           <span className="material-symbols-outlined">person</span>
           {/* Sử dụng interpolation để truyền tên user */}
           <h3>{t('userAnimeGroup.addedBy', { user })}</h3>
+          {/* Giữ lại class global count-badge nếu muốn hoặc thêm vào module */}
           <span className="count-badge">{animeCount}</span>
           
           {hasEditPermission && !deleteMode && (
             <button 
-              className="btn-add-circle" 
+              className={styles.btnAddCircle} 
               title={t('userAnimeGroup.addAnimeTitle')}
               onClick={onOpenAddModal} 
             >
@@ -50,23 +53,22 @@ const UserAnimeGroup: React.FC<UserAnimeGroupProps> = ({
         </div>
 
         {hasEditPermission && (
-          <div className="user-actions-controls">
+          <div className={styles.userActionsControls}>
             {!deleteMode ? (
               <button 
-                className="btn-icon-only text-danger"
+                className={`${styles.btnIconOnly} ${styles.textDanger}`}
                 onClick={onToggleDeleteMode}
                 title={t('userAnimeGroup.deleteItemsTitle')}
               >
                 <span className="material-symbols-outlined">delete</span>
               </button>
             ) : (
-              <div className="delete-actions-group">
-                {/* Sử dụng interpolation để hiển thị số lượng đã chọn */}
-                <span className="selection-count">
+              <div className={styles.deleteActionsGroup}>
+                <span className={styles.selectionCount}>
                   {t('userAnimeGroup.selectedCount', { count: selectedAnimeIds.length })}
                 </span>
                 <button 
-                  className="btn-icon-only text-secondary"
+                  className={`${styles.btnIconOnly} ${styles.textSecondary}`}
                   onClick={onToggleDeleteMode}
                   title={t('userAnimeGroup.cancelTitle')}
                   disabled={isDeleting}
@@ -74,7 +76,7 @@ const UserAnimeGroup: React.FC<UserAnimeGroupProps> = ({
                   <span className="material-symbols-outlined">close</span>
                 </button>
                 <button 
-                  className="btn-confirm-delete"
+                  className={styles.btnConfirmDelete}
                   onClick={onConfirmDelete}
                   title={t('userAnimeGroup.confirmDeleteTitle')}
                   disabled={isDeleting || selectedAnimeIds.length === 0}
@@ -94,24 +96,28 @@ const UserAnimeGroup: React.FC<UserAnimeGroupProps> = ({
         )}
       </div>
 
-      <div className="anime-grid-row">
+      <div className={styles.animeGridRow}>
         {animeList.map((anime) => {
           const animeId = getAnimeId(anime);
           const isSelected = isAnimeSelected(animeId);
           
           return (
             <div 
-              className={`grid-item-wrapper ${deleteMode && hasEditPermission ? 'delete-mode' : ''} ${isSelected ? 'selected' : ''}`} 
+              className={`
+                ${styles.gridItemWrapper} 
+                ${deleteMode && hasEditPermission ? styles.deleteMode : ''} 
+                ${isSelected ? styles.selected : ''}
+              `} 
               key={anime.id}
               onClick={() => deleteMode && hasEditPermission && onSelectAnime(animeId)}
             >
-              <div className="grid-item">
+              <div className={styles.gridItem}>
                 <AnimeCard anime={anime} />
               </div>
               
               {deleteMode && hasEditPermission && (
-                <div className="delete-overlay">
-                  <span className="material-symbols-outlined check-icon">
+                <div className={styles.deleteOverlay}>
+                  <span className={`material-symbols-outlined ${styles.checkIcon}`}>
                     {isSelected ? 'check_circle' : 'radio_button_unchecked'}
                   </span>
                 </div>

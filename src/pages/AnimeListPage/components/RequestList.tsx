@@ -1,8 +1,10 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next'; // Import hook
+import { useTranslation } from 'react-i18next';
 import { useRequestList } from '@umamusumeenjoyer/shared-logic';
 import type { RequestListProps, ListRequest } from '@umamusumeenjoyer/shared-logic';
-import './RequestList.css';
+
+// Import CSS Module
+import styles from './RequestList.module.css';
 
 const RequestList: React.FC<RequestListProps> = ({ 
   requests = [], 
@@ -10,7 +12,7 @@ const RequestList: React.FC<RequestListProps> = ({
   onReject, 
   currentMembers = [] 
 }) => {
-  const { t } = useTranslation(['requestList']); // Khởi tạo hook dịch
+  const { t } = useTranslation(['requestList']);
   const {
     isExpanded,
     categorizedRequests,
@@ -24,20 +26,20 @@ const RequestList: React.FC<RequestListProps> = ({
     const shouldShowAccept = checkShowAccept(req);
 
     return (
-      <div key={req.request_id} className="request-item">
-        <div className="req-user-row">
-          <span className="req-username">@{req.username}</span>
-          <span className="req-time">
+      <div key={req.request_id} className={styles.requestItem}>
+        <div className={styles.reqUserRow}>
+          <span className={styles.reqUsername}>@{req.username}</span>
+          <span className={styles.reqTime}>
             {formatRequestDate(req.requested_at)}
           </span>
         </div>
         
-        {req.message && <div className="req-msg">"{req.message}"</div>}
+        {req.message && <div className={styles.reqMsg}>"{req.message}"</div>}
         
-        <div className="req-actions">
+        <div className={styles.reqActions}>
           {shouldShowAccept && (
             <button 
-              className="btn-req-action btn-accept"
+              className={`${styles.btnReqAction} ${styles.btnAccept}`}
               onClick={(e) => {
                 e.stopPropagation();
                 onAccept(req);
@@ -49,7 +51,7 @@ const RequestList: React.FC<RequestListProps> = ({
           )}
           
           <button 
-            className="btn-req-action btn-reject"
+            className={`${styles.btnReqAction} ${styles.btnReject}`}
             onClick={(e) => {
               e.stopPropagation();
               onReject(req);
@@ -63,30 +65,29 @@ const RequestList: React.FC<RequestListProps> = ({
     );
   };
 
-  // Nếu không có request nào thì không render
   if (totalCount === 0) return null;
 
   return (
-    <div className={`request-list-container ${totalCount > 0 ? 'has-pending' : ''}`}>
+    <div className={`${styles.requestListContainer} ${totalCount > 0 ? styles.hasPending : ''}`}>
       {/* Header Summary */}
-      <div className="request-summary" onClick={toggleExpanded}>
-        <div className="summary-title">
+      <div className={styles.requestSummary} onClick={toggleExpanded}>
+        <div className={styles.summaryTitle}>
           <span className="material-symbols-outlined" style={{color: '#facc15'}}>notifications_active</span>
           {t('requestList.pendingRequests')}
-          <span className="badge-count">{totalCount}</span>
+          <span className={styles.badgeCount}>{totalCount}</span>
         </div>
-        <span className={`material-symbols-outlined toggle-icon ${isExpanded ? 'expanded' : ''}`}>
+        <span className={`material-symbols-outlined ${styles.toggleIcon} ${isExpanded ? styles.expanded : ''}`}>
           expand_more
         </span>
       </div>
 
       {/* Expanded Content */}
       {isExpanded && (
-        <div className="request-content">
+        <div className={styles.requestContent}>
           {/* SECTION: JOIN REQUESTS */}
           {categorizedRequests.joinRequests.length > 0 && (
-            <div className="req-group">
-              <div className="req-section-title">
+            <div className={styles.reqGroup}>
+              <div className={styles.reqSectionTitle}>
                 <span className="material-symbols-outlined" style={{fontSize: '16px'}}>person_add</span>
                 {t('requestList.joinRequests')}
               </div>
@@ -96,8 +97,8 @@ const RequestList: React.FC<RequestListProps> = ({
 
           {/* SECTION: EDIT REQUESTS */}
           {categorizedRequests.editRequests.length > 0 && (
-            <div className="req-group">
-              <div className="req-section-title">
+            <div className={styles.reqGroup}>
+              <div className={styles.reqSectionTitle}>
                 <span className="material-symbols-outlined" style={{fontSize: '16px'}}>edit_note</span>
                 {t('requestList.editAccessRequests')}
               </div>

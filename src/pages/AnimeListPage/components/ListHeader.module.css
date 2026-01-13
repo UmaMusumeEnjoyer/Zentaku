@@ -1,0 +1,160 @@
+/* src/components/ListHeader/ListHeader.module.css */
+
+.pageHeader {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.headerText {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.pageTitle {
+  font-size: 2rem;
+  font-weight: 800;
+  margin: 0;
+  line-height: 1.2;
+  color: var(--text-primary);
+}
+
+.pageDescription {
+  color: var(--text-secondary);
+  margin: 8px 0 0 0;
+  font-size: 1rem;
+  white-space: pre-line;
+}
+
+.privateBadgeWrapper {
+  margin-top: 8px;
+}
+
+.privateBadge {
+  background: #ef4444 !important; /* Status color (Red) */
+  color: white !important;
+  /* Nếu class count-badge là global, ta cần override, 
+     hoặc định nghĩa lại style cơ bản ở đây nếu cần */
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+/* Container chứa các nút */
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--bg-panel);
+  padding: 4px;
+  border-radius: 24px;
+  border: 1px solid var(--border-subtle);
+}
+
+/* Style chung cho cả 2 nút */
+.actionBtn {
+  background: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: all 0.2s ease;
+  height: 36px;
+  border-radius: 20px;
+  padding: 0 12px;
+}
+
+/* --- NÚT 1: LIKE BUTTON --- */
+.likeBtn {
+  padding: 0 10px;
+}
+
+.likeBtn:hover {
+  background-color: var(--bg-subtle);
+  color: var(--text-primary);
+}
+
+.likeBtn.liked {
+  color: #ef4444; /* Status Red */
+}
+
+.likeBtn.liked:hover {
+  background-color: rgba(239, 68, 68, 0.1);
+}
+
+.heartIcon {
+  font-size: 1.5rem;
+  font-variation-settings: 'FILL' 0;
+  transition: transform 0.2s;
+}
+
+.filled {
+  font-variation-settings: 'FILL' 1;
+}
+
+.likeBtn:active .heartIcon {
+  transform: scale(0.8);
+}
+
+/* --- NÚT 2: COUNT BUTTON --- */
+.countBtn {
+  gap: 6px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-left: 1px solid var(--border-subtle);
+  border-radius: 4px 20px 20px 4px;
+}
+
+/* Chỉ Owner mới có hiệu ứng hover/click ở nút này */
+.clickable:hover {
+  background-color: var(--bg-subtle);
+  color: var(--text-primary);
+}
+
+/* Nếu không phải owner */
+.countBtn:not(.clickable) {
+  cursor: default;
+  opacity: 0.8;
+}
+
+.countNumber {
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+}
+
+.countLabel {
+  font-size: 0.85rem;
+  font-weight: 400;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .pageHeader {
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .headerText {
+    width: 100%;
+  }
+
+  .pageTitle {
+    font-size: 1.6rem;
+  }
+
+  .pageDescription {
+    font-size: 0.9rem;
+  }
+
+  .headerActions {
+    align-self: flex-start;
+  }
+}

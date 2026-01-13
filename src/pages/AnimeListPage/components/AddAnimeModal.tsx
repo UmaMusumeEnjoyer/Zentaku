@@ -3,7 +3,9 @@ import { useTranslation } from 'react-i18next';
 import { useAddAnimeModal } from '@umamusumeenjoyer/shared-logic';
 import type { AddAnimeModalProps } from '@umamusumeenjoyer/shared-logic';
 import AnimeCard from '../../../components/AnimeCard/AnimeCard';
-import './AddAnimeModal.css';
+
+// Import CSS Module
+import styles from './AddAnimeModal.module.css';
 
 const AddAnimeModal: React.FC<AddAnimeModalProps> = ({ 
   isOpen, 
@@ -22,13 +24,13 @@ const AddAnimeModal: React.FC<AddAnimeModalProps> = ({
     handleSearchAction,
     handleInputChange,
     handleAddClick,
-    // formatStatusTitle, // Không cần dùng hàm này nữa vì đã dùng i18n
     getAnimeState,
     mapAnimeData,
   } = useAddAnimeModal(isOpen, currentList);
 
   const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if ((e.target as HTMLElement).classList.contains('add-anime-modal-overlay')) {
+    // Kiểm tra class overlay thông qua object styles
+    if ((e.target as HTMLElement).classList.contains(styles.addAnimeModalOverlay)) {
       onClose();
     }
   };
@@ -44,7 +46,7 @@ const AddAnimeModal: React.FC<AddAnimeModalProps> = ({
     const { isAdding, isAdded } = getAnimeState(animeIdStr);
 
     return (
-      <div key={animeIdStr} className="modal-card-wrapper">
+      <div key={animeIdStr} className={styles.modalCardWrapper}>
         <AnimeCard
           anime={{
             ...anime,
@@ -53,7 +55,7 @@ const AddAnimeModal: React.FC<AddAnimeModalProps> = ({
           }}
         />
         <button
-          className={`btn-card-add ${isAdded ? 'added-success' : ''}`}
+          className={`${styles.btnCardAdd} ${isAdded ? styles.addedSuccess : ''}`}
           onClick={(e) => {
             e.preventDefault();
             handleAddClick(anime, onAddAnime);
@@ -62,7 +64,7 @@ const AddAnimeModal: React.FC<AddAnimeModalProps> = ({
           title={isAdded ? t('addAnimeModal.alreadyInList') : t('addAnimeModal.addToList')}
         >
           {isAdding ? (
-            <span className="material-symbols-outlined spin-icon">progress_activity</span>
+            <span className={`material-symbols-outlined ${styles.spinIcon}`}>progress_activity</span>
           ) : isAdded ? (
             <span className="material-symbols-outlined">check</span>
           ) : (
@@ -76,12 +78,12 @@ const AddAnimeModal: React.FC<AddAnimeModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="add-anime-modal-overlay" onClick={handleOverlayClick}>
-      <div className="add-anime-modal-content">
-        <div className="add-anime-modal-header">
-          <div className="modal-search-wrapper">
+    <div className={styles.addAnimeModalOverlay} onClick={handleOverlayClick}>
+      <div className={styles.addAnimeModalContent}>
+        <div className={styles.addAnimeModalHeader}>
+          <div className={styles.modalSearchWrapper}>
             <span 
-              className="material-symbols-outlined search-icon" 
+              className={`material-symbols-outlined ${styles.searchIcon}`}
               onClick={handleSearchAction}
               style={{cursor: 'pointer', pointerEvents: 'auto'}}
             >
@@ -89,7 +91,7 @@ const AddAnimeModal: React.FC<AddAnimeModalProps> = ({
             </span>
             <input
               type="text"
-              className="modal-search-input"
+              className={styles.modalSearchInput}
               placeholder={t('addAnimeModal.searchPlaceholder')}
               value={searchTerm}
               onChange={(e) => handleInputChange(e.target.value)}
@@ -97,31 +99,31 @@ const AddAnimeModal: React.FC<AddAnimeModalProps> = ({
               autoFocus
             />
           </div>
-          <button className="close-btn" onClick={onClose}>
+          <button className={styles.closeBtn} onClick={onClose}>
             <span className="material-symbols-outlined">close</span>
           </button>
         </div>
 
-        <div className="add-anime-modal-body">
+        <div className={styles.addAnimeModalBody}>
           {loading ? (
-            <div className="modal-loading">
-              <span className="material-symbols-outlined spin-icon" style={{marginRight: '10px'}}>progress_activity</span>
+            <div className={styles.modalLoading}>
+              <span className={`material-symbols-outlined ${styles.spinIcon}`} style={{marginRight: '10px'}}>progress_activity</span>
               {isGlobalSearch ? t('addAnimeModal.searchingDatabase') : t('addAnimeModal.loadingLibrary')}
             </div>
           ) : (
             <>
               {isGlobalSearch ? (
-                <div className="modal-section">
-                  <h3 className="section-title">
+                <div className={styles.modalSection}>
+                  <h3 className={styles.sectionTitle}>
                     {t('addAnimeModal.searchResults')}
-                    <span className="count-badge">{globalResults.length}</span>
+                    <span className={styles.countBadge}>{globalResults.length}</span>
                   </h3>
                   {globalResults.length > 0 ? (
-                    <div className="modal-grid">
+                    <div className={styles.modalGrid}>
                       {globalResults.map(anime => renderAnimeCard(anime))}
                     </div>
                   ) : (
-                    <div className="modal-error">
+                    <div className={styles.modalError}>
                         {t('addAnimeModal.noResults', { searchTerm })}
                     </div>
                   )}
@@ -135,24 +137,20 @@ const AddAnimeModal: React.FC<AddAnimeModalProps> = ({
                     const normalizedItems = rawItems.map(mapAnimeData);
 
                     return (
-                      <div key={status} className="modal-section">
-                        <h3 className="section-title">
-                          {/* Sử dụng logic tương tự HomePagelogin.
-                              Giả sử biến 'status' có giá trị là: 'watching', 'planning', 'completed', 'dropped', 'onHold'
-                              Chúng ta sẽ gọi key tương ứng trong file json.
-                          */}
+                      <div key={status} className={styles.modalSection}>
+                        <h3 className={styles.sectionTitle}>
                           {t(`addAnimeModal.sections.${status}`)}
-                          <span className="count-badge">{normalizedItems.length}</span>
+                          <span className={styles.countBadge}>{normalizedItems.length}</span>
                         </h3>
 
-                        <div className="modal-grid">
+                        <div className={styles.modalGrid}>
                           {normalizedItems.map(anime => renderAnimeCard(anime))}
                         </div>
                       </div>
                     );
                   })
                 ) : (
-                  <div className="modal-error">{t('addAnimeModal.loadError')}</div>
+                  <div className={styles.modalError}>{t('addAnimeModal.loadError')}</div>
                 )
               )}
             </>

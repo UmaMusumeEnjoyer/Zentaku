@@ -1,0 +1,143 @@
+/* src/components/LikersModal/LikersModal.module.css */
+
+.modalOverlay {
+  position: fixed;
+  top: 0; 
+  left: 0; 
+  right: 0; 
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7); /* Giữ overlay tối */
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(2px);
+}
+
+.likersModal {
+  width: 100%;
+  max-width: 400px;
+  background-color: var(--bg-panel);
+  border-radius: 12px;
+  border: 1px solid var(--border-subtle);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  color: var(--text-primary);
+  display: flex;
+  flex-direction: column;
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.modalHeader h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+}
+
+.modalBody {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Đảm bảo list scroll nằm gọn */
+}
+
+.likersList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.likerItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--border-subtle);
+  transition: background 0.2s;
+}
+
+.likerItem:hover {
+  background-color: var(--bg-subtle);
+}
+
+.userIcon {
+  color: var(--text-secondary);
+  background: var(--bg-subtle);
+  padding: 8px;
+  border-radius: 50%;
+}
+
+.likerUsername {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.verifiedIcon {
+  font-size: 1rem;
+  color: #3db4f2; /* Brand color (Blue) - Giữ nguyên Hex hoặc dùng biến brand nếu có */
+}
+
+.modalFooterInfo {
+  padding: 12px 20px;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  text-align: center;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.emptyText {
+  padding: 24px;
+  text-align: center;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+.closeBtn {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex; /* Căn giữa icon */
+  align-items: center;
+  justify-content: center;
+}
+
+.closeBtn:hover {
+  color: var(--text-primary);
+}
+
+/* =========================================
+   [RESPONSIVE] MOBILE ADJUSTMENTS
+   ========================================= */
+
+@media (max-width: 768px) {
+  .likersModal {
+    width: 90%;
+    /* Giới hạn chiều cao theo màn hình thay vì px cứng */
+    max-height: 80vh; 
+    display: flex;
+    flex-direction: column;
+  }
+
+  .likersList {
+    /* List tự co giãn nhưng không vượt quá màn hình */
+    max-height: unset; 
+    flex: 1;
+    overflow-y: auto;
+  }
+  
+  .likerItem {
+    padding: 12px 16px;
+  }
+  
+  .modalHeader {
+    padding: 12px 16px;
+  }
+}

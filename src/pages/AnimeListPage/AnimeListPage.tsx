@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next'; // Import hook
+import { useTranslation } from 'react-i18next';
 import { useAnimeListPage } from '@umamusumeenjoyer/shared-logic';
 
 // Import Child Components
@@ -13,10 +13,11 @@ import UserSearchModal from './components/UserSearchModal';
 import RequestModal from './components/RequestModal';
 import RequestList from './components/RequestList';
 
-import './AnimeListPage.css';
+// Import CSS Module
+import styles from './AnimeListPage.module.css';
 
 const AnimeListPage: React.FC = () => {
-  const { t } = useTranslation(['animeListPage']); // Khởi tạo hook dịch
+  const { t } = useTranslation(['animeListPage']);
   const { id } = useParams<{ id: string }>();
   const location = useLocation();
   const navigate = useNavigate();
@@ -69,17 +70,17 @@ const AnimeListPage: React.FC = () => {
   } = useAnimeListPage(id || '', location.state, navigate);
 
   return (
-    <div className="page-container">
-      <div className="main-layout">
-        <main className="content-area">
+    <div className={styles.pageContainer}>
+      <div className={styles.mainLayout}>
+        <main className="content-area"> {/* Class này có vẻ là layout global hoặc không style trong file css gốc, giữ nguyên string */}
           <ListHeader listInfo={listInfo} listId={id || ''} />
 
-          <div className="filter-bar-sticky">
-            <div className="search-wrapper">
-              <span className="material-symbols-outlined search-icon">search</span>
+          <div className={styles.filterBarSticky}>
+            <div className={styles.searchWrapper}>
+              <span className={`material-symbols-outlined ${styles.searchIcon}`}>search</span>
               <input
                 type="text"
-                className="search-input"
+                className={styles.searchInput}
                 placeholder={t('animeListPage.searchPlaceholder')}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -87,34 +88,27 @@ const AnimeListPage: React.FC = () => {
             </div>
           </div>
 
-          <div className="anime-lists-container">
+          <div className="anime-lists-container"> {/* Giữ nguyên nếu không có trong css gốc, hoặc map nếu cần */}
             {loading ? (
-              <div className="loading-state">{t('animeListPage.loading')}</div>
+              <div className={styles.loadingState}>{t('animeListPage.loading')}</div>
             ) : Object.keys(groupedAnime).length > 0 ? (
               <>
                 {canEdit && !currentUserHasItems && (
-                  <div className="user-group-section" style={{ marginBottom: '30px' }}>
-                    <div className="user-group-header">
-                      <div className="user-group-title">
+                  <div className={styles.userGroupSection}>
+                    <div className={styles.userGroupHeader}>
+                      <div className={styles.userGroupTitle}>
                         <span className="material-symbols-outlined">person</span>
                         <h3>{t('animeListPage.emptyState.userTitle', { user: currentUsername })}</h3>
                       </div>
                     </div>
-                    <div style={{
-                      padding: '30px',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      backgroundColor: 'rgba(255, 255, 255, 0.03)',
-                      borderRadius: '12px',
-                      border: '1px dashed rgba(255, 255, 255, 0.1)'
-                    }}>
-                      <p style={{ color: '#94a3b8', marginBottom: '16px', fontSize: '0.95rem' }}>
+                    
+                    {/* Đã thay thế inline styles bằng class CSS Module */}
+                    <div className={styles.emptyGroupContent}>
+                      <p className={styles.emptyGroupText}>
                         {t('animeListPage.emptyState.noAnimeYet')}
                       </p>
                       <button
-                        className="btn btn-primary"
+                        className={`${styles.btn} ${styles.btnPrimary}`}
                         onClick={() => setShowAddModal(true)}
                       >
                         <span className="material-symbols-outlined" style={{ marginRight: '5px' }}>add</span>
@@ -153,11 +147,11 @@ const AnimeListPage: React.FC = () => {
                   })}
               </>
             ) : (
-              <div className="empty-state">
+              <div className={styles.emptyState}>
                 <p>{t('animeListPage.emptyState.listEmpty')}</p>
                 {canEdit && (
                   <button
-                    className="btn btn-primary"
+                    className={`${styles.btn} ${styles.btnPrimary}`}
                     style={{ marginTop: '16px' }}
                     onClick={() => setShowAddModal(true)}
                   >
@@ -170,19 +164,19 @@ const AnimeListPage: React.FC = () => {
         </main>
 
         <div className="sidebar-area">
-          <div className="action-buttons sidebar-actions">
+          <div className={`${styles.actionButtons} ${styles.sidebarActions}`}>
             {listInfo.is_owner ? (
               <>
-                <button className="btn btn-secondary" onClick={handleEditListClick}>
+                <button className={`${styles.btn} ${styles.btnSecondary}`} onClick={handleEditListClick}>
                   {t('animeListPage.sidebarActions.editDetails')}
                 </button>
-                <button className="btn btn-danger" onClick={handleDeleteList}>
+                <button className={`${styles.btn} ${styles.btnDanger}`} onClick={handleDeleteList}>
                   {t('animeListPage.sidebarActions.deleteList')}
                 </button>
               </>
             ) : isViewer ? (
               <button
-                className="btn btn-primary btn-icon"
+                className={`${styles.btn} ${styles.btnPrimary} btn-icon`}
                 onClick={handleOpenEditRequest}
               >
                 <span className="material-symbols-outlined">edit_note</span>
@@ -190,9 +184,8 @@ const AnimeListPage: React.FC = () => {
               </button>
             ) : !currentPermission && (
               <button
-                className="btn btn-primary btn-icon"
+                className={`${styles.btn} ${styles.btnJoinRequest} btn-icon`}
                 onClick={handleOpenJoinRequest}
-                style={{ backgroundColor: 'var(--accent-green)' }}
               >
                 <span className="material-symbols-outlined">person_add</span>
                 {t('animeListPage.sidebarActions.joinRequest')}

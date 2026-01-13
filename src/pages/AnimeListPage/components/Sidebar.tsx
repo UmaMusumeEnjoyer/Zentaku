@@ -1,9 +1,11 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next'; // Import hook
+import { useTranslation } from 'react-i18next';
 import { useSidebar } from '@umamusumeenjoyer/shared-logic';
 import type { SidebarProps } from '@umamusumeenjoyer/shared-logic';
 import UserItem from './UserItem';
-import './Sidebar.css';
+
+// Import CSS Module
+import styles from './Sidebar.module.css';
 
 const Sidebar: React.FC<SidebarProps> = ({ 
   members = [], 
@@ -11,7 +13,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   onAddViewer, 
   onRemoveMember 
 }) => {
-  const { t } = useTranslation(['sidebar']); // Khởi tạo hook dịch
+  const { t } = useTranslation(['sidebar']);
   const {
     currentUsername,
     isCurrentUserOwner,
@@ -21,10 +23,11 @@ const Sidebar: React.FC<SidebarProps> = ({
 
   if (!hasMembers) {
     return (
-      <aside className="sidebar">
-        <div className="sidebar-section">
-          <h3 className="sidebar-title">{t('sidebar.members')}</h3>
-          <p style={{ color: '#64748b', fontSize: '0.9rem', fontStyle: 'italic' }}>
+      <aside className={styles.sidebar}>
+        <div className={styles.sidebarSection}>
+          <h3 className={styles.sidebarTitle}>{t('sidebar.members')}</h3>
+          {/* Đã chuyển inline style sang class CSS Module */}
+          <p className={styles.loadingText}>
             {t('sidebar.loading')}
           </p>
         </div>
@@ -35,11 +38,11 @@ const Sidebar: React.FC<SidebarProps> = ({
   const { owner, editors, viewers } = categorizedMembers;
 
   return (
-    <aside className="sidebar">
+    <aside className={styles.sidebar}>
       {/* 1. OWNER SECTION */}
       {owner && (
-        <div className="sidebar-section">
-          <h3 className="sidebar-title">{t('sidebar.owner')}</h3>
+        <div className={styles.sidebarSection}>
+          <h3 className={styles.sidebarTitle}>{t('sidebar.owner')}</h3>
           <UserItem 
             user={owner} 
             roleIcon="verified_user" 
@@ -51,19 +54,18 @@ const Sidebar: React.FC<SidebarProps> = ({
       )}
 
       {/* 2. EDITORS SECTION */}
-      <div className="sidebar-section">
-        <div className="sidebar-header">
-          {/* Sử dụng interpolation để hiển thị số lượng */}
-          <h3 className="sidebar-title">
+      <div className={styles.sidebarSection}>
+        <div className={styles.sidebarHeader}>
+          <h3 className={styles.sidebarTitle}>
             {t('sidebar.editorsHeader', { count: editors.length })}
           </h3>
           {isCurrentUserOwner && (
-            <button className="add-btn" onClick={onAddEditor} title={t('sidebar.inviteEditor')}>
+            <button className={styles.addBtn} onClick={onAddEditor} title={t('sidebar.inviteEditor')}>
               <span className="material-symbols-outlined">add</span>
             </button>
           )}
         </div>
-        <div className="user-list">
+        <div className={styles.userList}>
           {editors.length > 0 ? (
             editors.map((editor) => (
               <UserItem 
@@ -77,24 +79,24 @@ const Sidebar: React.FC<SidebarProps> = ({
               />
             ))
           ) : (
-            <p className="empty-text">{t('sidebar.noEditors')}</p>
+            <p className={styles.emptyText}>{t('sidebar.noEditors')}</p>
           )}
         </div>
       </div>
 
       {/* 3. VIEWERS SECTION */}
-      <div className="sidebar-section">
-        <div className="sidebar-header">
-          <h3 className="sidebar-title">
+      <div className={styles.sidebarSection}>
+        <div className={styles.sidebarHeader}>
+          <h3 className={styles.sidebarTitle}>
             {t('sidebar.viewersHeader', { count: viewers.length })}
           </h3>
           {isCurrentUserOwner && (
-            <button className="add-btn" onClick={onAddViewer} title={t('sidebar.inviteViewer')}>
+            <button className={styles.addBtn} onClick={onAddViewer} title={t('sidebar.inviteViewer')}>
               <span className="material-symbols-outlined">add</span>
             </button>
           )}
         </div>
-        <div className="user-list">
+        <div className={styles.userList}>
           {viewers.length > 0 ? (
             viewers.map((viewer) => (
               <UserItem 
@@ -108,7 +110,7 @@ const Sidebar: React.FC<SidebarProps> = ({
               />
             ))
           ) : (
-            <p className="empty-text">{t('sidebar.noViewers')}</p>
+            <p className={styles.emptyText}>{t('sidebar.noViewers')}</p>
           )}
         </div>
       </div>

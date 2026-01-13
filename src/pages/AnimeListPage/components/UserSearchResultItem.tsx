@@ -1,9 +1,11 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next'; // Import hook
+import { useTranslation } from 'react-i18next';
 import { useUserSearchResultItem } from '@umamusumeenjoyer/shared-logic';
 import type { UserSearchResultItemProps } from '@umamusumeenjoyer/shared-logic';
 
-// Lấy biến môi trường từ Vite
+// Import CSS Module mới
+import styles from './UserSearchResultItem.module.css';
+
 const BACKEND_DOMAIN = import.meta.env.VITE_BACKEND_DOMAIN;
 const DEFAULT_AVATAR = import.meta.env.VITE_DEFAULT_AVATAR_URL;
 
@@ -14,7 +16,7 @@ const UserSearchResultItem: React.FC<UserSearchResultItemProps> = ({
   isProcessing,
   onAddUser
 }) => {
-  const { t } = useTranslation(['userSearchModal']); // Khởi tạo hook dịch
+  const { t } = useTranslation(['userSearchModal']);
   const {
     displayAvatar,
     isOwner,
@@ -33,32 +35,38 @@ const getStatusDisplay = () => {
     if (isOwner) return `${t('userSearchResultItem.currently')}: ${t('userSearchResultItem.status.owner')}`;
     if (!statusText) return `${t('userSearchResultItem.assign')}: ${isEditorMode ? t('userSearchResultItem.status.editor') : t('userSearchResultItem.status.viewer')}`;
     
-    // Map statusText từ hook
     const roleKey = statusText.toLowerCase(); 
     const roleLabel = t(`userSearchResultItem.status.${roleKey}`, { defaultValue: statusText });
     return `${t('userSearchResultItem.currently')}: ${roleLabel}`;
   };
 
+  // Helper function để map class string từ hook sang class module
+  const getButtonClass = () => {
+    // buttonState.className trả về 'editor' hoặc 'viewer' string
+    const baseClass = styles.btnInvite;
+    const roleClass = buttonState.className === 'editor' ? styles.editor : 
+                      buttonState.className === 'viewer' ? styles.viewer : '';
+    return `${baseClass} ${roleClass}`;
+  };
+
   return (
-    <div className="user-card-item">
-      <div className="user-card-info">
-        <img src={displayAvatar} alt={user.username} className="user-card-avatar" />
+    <div className={styles.userCardItem}>
+      <div className={styles.userCardInfo}>
+        <img src={displayAvatar} alt={user.username} className={styles.userCardAvatar} />
         <div>
-          <p className="user-card-name">
+          <p className={styles.userCardName}>
             {user.username}
             {user.email_verified && (
-              <span className="material-symbols-outlined" 
-                style={{fontSize: '14px', color: '#3db4f2', marginLeft: '4px', verticalAlign: 'middle'}}
+              <span 
+                className={`material-symbols-outlined ${styles.verifiedIcon}`}
                 title={t('userSearchResultItem.verifiedEmail')}>
                 verified
               </span>
             )}
           </p>
           
-          <p className="user-card-handle">
-            <span style={{color: '#94a3b8', fontStyle: isOwner ? 'italic' : 'normal'}}>
-              {/* statusText đến từ logic hook, nếu cần dịch statusText, 
-                  bạn cần xử lý trong hook hoặc map giá trị ở đây */}
+          <p className={styles.userCardHandle}>
+            <span className={`${styles.statusText} ${isOwner ? styles.statusOwner : ''}`}>
               {getStatusDisplay()}
             </span>
           </p>
@@ -66,13 +74,13 @@ const getStatusDisplay = () => {
       </div>
 
       <button 
-        className={`btn-invite ${buttonState.className}`} 
+        className={getButtonClass()} 
         onClick={() => onAddUser(user)}
         disabled={buttonState.isDisabled}
         title={isOwner ? t('userSearchResultItem.cannotModifyOwner') : ""}
       >
         {isProcessing ? (
-          <span className="material-symbols-outlined spin-icon" style={{fontSize: '18px'}}>sync</span>
+          <span className={`material-symbols-outlined ${styles.spinIcon}`}>sync</span>
         ) : (
           <>
             <span className="material-symbols-outlined" style={{fontSize: '18px'}}>
