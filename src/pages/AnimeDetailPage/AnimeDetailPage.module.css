@@ -2,10 +2,10 @@
 
 /* Wrapper chính bao quanh cả trang */
 .pageWrapper {
-  min-height: 100vh;
+  min-height: 100vh;  
   /* REFACTOR: Sử dụng biến nền toàn cục */
   background-color: var(--bg-app);
-  color: var(--text-primary);
+  color: var(--text-primary)  ;
   transition: background-color 0.3s ease, color 0.3s ease;
   padding-bottom: 40px; /* Thêm padding đáy để không bị sát lề */
 }
@@ -16,7 +16,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 50vh;
+  min-height: 100vh;
   font-size: 1.2rem;
   color: var(--text-secondary);
 }
