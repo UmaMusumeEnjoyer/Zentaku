@@ -34,17 +34,19 @@ const AnimeDetailPage: React.FC = () => {
       </div>
     );
   }
-
   return (
     // 4. Áp dụng styles.pageWrapper để lấy màu nền var(--bg-app)
     <div className={styles.pageWrapper}>
       
-      {hasBanner && (
+      {hasBanner ? (
         <div 
           className={styles.bannerImage} 
           style={{ backgroundImage: `url(${anime.banner_image})` }}
         ></div>
-      )}
+      ) : (
+        <div className={styles.bannerPlaceholder}></div>
+      ) 
+      }
 
       <div className={styles.mainContentContainer}>
         <div className={styles.contentWrapper}>

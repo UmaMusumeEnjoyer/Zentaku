@@ -99,7 +99,7 @@
   --bg-panel: var(--clr-surface-tonal-a0);
 
   /* Nền khi hover vào một item (ví dụ item trong danh sách) */
-  --bg-hover: var(--clr-surface-a30);
+  --bg-hover: var(--clr-surface-a10);
 
   /* Nền phụ, dùng cho các khối trích dẫn hoặc code block */
   --bg-subtle: var(--clr-surface-tonal-a10);

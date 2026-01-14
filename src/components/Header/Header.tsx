@@ -1,13 +1,14 @@
 // src/components/Header/Header.tsx
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-// [CHANGE] Import styles from module
 import styles from './Header.module.css';
 import GlobalSearchModal from '../GlobalSearch/GlobalSearch';
 import { useTheme } from '../../context/ThemeContext';
 import { useAuth } from '../../context/AuthContext';
 import { useTranslation } from 'react-i18next';
 import { useHeader } from '@umamusumeenjoyer/shared-logic';
+// Import hook logic hoạt hình mới tạo
+import { useHeaderAnimation } from './useHeaderAnimation';
 
 const BACKEND_DOMAIN = import.meta.env.VITE_BACKEND_DOMAIN;
 const DEFAULT_AVATAR = import.meta.env.VITE_DEFAULT_AVATAR_URL;
@@ -18,6 +19,10 @@ const Header: React.FC = () => {
   const { user, logout: authLogout } = useAuth();
   const { t, i18n } = useTranslation(['Header']);
 
+  // 1. Hook xử lý UI Animation (Local ViewModel)
+  // Logic: Ẩn/Hiện khi scroll + Trong suốt ở trang chỉ định
+  const { isVisible, isTransparent, animationHandlers } = useHeaderAnimation();
+
   const avatarUrl = React.useMemo(() => {
     if (!user?.avatar_url) return DEFAULT_AVATAR;
     if (user.avatar_url.startsWith('http')) return user.avatar_url;
@@ -26,6 +31,8 @@ const Header: React.FC = () => {
 
   const isAuthenticated = !!user;
 
+  // 2. Hook xử lý Business Logic (Shared ViewModel)
+  // Logic: Noti, Search, Dropdown, Settings
   const {
     isDropdownOpen,
     isSearchModalOpen,
@@ -64,9 +71,20 @@ const Header: React.FC = () => {
     i18n.changeLanguage(lang);
   };
 
+  // 3. Tạo chuỗi className động dựa trên state animation
+  const headerClasses = [
+    styles.appHeader,
+    isVisible ? styles.headerVisible : styles.headerHidden,
+    isTransparent ? styles.headerTransparent : styles.headerSolid
+  ].join(' ');
+
   return (
     <>
-      <header className={styles.appHeader} data-theme={theme}>
+      <header 
+        className={headerClasses} 
+        data-theme={theme}
+        {...animationHandlers} // Gắn sự kiện onMouseEnter/onMouseLeave
+      >
         <div className={styles.headerLeft}>
           <div className={styles.logo}>
             <Link to="/">
@@ -82,7 +100,6 @@ const Header: React.FC = () => {
             <>
               <Link to="/animelist">{t('Header:navigation.anime_list')}</Link>
               <Link to="/profile">{t('Header:navigation.profile')}</Link>
-              <Link to="/animelist">{t('Header:navigation.anime_list')}</Link>
             </>
           )}
         </nav>
@@ -141,7 +158,6 @@ const Header: React.FC = () => {
                       )}
                     </button>
 
-                    {/* Settings Button */}
                     <button className={styles.dropdownItem} onClick={openSettingsModal}>
                       {t('Header:user_menu.settings')}
                     </button>

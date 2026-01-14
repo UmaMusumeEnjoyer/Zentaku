@@ -33,6 +33,25 @@
   -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
 }
 
+.bannerPlaceholder {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 50px;
+  background-color: var(--bg-page); /* Sử dụng màu nền của trang */
+  z-index: 0;
+  /* Tùy chọn: Bạn có thể thêm một chút hiệu ứng để nó không quá trơn */
+  /* background-image: linear-gradient(to bottom, rgba(0,0,0,0.1), transparent); */
+}
+.heroBanner .bannerImageOverlay {
+  z-index: 1;
+  /* ... các thuộc tính cũ giữ nguyên */
+}
+.headerContent {
+  /* ... */
+  z-index: 2; /* Đảm bảo z-index này cao hơn placeholder */
+}
+
 .mainContentContainer {
   /* Giới hạn độ rộng nội dung nếu cần, tương tự HomePage */
   width: 100%;
