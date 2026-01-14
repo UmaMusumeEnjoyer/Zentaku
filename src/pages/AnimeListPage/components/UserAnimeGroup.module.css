@@ -31,6 +31,39 @@
   font-weight: 700;
 }
 
+.loadMoreContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+  width: 100%;
+}
+
+.loadMoreBtn {
+  background-color: transparent;
+  padding: 8px 24px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.loadMoreBtn:hover {
+  border-color: #3182ce; /* Hoặc màu chủ đạo của app */
+  color: #3182ce;
+  background-color: rgba(49, 130, 206, 0.1);
+
+}
+
+.loadMoreBtn span {
+  font-size: 1.2rem;
+}
+
 /* --- Add Button (Green Circle) --- */
 .btnAddCircle {
   background: transparent;
@@ -208,6 +241,10 @@
   .userGroupSection {
     padding: 16px;
     margin-bottom: 24px;
+  }
+  .loadMoreBtn {
+    width: 100%;
+    justify-content: center;
   }
 
   .userGroupHeader {

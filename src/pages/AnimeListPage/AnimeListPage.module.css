@@ -10,7 +10,7 @@
   background-color: var(--bg-app);
   color: var(--text-primary);
   font-family: 'Spline Sans', sans-serif;
-  padding: 24px 250px;
+  padding: 100px 250px;
 }
 
 .mainLayout {
@@ -79,7 +79,7 @@
 
 /* Sticky Filter Bar */
 .filterBarSticky {
-  position: sticky;
+  position:relative;
   top: 0;
   background-color: var(--bg-app); /* Match nền trang để che nội dung khi scroll */
   z-index: 10;

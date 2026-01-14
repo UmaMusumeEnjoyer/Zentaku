@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import AnimeCard from '../../../components/AnimeCard/AnimeCard';
 import { type AnimeSectionProps } from '@umamusumeenjoyer/shared-logic';
 import { useAnimeSection } from '@umamusumeenjoyer/shared-logic';
@@ -10,20 +10,37 @@ const AnimeSection: React.FC<AnimeSectionProps> = ({ title, animeList, allowNoti
   const { theme } = useTheme();
   const { t } = useTranslation(['AnimeSection']);
   
+  // Cấu hình số lượng hiển thị ban đầu
+  const INITIAL_DISPLAY_COUNT = 7;
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  // Lấy các logic về Notification từ hook (bỏ qua logic hiển thị cũ của hook)
   const {
-    isExpanded,
     showModal,
     isLoadingSettings,
     settings,
     hasData,
-    displayedAnime,
-    showViewAllButton,
+    // displayedAnime, // Không dùng từ hook nữa
+    // isExpanded,     // Không dùng từ hook nữa
+    // showViewAllButton, // Không dùng từ hook nữa
+    // toggleExpand,   // Không dùng từ hook nữa
     handleNotifyClick,
     handleCloseModal,
-    toggleExpand,
     handleSettingChange,
     handleSaveSettings
   } = useAnimeSection(animeList, allowNotification);
+
+  // --- LOGIC MỚI: Xử lý hiển thị 6 thẻ ---
+  const shouldShowButton = animeList.length > INITIAL_DISPLAY_COUNT;
+  
+  const displayedAnime = isExpanded 
+    ? animeList 
+    : animeList.slice(0, INITIAL_DISPLAY_COUNT);
+
+  const handleToggleExpand = () => {
+    setIsExpanded(!isExpanded);
+  };
+  // ----------------------------------------
 
   if (!hasData) {
     return null;
@@ -52,10 +69,11 @@ const AnimeSection: React.FC<AnimeSectionProps> = ({ title, animeList, allowNoti
             </button>
           )}
 
-          {showViewAllButton && (
+          {/* Nút View All / Show Less mới */}
+          {shouldShowButton && (
             <button 
               className="view-all-btn" 
-              onClick={toggleExpand}
+              onClick={handleToggleExpand}
             >
               {isExpanded ? t('AnimeSection:buttons.showLess') : t('AnimeSection:buttons.viewAll')}
             </button>
@@ -70,7 +88,7 @@ const AnimeSection: React.FC<AnimeSectionProps> = ({ title, animeList, allowNoti
         ))}
       </div>
 
-      {/* --- NOTIFICATION MODAL --- */}
+      {/* --- NOTIFICATION MODAL (Giữ nguyên) --- */}
       {showModal && (
         <div className="modal-overlay">
           <div className="modal-content" data-theme={theme}>

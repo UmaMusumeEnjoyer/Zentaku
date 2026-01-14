@@ -1,10 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useUserAnimeGroup } from '@umamusumeenjoyer/shared-logic';
 import type { UserAnimeGroupProps } from '@umamusumeenjoyer/shared-logic';
 import AnimeCard from '../../../components/AnimeCard/AnimeCard';
 
-// Import CSS Module
 import styles from './UserAnimeGroup.module.css';
 
 const UserAnimeGroup: React.FC<UserAnimeGroupProps> = ({ 
@@ -21,6 +20,11 @@ const UserAnimeGroup: React.FC<UserAnimeGroupProps> = ({
   onSelectAnime 
 }) => {
   const { t } = useTranslation(['userAnimeGroup']);
+  
+  // 1. Cấu hình
+  const ITEMS_PER_ROW = 5; 
+  const [visibleCount, setVisibleCount] = useState(ITEMS_PER_ROW);
+
   const {
     hasEditPermission,
     shouldRender,
@@ -29,6 +33,22 @@ const UserAnimeGroup: React.FC<UserAnimeGroupProps> = ({
     getAnimeId,
   } = useUserAnimeGroup(animeList, isCurrentUser, canEdit, deleteMode, selectedAnimeIds);
 
+  // 2. Logic Mới: Kiểm tra trạng thái hiển thị
+  const isAllExpanded = visibleCount >= animeList.length;
+  const shouldShowButton = animeList.length > ITEMS_PER_ROW; // Chỉ hiện nút nếu list dài hơn 1 hàng
+
+  const handleToggleView = () => {
+    if (isAllExpanded) {
+      // Nếu đang mở hết -> Thu gọn về ban đầu
+      setVisibleCount(ITEMS_PER_ROW);
+    } else {
+      // Nếu chưa mở hết -> Mở thêm 1 hàng (hoặc mở hết luôn nếu muốn)
+      setVisibleCount(prev => prev + ITEMS_PER_ROW);
+    }
+  };
+
+  const displayedAnime = animeList.slice(0, visibleCount);
+
   if (!shouldRender) return null;
 
   return (
@@ -36,9 +56,7 @@ const UserAnimeGroup: React.FC<UserAnimeGroupProps> = ({
       <div className={styles.userGroupHeader}>
         <div className={styles.userGroupTitle}>
           <span className="material-symbols-outlined">person</span>
-          {/* Sử dụng interpolation để truyền tên user */}
           <h3>{t('userAnimeGroup.addedBy', { user })}</h3>
-          {/* Giữ lại class global count-badge nếu muốn hoặc thêm vào module */}
           <span className="count-badge">{animeCount}</span>
           
           {hasEditPermission && !deleteMode && (
@@ -96,8 +114,9 @@ const UserAnimeGroup: React.FC<UserAnimeGroupProps> = ({
         )}
       </div>
 
+      {/* Grid hiển thị Anime */}
       <div className={styles.animeGridRow}>
-        {animeList.map((anime) => {
+        {displayedAnime.map((anime) => {
           const animeId = getAnimeId(anime);
           const isSelected = isAnimeSelected(animeId);
           
@@ -126,6 +145,23 @@ const UserAnimeGroup: React.FC<UserAnimeGroupProps> = ({
           );
         })}
       </div>
+
+      {/* 3. Nút Toggle View (View More / View Less) */}
+      {shouldShowButton && (
+        <div className={styles.loadMoreContainer}>
+          <button onClick={handleToggleView} className={styles.loadMoreBtn}>
+            {/* Đổi icon dựa trên trạng thái */}
+            <span className="material-symbols-outlined">
+              {isAllExpanded ? 'expand_less' : 'expand_more'}
+            </span>
+            {/* Đổi text dựa trên trạng thái */}
+            {isAllExpanded 
+              ? t('userAnimeGroup.viewLess', 'View Less') 
+              : t('userAnimeGroup.viewMore', 'View More')
+            }
+          </button>
+        </div>
+      )}
     </div>
   );
 };
