@@ -2,7 +2,7 @@
 
 .userGroupSection {
   margin-bottom: 40px;
-  background-color: var(--clr-surface-tonal-a10); /* Card Background */
+  background-color: var(--bg-subtle); /* Card Background */
   padding: 20px;
   border-radius: 12px;
   border: 1px solid var(--border-subtle);
@@ -137,12 +137,12 @@
 /* Grid Layout */
 .animeGridRow {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 16px;
 }
 
 .gridItem {
-  height: 350px; /* Desktop height constraint */
+  height: 35  0px; /* Desktop height constraint */
 }
 
 /* Grid Item Wrapper & Overlay */

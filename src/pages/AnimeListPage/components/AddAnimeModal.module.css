@@ -161,7 +161,7 @@
 
 .modalCardWrapper {
   position: relative;
-  aspect-ratio: 2/3;
+
   transition: transform 0.2s;
 }
 

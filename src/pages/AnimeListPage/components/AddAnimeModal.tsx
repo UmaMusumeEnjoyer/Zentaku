@@ -44,14 +44,12 @@ const AddAnimeModal: React.FC<AddAnimeModalProps> = ({
   const renderAnimeCard = (anime: any) => {
     const animeIdStr = String(anime.id);
     const { isAdding, isAdded } = getAnimeState(animeIdStr);
-
+    
     return (
       <div key={animeIdStr} className={styles.modalCardWrapper}>
         <AnimeCard
           anime={{
             ...anime,
-            episode_progress: undefined,
-            next_airing_ep: undefined
           }}
         />
         <button
