@@ -8,8 +8,8 @@
 /* --- 1.1 DEFAULT THEME (LIGHT MODE) --- */
 :root {
   /* Base colors */
-  --clr-dark-a0: #000000;
-  --clr-light-a0: #cfd0d1;
+  --clr-dark-a0: #323232;
+  --clr-light-a0: #bcbcbc;
 
   /* Theme primary colors (Màu xanh dương đậm của Light Mode) */
   --clr-primary-a0: #2b76d9;
@@ -20,7 +20,7 @@
   --clr-primary-a50: #20355b;
 
   /* Theme surface colors (Nền trắng/xám sáng) */
-  --clr-surface-a0: #ffffff; /* Trắng tinh */
+  --clr-surface-a0: #EEEEEE; /* Trắng tinh */
   --clr-surface-a10: #f0f0f0;
   --clr-surface-a20: #e1e1e1;
   --clr-surface-a30: #d3d3d3;
@@ -28,8 +28,8 @@
   --clr-surface-a50: #b6b6b6;
 
   /* Theme tonal surface colors (Card/Panel tones) */
-  --clr-surface-tonal-a0: #edf0fc;
-  --clr-surface-tonal-a10: #e0e3ee;
+  --clr-surface-tonal-a0: #F9F9F9;
+  --clr-surface-tonal-a10: #696969;
   --clr-surface-tonal-a20: #d4d6df;
   --clr-surface-tonal-a30: #c7c9d1;
   --clr-surface-tonal-a40: #bbbdc3;
@@ -56,7 +56,7 @@
   --clr-primary-a50: #b2c6ff;
 
   /* Theme surface colors (Nền tối) */
-  --clr-surface-a0: #202225; /* Đen xám (Nền chính) */
+  --clr-surface-a0: #191919; /* Đen xám (Nền chính) */
   --clr-surface-a10: #353739;
   --clr-surface-a20: #292b2f;
   --clr-surface-a30: #626366;
@@ -64,8 +64,8 @@
   --clr-surface-a50: #939496;
 
   /* Theme tonal surface colors */
-  --clr-surface-tonal-a0: #252b38;
-  --clr-surface-tonal-a10: #3a3f4b;
+  --clr-surface-tonal-a0: #2c2c2c;
+  --clr-surface-tonal-a10: #717171;
   --clr-surface-tonal-a20: #505460;
   --clr-surface-tonal-a30: #666a75;
   --clr-surface-tonal-a40: #7e828a;
