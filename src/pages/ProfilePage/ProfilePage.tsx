@@ -5,7 +5,7 @@ import { useProfilePage, type UserProfile } from '@umamusumeenjoyer/shared-logic
 import { useTheme } from '../../context/ThemeContext';
 import { useTranslation } from 'react-i18next';
 import { useAuth as useAuthContext } from '../../context/AuthContext';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 // Components
 import ProfileBanner from './components/ProfileBanner'; 
@@ -19,6 +19,7 @@ const ProfilePage: React.FC = () => {
   const { username } = useParams<{ username: string }>();
   const { theme } = useTheme();
   const { updateUserInState: syncAuthUser } = useAuthContext();
+  const navigate = useNavigate();
 
   // ViewModel
   const {
@@ -42,7 +43,15 @@ const ProfilePage: React.FC = () => {
     showEditModal, setShowEditModal, handleUpdateSuccess,
     showCreateModal, setShowCreateModal, newListData, creating, 
     handleCreateListSubmit, handleNewListInputChange
-  } = useProfilePage(username);
+  } = useProfilePage(username, { 
+    // [3] Truyền object callbacks vào đây
+    onNavigateToList: (listId) => {
+      // Định nghĩa đường dẫn tới trang chi tiết list của bạn
+      navigate(`/list/${listId}`); 
+    },
+    onNavigateToUserProfile: (newUsername) => {
+    }
+  });
 
    React.useEffect(() => {
     if (isOwnProfile && userProfile) {
