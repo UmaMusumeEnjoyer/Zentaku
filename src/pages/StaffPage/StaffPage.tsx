@@ -2,9 +2,8 @@
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import styles from './StaffPage.module.css';
 import { useStaffPage } from '@umamusumeenjoyer/shared-logic';
-import { useTheme } from '../../context/ThemeContext';
+import styles from './StaffPage.module.css';
 
 // --- Components phụ trợ (UI Components) ---
 
@@ -49,7 +48,7 @@ const DescriptionRenderer: React.FC<DescriptionRendererProps> = ({ text }) => {
 
 const StaffPage: React.FC = () => {
     const { id } = useParams<{ id: string }>();
-    const { theme } = useTheme();
+    // [REMOVED] useTheme hook vì CSS Variables đã handle tự động
     const { t, i18n } = useTranslation('StaffPage');
     
     // Gọi Custom Hook để lấy dữ liệu và logic
@@ -61,7 +60,6 @@ const StaffPage: React.FC = () => {
         isDescriptionExpanded, 
         toggleDescription, 
         shouldShowReadMore,
-        formatDate
     } = useStaffPage(id);
 
     // Format date theo ngôn ngữ
@@ -93,7 +91,8 @@ const StaffPage: React.FC = () => {
     const descriptionText = staff.description || '';
 
     return (
-        <div className={`${styles.pageWrapper} ${styles[theme]}`}>
+        // [UPDATE] Chỉ sử dụng class pageWrapper, không cần logic theme
+        <div className={styles.pageWrapper}>
             <div className={styles.mainContent}>
                 {/* Cột trái: Ảnh */}
                 <div className={styles.leftColumn}>

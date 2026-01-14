@@ -1,42 +1,10 @@
-/* src/pages/StaffPage.module.css */
+/* src/pages/StaffPage/StaffPage.module.css */
 
-/* =========================================
-   DARK MODE (Default)
-   ========================================= */
-.pageWrapper.dark {
-    --bg-primary: #0f1922;
-    --bg-secondary: #1a2838;
-    --bg-hover: rgba(255, 255, 255, 0.05);
-    --text-primary: #fff;
-    --text-secondary: #c2c2c2;
-    --text-muted: #8a92a3;
-    --border-color: #2a3a50;
-    --link-color: #3DB4F2;
-    --shadow: rgba(0, 0, 0, 0.3);
-}
-
-/* =========================================
-   LIGHT MODE
-   ========================================= */
-.pageWrapper.light {
-    --bg-primary: #f5f7fa;
-    --bg-secondary: #ffffff;
-    --bg-hover: rgba(0, 0, 0, 0.05);
-    --text-primary: #1a1a1a;
-    --text-secondary: #4a4a4a;
-    --text-muted: #6a6a6a;
-    --border-color: #e0e6ed;
-    --link-color: #0077cc;
-    --shadow: rgba(0, 0, 0, 0.1);
-}
-
-/* =========================================
-   BASE STYLES
-   ========================================= */
+/* BASE STYLES */
 .pageWrapper {
-    background-color: var(--bg-primary);
+    background-color: var(--bg-app);
     color: var(--text-secondary);
-    padding: 40px 100px;
+    padding: 120px 100px;
     font-family: 'Montserrat', sans-serif;
     min-height: 100vh;
     transition: background-color 0.3s ease, color 0.3s ease;
@@ -69,7 +37,7 @@
     width: 100%;
     border-radius: 8px;
     object-fit: cover;
-    box-shadow: 0 4px 15px var(--shadow);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* Shadow giữ nguyên opacity */
     transition: box-shadow 0.3s ease;
 }
 
@@ -120,6 +88,7 @@
     white-space: pre-wrap;
     font-size: 0.9rem;
     transition: max-height 0.3s ease-in-out, color 0.3s ease;
+    color: var(--text-secondary);
 }
 
 .description p { margin-top: 0; }
@@ -130,6 +99,7 @@
     max-height: 120px; 
     overflow: hidden;
     position: relative;
+    /* Mask giữ nguyên logic hiển thị */
     -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
     mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
 }
@@ -137,7 +107,7 @@
 .readMoreButton {
     background: none;
     border: none;
-    color: var(--text-muted);
+    color: var(--text-secondary); /* Thay vì muted hardcode */
     cursor: pointer;
     font-weight: bold;
     font-family: inherit;
@@ -148,11 +118,11 @@
 }
 
 .readMoreButton:hover {
-    filter: brightness(1.2);
+    color: var(--text-primary);
 }
 
 .descriptionLink {
-    color: var(--link-color);
+    color: var(--btn-primary-bg); /* Dùng màu brand cho link */
     text-decoration: none;
     transition: color 0.3s ease;
 }
@@ -179,7 +149,7 @@
     font-size: 1.5rem;
     margin-bottom: 20px;
     padding-bottom: 10px;
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-subtle);
     transition: color 0.3s ease, border-color 0.3s ease;
 }
 
@@ -199,18 +169,19 @@
     display: flex;
     align-items: center;
     gap: 15px;
-    background-color: var(--bg-secondary);
+    background-color: var(--bg-panel);
     border-radius: 6px;
     overflow: hidden;
     height: 80px;
     transition: background-color 0.3s ease, filter 0.2s ease;
     padding-right: 15px;
+    border: 1px solid transparent; /* Chuẩn bị cho hover */
 }
 
 /* Hiệu ứng hover cho card */
 .roleCardLink:hover .roleCard {
-    background-color: var(--bg-hover);
-    filter: brightness(1.2); 
+    background-color: var(--bg-subtle);
+    border-color: var(--border-subtle);
 }
 
 .roleImage {
