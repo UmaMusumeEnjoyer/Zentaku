@@ -16,7 +16,7 @@ const AnimeDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   
   // 3. Xóa destructuring theme
-  const { anime, loading, error, hasBanner } = useAnimeDetail(id);
+  const { anime, loading, error, hasBanner, staffList, characterList, stats } = useAnimeDetail(id);
 
   if (loading) {
     return (
@@ -58,7 +58,12 @@ const AnimeDetailPage: React.FC = () => {
             <InfoSidebar anime={anime as any} />
             
             {/* Cột phải */}
-            <MainContentArea anime={anime as any} />
+            <MainContentArea 
+              anime={anime as any}
+              staffList={staffList} 
+              characterList={characterList}
+              stats={stats}
+             />
           </div>
           
         </div>

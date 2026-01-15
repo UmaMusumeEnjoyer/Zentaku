@@ -3,29 +3,28 @@ import React from 'react';
 import CharacterCard from './CharacterCard';
 import { useAnimeCharacters } from '@umamusumeenjoyer/shared-logic';
 import { useTranslation } from 'react-i18next';
-// 1. Import CSS Module
 import styles from './CharactersSection.module.css';
 
+// 1. Cập nhật Interface Props
 interface CharactersSectionProps {
-  animeId: number | string;
+  data: any[]; // Tốt nhất nên thay 'any' bằng 'Character[]'
 }
 
-const CharactersSection: React.FC<CharactersSectionProps> = ({ animeId }) => {
+const CharactersSection: React.FC<CharactersSectionProps> = ({ data }) => {
   const { t } = useTranslation('CharactersSection'); 
-  const { characters, loading } = useAnimeCharacters(animeId);
+  
+  // 2. Truyền data vào hook (Hook này chỉ làm nhiệm vụ cắt mảng slice(0,6))
+  const { characters } = useAnimeCharacters(data);
 
-  if (loading) {
-    return <div>{t('characters.loading')}</div>;
-  }
-
+  // 3. Xóa logic check loading
+  
   if (!characters || characters.length === 0) {
     return <p>{t('characters.no_info')}</p>;
   }
 
   return (
-    // 2. Sử dụng class từ module
     <div className={styles.charactersGrid}>
-      {characters.map((char) => (
+      {characters.map((char: any) => (
         <CharacterCard key={char.id} character={char} />
       ))}
     </div>
