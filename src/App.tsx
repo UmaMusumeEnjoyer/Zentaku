@@ -41,7 +41,15 @@ initSharedLogic({
 
 // Component để render trang home dựa trên trạng thái đăng nhập
 const HomeRoute = () => {
-  const { user } = useAuth();
+  const { user, isInitializing } = useAuth();
+  if (isInitializing) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        {/* Bạn có thể thay bằng component <LoadingSpinner /> của bạn */}
+        Loading... 
+      </div>
+    );
+  }
   return user ? <HomePageLogin /> : <HomePage />;
 };
 

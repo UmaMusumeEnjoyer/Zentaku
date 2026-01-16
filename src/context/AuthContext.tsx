@@ -1,13 +1,20 @@
 // src/context/AuthContext.tsx
-import  { createContext, useContext, useEffect, useRef, type ReactNode, useMemo } from 'react';
+import  { createContext, useContext, useEffect, useRef, type ReactNode, useMemo, useState } from 'react';
 import { useAuth as useSharedAuth, type UseAuthReturn } from '@umamusumeenjoyer/shared-logic';
 import { authService } from '@umamusumeenjoyer/shared-logic';
 
-const AuthContext = createContext<UseAuthReturn | null>(null);
+interface AuthContextType extends UseAuthReturn {
+  isInitializing: boolean;
+}
+const AuthContext = createContext< AuthContextType | null>(null);
+
+
+
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const authLogic = useSharedAuth();
   const refreshTimerRef = useRef<number | null>(null);
+  const [isInitializing, setIsInitializing] = useState(true);
 
   // Hàm refresh token thủ công
   const refreshAccessToken = async () => {
@@ -52,9 +59,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const token = localStorage.getItem('authToken');
       const username = localStorage.getItem('username');
 
-      if (token && username && !authLogic.user) {
-        await authLogic.fetchUserInfo(username);
-        setupRefreshTimer();
+      try{
+        if (token && username && !authLogic.user) {
+          await authLogic.fetchUserInfo(username);
+          setupRefreshTimer();
+        }
+      } catch(error){
+        console.error("Lỗi khôi phục phiên đăng nhập:", error);
+      } finally{
+        setIsInitializing(false);
       }
     };
 
@@ -94,7 +107,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     ...authLogic,
     // Explicitly include user to ensure it's in dependencies
     user: authLogic.user,
-  }), [authLogic, authLogic.user]);
+    isInitializing
+  }), [authLogic, authLogic.user, isInitializing]);
 
   return (
     <AuthContext.Provider value={contextValue}>
