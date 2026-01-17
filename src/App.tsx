@@ -17,6 +17,7 @@ import AnimeListSearchPage from './pages/AnimeListSearch/AnimeListSearchPage';
 import ProfilePage from './pages/ProfilePage/ProfilePage';
 import AnimeListPage from './pages/AnimeListPage/AnimeListPage';
 
+
 // Xác định API base URL dựa trên environment
 const isDevelopment = import.meta.env.DEV;
 const API_BASE_URL = isDevelopment 
@@ -42,11 +43,20 @@ initSharedLogic({
 // Component để render trang home dựa trên trạng thái đăng nhập
 const HomeRoute = () => {
   const { user, isInitializing } = useAuth();
+  const hasToken = localStorage.getItem('authToken');
   if (isInitializing) {
     return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+      <div >
         {/* Bạn có thể thay bằng component <LoadingSpinner /> của bạn */}
-        Loading... 
+       
+      </div>
+    );
+  }
+  if (!user && hasToken) {
+     return (
+      <div >
+        {/* Bạn nên dùng component LoadingSpinner đẹp mắt của dự án ở đây */}
+        
       </div>
     );
   }

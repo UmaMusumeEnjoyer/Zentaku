@@ -30,6 +30,8 @@ const Header: React.FC = () => {
   }, [user?.avatar_url]);
 
   const isAuthenticated = !!user;
+  const hasToken = localStorage.getItem('authToken');
+  const isUserLoading = !user && hasToken;
 
   // 2. Hook xử lý Business Logic (Shared ViewModel)
   // Logic: Noti, Search, Dropdown, Settings
@@ -105,7 +107,16 @@ const Header: React.FC = () => {
         </nav>
 
         <div className={styles.headerRight}>
-          {isAuthenticated ? (
+          {isUserLoading ? (
+             // TRẠNG THÁI LOADING:
+             // Hiển thị một khung placeholder (Skeleton) thay vì nút Login
+             // Giữ kích thước tương đương Avatar để không bị giật layout
+             <div className={styles.userMenuContainer}>
+                <div 
+
+                />
+             </div>
+          ) : isAuthenticated ? (
             <>
               <button
                 className={styles.btnSearch}
