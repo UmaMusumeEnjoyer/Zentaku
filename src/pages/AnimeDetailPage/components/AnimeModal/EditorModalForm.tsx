@@ -36,7 +36,7 @@ const EditorModalForm: React.FC<EditorModalFormProps> = ({ formData, handleChang
             value={formData.score} 
             onChange={handleChange} 
             min="0" max="10" 
-            disabled={isEditMode} 
+            
             className={styles.input}
           />
         </div>
@@ -61,7 +61,7 @@ const EditorModalForm: React.FC<EditorModalFormProps> = ({ formData, handleChang
             name="startDate" 
             value={formData.startDate} 
             onChange={handleChange}
-            disabled={isEditMode}
+           
             className={styles.input}
           />
         </div>
@@ -74,7 +74,7 @@ const EditorModalForm: React.FC<EditorModalFormProps> = ({ formData, handleChang
             name="finishDate" 
             value={formData.finishDate} 
             onChange={handleChange}
-            disabled={isEditMode}
+            
             className={styles.input}
           />
         </div>
@@ -87,7 +87,7 @@ const EditorModalForm: React.FC<EditorModalFormProps> = ({ formData, handleChang
             name="rewatches" 
             value={formData.rewatches} 
             onChange={handleChange}
-            disabled={isEditMode}
+           
             className={styles.input}
           />
         </div>
@@ -122,7 +122,7 @@ const EditorModalForm: React.FC<EditorModalFormProps> = ({ formData, handleChang
               name="private" 
               checked={formData.private} 
               onChange={handleChange}
-              disabled={isEditMode}
+            
             />
             {t('AnimeModal:labels.private')}
           </label>
