@@ -5,6 +5,8 @@ import { useAnimeDetail } from '@umamusumeenjoyer/shared-logic';
 
 import PlaceholderSkeleton from '../../components/PlaceholderSkeleton/Skeleton';
 import SummarySkeleton from './components/MainContentArea/Summary_section/SummarySkeleton';
+import InfoSidebarSkeleton from './components/InfoSidebar/InfoSidebarSkeleton';
+import MainContentSkeleton from './components/MainContentArea/MainContentSkeleton';
 
 
 import styles from './AnimeDetailPage.module.css';
@@ -34,7 +36,8 @@ const AnimeDetailPage: React.FC = () => {
           <SummarySkeleton></SummarySkeleton>
           
           <div className={styles.gridContainer}>
-
+            <InfoSidebarSkeleton></InfoSidebarSkeleton>
+            <MainContentSkeleton></MainContentSkeleton>
           </div>
           
         </div>

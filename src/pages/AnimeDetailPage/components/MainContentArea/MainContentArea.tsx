@@ -88,13 +88,11 @@ const MainContentArea: React.FC<MainContentAreaProps> = ({
   stats // 1. Nhận stats từ props
 }) => {
   
-  // 2. QUAN TRỌNG: Đã xóa dòng "useAnimeStats(anime.id)" để tránh gọi API lặp lại
+
   
   const { t } = useTranslation(['MainContentArea', 'common']);
 
-  // 3. Đã xóa block "if (loading)" và "if (error)"
-  // Lý do: Parent Page (AnimeDetailPage) đã handle loading tổng thể.
-  // Tại đây chỉ cần render dữ liệu (nếu có) hoặc mảng rỗng.
+
 
   return (
     <main className={styles.mainContentArea}>

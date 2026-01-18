@@ -14,10 +14,8 @@ const SummarySkeleton: React.FC<SummarySkeletonProps> = ({ hasBanner = true }) =
 
   return (
     <div className={sectionClass}>
-      {/* --- CỘT TRÁI (Ảnh bìa + Nút) --- */}
+
       <div className={styles.summaryLeft}>
-        {/* Giả lập ảnh bìa (Cover Image) */}
-        {/* Chiều cao 305px là ước lượng dựa trên tỷ lệ ảnh anime chuẩn (2:3) với width ~215px */}
         <Skeleton 
           className={styles.summaryCover} 
           height={305} 
@@ -31,10 +29,8 @@ const SummarySkeleton: React.FC<SummarySkeletonProps> = ({ hasBanner = true }) =
         />
       </div>
 
-      {/* --- CỘT PHẢI (Tiêu đề + Mô tả) --- */}
       <div className={styles.summaryRight}>
-        {/* Giả lập Tiêu đề (Title) */}
-        {/* Margin bottom 15px để khớp với .animeTitleMain */}
+
         <Skeleton 
           height={48} 
           width="60%" 
@@ -51,7 +47,6 @@ const SummarySkeleton: React.FC<SummarySkeletonProps> = ({ hasBanner = true }) =
           <Skeleton height={16} width="40%" />
         </div>
         
-        {/* Giả lập nút "See more" nhỏ ở dưới */}
         <Skeleton 
           height={14} 
           width={80} 
