@@ -1,9 +1,9 @@
-import React from 'react'; // Xóa useEffect nếu không dùng
+import React from 'react'; 
 import AnimeSection from './components/AnimeSection'; 
 import { useHomePagelogin } from '@umamusumeenjoyer/shared-logic';
-// 1. Xóa import useTheme
-// import { useTheme } from '../../context/ThemeContext';
 import { useTranslation } from 'react-i18next';
+
+import AnimeSectionSkeleton from './components/AnimeSectionSkeleton';
 
 // 2. Import CSS Module
 import styles from './HomePagelogin.module.css';
@@ -17,10 +17,13 @@ const HomePagelogin: React.FC = () => {
 
   if (loading) {
     return (
-      // 3. Xóa prop data-theme và dùng styles module
-      <div className={styles['loading-container']}>
-        <h2>{t('HomePageLogin:loading.message')}</h2>
-      </div>
+         <div className={styles['homepage-login-wrapper']}>
+            <div className={styles['main-content-container']}>
+                 <main className={styles['main-content']}>
+                  <AnimeSectionSkeleton></AnimeSectionSkeleton>
+                 </main>
+            </div>
+         </div>
     );
   }
 

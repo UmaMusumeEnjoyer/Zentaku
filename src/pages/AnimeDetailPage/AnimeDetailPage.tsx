@@ -23,18 +23,14 @@ const AnimeDetailPage: React.FC = () => {
 
   if (loading) {
     return (
-      // Áp dụng class từ module và biến CSS toàn cục (đã define trong css)
       <div className={`${styles.pageWrapper}`}>
         <PlaceholderSkeleton 
           height="var(--banner-h)"
           borderRadius={0} 
-        />
-        
+        />   
         <div className={styles.mainContentContainer}>
         <div className={styles.contentWrapper}>
-          
-          <SummarySkeleton></SummarySkeleton>
-          
+          <SummarySkeleton></SummarySkeleton>  
           <div className={styles.gridContainer}>
             <InfoSidebarSkeleton></InfoSidebarSkeleton>
             <MainContentSkeleton></MainContentSkeleton>
