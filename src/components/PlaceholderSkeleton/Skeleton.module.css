@@ -1,0 +1,26 @@
+/* Skeleton.module.css */
+
+.skeletonLoader {
+  /* Màu nền cơ bản lấy từ biến toàn cục */
+  background-color: var(--bg-subtle);
+  
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+  box-sizing: border-box; 
+  
+  /* Áp dụng hiệu ứng Pulse */
+  /* 2s: Thời gian một chu kỳ (sáng -> tối -> sáng) */
+  /* cubic-bezier: Giúp nhịp thở tự nhiên hơn */
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Định nghĩa keyframes cho hiệu ứng nhấp nháy */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1; /* Hiển thị rõ (đậm màu) */
+  }
+  50% {
+    opacity: 0.5; /* Mờ đi 50% (nhạt màu/sáng hơn trên nền trắng, tối hơn trên nền đen) */
+  }
+}

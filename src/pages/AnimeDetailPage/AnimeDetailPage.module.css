@@ -8,6 +8,7 @@
   color: var(--text-primary)  ;
   transition: background-color 0.3s ease, color 0.3s ease;
   padding-bottom: 40px; /* Thêm padding đáy để không bị sát lề */
+  --banner-h: 380px;
 }
 
 /* Loading & Error States */
@@ -23,7 +24,7 @@
 
 /* Banner */
 .bannerImage {
-  height: 380px; 
+  height: var(--banner-h);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

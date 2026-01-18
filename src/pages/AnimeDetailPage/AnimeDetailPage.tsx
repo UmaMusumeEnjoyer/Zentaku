@@ -2,10 +2,11 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useAnimeDetail } from '@umamusumeenjoyer/shared-logic';
-// 1. Xóa import useTheme
-// import { useTheme } from '../../context/ThemeContext';
 
-// 2. Import CSS Modules
+import PlaceholderSkeleton from '../../components/PlaceholderSkeleton/Skeleton';
+import SummarySkeleton from './components/MainContentArea/Summary_section/SummarySkeleton';
+
+
 import styles from './AnimeDetailPage.module.css';
 
 import SummarySection from './components/MainContentArea/Summary_section/SummarySection';
@@ -21,8 +22,23 @@ const AnimeDetailPage: React.FC = () => {
   if (loading) {
     return (
       // Áp dụng class từ module và biến CSS toàn cục (đã define trong css)
-      <div className={`${styles.pageWrapper} ${styles.loadingState}`}>
-        Loading...
+      <div className={`${styles.pageWrapper}`}>
+        <PlaceholderSkeleton 
+          height="var(--banner-h)"
+          borderRadius={0} 
+        />
+        
+        <div className={styles.mainContentContainer}>
+        <div className={styles.contentWrapper}>
+          
+          <SummarySkeleton></SummarySkeleton>
+          
+          <div className={styles.gridContainer}>
+
+          </div>
+          
+        </div>
+      </div>
       </div>
     );
   }
