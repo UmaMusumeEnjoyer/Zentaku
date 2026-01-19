@@ -28,7 +28,9 @@
   /* Giữ shadow nhẹ để tạo độ nổi */
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
-
+.skeleton{
+  pointer-events: none;
+}
 @media (hover: hover) {
   .anime-card:hover {
     

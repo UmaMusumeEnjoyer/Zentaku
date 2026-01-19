@@ -32,16 +32,6 @@
     z-index: 1000;
 }
 
-.loading {
-    color: var(--text-primary);
-    background-color: var(--bg-app); /* Đảm bảo loading cũng full màu */
-    font-size: 1.5rem;
-    text-align: center;
-    min-height: 80vh;
-    padding-top: 50px;
-    width: 100%;
-}
-
 .mainContent {
     display: grid;
     grid-template-columns: 225px 1fr;

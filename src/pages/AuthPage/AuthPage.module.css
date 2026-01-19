@@ -87,6 +87,16 @@
     background-color: rgba(255, 255, 255, 0.1);
 }
 
+.container button:disabled {
+    background-color: #ccc; /* Màu xám */
+    cursor: not-allowed;    /* Con trỏ báo không được click */
+    border-color: #ccc;
+    transform: none;
+    opacity: 0.7;
+}
+.container button:disabled:hover {
+    background-color: #ccc; 
+}
 /* Form Styles */
 .container form {
     background-color: var(--bg-panel);

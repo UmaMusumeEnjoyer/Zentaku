@@ -12,6 +12,7 @@
   height: auto; 
   min-height: 80px;
   
+  
   /* REFACTOR: Sử dụng biến viền */
   border: 1px solid var(--border-subtle);
   width: 100%;
@@ -26,7 +27,7 @@
   color: inherit; 
   transition: background-color 0.2s ease;
   min-width: 0;
- 
+  
 }
 
 .cardLink:hover {
@@ -60,6 +61,7 @@
   flex-direction: column;
   justify-content: center;
   flex: 1;
+  min-width: 0;
 }
 
 .personName {
@@ -68,12 +70,13 @@
   font-size: 0.9rem;
   font-weight: 600;
   margin: 0 0 4px 0;
-  
-  white-space: normal; 
-  overflow: visible;
-  text-overflow: clip;
-  word-wrap: break-word; 
   line-height: 1.3;
+  white-space: normal; 
+
+  overflow-wrap: break-word;
+  word-break: break-word;
+  width: 100%;
+  max-width: 100px;
 }
 
 .personRole {

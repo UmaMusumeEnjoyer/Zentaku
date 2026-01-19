@@ -11,12 +11,6 @@
     width: 100%;
 }
 
-.loading {
-    color: var(--text-primary);
-    font-size: 1.5rem;
-    text-align: center;
-    padding-top: 50px;
-}
 
 .mainContent {
     display: grid;

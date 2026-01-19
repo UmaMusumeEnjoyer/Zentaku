@@ -9,8 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import { useAuthPage } from '@umamusumeenjoyer/shared-logic';
 import { useAuth } from '../../context/AuthContext';
-// 1. Xóa import useTheme vì không cần thiết nữa
-// import { useTheme } from '../../context/ThemeContext';
+
 import { useTranslation } from 'react-i18next';
 
 const AuthPage: React.FC = () => {
@@ -19,8 +18,6 @@ const AuthPage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const { login } = useAuth();
   
-  // const { theme } = useTheme(); -> Đã xóa
-
   const { t } = useTranslation(['Auth']);
 
   const initialPath = location.pathname === '/signup' ? 'signup' : 'login';
@@ -32,6 +29,7 @@ const AuthPage: React.FC = () => {
 
   const {
     isActive,
+    isLoading, // 1. Destructure isLoading từ useAuthPage
     registerData,
     loginData,
     handleRegisterChange,
@@ -60,7 +58,6 @@ const AuthPage: React.FC = () => {
   );
 
   return (
-    // 2. Xóa prop data-theme, CSS biến tự xử lý
     <div className={styles.authPageWrapper}>
       <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} />
       
@@ -71,6 +68,7 @@ const AuthPage: React.FC = () => {
           <form onSubmit={handleRegisterSubmit}>
             <h1>{t('Auth:signup.title')}</h1>
             
+            {/* ... (Các input giữ nguyên) ... */}
             <input 
               name="email" 
               type="email" 
@@ -79,29 +77,30 @@ const AuthPage: React.FC = () => {
               onChange={handleRegisterChange} 
               required 
             />
+             {/* ... (Các input khác giữ nguyên) ... */}
             <input 
-              name="username" 
-              type="text" 
-              placeholder={t('Auth:placeholders.username')} 
-              value={registerData.username} 
-              onChange={handleRegisterChange} 
-              required 
+                name="username" 
+                type="text" 
+                placeholder={t('Auth:placeholders.username')} 
+                value={registerData.username} 
+                onChange={handleRegisterChange} 
+                required 
             />
             <input 
-              name="password" 
-              type="password" 
-              placeholder={t('Auth:placeholders.password')} 
-              value={registerData.password} 
-              onChange={handleRegisterChange} 
-              required 
+                name="password" 
+                type="password" 
+                placeholder={t('Auth:placeholders.password')} 
+                value={registerData.password} 
+                onChange={handleRegisterChange} 
+                required 
             />
             <input 
-              name="confirm_password" 
-              type="password" 
-              placeholder={t('Auth:placeholders.confirm_password')} 
-              value={registerData.confirm_password} 
-              onChange={handleRegisterChange} 
-              required 
+                name="confirm_password" 
+                type="password" 
+                placeholder={t('Auth:placeholders.confirm_password')} 
+                value={registerData.confirm_password} 
+                onChange={handleRegisterChange} 
+                required 
             />
             
             <div className={styles.terms}>
@@ -109,7 +108,10 @@ const AuthPage: React.FC = () => {
               <label htmlFor="terms">{t('Auth:signup.terms')}</label>
             </div>
             
-            <button type="submit">{t('Auth:signup.submit')}</button>
+            {/* 2. Thêm disabled={isLoading} */}
+            <button type="submit" disabled={isLoading}>
+                {isLoading ? 'Processing...' : t('Auth:signup.submit')}
+            </button>
           </form>
         </div>
 
@@ -119,6 +121,7 @@ const AuthPage: React.FC = () => {
             <h1>{t('Auth:signin.title')}</h1>
             
             <div className={styles.socialIcons}>
+              {/* ... (Icons giữ nguyên) ... */}
               <a href="#" className="icon"><FontAwesomeIcon icon={faGooglePlusG} /></a>
               <a href="#" className="icon"><FontAwesomeIcon icon={faFacebookF} /></a>
               <a href="#" className="icon"><FontAwesomeIcon icon={faGithub} /></a>
@@ -145,30 +148,31 @@ const AuthPage: React.FC = () => {
             />
             
             <a href="#">{t('Auth:signin.forgot_password')}</a>
-            <button type="submit">{t('Auth:signin.submit')}</button>
+            
+            {/* 3. Thêm disabled={isLoading} */}
+            <button type="submit" disabled={isLoading}>
+                {isLoading ? 'Processing...' : t('Auth:signin.submit')}
+            </button>
           </form>
         </div>
 
         {/* --- OVERLAY ANIMATION --- */}
         <div className={styles.toggleContainer}>
+           {/* ... (Phần toggle giữ nguyên) ... */}
           <div className={styles.toggle}>
-            
-            {/* Panel Trái: Về Login */}
             <div className={`${styles.togglePanel} ${styles.toggleLeft}`}>
               <h1>{t('Auth:toggle.welcome_back')}</h1>
-              <button className={styles.hidden} onClick={handleLoginClick}>
+              <button className={styles.hidden} onClick={handleLoginClick} disabled={isLoading}>
                 {t('Auth:toggle.to_signin')}
               </button>
             </div>
             
-            {/* Panel Phải: Qua Register */}
             <div className={`${styles.togglePanel} ${styles.toggleRight}`}>
               <h1>{t('Auth:toggle.hello_friend')}</h1>
-              <button className={styles.hidden} onClick={handleRegisterClick}>
+              <button className={styles.hidden} onClick={handleRegisterClick} disabled={isLoading}>
                 {t('Auth:toggle.to_signup')}
               </button>
             </div>
-            
           </div>
         </div>
       

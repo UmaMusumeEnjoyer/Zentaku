@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useStaffPage } from '@umamusumeenjoyer/shared-logic';
 import styles from './StaffPage.module.css';
 
-// --- Components phụ trợ (UI Components) ---
+import StaffPageSkeleton from './StaffPageSkeleton';
 
 interface DescriptionRendererProps {
     text?: string;
@@ -85,7 +85,10 @@ const StaffPage: React.FC = () => {
         }
     };
 
-    if (loading) return <div className={styles.loading}>{t('loading')}</div>;
+    if (loading) return(<StaffPageSkeleton></StaffPageSkeleton>);
+
+
+
     if (!staff) return <div className={styles.loading}>{t('error.not_found')}</div>;
 
     const descriptionText = staff.description || '';

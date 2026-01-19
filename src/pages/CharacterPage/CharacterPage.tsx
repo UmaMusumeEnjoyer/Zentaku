@@ -8,6 +8,7 @@ import styles from './CharacterPage.module.css';
 import { useCharacter } from '@umamusumeenjoyer/shared-logic';
 import { Spoiler } from './Spoiler'; 
 import AnimeCard from '../../components/AnimeCard/AnimeCard'; // Import AnimeCard
+import CharacterPageSkeleton from './CharacterPageSkeleton';
 
 const CharacterPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -31,7 +32,7 @@ const CharacterPage: React.FC = () => {
     });
   };
 
-  if (loading) return <div className={styles.loading}>{t('common:loading')}</div>;
+  if (loading) return (<CharacterPageSkeleton></CharacterPageSkeleton>);
   if (error) return <div className={styles.loading}>{t('common:error', { message: error })}</div>;
   if (!character) return <div className={styles.loading}>{t('error.not_found')}</div>;
 
