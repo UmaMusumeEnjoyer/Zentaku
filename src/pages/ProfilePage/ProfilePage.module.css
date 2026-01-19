@@ -202,6 +202,9 @@
   cursor: pointer;
   transition: border-color 0.2s, background-color 0.2s;
 }
+.skeleton{
+  pointer-events: none;
+}
 
 .customListCard:hover {
   border-color: var(--text-secondary);

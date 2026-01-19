@@ -150,7 +150,9 @@
   display: flex;
   flex-direction: column;
 }
-
+.skeleton{
+  pointer-events: none;
+}
 .animeListCard:hover {
   background-color: var(--bg-hover, var(--bg-subtle));
   border-color: var(--btn-primary-bg);

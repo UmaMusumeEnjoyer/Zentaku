@@ -5,8 +5,10 @@ import SearchListCard from './components/SearchListCard';
 import { useAnimeListSearchPage } from '@umamusumeenjoyer/shared-logic';
 import { useTheme } from '../../context/ThemeContext';
 import { useTranslation } from 'react-i18next';
-// [CHANGE] Import styles
 import styles from './AnimeListSearchPage.module.css';
+
+// [UPDATE] Import cả 2 loại Skeleton
+import AnimeListSearchPageSkeleton, { SearchResultsSkeleton } from './AnimeListSearchSkeleton';
 
 const AnimeListSearchPage: React.FC = () => {
   const { theme } = useTheme();
@@ -16,11 +18,15 @@ const AnimeListSearchPage: React.FC = () => {
     topLists,
     searchResults,
     searchMetadata,
-    loadingTop,
-    loadingSearch,
+    loadingTop,    
+    loadingSearch,  
     isSearching,
     handleSearch
   } = useAnimeListSearchPage();
+
+  if (loadingTop && topLists.length === 0) {
+    return <AnimeListSearchPageSkeleton />;
+  }
 
   return (
     <div className={styles.animeListSearchPage} data-theme={theme}>
@@ -43,8 +49,10 @@ const AnimeListSearchPage: React.FC = () => {
               }
             </h2>
 
+            {/* [LOGIC 2] Xử lý Load khi tìm kiếm */}
             {loadingSearch ? (
-               <p style={{color: 'var(--text-secondary)'}}>{t('AnimeListSearch:search_results.loading')}</p>
+               // Thay thế text loading đơn giản bằng Skeleton Grid
+               <SearchResultsSkeleton />
             ) : searchResults.length > 0 ? (
               <div className={styles.listsGrid}>
                 {searchResults.map((list) => (
@@ -58,8 +66,12 @@ const AnimeListSearchPage: React.FC = () => {
 
         ) : (
           // --- VIEW 2: TOP LISTS (DEFAULT) ---
+          // Trường hợp loadingTop nhưng đã có data (ví dụ refresh ngầm) hoặc fallback
           loadingTop ? (
-            <p style={{color: 'var(--text-secondary)'}}>{t('AnimeListSearch:top_lists.loading')}</p>
+            // Nếu muốn skeleton cục bộ cho phần này, có thể dùng SearchResultsSkeleton tạm
+            // hoặc giữ loading text nếu không muốn chớp nháy cả trang.
+            // Ở đây vì Logic 1 đã bắt trường hợp load đầu tiên, dòng này chỉ là dự phòng.
+             <SearchResultsSkeleton />
           ) : (
             <TopListsSection title={t('AnimeListSearch:top_lists.title')} lists={topLists} />
           )

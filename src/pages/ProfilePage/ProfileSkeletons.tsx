@@ -125,7 +125,7 @@ export const ActivityFeedSkeleton: React.FC = () => (
 export const AnimeListsSkeleton: React.FC = () => (
   <div className={pageStyles.customListGrid}>
     {[1, 2, 3, 4].map((item) => (
-      <div key={item} className={pageStyles.customListCard}>
+      <div key = {item} className={`${pageStyles['.customListCard']} ${pageStyles['skeleton']}`}>
         <div style={{ display: 'flex', alignItems: 'center', marginBottom: 8 }}>
             <Skeleton height={20} width="60%" />
             <Skeleton height={14} width={40} style={{ marginLeft: 'auto' }} borderRadius={10} />
