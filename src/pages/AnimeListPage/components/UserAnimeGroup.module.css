@@ -2,7 +2,7 @@
 
 .userGroupSection {
   margin-bottom: 40px;
-  background-color: var(--bg-subtle); /* Card Background */
+  background-color: var(--bg-subtle);
   padding: 20px;
   border-radius: 12px;
   border: 1px solid var(--border-subtle);
@@ -54,22 +54,21 @@
 }
 
 .loadMoreBtn:hover {
-  border-color: #3182ce; /* Hoặc màu chủ đạo của app */
+  border-color: #3182ce;
   color: #3182ce;
   background-color: rgba(49, 130, 206, 0.1);
-
 }
 
 .loadMoreBtn span {
   font-size: 1.2rem;
 }
 
-/* --- Add Button (Green Circle) --- */
+/* --- Add Button --- */
 .btnAddCircle {
   background: transparent;
   border: none;
   box-shadow: none;
-  color: #4cca51; /* Brand Green - Giữ nguyên hoặc dùng var(--accent-green) */
+  color: #4cca51;
   cursor: pointer;
   margin-left: 10px;
   padding: 0;
@@ -107,7 +106,7 @@
   align-items: center;
   justify-content: center;
   transition: background 0.2s;
-  color: var(--text-secondary); /* Default icon color */
+  color: var(--text-secondary);
 }
 
 .btnIconOnly:hover {
@@ -115,19 +114,10 @@
   color: var(--text-primary);
 }
 
-/* Text Colors Utility */
-.textDanger {
-  color: #ef4444; /* Red 500 */
-}
-.textDanger:hover {
-  color: #dc2626; /* Red 600 */
-}
+.textDanger { color: #ef4444; }
+.textDanger:hover { color: #dc2626; }
+.textSecondary { color: var(--text-secondary); }
 
-.textSecondary {
-  color: var(--text-secondary);
-}
-
-/* Delete Actions Group */
 .deleteActionsGroup {
   display: flex;
   align-items: center;
@@ -147,7 +137,7 @@
 }
 
 .btnConfirmDelete {
-  background-color: #dc2626; /* Red 600 */
+  background-color: #dc2626;
   color: white;
   border: none;
   padding: 6px 16px;
@@ -167,15 +157,12 @@
   cursor: not-allowed;
 }
 
-/* Grid Layout */
+/* --- Grid Layout (UPDATED to match AnimeSection) --- */
 .animeGridRow {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  /* Sử dụng minmax 140px giống hệt AnimeSection */
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
   gap: 16px;
-}
-
-.gridItem {
-  height: 35  0px; /* Desktop height constraint */
 }
 
 /* Grid Item Wrapper & Overlay */
@@ -184,6 +171,12 @@
   border-radius: 8px;
   overflow: hidden;
   transition: transform 0.2s;
+  height: 100%; /* Đảm bảo wrapper cao hết cỡ thẻ */
+}
+
+/* Xóa class .gridItem cũ vì nó gây lỗi height */
+.gridItem {
+  height: 100%;
 }
 
 .gridItemWrapper.deleteMode {
@@ -191,14 +184,14 @@
 }
 
 .gridItemWrapper.selected {
-  outline: 3px solid #ef4444; /* Red 500 */
+  outline: 3px solid #ef4444;
   transform: scale(0.96);
 }
 
 .deleteOverlay {
   position: absolute;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.3); /* Overlay tối luôn cần semi-transparent black */
+  background-color: rgba(0, 0, 0, 0.3);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -225,18 +218,7 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Responsive Breakpoints */
-@media (max-width: 1200px) {
-  .animeGridRow { grid-template-columns: repeat(5, 1fr); }
-}
-@media (max-width: 900px) {
-  .animeGridRow { grid-template-columns: repeat(4, 1fr); }
-}
-@media (max-width: 600px) {
-  .animeGridRow { grid-template-columns: repeat(3, 1fr); }
-}
-
-/* Mobile Adjustments */
+/* --- Mobile Adjustments (UPDATED) --- */
 @media (max-width: 768px) {
   .userGroupSection {
     padding: 16px;
@@ -263,18 +245,12 @@
     padding-bottom: 5px;
   }
 
-  /* Grid Anime: Tối ưu chiều cao thẻ trên mobile */
+  /* Grid Anime: Force 2 columns giống AnimeSection mobile */
   .animeGridRow {
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;
   }
   
-  .gridItem {
-    height: auto;
-    aspect-ratio: 2/3; /* Tỉ lệ chuẩn poster */
-    min-height: 220px;
-  }
-
   .btnAddCircle {
     padding: 8px;
   }

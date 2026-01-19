@@ -22,7 +22,7 @@ const UserAnimeGroup: React.FC<UserAnimeGroupProps> = ({
   const { t } = useTranslation(['userAnimeGroup']);
   
   // 1. Cấu hình
-  const ITEMS_PER_ROW = 5; 
+  const ITEMS_PER_ROW = 7; 
   const [visibleCount, setVisibleCount] = useState(ITEMS_PER_ROW);
 
   const {

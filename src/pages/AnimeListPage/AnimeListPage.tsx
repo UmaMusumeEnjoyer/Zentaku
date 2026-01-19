@@ -13,6 +13,8 @@ import UserSearchModal from './components/UserSearchModal';
 import RequestModal from './components/RequestModal';
 import RequestList from './components/RequestList';
 
+import AnimeListPageSkeleton from './AnimeListPageSkeleton';
+
 // Import CSS Module
 import styles from './AnimeListPage.module.css';
 
@@ -68,6 +70,10 @@ const AnimeListPage: React.FC = () => {
     handleUserAdded,
     handleRemoveMember,
   } = useAnimeListPage(id || '', location.state, navigate);
+  
+  if (loading) {
+    return <AnimeListPageSkeleton />;
+  }
 
   return (
     <div className={styles.pageContainer}>
