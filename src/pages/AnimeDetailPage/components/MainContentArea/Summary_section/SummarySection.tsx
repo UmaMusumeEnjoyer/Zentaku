@@ -1,6 +1,6 @@
 // src/components/SummarySection.tsx
 import React, { useMemo, useState } from 'react'; // [ADD] import useState
-import EditorModal from '../../AnimeModal/EditorModal'; 
+import EditorModal from '../../../../../components/AnimeModal/EditorModal'; 
 import styles from './SummarySection.module.css';
 import type { SummarySectionProps } from '@umamusumeenjoyer/shared-logic';
 import { useSummarySection } from '@umamusumeenjoyer/shared-logic';
