@@ -21,6 +21,10 @@ const HomePagelogin: React.FC = () => {
             <div className={styles['main-content-container']}>
                  <main className={styles['main-content']}>
                   <AnimeSectionSkeleton></AnimeSectionSkeleton>
+                  <AnimeSectionSkeleton></AnimeSectionSkeleton>
+                  <AnimeSectionSkeleton></AnimeSectionSkeleton>
+                  <AnimeSectionSkeleton></AnimeSectionSkeleton>
+                  <AnimeSectionSkeleton></AnimeSectionSkeleton>
                  </main>
             </div>
          </div>
