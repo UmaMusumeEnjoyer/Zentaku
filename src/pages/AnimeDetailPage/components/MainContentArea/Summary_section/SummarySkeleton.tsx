@@ -1,5 +1,5 @@
 import React from 'react';
-import Skeleton from '../../../../../components/PlaceholderSkeleton/Skeleton'; // Đảm bảo đường dẫn import đúng
+import Skeleton from '../../../../../components/PlaceholderSkeleton/Skeleton'; 
 import styles from './SummarySection.module.css';
 
 interface SummarySkeletonProps {
@@ -7,7 +7,6 @@ interface SummarySkeletonProps {
 }
 
 const SummarySkeleton: React.FC<SummarySkeletonProps> = ({ hasBanner = true }) => {
-  // Logic class giống hệt component thật để giữ layout chính xác
   const sectionClass = !hasBanner 
     ? `${styles.summarySection} ${styles.noBanner}` 
     : styles.summarySection;
@@ -22,7 +21,6 @@ const SummarySkeleton: React.FC<SummarySkeletonProps> = ({ hasBanner = true }) =
           borderRadius={8} 
         />
         
-        {/* Giả lập nút (Button) */}
         <Skeleton 
           height={40} 
           borderRadius={6} 
@@ -37,8 +35,8 @@ const SummarySkeleton: React.FC<SummarySkeletonProps> = ({ hasBanner = true }) =
           style={{ marginBottom: '15px' }} 
         />
 
-        {/* Giả lập đoạn mô tả (Description) - Tạo nhiều dòng với độ dài khác nhau */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        {/* Giả lập Description */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '15px' }}>
           <Skeleton height={16} width="100%" />
           <Skeleton height={16} width="98%" />
           <Skeleton height={16} width="95%" />
@@ -47,11 +45,22 @@ const SummarySkeleton: React.FC<SummarySkeletonProps> = ({ hasBanner = true }) =
           <Skeleton height={16} width="40%" />
         </div>
         
+        {/* Giả lập nút Read More */}
         <Skeleton 
           height={14} 
           width={80} 
-          style={{ marginTop: '15px' }} 
+          style={{ marginBottom: '30px' }} 
         />
+
+        {/* [NEW] Giả lập Navigation Bar */}
+        <div className={styles.navBar} style={{ marginTop: 'auto' }}>
+          <Skeleton height={20} width={60} />
+          <Skeleton height={20} width={45} />
+          <Skeleton height={20} width={70} />
+          <Skeleton height={20} width={40} />
+          <Skeleton height={20} width={40} />
+          <Skeleton height={20} width={50} />
+        </div>
       </div>
     </div>
   );

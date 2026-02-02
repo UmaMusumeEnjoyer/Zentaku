@@ -208,7 +208,7 @@
 /* Dropdown Menu */
 .dropdownMenu {
   position: absolute;
-  top: 130%;
+  top: 100%;
   right: 0;
   background-color: var(--bg-panel);
   border: 1px solid var(--border-subtle);

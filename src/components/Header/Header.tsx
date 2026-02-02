@@ -33,6 +33,18 @@ const Header: React.FC = () => {
   const hasToken = localStorage.getItem('authToken');
   const isUserLoading = !user && hasToken;
 
+  const handleMouseEnter = () => {
+    if (!isDropdownOpen) {
+      toggleDropdown();
+    }
+  };
+
+  const handleMouseLeave = () => {
+    if (isDropdownOpen) {
+      toggleDropdown();
+    }
+  };
+
   // 2. Hook xử lý Business Logic (Shared ViewModel)
   // Logic: Noti, Search, Dropdown, Settings
   const {
@@ -40,12 +52,10 @@ const Header: React.FC = () => {
     isSearchModalOpen,
     isNotiModalOpen,
     isSettingsModalOpen,
-    notificationCount,
     notifications,
     toggleDropdown,
     openSearchModal,
     closeSearchModal,
-    openNotificationModal,
     closeNotificationModal,
     openSettingsModal,
     closeSettingsModal,
@@ -128,19 +138,18 @@ const Header: React.FC = () => {
                   <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
               </button>
-
-              <div className={styles.userMenuContainer}>
-                <div className={styles.userAvatarTrigger} onClick={toggleDropdown}>
+            
+              <div className={styles.userMenuContainer}
+                   onMouseEnter={handleMouseEnter} // Di chuột vào vùng này (gồm cả ảnh và menu) thì mở
+                onMouseLeave={handleMouseLeave}
+              >
+                <div className={styles.userAvatarTrigger} >
                   <img
                     src={avatarUrl}
                     alt="User Avatar"
                     className={styles.userAvatarImg}
                   />
-                  {notificationCount > 0 && (
-                    <span className={styles.notificationBadge}>
-                      {notificationCount > 99 ? '99+' : notificationCount}
-                    </span>
-                  )}
+
                 </div>
 
                 {isDropdownOpen && (
@@ -162,12 +171,6 @@ const Header: React.FC = () => {
                       {t('Header:user_menu.profile')}
                     </Link>
                     
-                    <button className={styles.dropdownItem} onClick={openNotificationModal}>
-                      {t('Header:user_menu.notifications')}
-                      {notificationCount > 0 && (
-                        <span className={styles.dropdownBadge}>{notificationCount}</span>
-                      )}
-                    </button>
 
                     <button className={styles.dropdownItem} onClick={openSettingsModal}>
                       {t('Header:user_menu.settings')}

@@ -1,15 +1,17 @@
 // src/components/SummarySection.tsx
-import React, { useMemo, useState } from 'react'; // [ADD] import useState
+import React, { useMemo, useState } from 'react';
 import EditorModal from '../../../../../components/AnimeModal/EditorModal'; 
 import styles from './SummarySection.module.css';
 import type { SummarySectionProps } from '@umamusumeenjoyer/shared-logic';
 import { useSummarySection } from '@umamusumeenjoyer/shared-logic';
 import { useTranslation } from 'react-i18next';
 
+// Danh sách các nút chức năng
+const NAV_ITEMS = ['Overview', 'Watch', 'Characters', 'Staff', 'Stats'  ];
+
 const SummarySection: React.FC<SummarySectionProps> = ({ anime, hasBanner }) => {
-  const { t } = useTranslation(['AnimeModal', 'common']); // Thêm namespace 'common' nếu cần
+  const { t } = useTranslation(['AnimeModal', 'common']); 
   
-  // [ADD] State để kiểm soát việc mở rộng mô tả
   const [isExpanded, setIsExpanded] = useState(false);
 
   const {
@@ -36,7 +38,6 @@ const SummarySection: React.FC<SummarySectionProps> = ({ anime, hasBanner }) => 
     ? `${styles.summarySection} ${styles.noBanner}` 
     : styles.summarySection;
 
-  // [ADD] Xác định class cho description dựa trên state
   const descriptionClass = isExpanded 
     ? styles.animeDescription 
     : `${styles.animeDescription} ${styles.collapsed}`;
@@ -62,7 +63,7 @@ const SummarySection: React.FC<SummarySectionProps> = ({ anime, hasBanner }) => 
         <div className={styles.summaryRight}>
           <h1 className={styles.animeTitleMain}>{anime.name_romaji}</h1>
           
-          {/* [MODIFIED] Áp dụng class động và hiển thị nút See more */}
+          {/* Description Block */}
           <div 
             className={descriptionClass} 
             dangerouslySetInnerHTML={{ __html: anime.desc }}
@@ -74,6 +75,20 @@ const SummarySection: React.FC<SummarySectionProps> = ({ anime, hasBanner }) => 
           >
             {isExpanded ? t('common:buttons.show_less') : t('common:buttons.read_more')}
           </button>
+
+          {/* [NEW] Navigation Buttons */}
+          <div className={styles.navBar}>
+            {NAV_ITEMS.map((item) => (
+              <button 
+                key={item} 
+                className={styles.navItem}
+                // onClick={() => console.log(item)} // Placeholder logic
+              >
+                {/* Bạn có thể thêm t() vào đây nếu muốn đa ngôn ngữ: t(`common:nav.${item}`) */}
+                {t(`AnimeModal:navBar.${item}`) }
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 

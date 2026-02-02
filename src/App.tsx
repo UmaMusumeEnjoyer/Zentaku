@@ -51,12 +51,11 @@ const HomeRoute = () => {
        
       </div>
     );
-  }
+  } 
   if (!user && hasToken) {
      return (
       <div >
         {/* Bạn nên dùng component LoadingSpinner đẹp mắt của dự án ở đây */}
-        
       </div>
     );
   }
