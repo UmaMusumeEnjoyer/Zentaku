@@ -1,5 +1,6 @@
 // src/components/SummarySection.tsx
 import React, { useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // [1] Import useNavigate
 import EditorModal from '../../../../../components/AnimeModal/EditorModal'; 
 import styles from './SummarySection.module.css';
 import type { SummarySectionProps } from '@umamusumeenjoyer/shared-logic';
@@ -7,10 +8,11 @@ import { useSummarySection } from '@umamusumeenjoyer/shared-logic';
 import { useTranslation } from 'react-i18next';
 
 // Danh sách các nút chức năng
-const NAV_ITEMS = ['Overview', 'Watch', 'Characters', 'Staff', 'Stats'  ];
+const NAV_ITEMS = ['Overview', 'Watch', 'Characters', 'Staff', 'Stats'];
 
 const SummarySection: React.FC<SummarySectionProps> = ({ anime, hasBanner }) => {
   const { t } = useTranslation(['AnimeModal', 'common']); 
+  const navigate = useNavigate(); // [2] Khởi tạo hook navigate
   
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -33,6 +35,17 @@ const SummarySection: React.FC<SummarySectionProps> = ({ anime, hasBanner }) => 
     }
     return t('AnimeModal:status_options.default') || 'Add to List';
   }, [isLoadingStatus, isFollowing, watchStatus, t]);
+
+  // [3] Hàm xử lý click điều hướng
+  const handleNavClick = (item: string) => {
+    if (item === 'Watch') {
+      // Điều hướng tới /anime/:id/watch
+      navigate(`/anime/${anime.id}/watch`);
+    } else {
+      // Logic cho các tab khác (nếu cần)
+      console.log(`Clicked on ${item}`);
+    }
+  };
 
   const sectionClass = !hasBanner 
     ? `${styles.summarySection} ${styles.noBanner}` 
@@ -82,9 +95,8 @@ const SummarySection: React.FC<SummarySectionProps> = ({ anime, hasBanner }) => 
               <button 
                 key={item} 
                 className={styles.navItem}
-                // onClick={() => console.log(item)} // Placeholder logic
+                onClick={() => handleNavClick(item)} // [4] Gắn hàm xử lý vào đây
               >
-                {/* Bạn có thể thêm t() vào đây nếu muốn đa ngôn ngữ: t(`common:nav.${item}`) */}
                 {t(`AnimeModal:navBar.${item}`) }
               </button>
             ))}

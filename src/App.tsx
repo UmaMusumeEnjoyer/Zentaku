@@ -16,6 +16,7 @@ import AnimeSearchPage from './pages/AnimeSearch/AnimeSearchPage';
 import AnimeListSearchPage from './pages/AnimeListSearch/AnimeListSearchPage';
 import ProfilePage from './pages/ProfilePage/ProfilePage';
 import AnimeListPage from './pages/AnimeListPage/AnimeListPage';
+import AnimeWatchPage from './pages/AnimeWatchPage/WatchPage';
 
 
 // Xác định API base URL dựa trên environment
@@ -91,6 +92,7 @@ function App() {
               <Route path="/news/:id" element={<NewsDetailPage />} />
               <Route path="/character/:id" element={<CharacterPage />} />
               <Route path="/anime/:id" element={<AnimeDetailPage />} />
+              <Route path="/anime/:id/watch" element={<AnimeWatchPage />}/>
               <Route path="/login" element={<AuthPage />} />
               <Route path="/signup" element={<AuthPage />} />
               <Route path="/staff/:id" element={<StaffPage />} />

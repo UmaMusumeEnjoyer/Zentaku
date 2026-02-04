@@ -1,0 +1,135 @@
+/* VideoPlayer.module.css */
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+}
+
+/* Container của Player */
+.playerContainer {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9; /* Tự động giữ tỉ lệ 16:9 */
+  background-color: #000;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--border-subtle, #333);
+}
+
+/* Placeholder khi chưa có video */
+.placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  color: #94a3b8;
+  z-index: 1;
+}
+
+.placeholderIcon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+/* Phần điều khiển (Controls Bar & Server Selector) */
+.controlsGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.controlPanel {
+  padding: 1rem;
+  background-color: var(--bg-card, #1e293b);
+  border-radius: 0.5rem;
+  border: 1px solid var(--border-subtle, #334155);
+}
+
+.panelHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.panelTitle {
+  color: var(--text-primary, #f1f5f9);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Nút Server */
+.serverGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.serverBtn {
+  padding: 0.5rem 1rem;
+  background-color: var(--bg-subtle, #334155);
+  color: var(--text-secondary, #94a3b8);
+  border: 1px solid transparent;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.serverBtn:hover {
+  background-color: var(--bg-hover, #475569);
+  color: var(--text-primary, #fff);
+}
+
+.serverBtnActive {
+  background-color: var(--btn-primary-bg, #3b82f6);
+  color: #fff;
+  box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3);
+}
+
+/* Nút Next/Prev Episode */
+.episodeNav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: var(--bg-subtle, #334155);
+  border: none;
+  border-radius: 0.375rem;
+  color: var(--text-primary, #f1f5f9);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.navBtn:hover {
+  background-color: var(--bg-hover, #475569);
+}
+
+.navBtnPrimary {
+  background-color: var(--btn-primary-bg, #3b82f6);
+  color: white;
+}
+.navBtnPrimary:hover {
+  background-color: #2563eb;
+}
