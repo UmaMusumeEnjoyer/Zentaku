@@ -76,11 +76,11 @@ export const useWatchPage = () => {
         // Set metadata
         setAnimeData({
           id: data.providerId,
-          title: `Anime ID: ${paramId}`,
+          title: `Chưa tày đâu em`,
           rating: 9.0,
           posterUrl: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx178022-bA3dC4ae5t5u.jpg',
           tags: ['Action', 'Supernatural'],
-          synopsis: 'Dữ liệu được lấy trực tiếp từ Backend Node.js custom.'
+          synopsis: 'Chưa tày đâu em.'
         });
 
         // CHỈNH SỬA QUAN TRỌNG: Tự động chọn tập đầu tiên sau khi load xong

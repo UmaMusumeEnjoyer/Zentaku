@@ -141,23 +141,35 @@
   border-color: var(--btn-primary-bg);
 }
 
-/* --- Sidebar Section --- */
+/* --- SIDEBAR SECTION --- */
+
+/* Wrapper cho cột Sidebar để chứa Card + Button */
+.sidebarColumn {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem; /* Khoảng cách giữa Card và Button (AnimeModal) */
+    position: sticky;
+    top: 1.5rem;
+}
+
 .sidebarCard {
   background-color: var(--bg-panel);
   border-radius: 0.5rem;
-  padding: 1rem;
+  padding: 1.25rem;
   border: 1px solid var(--border-subtle);
-  position: sticky;
-  top: 1.5rem;
+  /* Bỏ sticky ở đây vì đã chuyển lên sidebarColumn nếu muốn cả cột dính, 
+     hoặc giữ nguyên nếu chỉ muốn Card dính */
   transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
+/* Poster */
 .posterWrapper {
   position: relative;
   aspect-ratio: 2/3;
-  border-radius: 0.375rem;
+  border-radius: 0.5rem;
   overflow: hidden;
   margin-bottom: 1rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
 .posterImg {
@@ -175,73 +187,189 @@
 }
 
 .badge {
-  padding: 0.125rem 0.375rem;
+  padding: 0.2rem 0.4rem;
   border-radius: 0.25rem;
-  font-size: 0.625rem;
-  font-weight: bold;
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 1;
 }
 
 .badgeHd { background-color: var(--btn-primary-bg); color: var(--btn-primary-text); }
-.badgeEp { background-color: #eab308; color: black; } /* Brand color giữ nguyên */
+.badgeEp { background-color: #eab308; color: black; }
 
-.animeTitle {
-  font-size: 1.125rem;
-  font-weight: bold;
-  margin-bottom: 0.375rem;
+/* Title & Meta */
+.animeTitleSidebar {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
   color: var(--text-primary);
-  transition: color 0.3s ease;
+  line-height: 1.3;
 }
 
-.ratingContainer {
-  color: #facc15; /* Brand color */
-  font-size: 0.875rem;
-  display: flex;
-  gap: 2px;
-  align-items: center;
+.metaInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin-bottom: 1.25rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px dashed var(--border-subtle);
 }
 
+.metaItem {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.875rem;
+}
+
+.metaLabel {
+    color: var(--text-secondary);
+}
+
+.metaValue {
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+/* --- PROGRESS BAR STYLES --- */
+.progressContainer {
+    margin-bottom: 1.25rem;
+}
+
+.progressHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 0.5rem;
+    font-size: 0.75rem;
+}
+
+.progressLabel {
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+}
+
+.progressValue {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.track {
+    position: relative;
+    width: 100%;
+    height: 8px;
+    background-color: var(--bg-subtle); /* Màu của Total Episodes */
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+/* Thanh Released (Màu xám sáng/Trung tính) */
+.barReleased {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: var(--text-secondary); /* Hoặc dùng một màu riêng */
+    opacity: 0.3;
+    z-index: 1;
+    border-radius: 4px 0 0 4px;
+}
+
+/* Thanh Watched (Màu chính) */
+.barWatched {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: var(--btn-primary-bg);
+    z-index: 2;
+    border-radius: 4px;
+}
+
+.progressLegend {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.5rem;
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+}
+
+.legendItem {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+}
+.dotWatched { background-color: var(--btn-primary-bg); }
+.dotReleased { background-color: var(--text-secondary); opacity: 0.5; }
+
+
+/* Tags */
 .tags {
   display: flex;
   flex-wrap: wrap;
   gap: 0.375rem;
-  margin: 0.75rem 0;
-}
-
-.tag {
-  padding: 0.125rem 0.5rem;
-  background-color: var(--bg-subtle);
-  border-radius: 9999px;
-  font-size: 0.7rem;
-  color: var(--text-secondary);
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.synopsis {
-  font-size: 0.8125rem;
-  color: var(--text-secondary);
-  line-height: 1.4;
   margin-bottom: 1.25rem;
 }
 
+.tag {
+  padding: 0.15rem 0.6rem;
+  background-color: var(--bg-subtle);
+  border-radius: 999px;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.tag:hover {
+    border-color: var(--border-subtle);
+    color: var(--text-primary);
+}
+
+/* Synopsis */
 .synopsisTitle {
   text-transform: uppercase;
   font-size: 0.75rem;
   font-weight: bold;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.5rem;
   color: var(--text-secondary);
   opacity: 0.8;
 }
 
-/* Error State */
-.errorContainer {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background-color: var(--bg-app);
+.synopsisText {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    /* Giới hạn số dòng hiển thị nếu muốn */
+    display: -webkit-box;
+    -webkit-line-clamp: 6; 
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
-.errorText {
-  color: var(--text-primary);
-  font-size: 1.2rem;
+/* --- EXTERNAL BUTTON --- */
+.modalBtn {
+    width: 100%;
+    padding: 1rem;
+    background-color: transparent;
+    border: 2px dashed var(--border-subtle);
+    color: var(--text-secondary);
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    text-align: center;
+}
+
+.modalBtn:hover {
+    border-color: var(--btn-primary-bg);
+    color: var(--btn-primary-bg);
+    background-color: rgba(59, 130, 246, 0.05); /* Hiệu ứng hover nhẹ */
 }

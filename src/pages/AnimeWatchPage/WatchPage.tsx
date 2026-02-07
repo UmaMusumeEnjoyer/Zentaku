@@ -1,6 +1,7 @@
 import React from 'react';
 import { useWatchPage } from './useWatchPage';
 import { VideoPlayer } from './components/VideoPlayer';
+import { Sidebar } from './components/Sidebar';
 import WatchPageSkeleton from './WatchPageSkeleton';
 import styles from './WatchPage.module.css';
 
@@ -13,9 +14,9 @@ const WatchPage: React.FC = () => {
     currentEpisode, 
     servers, 
     activeServerId, 
-    setActiveServerId,
+    setActiveServerId, 
     streamData, 
-    loadingStream,
+    loadingStream, 
     handleEpisodeChange
   } = useWatchPage();
   
@@ -54,7 +55,6 @@ const WatchPage: React.FC = () => {
             }}
           />
 
-           {/* List tập phim đã được Refactor sang CSS Module */}
            <div className={styles.episodeListContainer}>
               <h3 className={styles.episodeListTitle}>Episodes ({episodes.length})</h3>
               <div className={styles.episodeGrid}>
@@ -71,37 +71,7 @@ const WatchPage: React.FC = () => {
            </div>
         </div>
 
-        {/* --- SIDEBAR INFO --- */}
-        <aside>
-          <div className={styles.sidebarCard}>
-            <div className={styles.posterWrapper}>
-              <img src={animeData.posterUrl} alt={animeData.title} className={styles.posterImg} />
-              <div className={styles.badgeContainer}>
-                <span className={`${styles.badge} ${styles.badgeHd}`}>HD</span>
-                <span className={`${styles.badge} ${styles.badgeEp}`}>EP {currentEpisode?.number}</span>
-              </div>
-            </div>
-
-            <div className={styles.infoHeader}>
-              <h2 className={styles.animeTitle}>{animeData.title}</h2>
-              <div className={styles.ratingContainer}>
-                <span>★</span><span>★</span><span>★</span><span>★</span><span style={{ color: 'var(--text-secondary)' }}>★</span>
-                <span style={{ color: 'var(--text-secondary)', marginLeft: '4px' }}>({animeData.rating}/10)</span>
-              </div>
-            </div>
-
-            <div className={styles.tags}>
-              {animeData.tags?.map((tag: string, index: number) => (
-                <span key={index} className={styles.tag}>{tag}</span>
-              ))}
-            </div>
-
-            <div className={styles.synopsis}>
-              <h3 className={styles.synopsisTitle}>Synopsis</h3>
-              <p>{animeData.synopsis}</p>
-            </div>
-          </div>
-        </aside>
+        <Sidebar data={animeData} />
 
       </main>
     </div>
