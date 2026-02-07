@@ -1,135 +1,171 @@
-/* VideoPlayer.module.css */
-
 .wrapper {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.5rem;
   width: 100%;
 }
 
-/* Container của Player */
 .playerContainer {
   position: relative;
   width: 100%;
-  aspect-ratio: 16 / 9; /* Tự động giữ tỉ lệ 16:9 */
+  aspect-ratio: 16/9;
   background-color: #000;
-  border-radius: 0.75rem;
+  border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-  border: 1px solid var(--border-subtle, #333);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
-/* Placeholder khi chưa có video */
 .placeholder {
-  position: absolute;
-  inset: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-  color: #94a3b8;
-  z-index: 1;
+  height: 100%;
+  color: #9ca3af;
 }
 
 .placeholderIcon {
   font-size: 3rem;
   margin-bottom: 1rem;
-  opacity: 0.5;
 }
 
-/* Phần điều khiển (Controls Bar & Server Selector) */
 .controlsGroup {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
 }
 
 .controlPanel {
+  background-color: #1f2937;
+  border-radius: 0.75rem;
   padding: 1rem;
-  background-color: var(--bg-card, #1e293b);
-  border-radius: 0.5rem;
-  border: 1px solid var(--border-subtle, #334155);
+  border: 1px solid #374151;
 }
 
 .panelHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #374151;
 }
 
 .panelTitle {
-  color: var(--text-primary, #f1f5f9);
-  font-size: 0.875rem;
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  color: #e5e7eb;
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
 
-/* Nút Server */
-.serverGrid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.serverBtn {
-  padding: 0.5rem 1rem;
-  background-color: var(--bg-subtle, #334155);
-  color: var(--text-secondary, #94a3b8);
-  border: 1px solid transparent;
-  border-radius: 0.375rem;
-  cursor: pointer;
-  font-size: 0.75rem;
-  font-weight: 600;
-  transition: all 0.2s ease;
-}
-
-.serverBtn:hover {
-  background-color: var(--bg-hover, #475569);
-  color: var(--text-primary, #fff);
-}
-
-.serverBtnActive {
-  background-color: var(--btn-primary-bg, #3b82f6);
-  color: #fff;
-  box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3);
-}
-
-/* Nút Next/Prev Episode */
 .episodeNav {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  gap: 1rem;
 }
 
 .navBtn {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  background-color: var(--bg-subtle, #334155);
-  border: none;
-  border-radius: 0.375rem;
-  color: var(--text-primary, #f1f5f9);
-  font-size: 0.875rem;
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
   font-weight: 500;
+  transition: all 0.2s;
+  background-color: #374151;
+  color: #e5e7eb;
+  border: none;
   cursor: pointer;
-  transition: background-color 0.2s;
 }
 
 .navBtn:hover {
-  background-color: var(--bg-hover, #475569);
+  background-color: #4b5563;
 }
 
 .navBtnPrimary {
-  background-color: var(--btn-primary-bg, #3b82f6);
+  background-color: #2563eb;
   color: white;
 }
+
 .navBtnPrimary:hover {
+  background-color: #1d4ed8;
+}
+
+.serverGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 0.75rem;
+}
+
+.serverBtn {
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s;
+  background-color: #374151;
+  color: #d1d5db;
+  border: 1px solid transparent;
+  cursor: pointer;
+}
+
+.serverBtn:hover {
+  background-color: #4b5563;
+  color: white;
+}
+
+.serverBtnActive {
   background-color: #2563eb;
+  color: white;
+  border-color: #60a5fa;
+}
+
+@media (max-width: 768px) {
+  .controlsGroup {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* --- SỬA LỖI SUBTITLE --- */
+
+/* Thay vì target vào thẻ p, ta target trực tiếp vào container .art-subtitle */
+:global(.art-subtitle) {
+    /* 1. Reset vị trí để căn giữa thủ công */
+    position: absolute !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    right: auto !important; /* Ghi đè style mặc định của Artplayer */
+    bottom: 40px !important;
+
+    /* 2. Ép container co lại vừa bằng nội dung chữ */
+    width: auto !important;
+    max-width: 90% !important;
+
+    /* 3. Áp dụng màu nền (lấy từ biến CSS do JS truyền vào) */
+    background-color: var(--subtitle-background, rgba(0,0,0,0)) !important;
+    
+    /* 4. Style khung nền cho đẹp */
+    padding: 6px 12px !important;
+    border-radius: 6px !important;
+    text-align: center !important;
+    line-height: 1.5 !important;
+    
+    /* Các thuộc tính phụ trợ */
+    pointer-events: none; /* Để click xuyên qua sub */
+    white-space: pre-wrap !important; /* Giữ nguyên xuống dòng */
+    word-break: break-word !important;
+}
+
+/* Reset style cho các thẻ con bên trong để tránh bị trùng lặp/xung đột */
+:global(.art-subtitle p),
+:global(.art-subtitle div),
+:global(.art-subtitle span) {
+    background: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: auto !important;
+    display: inline !important;
+}
+
+/* Fix lỗi hiển thị tag <i> <b> */
+:global(.art-subtitle i), 
+:global(.art-subtitle b) {
+    font-style: italic !important;
+    font-weight: bold !important;
+    background: none !important;
 }

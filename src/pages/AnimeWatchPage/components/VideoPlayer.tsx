@@ -3,8 +3,14 @@ import Artplayer from 'artplayer';
 import Hls from 'hls.js';
 import type { Server, Episode } from '../WatchPage.types';
 import styles from './VideoPlayer.module.css';
+import { 
+  getSavedSubtitleStyle, 
+  saveSubtitleSetting, 
+  SUB_COLORS, 
+  SUB_SIZES, 
+  SUB_BACKGROUNDS 
+} from './PlayerConfig';
 
-// Endpoint Proxy Node.js
 const PROXY_BASE = 'http://localhost:5000/api/proxy';
 
 const createProxyUrl = (url: string, referer: string) => {
@@ -29,13 +35,17 @@ interface VideoPlayerProps {
     onPrevEpisode?: () => void;
 }
 
+const setSubtitleBackgroundVar = (artRef: HTMLElement | null, color: string) => {
+    if (artRef) {
+        artRef.style.setProperty('--subtitle-background', color);
+    }
+};
+
 const AnimePlayer: React.FC<{ stream: StreamData }> = ({ stream }) => {
   const artRef = useRef<HTMLDivElement>(null);
-  // Dùng ref để giữ instance player, giúp clean up chính xác
   const playerRef = useRef<Artplayer | null>(null);
 
   useEffect(() => {
-    // 1. Clean up ngay lập tức nếu đã có instance tồn tại (Fix lỗi double audio)
     if (playerRef.current) {
         if ((playerRef.current as any).hls) {
             (playerRef.current as any).hls.destroy();
@@ -46,11 +56,10 @@ const AnimePlayer: React.FC<{ stream: StreamData }> = ({ stream }) => {
 
     if (!artRef.current || !stream.videoUrl) return;
 
-    console.log("🎬 Initializing Player for:", stream.videoUrl);
-
-    // Lấy config sub cũ
-    const savedStyle = JSON.parse(localStorage.getItem('artplayer_sub_style') || '{"color":"#ffffff","fontSize":"24px","background":"rgba(0,0,0,0)"}');
+    const savedStyle = getSavedSubtitleStyle();
     
+    setSubtitleBackgroundVar(artRef.current, savedStyle.background);
+
     const originalBase = stream.videoUrl.substring(0, stream.videoUrl.lastIndexOf('/') + 1);
     const refererHeader = stream.referer || 'https://megacloud.blog/';
 
@@ -60,7 +69,7 @@ const AnimePlayer: React.FC<{ stream: StreamData }> = ({ stream }) => {
       type: 'm3u8',
       volume: 0.7,
       isLive: false,
-      autoplay: false, // Lưu ý: Một số trình duyệt chặn autoplay nếu chưa tương tác
+      autoplay: false, 
       autoMini: true,
       setting: true,
       playbackRate: true,
@@ -69,13 +78,85 @@ const AnimePlayer: React.FC<{ stream: StreamData }> = ({ stream }) => {
       fullscreenWeb: true,
       theme: '#3b82f6',
       
-      // Config Subtitle qua Proxy
       subtitle: stream.subUrl ? {
         url: createProxyUrl(stream.subUrl, refererHeader),
         type: 'vtt',
-        style: savedStyle,
+        style: {
+            color: savedStyle.color,
+            fontSize: savedStyle.fontSize,
+            background: 'none',
+            padding: '0',
+        } as any, 
         encoding: 'utf-8',
+        escape: false,
       } : undefined,
+
+      settings: [
+        {
+          html: 'Subtitle Settings',
+          width: 250,
+          tooltip: 'Customize',
+          icon: '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"><path fill="#ffffff" d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V6h16v12zM6 10h2v2H6zm0 4h8v2H6zm10 0h2v2h-2zm-6-4h8v2h-8z"/></svg>',
+          selector: [
+            {
+                html: 'Show Subtitles',
+                tooltip: savedStyle.visible ? 'On' : 'Off',
+                switch: savedStyle.visible,
+                onSwitch: function (item) {
+                   const isVisible = !item.switch;
+                   item.tooltip = isVisible ? 'On' : 'Off';
+                   art.subtitle.show = isVisible;
+                   saveSubtitleSetting('visible', isVisible);
+                   
+                   if (!isVisible && art.template.$subtitle) {
+                       art.template.$subtitle.classList.remove('has-text');
+                   }
+                   
+                   return isVisible;
+                },
+            },
+            {
+                html: 'Color',
+                tooltip: 'Select',
+                selector: SUB_COLORS.map(item => ({
+                    ...item,
+                    default: item.value === savedStyle.color
+                })),
+                onSelect: (item: any) => {
+                    art.subtitle.style('color', item.value);
+                    saveSubtitleSetting('color', item.value);
+                    return item.html;
+                },
+            },
+            {
+                html: 'Size',
+                tooltip: 'Select',
+                selector: SUB_SIZES.map(item => ({
+                    ...item,
+                    default: item.value === savedStyle.fontSize
+                })),
+                onSelect: (item: any) => {
+                    art.subtitle.style('fontSize', item.value);
+                    saveSubtitleSetting('fontSize', item.value);
+                    return item.html;
+                },
+            },
+            {
+                html: 'Background',
+                tooltip: 'Select',
+                selector: SUB_BACKGROUNDS.map(item => ({
+                    ...item,
+                    default: item.value === savedStyle.background
+                })),
+                onSelect: (item: any) => {
+                    setSubtitleBackgroundVar(artRef.current, item.value);
+                    saveSubtitleSetting('background', item.value);
+                    return item.html;
+                },
+            }
+          ]
+        }
+      ],
 
       customType: {
         m3u8: function (video: HTMLVideoElement, url: string, art: Artplayer) {
@@ -83,14 +164,11 @@ const AnimePlayer: React.FC<{ stream: StreamData }> = ({ stream }) => {
             const hls = new Hls({
               xhrSetup: function (xhr, u) {
                 let targetUrl = u;
-
                 if (!u.startsWith('http')) {
                    targetUrl = originalBase + u;
-                } 
-                else if (u.includes('localhost:5000') && !u.includes('/proxy')) {
+                } else if (u.includes('localhost:5000') && !u.includes('/proxy')) {
                    const parts = u.split('/');
-                   const fileName = parts[parts.length - 1];
-                   targetUrl = originalBase + fileName;
+                   targetUrl = originalBase + parts[parts.length - 1];
                 }
 
                 if (!targetUrl.startsWith(PROXY_BASE)) {
@@ -106,28 +184,24 @@ const AnimePlayer: React.FC<{ stream: StreamData }> = ({ stream }) => {
             hls.attachMedia(video);
 
             hls.on(Hls.Events.MANIFEST_PARSED, (_, data) => {
-               // Chỉ gọi play khi manifest đã load xong để tránh lỗi race condition
-               // video.play().catch(() => {}); 
-               
                const levels = data.levels.map((level, index) => ({
                  html: level.height + 'P',
                  name: level.height + 'P',
                  index: index,
-                 default: index === data.levels.length - 1
+                 default: false
                }));
-               
+               const levelsDesc = levels.reverse();
+               const autoOption = { html: 'Auto', current: true, index: -1 };
                if (art.setting) {
                     art.setting.add({
                         html: 'Quality',
                         width: 150,
                         tooltip: 'Auto',
-                        selector: [{ html: 'Auto', current: true, index: -1 }, ...levels],
+                        selector: [...levelsDesc, autoOption],
                         onSelect: (item: any) => { hls.currentLevel = item.index; return item.html; },
                     });
                }
             });
-            
-            // Gán HLS vào art instance để tiện destroy sau này
             (art as any).hls = hls;
           } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
             video.src = createProxyUrl(url, refererHeader);
@@ -136,11 +210,26 @@ const AnimePlayer: React.FC<{ stream: StreamData }> = ({ stream }) => {
       },
     });
 
+    art.on('subtitle:update', (text) => {
+        if (art.template.$subtitle) {
+            if (typeof text === 'string' && text.trim().length > 0) {
+                art.template.$subtitle.classList.add('has-text');
+            } else {
+                art.template.$subtitle.classList.remove('has-text');
+            }
+        }
+    });
+
+    if (!savedStyle.visible) {
+        art.subtitle.show = false;
+        if (art.template.$subtitle) {
+            art.template.$subtitle.classList.remove('has-text');
+        }
+    }
+
     playerRef.current = art;
 
-    // 2. Clean up function khi component unmount hoặc url đổi
     return () => {
-      console.log("🧹 Destroying Player...");
       if (playerRef.current) {
          if ((playerRef.current as any).hls) {
              (playerRef.current as any).hls.destroy();
@@ -149,7 +238,7 @@ const AnimePlayer: React.FC<{ stream: StreamData }> = ({ stream }) => {
          playerRef.current = null;
       }
     };
-  }, [stream.videoUrl, stream.subUrl, stream.referer]); // Dependency array
+  }, [stream.videoUrl, stream.subUrl, stream.referer]);
 
   return <div ref={artRef} className={styles.playerContainer} />;
 };
@@ -163,7 +252,6 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
   onNextEpisode,
   onPrevEpisode
 }) => {
-
   return (
     <div className={styles.wrapper}>
       {isLoading ? (
@@ -174,9 +262,6 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
              </div>
          </div>
       ) : streamData && streamData.videoUrl ? (
-        // Key prop ở đây cực kỳ quan trọng:
-        // Khi videoUrl thay đổi, React sẽ unmount component cũ và mount component mới hoàn toàn.
-        // Điều này đảm bảo Player cũ bị destroy 100% trước khi cái mới được tạo.
         <AnimePlayer key={streamData.videoUrl} stream={streamData} />
       ) : (
         <div className={styles.playerContainer}>
