@@ -35,6 +35,7 @@ interface VideoPlayerProps {
     onPrevEpisode?: () => void;
 }
 
+// Helper để set biến CSS cho background phụ đề (được gọi trong settings)
 const setSubtitleBackgroundVar = (artRef: HTMLElement | null, color: string) => {
     if (artRef) {
         artRef.style.setProperty('--subtitle-background', color);
@@ -46,6 +47,7 @@ const AnimePlayer: React.FC<{ stream: StreamData }> = ({ stream }) => {
   const playerRef = useRef<Artplayer | null>(null);
 
   useEffect(() => {
+    // Cleanup player cũ nếu có
     if (playerRef.current) {
         if ((playerRef.current as any).hls) {
             (playerRef.current as any).hls.destroy();
@@ -56,8 +58,10 @@ const AnimePlayer: React.FC<{ stream: StreamData }> = ({ stream }) => {
 
     if (!artRef.current || !stream.videoUrl) return;
 
+    // Lấy setting đã lưu
     const savedStyle = getSavedSubtitleStyle();
     
+    // Set biến CSS ban đầu cho subtitle background
     setSubtitleBackgroundVar(artRef.current, savedStyle.background);
 
     const originalBase = stream.videoUrl.substring(0, stream.videoUrl.lastIndexOf('/') + 1);
@@ -76,7 +80,7 @@ const AnimePlayer: React.FC<{ stream: StreamData }> = ({ stream }) => {
       aspectRatio: true,
       fullscreen: true,
       fullscreenWeb: true,
-      theme: '#3b82f6',
+      theme: '#3b82f6', // Có thể thay bằng var(--btn-primary-bg) nếu Artplayer hỗ trợ CSS var, nhưng thường JS cần mã hex
       
       subtitle: stream.subUrl ? {
         url: createProxyUrl(stream.subUrl, refererHeader),
@@ -84,7 +88,7 @@ const AnimePlayer: React.FC<{ stream: StreamData }> = ({ stream }) => {
         style: {
             color: savedStyle.color,
             fontSize: savedStyle.fontSize,
-            background: 'none',
+            background: 'none', // Đã xử lý bằng CSS class
             padding: '0',
         } as any, 
         encoding: 'utf-8',
@@ -210,6 +214,7 @@ const AnimePlayer: React.FC<{ stream: StreamData }> = ({ stream }) => {
       },
     });
 
+    // Fix lỗi hiển thị khung sub trống khi không có text
     art.on('subtitle:update', (text) => {
         if (art.template.$subtitle) {
             if (typeof text === 'string' && text.trim().length > 0) {
@@ -255,11 +260,9 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
   return (
     <div className={styles.wrapper}>
       {isLoading ? (
-         <div className={styles.playerContainer} style={{display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', background: '#000'}}>
-             <div style={{textAlign: 'center'}}>
-                <div style={{fontSize: '2rem', marginBottom: '1rem'}}>⏳</div>
-                <p>Loading stream...</p>
-             </div>
+         // Đã thay thế style cứng bằng class .playerLoading
+         <div className={`${styles.playerContainer} ${styles.playerLoading}`}>
+            <p>Loading Stream...</p>
          </div>
       ) : streamData && streamData.videoUrl ? (
         <AnimePlayer key={streamData.videoUrl} stream={streamData} />

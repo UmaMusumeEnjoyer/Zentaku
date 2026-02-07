@@ -1,3 +1,5 @@
+/* VideoPlayer.module.css */
+
 .wrapper {
   display: flex;
   flex-direction: column;
@@ -9,10 +11,21 @@
   position: relative;
   width: 100%;
   aspect-ratio: 16/9;
-  background-color: #000;
+  background-color: #000; /* Giữ màu đen cho player */
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Loading State */
+.playerLoading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  background: #000;
+  height: 100%;
+  width: 100%;
 }
 
 .placeholder {
@@ -21,7 +34,8 @@
   align-items: center;
   justify-content: center;
   height: 100%;
-  color: #9ca3af;
+  color: var(--text-secondary);
+  background-color: #000;
 }
 
 .placeholderIcon {
@@ -36,21 +50,22 @@
 }
 
 .controlPanel {
-  background-color: #1f2937;
+  background-color: var(--bg-panel);
   border-radius: 0.75rem;
   padding: 1rem;
-  border: 1px solid #374151;
+  border: 1px solid var(--border-subtle);
+  transition: background-color 0.3s ease;
 }
 
 .panelHeader {
   margin-bottom: 1rem;
   padding-bottom: 0.5rem;
-  border-bottom: 1px solid #374151;
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .panelTitle {
   font-weight: 600;
-  color: #e5e7eb;
+  color: var(--text-primary);
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -67,23 +82,23 @@
   border-radius: 0.5rem;
   font-weight: 500;
   transition: all 0.2s;
-  background-color: #374151;
-  color: #e5e7eb;
+  background-color: var(--bg-subtle);
+  color: var(--text-primary);
   border: none;
   cursor: pointer;
 }
 
 .navBtn:hover {
-  background-color: #4b5563;
+  background-color: var(--border-subtle);
 }
 
 .navBtnPrimary {
-  background-color: #2563eb;
-  color: white;
+  background-color: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
 }
 
 .navBtnPrimary:hover {
-  background-color: #1d4ed8;
+  opacity: 0.9;
 }
 
 .serverGrid {
@@ -98,21 +113,21 @@
   font-size: 0.875rem;
   font-weight: 500;
   transition: all 0.2s;
-  background-color: #374151;
-  color: #d1d5db;
+  background-color: var(--bg-subtle);
+  color: var(--text-secondary);
   border: 1px solid transparent;
   cursor: pointer;
 }
 
 .serverBtn:hover {
-  background-color: #4b5563;
-  color: white;
+  background-color: var(--border-subtle);
+  color: var(--text-primary);
 }
 
 .serverBtnActive {
-  background-color: #2563eb;
-  color: white;
-  border-color: #60a5fa;
+  background-color: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  border-color: var(--btn-primary-bg);
 }
 
 @media (max-width: 768px) {
@@ -121,37 +136,25 @@
   }
 }
 
-/* --- SỬA LỖI SUBTITLE --- */
-
-/* Thay vì target vào thẻ p, ta target trực tiếp vào container .art-subtitle */
+/* --- SUBTITLE STYLES (Global overrides) --- */
 :global(.art-subtitle) {
-    /* 1. Reset vị trí để căn giữa thủ công */
     position: absolute !important;
     left: 50% !important;
     transform: translateX(-50%) !important;
-    right: auto !important; /* Ghi đè style mặc định của Artplayer */
+    right: auto !important; 
     bottom: 40px !important;
-
-    /* 2. Ép container co lại vừa bằng nội dung chữ */
     width: auto !important;
     max-width: 90% !important;
-
-    /* 3. Áp dụng màu nền (lấy từ biến CSS do JS truyền vào) */
     background-color: var(--subtitle-background, rgba(0,0,0,0)) !important;
-    
-    /* 4. Style khung nền cho đẹp */
     padding: 6px 12px !important;
     border-radius: 6px !important;
     text-align: center !important;
     line-height: 1.5 !important;
-    
-    /* Các thuộc tính phụ trợ */
-    pointer-events: none; /* Để click xuyên qua sub */
-    white-space: pre-wrap !important; /* Giữ nguyên xuống dòng */
+    pointer-events: none;
+    white-space: pre-wrap !important;
     word-break: break-word !important;
 }
 
-/* Reset style cho các thẻ con bên trong để tránh bị trùng lặp/xung đột */
 :global(.art-subtitle p),
 :global(.art-subtitle div),
 :global(.art-subtitle span) {
@@ -162,7 +165,6 @@
     display: inline !important;
 }
 
-/* Fix lỗi hiển thị tag <i> <b> */
 :global(.art-subtitle i), 
 :global(.art-subtitle b) {
     font-style: italic !important;

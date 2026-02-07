@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom'; // 1. Import useParams
+import { useParams } from 'react-router-dom';
 import type { Episode, Server } from './WatchPage.types';
 
 // Cấu hình API Backend
@@ -12,8 +12,7 @@ interface StreamData {
 }
 
 export const useWatchPage = () => {
-  // 2. Lấy ID từ URL
-  // Lưu ý: Tên biến 'id' phải trùng với tên bạn đặt trong Router (ví dụ: path="/anime/:id/watch")
+  // Lấy ID từ URL
   const { id: paramId } = useParams<{ id: string }>(); 
   
   // State quản lý dữ liệu
@@ -38,7 +37,6 @@ export const useWatchPage = () => {
 
   // 1. Fetch danh sách tập phim khi vào trang (hoặc khi ID đổi)
   useEffect(() => {
-    // Nếu không có ID trên URL thì không làm gì hoặc báo lỗi
     if (!paramId) {
         setError("Không tìm thấy ID Anime");
         setLoading(false);
@@ -47,12 +45,11 @@ export const useWatchPage = () => {
 
     const fetchInitialData = async () => {
       setLoading(true);
-      setError(null); // Reset error khi load ID mới
+      setError(null);
       
       try {
         console.log(`Fetching data for AniList ID: ${paramId}`);
         
-        // Gọi API lấy episodes với ID động
         const res = await fetch(`${BACKEND_URL}/anime/${paramId}/episodes`);
         
         if (!res.ok) {
@@ -63,7 +60,7 @@ export const useWatchPage = () => {
         const data = await res.json();
 
         // Map dữ liệu API
-        const mappedEpisodes: Episode[] = data.episodes.map((ep: any) => ({
+        let mappedEpisodes: Episode[] = data.episodes.map((ep: any) => ({
           id: ep.episodeId,
           number: ep.number,
           title: ep.title,
@@ -71,19 +68,22 @@ export const useWatchPage = () => {
           videoUrl: ''
         }));
 
+        // Sắp xếp tập phim theo thứ tự tăng dần để đảm bảo [0] là tập 1
+        mappedEpisodes = mappedEpisodes.sort((a, b) => a.number - b.number);
+
         setEpisodes(mappedEpisodes);
 
         // Set metadata
         setAnimeData({
           id: data.providerId,
-          title: `Anime ID: ${paramId} (Data from HiAnime)`, // Có thể update title thật nếu backend trả về
+          title: `Anime ID: ${paramId}`,
           rating: 9.0,
-          posterUrl: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx178022-bA3dC4ae5t5u.jpg', // Placeholder
+          posterUrl: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx178022-bA3dC4ae5t5u.jpg',
           tags: ['Action', 'Supernatural'],
           synopsis: 'Dữ liệu được lấy trực tiếp từ Backend Node.js custom.'
         });
 
-        // Chọn tập đầu tiên mặc định
+        // CHỈNH SỬA QUAN TRỌNG: Tự động chọn tập đầu tiên sau khi load xong
         if (mappedEpisodes.length > 0) {
           setCurrentEpisode(mappedEpisodes[0]);
         } else {
@@ -99,7 +99,7 @@ export const useWatchPage = () => {
     };
 
     fetchInitialData();
-  }, [paramId]); // 3. Thêm paramId vào dependency array
+  }, [paramId]);
 
   // 2. Fetch Link Stream khi đổi tập/server
   useEffect(() => {
@@ -107,7 +107,7 @@ export const useWatchPage = () => {
 
     const fetchStreamSource = async () => {
       setLoadingStream(true);
-      setStreamData(null);
+      setStreamData(null); // Reset stream data cũ để hiện loading
       try {
         const url = `${BACKEND_URL}/anime/episode-src?id=${currentEpisode.id}&server=${activeServerId}&category=sub`;
         const res = await fetch(url);

@@ -1,13 +1,12 @@
 /* WatchPage.module.css */
 
 .container {
-  max-width: 1100px;
+  max-width: 1200px; /* Tăng nhẹ max-width để cân đối với padding 50px */
   margin: 0 auto;
-  /* Giảm padding top từ 80px -> 60px */
-  padding-top: 80px; 
-  /* Giảm padding ngang từ 1.5rem -> 1rem */
-  padding-left: 1rem;
-  padding-right: 1rem;
+  padding-top: 80px;
+  /* Yêu cầu: Padding 2 bên 50px */
+  padding-left: 50px;
+  padding-right: 50px;
   
   background-color: var(--bg-app);
   color: var(--text-secondary);
@@ -20,13 +19,11 @@
 .mainLayout {
   display: grid;
   grid-template-columns: 1fr;
-  /* Giảm khoảng cách giữa Player và Sidebar: 1.5rem -> 1.25rem */
   gap: 1.25rem; 
 }
 
 @media (min-width: 1024px) {
   .mainLayout {
-    /* Điều chỉnh tỷ lệ cột một chút nếu cần, hoặc giữ nguyên */
     grid-template-columns: 9fr 3fr;
   }
 }
@@ -37,59 +34,10 @@
   flex-direction: column;
 }
 
-.playerContainer {
-  position: relative;
-  width: 100%;
-  /* Cách tạo khung hình 16:9 chuẩn responsive */
-  padding-top: 56.25%; 
-  background-color: #000; /* Thêm màu nền đen để dễ debug */
-  overflow: hidden;
-}
-.videoPlaceholder {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: 0.8;
-}
-
-/* Controls Overlay */
-.controlsOverlay {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
-  /* Giảm padding overlay: 1rem -> 0.75rem */
-  padding: 0.75rem;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.playerContainer:hover .controlsOverlay {
-  opacity: 1;
-}
-
-.progressBar {
-  width: 100%;
-  height: 3px; /* Giảm độ dày thanh: 4px -> 3px */
-  background-color: var(--bg-subtle);
-  border-radius: 2px;
-  margin-bottom: 0.75rem; /* Giảm margin: 1rem -> 0.75rem */
-}
-
-.progressFill {
-  width: 85%;
-  height: 100%;
-  background-color: var(--btn-primary-bg);
-}
-/* WatchPage.module.css */
-
-/* ... Các style cũ ... */
-
 /* Developer Tools Section */
 .devTools {
-  background-color: #1e293b;
-  border: 1px solid #334155;
+  background-color: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
   border-radius: 8px;
   margin-bottom: 1rem;
   overflow: hidden;
@@ -97,8 +45,8 @@
 
 .devHeader {
   padding: 10px 16px;
-  background-color: #0f172a;
-  color: #fff;
+  background-color: var(--bg-subtle);
+  color: var(--text-primary);
   font-weight: 600;
   font-size: 13px;
   cursor: pointer;
@@ -109,7 +57,7 @@
 }
 
 .devHeader:hover {
-  background-color: #1e293b;
+  background-color: var(--bg-panel);
 }
 
 .devBody {
@@ -117,7 +65,7 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
-  border-top: 1px solid #334155;
+  border-top: 1px solid var(--border-subtle);
 }
 
 .inputGroup {
@@ -128,139 +76,75 @@
 
 .inputGroup label {
   font-size: 11px;
-  color: #94a3b8;
+  color: var(--text-secondary);
   font-weight: bold;
   text-transform: uppercase;
 }
 
 .inputGroup input {
-  background-color: #0f172a;
-  border: 1px solid #334155;
-  color: #f8fafc;
+  background-color: var(--bg-app);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
   padding: 8px 12px;
   border-radius: 4px;
   font-size: 13px;
   outline: none;
-  font-family: monospace; /* Dễ nhìn URL */
+  font-family: monospace;
 }
 
 .inputGroup input:focus {
-  border-color: #3b82f6;
+  border-color: var(--btn-primary-bg);
   box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
 }
-.controlButtons {
-  display: flex;
-  justify-content: space-between;
-  color: var(--text-primary);
-  font-size: 0.875rem; /* Set font size nhỏ hơn cho icon/text */
-}
 
-.iconBtn {
-  background: none;
-  border: none;
-  color: var(--text-primary);
-  cursor: pointer;
-  padding: 0 0.25rem; /* Thêm chút padding nhỏ để dễ bấm */
-}
-
-/* Episode Controls Bar */
-.episodeControlsBar {
+/* --- Episode List (Refactored from Inline Styles) --- */
+.episodeListContainer {
+  margin-top: 1rem;
   background-color: var(--bg-panel);
-  /* Giảm padding bar: 0.75rem 1rem -> 0.5rem 0.75rem */
-  padding: 0.5rem 0.75rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid var(--border-subtle);
-  transition: background-color 0.3s ease, border-color 0.3s ease;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-subtle);
 }
 
-.toggleGroup {
-  display: flex;
-  gap: 1rem; /* Giảm gap: 1.5rem -> 1rem */
-  font-size: 0.8125rem; /* Giảm font: 0.875rem -> 13px */
-  color: var(--text-secondary);
-}
-
-.navButtons {
-  display: flex;
-  gap: 0.75rem; /* Giảm gap: 1rem -> 0.75rem */
-}
-
-.navBtn {
-  background: none;
-  border: none;
-  color: var(--text-secondary);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  font-weight: 500;
-  font-size: 0.8125rem; /* Giảm font size */
-}
-
-.navBtn:hover {
+.episodeListTitle {
   color: var(--text-primary);
-}
-
-/* Server Selector */
-.serverSelector {
-  background-color: var(--bg-subtle);
-  /* Giảm padding: 1rem -> 0.75rem */
-  padding: 0.75rem;
-  border-bottom-left-radius: 0.5rem;
-  border-bottom-right-radius: 0.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-top: 1px solid var(--border-subtle);
-  transition: background-color 0.3s ease, border-color 0.3s ease;
-}
-
-.serverList {
-  display: flex;
-  gap: 0.5rem; /* Giảm gap: 0.75rem -> 0.5rem */
-  align-items: center;
-}
-
-.serverLabel {
-  color: var(--btn-primary-bg);
-  font-weight: bold;
-  font-size: 0.7rem; /* Giảm font: 0.75rem -> 0.7rem */
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-}
-
-.serverBtn {
-  /* Giảm padding nút: 0.5rem 1rem -> 0.375rem 0.75rem */
-  padding: 0.375rem 0.75rem;
-  border-radius: 0.25rem;
-  border: none;
-  cursor: pointer;
-  font-size: 0.7rem; /* Giảm font size */
+  margin-bottom: 0.5rem;
   font-weight: 600;
-  transition: all 0.3s ease;
-  background-color: var(--bg-panel);
+}
+
+.episodeGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.episodeBtn {
+  padding: 0.5rem 1rem;
+  background-color: var(--bg-subtle);
   color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.serverBtnActive {
-  background-color: var(--btn-primary-bg);
-  color: var(--btn-primary-text);
-  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2); /* Giảm shadow nhẹ */
-}
-
-.serverBtn:hover:not(.serverBtnActive) {
+.episodeBtn:hover {
   background-color: var(--border-subtle);
   color: var(--text-primary);
+}
+
+.episodeBtnActive {
+  background-color: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  border-color: var(--btn-primary-bg);
 }
 
 /* --- Sidebar Section --- */
 .sidebarCard {
   background-color: var(--bg-panel);
   border-radius: 0.5rem;
-  /* Giảm padding sidebar: 1.25rem -> 1rem */
   padding: 1rem;
   border: 1px solid var(--border-subtle);
   position: sticky;
@@ -273,7 +157,7 @@
   aspect-ratio: 2/3;
   border-radius: 0.375rem;
   overflow: hidden;
-  margin-bottom: 1rem; /* Giảm margin: 1.25rem -> 1rem */
+  margin-bottom: 1rem;
 }
 
 .posterImg {
@@ -298,54 +182,66 @@
 }
 
 .badgeHd { background-color: var(--btn-primary-bg); color: var(--btn-primary-text); }
-.badgeEp { background-color: #eab308; color: black; }
+.badgeEp { background-color: #eab308; color: black; } /* Brand color giữ nguyên */
 
 .animeTitle {
-  font-size: 1.125rem; /* Giảm font tiêu đề: 1.25rem -> 1.125rem */
+  font-size: 1.125rem;
   font-weight: bold;
   margin-bottom: 0.375rem;
   color: var(--text-primary);
   transition: color 0.3s ease;
 }
 
+.ratingContainer {
+  color: #facc15; /* Brand color */
+  font-size: 0.875rem;
+  display: flex;
+  gap: 2px;
+  align-items: center;
+}
+
 .tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.375rem; /* Giảm gap tag */
-  margin: 0.75rem 0; /* Giảm margin: 1rem -> 0.75rem */
+  gap: 0.375rem;
+  margin: 0.75rem 0;
 }
 
 .tag {
-  padding: 0.125rem 0.5rem; /* Giảm padding dọc */
+  padding: 0.125rem 0.5rem;
   background-color: var(--bg-subtle);
   border-radius: 9999px;
-  font-size: 0.7rem; /* Giảm font size */
+  font-size: 0.7rem;
   color: var(--text-secondary);
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .synopsis {
-  font-size: 0.8125rem; /* Giảm font nội dung: 0.875rem -> 13px */
+  font-size: 0.8125rem;
   color: var(--text-secondary);
-  line-height: 1.4; /* Giảm line-height cho gọn */
+  line-height: 1.4;
   margin-bottom: 1.25rem;
 }
 
-.actionBtn {
-  width: 100%;
-  /* Giảm padding nút: 0.625rem -> 0.5rem */
-  padding: 0.5rem;
-  border-radius: 0.25rem;
-  font-weight: 600;
-  cursor: pointer;
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  margin-top: 0.5rem; /* Giảm margin */
-  font-size: 0.8125rem; /* Thêm font size nhỏ cho nút */
+.synopsisTitle {
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  font-weight: bold;
+  margin-bottom: 0.25rem;
+  color: var(--text-secondary);
+  opacity: 0.8;
 }
 
-.btnAdd { background-color: var(--btn-primary-bg); color: var(--btn-primary-text); }
-.btnMore { background-color: var(--bg-subtle); color: var(--text-primary); }
+/* Error State */
+.errorContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: var(--bg-app);
+}
+
+.errorText {
+  color: var(--text-primary);
+  font-size: 1.2rem;
+}
