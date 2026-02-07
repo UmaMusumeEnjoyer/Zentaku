@@ -25,7 +25,7 @@ export interface Episode {
 
 export interface PageData {
   anime: AnimeInfo;
-  currentEpisode: Episode;
+  currentEpisode: Episode | null;
   servers: Server[];
   relatedEpisodes: Episode[];
 }

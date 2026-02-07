@@ -1,63 +1,80 @@
 import React, { useEffect, useRef } from 'react';
 import Artplayer from 'artplayer';
 import Hls from 'hls.js';
-import type { Episode, Server } from '../WatchPage.types';
+import type { Server, Episode } from '../WatchPage.types';
 import styles from './VideoPlayer.module.css';
 
-// --- CẤU HÌNH PROXY ---
-const PROXY_BASE = 'http://localhost:5000/proxy';
+// Endpoint Proxy Node.js
+const PROXY_BASE = 'http://localhost:5000/api/proxy';
 
 const createProxyUrl = (url: string, referer: string) => {
+  if (!url) return '';
   return `${PROXY_BASE}?url=${encodeURIComponent(url)}&referer=${encodeURIComponent(referer)}`;
 };
 
-// --- CẤU HÌNH MẶC ĐỊNH CHO SUBTITLE ---
-const DEFAULT_SUB_STYLE = {
-  color: '#ffffff',
-  fontSize: '24px',
-  background: 'rgba(0, 0, 0, 0)',
-};
+interface StreamData {
+    videoUrl: string;
+    subUrl: string | null;
+    referer: string | null;
+}
 
-// --- Component Player Chính ---
-const AnimePlayer: React.FC<{ 
-  episode: Episode;
-  referer: string; 
-  subUrl?: string; 
-}> = ({ episode, referer, subUrl }) => {
+interface VideoPlayerProps {
+    streamData: StreamData | null;
+    isLoading: boolean;
+    servers: Server[];
+    activeServerId: string;
+    onServerChange: (id: string) => void;
+    currentEpisode: Episode | null;
+    onNextEpisode?: () => void;
+    onPrevEpisode?: () => void;
+}
+
+const AnimePlayer: React.FC<{ stream: StreamData }> = ({ stream }) => {
   const artRef = useRef<HTMLDivElement>(null);
+  // Dùng ref để giữ instance player, giúp clean up chính xác
   const playerRef = useRef<Artplayer | null>(null);
 
   useEffect(() => {
-    if (!artRef.current || !episode.videoUrl) return;
+    // 1. Clean up ngay lập tức nếu đã có instance tồn tại (Fix lỗi double audio)
+    if (playerRef.current) {
+        if ((playerRef.current as any).hls) {
+            (playerRef.current as any).hls.destroy();
+        }
+        playerRef.current.destroy(false);
+        playerRef.current = null;
+    }
 
-    // Lấy config đã lưu từ trước (nếu có)
-    const savedStyle = JSON.parse(localStorage.getItem('artplayer_sub_style') || JSON.stringify(DEFAULT_SUB_STYLE));
+    if (!artRef.current || !stream.videoUrl) return;
 
-    const originalBase = episode.videoUrl.substring(0, episode.videoUrl.lastIndexOf('/') + 1);
+    console.log("🎬 Initializing Player for:", stream.videoUrl);
+
+    // Lấy config sub cũ
+    const savedStyle = JSON.parse(localStorage.getItem('artplayer_sub_style') || '{"color":"#ffffff","fontSize":"24px","background":"rgba(0,0,0,0)"}');
+    
+    const originalBase = stream.videoUrl.substring(0, stream.videoUrl.lastIndexOf('/') + 1);
+    const refererHeader = stream.referer || 'https://megacloud.blog/';
 
     const art = new Artplayer({
       container: artRef.current,
-      url: episode.videoUrl,
+      url: stream.videoUrl, 
       type: 'm3u8',
-      poster: episode.thumbnail || '',
       volume: 0.7,
       isLive: false,
-      muted: false,
-      autoplay: false,
+      autoplay: false, // Lưu ý: Một số trình duyệt chặn autoplay nếu chưa tương tác
       autoMini: true,
-      setting: true,     // Bật menu settings
+      setting: true,
       playbackRate: true,
       aspectRatio: true,
       fullscreen: true,
       fullscreenWeb: true,
       theme: '#3b82f6',
       
-      subtitle: subUrl ? {
-        url: createProxyUrl(subUrl, referer),
+      // Config Subtitle qua Proxy
+      subtitle: stream.subUrl ? {
+        url: createProxyUrl(stream.subUrl, refererHeader),
         type: 'vtt',
-        style: savedStyle, // Áp dụng style đã lưu
+        style: savedStyle,
         encoding: 'utf-8',
-        escape: false,     // Cho phép render HTML trong sub nếu cần
       } : undefined,
 
       customType: {
@@ -66,15 +83,21 @@ const AnimePlayer: React.FC<{
             const hls = new Hls({
               xhrSetup: function (xhr, u) {
                 let targetUrl = u;
-                if (u.includes('localhost:5000') && !u.includes('/proxy')) {
-                  const fileName = u.split('/').pop();
-                  if (fileName) targetUrl = originalBase + fileName;
-                } else if (!u.startsWith('http')) {
-                  targetUrl = originalBase + u;
+
+                if (!u.startsWith('http')) {
+                   targetUrl = originalBase + u;
+                } 
+                else if (u.includes('localhost:5000') && !u.includes('/proxy')) {
+                   const parts = u.split('/');
+                   const fileName = parts[parts.length - 1];
+                   targetUrl = originalBase + fileName;
                 }
 
                 if (!targetUrl.startsWith(PROXY_BASE)) {
-                  xhr.open('GET', createProxyUrl(targetUrl, referer), true);
+                    const proxied = createProxyUrl(targetUrl, refererHeader);
+                    xhr.open('GET', proxied, true);
+                } else {
+                    xhr.open('GET', targetUrl, true);
                 }
               }
             });
@@ -83,186 +106,114 @@ const AnimePlayer: React.FC<{
             hls.attachMedia(video);
 
             hls.on(Hls.Events.MANIFEST_PARSED, (_, data) => {
-              // --- MENU CHỌN CHẤT LƯỢNG ---
-              const levels = data.levels.map((level, index) => ({
-                html: level.height + 'P',
-                name: level.height + 'P',
-                index: index,
-                default: index === data.levels.length - 1
-              }));
-
-              art.setting.add({
-                html: 'Chất lượng',
-                width: 150,
-                tooltip: levels[levels.length - 1]?.html || 'Auto',
-                selector: [{ html: 'Auto', current: true, index: -1 }, ...levels],
-                onSelect: (item: any) => { hls.currentLevel = item.index; return item.html; },
-              });
+               // Chỉ gọi play khi manifest đã load xong để tránh lỗi race condition
+               // video.play().catch(() => {}); 
+               
+               const levels = data.levels.map((level, index) => ({
+                 html: level.height + 'P',
+                 name: level.height + 'P',
+                 index: index,
+                 default: index === data.levels.length - 1
+               }));
+               
+               if (art.setting) {
+                    art.setting.add({
+                        html: 'Quality',
+                        width: 150,
+                        tooltip: 'Auto',
+                        selector: [{ html: 'Auto', current: true, index: -1 }, ...levels],
+                        onSelect: (item: any) => { hls.currentLevel = item.index; return item.html; },
+                    });
+               }
             });
-
+            
+            // Gán HLS vào art instance để tiện destroy sau này
             (art as any).hls = hls;
           } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-            video.src = createProxyUrl(url, referer);
+            video.src = createProxyUrl(url, refererHeader);
           }
         },
       },
     });
 
-    // --- THÊM TÙY CHỈNH SUBTITLE VÀO MENU SETTINGS ---
-    if (subUrl) {
-      // 1. Màu sắc
-      art.setting.add({
-        html: 'Màu phụ đề',
-        width: 150,
-        tooltip: 'Trắng',
-        selector: [
-          { html: '<span style="color:#fff">Trắng</span>', color: '#ffffff', default: savedStyle.color === '#ffffff' },
-          { html: '<span style="color:#facc15">Vàng</span>', color: '#facc15', default: savedStyle.color === '#facc15' },
-          { html: '<span style="color:#4ade80">Xanh lá</span>', color: '#4ade80', default: savedStyle.color === '#4ade80' },
-          { html: '<span style="color:#f472b6">Hồng</span>', color: '#f472b6', default: savedStyle.color === '#f472b6' },
-        ],
-        onSelect: function (item: any) {
-          art.subtitle.style('color', item.color);
-          saveSubStyle('color', item.color);
-          return item.html;
-        },
-      });
-
-      // 2. Kích thước
-      art.setting.add({
-        html: 'Cỡ chữ',
-        width: 150,
-        tooltip: 'Vừa',
-        selector: [
-          { html: 'Nhỏ', size: '18px', default: savedStyle.fontSize === '18px' },
-          { html: 'Vừa', size: '24px', default: savedStyle.fontSize === '24px' },
-          { html: 'Lớn', size: '32px', default: savedStyle.fontSize === '32px' },
-          { html: 'Cực lớn', size: '40px', default: savedStyle.fontSize === '40px' },
-        ],
-        onSelect: function (item: any) {
-          art.subtitle.style('fontSize', item.size);
-          saveSubStyle('fontSize', item.size);
-          return item.html;
-        },
-      });
-
-      // 3. Phông nền (Background)
-      art.setting.add({
-        html: 'Nền phụ đề',
-        width: 150,
-        tooltip: 'Tắt',
-        selector: [
-          { html: 'Tắt', bg: 'rgba(0,0,0,0)', default: savedStyle.background === 'rgba(0,0,0,0)' },
-          { html: 'Mờ', bg: 'rgba(0,0,0,0.5)', default: savedStyle.background === 'rgba(0,0,0,0.5)' },
-          { html: 'Đậm', bg: 'rgba(0,0,0,0.8)', default: savedStyle.background === 'rgba(0,0,0,0.8)' },
-        ],
-        onSelect: function (item: any) {
-          art.subtitle.style('background', item.bg);
-          // Cần padding nếu có background để nhìn đẹp hơn
-          if (item.bg !== 'rgba(0,0,0,0)') {
-              art.subtitle.style('padding', '2px 5px'); 
-          } else {
-              art.subtitle.style('padding', '0');
-          }
-          saveSubStyle('background', item.bg);
-          return item.html;
-        },
-      });
-    }
-
-    // Helper lưu setting vào localStorage
-    const saveSubStyle = (key: string, value: string) => {
-      const current = JSON.parse(localStorage.getItem('artplayer_sub_style') || JSON.stringify(DEFAULT_SUB_STYLE));
-      current[key] = value;
-      localStorage.setItem('artplayer_sub_style', JSON.stringify(current));
-    };
-
     playerRef.current = art;
 
-    if (playerRef.current && episode.videoUrl !== playerRef.current.option.url) {
-        playerRef.current.switchUrl(episode.videoUrl);
-    }
-
+    // 2. Clean up function khi component unmount hoặc url đổi
     return () => {
-      if (playerRef.current && (playerRef.current as any).hls) (playerRef.current as any).hls.destroy();
-      if (playerRef.current) playerRef.current.destroy(false);
+      console.log("🧹 Destroying Player...");
+      if (playerRef.current) {
+         if ((playerRef.current as any).hls) {
+             (playerRef.current as any).hls.destroy();
+         }
+         playerRef.current.destroy(false);
+         playerRef.current = null;
+      }
     };
-  }, [episode.videoUrl, referer, subUrl]);
+  }, [stream.videoUrl, stream.subUrl, stream.referer]); // Dependency array
 
   return <div ref={artRef} className={styles.playerContainer} />;
 };
 
-// --- Các Component UI Giữ Nguyên ---
-const EpisodeControls: React.FC = () => (
-  <div className={styles.controlPanel}>
-    <div className={styles.panelHeader}>
-      <span className={styles.panelTitle}>Episode Navigation</span>
-    </div>
-    <div className={styles.episodeNav}>
-      <button className={styles.navBtn}>← Previous</button>
-      <button className={`${styles.navBtn} ${styles.navBtnPrimary}`}>Next Episode →</button>
-    </div>
-  </div>
-);
-
-const ServerSelector: React.FC<{
-  servers: Server[];
-  activeServerId: string;
-  onServerChange: (serverId: string) => void;
-}> = ({ servers, activeServerId, onServerChange }) => (
-  <div className={styles.controlPanel}>
-    <div className={styles.panelHeader}>
-      <span className={styles.panelTitle}>☁️ Server Selection</span>
-    </div>
-    <div className={styles.serverGrid}>
-      {servers.map(server => (
-        <button
-          key={server.id}
-          onClick={() => onServerChange(server.id)}
-          className={`${styles.serverBtn} ${activeServerId === server.id ? styles.serverBtnActive : ''}`}
-        >
-          {server.name}
-        </button>
-      ))}
-    </div>
-  </div>
-);
-
-// --- Export VideoPlayer ---
-export const VideoPlayer: React.FC<{
-  currentEpisode: Episode;
-  servers: Server[];
-  activeServerId: string;
-  onServerChange: (serverId: string) => void;
-  customReferer?: string;
-  customSubUrl?: string;
-}> = (props) => {
-  const finalReferer = props.customReferer || 'https://megacloud.blog/';
+export const VideoPlayer: React.FC<VideoPlayerProps> = ({
+  streamData,
+  isLoading,
+  servers,
+  activeServerId,
+  onServerChange,
+  onNextEpisode,
+  onPrevEpisode
+}) => {
 
   return (
     <div className={styles.wrapper}>
-      {props.currentEpisode.videoUrl ? (
-        <AnimePlayer 
-          episode={props.currentEpisode} 
-          referer={finalReferer}
-          subUrl={props.customSubUrl}
-        />
+      {isLoading ? (
+         <div className={styles.playerContainer} style={{display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', background: '#000'}}>
+             <div style={{textAlign: 'center'}}>
+                <div style={{fontSize: '2rem', marginBottom: '1rem'}}>⏳</div>
+                <p>Loading stream...</p>
+             </div>
+         </div>
+      ) : streamData && streamData.videoUrl ? (
+        // Key prop ở đây cực kỳ quan trọng:
+        // Khi videoUrl thay đổi, React sẽ unmount component cũ và mount component mới hoàn toàn.
+        // Điều này đảm bảo Player cũ bị destroy 100% trước khi cái mới được tạo.
+        <AnimePlayer key={streamData.videoUrl} stream={streamData} />
       ) : (
         <div className={styles.playerContainer}>
           <div className={styles.placeholder}>
             <div className={styles.placeholderIcon}>🎬</div>
-            <p>No video source available</p>
+            <p>Select an episode to watch</p>
           </div>
         </div>
       )}
 
       <div className={styles.controlsGroup}>
-        <EpisodeControls />
-        <ServerSelector 
-          servers={props.servers}
-          activeServerId={props.activeServerId}
-          onServerChange={props.onServerChange}
-        />
+        <div className={styles.controlPanel}>
+            <div className={styles.panelHeader}>
+            <span className={styles.panelTitle}>Navigation</span>
+            </div>
+            <div className={styles.episodeNav}>
+            <button className={styles.navBtn} onClick={onPrevEpisode}>← Previous</button>
+            <button className={`${styles.navBtn} ${styles.navBtnPrimary}`} onClick={onNextEpisode}>Next Episode →</button>
+            </div>
+        </div>
+
+        <div className={styles.controlPanel}>
+            <div className={styles.panelHeader}>
+            <span className={styles.panelTitle}>☁️ Server Selection</span>
+            </div>
+            <div className={styles.serverGrid}>
+            {servers.map(server => (
+                <button
+                key={server.id}
+                onClick={() => onServerChange(server.id)}
+                className={`${styles.serverBtn} ${activeServerId === server.id ? styles.serverBtnActive : ''}`}
+                >
+                {server.name}
+                </button>
+            ))}
+            </div>
+        </div>
       </div>
     </div>
   );
