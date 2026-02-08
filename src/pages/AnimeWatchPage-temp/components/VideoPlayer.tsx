@@ -288,7 +288,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
 
         <div className={styles.controlPanel}>
             <div className={styles.panelHeader}>
-            <span className={styles.panelTitle}>☁️ Server Selection</span>
+            <span className={styles.panelTitle}>Server Selection</span>
             </div>
             <div className={styles.serverGrid}>
             {servers.map(server => (

@@ -1,4 +1,4 @@
-import React, { useMemo, useState }  from 'react'; // ✅ Thêm useState
+import React, { useMemo, useState }  from 'react';
 import styles from '../WatchPage.module.css';
 import EditorModal from '../../../components/AnimeModal/EditorModal';
 import { useSummarySection } from '@umamusumeenjoyer/shared-logic';
@@ -12,7 +12,6 @@ interface SidebarProps {
 export const Sidebar: React.FC<SidebarProps> = ({ animeData, animeId }) => {
   const { t } = useTranslation(['AnimeModal', 'common']);
   
-  // ✅ THÊM: State cho expand synopsis
   const [isSynopsisExpanded, setIsSynopsisExpanded] = useState(false);
 
   const anime = useMemo(() => ({
@@ -96,6 +95,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ animeData, animeId }) => {
               </div>
           </div>
 
+          <button 
+            className={styles.modalBtn}
+            onClick={handleBtnClick}
+          >
+            {buttonLabel}
+          </button>
+
           <div className={styles.progressContainer}>
               <div className={styles.progressHeader}>
                   <span className={styles.progressLabel}>Progress</span>
@@ -132,14 +138,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ animeData, animeId }) => {
             ))}
           </div>
 
-          {/* ✅ CHỈNH SỬA: Synopsis với See More/Less */}
           <div className={styles.synopsis}>
               <h3 className={styles.synopsisTitle}>Synopsis</h3>
               <p 
                 className={`${styles.synopsisText} ${isSynopsisExpanded ? styles.synopsisExpanded : styles.synopsisCollapsed}`}
                 dangerouslySetInnerHTML={{ __html: animeData.desc || 'No synopsis available.' }}
               />
-              {/* ✅ Button See More/Less */}
               <button 
                 className={styles.seeMoreBtn}
                 onClick={() => setIsSynopsisExpanded(!isSynopsisExpanded)}
@@ -148,13 +152,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ animeData, animeId }) => {
               </button>
           </div>
         </div>
-
-        <button 
-          className={styles.modalBtn}
-          onClick={handleBtnClick}
-        >
-          {buttonLabel}
-        </button>
       </aside>
 
       <EditorModal 

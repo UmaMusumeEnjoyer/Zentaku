@@ -1,10 +1,9 @@
 /* WatchPage.module.css */
 
 .container {
-  max-width: 1200px; /* Tăng nhẹ max-width để cân đối với padding 50px */
+  max-width: 1200px;
   margin: 0 auto;
   padding-top: 80px;
-  /* Yêu cầu: Padding 2 bên 50px */
   padding-left: 50px;
   padding-right: 50px;
   
@@ -97,7 +96,7 @@
   box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
 }
 
-/* --- Episode List (Refactored from Inline Styles) --- */
+/* --- Episode List --- */
 .episodeListContainer {
   margin-top: 1rem;
   background-color: var(--bg-panel);
@@ -108,6 +107,7 @@
 
 .episodeListTitle {
   color: var(--text-primary);
+  margin-top: unset;
   margin-bottom: 0.5rem;
   font-weight: 600;
 }
@@ -143,11 +143,9 @@
 
 /* --- SIDEBAR SECTION --- */
 
-/* Wrapper cho cột Sidebar để chứa Card + Button */
 .sidebarColumn {
     display: flex;
     flex-direction: column;
-    gap: 1rem; /* Khoảng cách giữa Card và Button (AnimeModal) */
     position: sticky;
     top: 1.5rem;
 }
@@ -157,8 +155,6 @@
   border-radius: 0.5rem;
   padding: 1.25rem;
   border: 1px solid var(--border-subtle);
-  /* Bỏ sticky ở đây vì đã chuyển lên sidebarColumn nếu muốn cả cột dính, 
-     hoặc giữ nguyên nếu chỉ muốn Card dính */
   transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
@@ -170,7 +166,7 @@
   overflow: hidden;
   margin-bottom: 1rem;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    max-width: 200px; /* Hoặc 200px nếu muốn nhỏ hơn nữa */
+  max-width: 200px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -213,7 +209,7 @@
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
-    margin-bottom: 1.25rem;
+    margin-bottom: 1rem;
     padding-bottom: 1rem;
     border-bottom: 1px dashed var(--border-subtle);
 }
@@ -231,6 +227,28 @@
 .metaValue {
     color: var(--text-primary);
     font-weight: 500;
+}
+
+/* --- EXTERNAL BUTTON (Moved Inside) --- */
+.modalBtn {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: var(--bg-subtle);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-primary);
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    text-align: center;
+    margin-bottom: 1.5rem; /* Tạo khoảng cách với Progress Bar */
+}
+
+.modalBtn:hover {
+    border-color: var(--btn-primary-bg);
+    color: var(--btn-primary-bg);
+    background-color: rgba(59, 130, 246, 0.05);
 }
 
 /* --- PROGRESS BAR STYLES --- */
@@ -261,24 +279,22 @@
     position: relative;
     width: 100%;
     height: 8px;
-    background-color: var(--bg-subtle); /* Màu của Total Episodes */
+    background-color: var(--bg-subtle);
     border-radius: 4px;
     overflow: hidden;
 }
 
-/* Thanh Released (Màu xám sáng/Trung tính) */
 .barReleased {
     position: absolute;
     top: 0;
     left: 0;
     height: 100%;
-    background-color: var(--text-secondary); /* Hoặc dùng một màu riêng */
+    background-color: var(--text-secondary);
     opacity: 0.3;
     z-index: 1;
     border-radius: 4px 0 0 4px;
 }
 
-/* Thanh Watched (Màu chính) */
 .barWatched {
     position: absolute;
     top: 0;
@@ -334,10 +350,11 @@
     border-color: var(--border-subtle);
     color: var(--text-primary);
 }
+
 .synopsis {
-  position: relative; /* ✅ THÊM: Để button có thể position tốt hơn */
+  position: relative;
 }
-/* Synopsis */
+
 .synopsisTitle {
   text-transform: uppercase;
   font-size: 0.75rem;
@@ -379,25 +396,4 @@
 .seeMoreBtn:hover {
     opacity: 0.7;
     text-decoration: underline;
-}
-
-/* --- EXTERNAL BUTTON --- */
-.modalBtn {
-    width: 100%;
-    padding: 1rem;
-    background-color: transparent;
-    border: 2px dashed var(--border-subtle);
-    color: var(--text-secondary);
-    border-radius: 0.5rem;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 0.9rem;
-    transition: all 0.2s ease;
-    text-align: center;
-}
-
-.modalBtn:hover {
-    border-color: var(--btn-primary-bg);
-    color: var(--btn-primary-bg);
-    background-color: rgba(59, 130, 246, 0.05); /* Hiệu ứng hover nhẹ */
 }
