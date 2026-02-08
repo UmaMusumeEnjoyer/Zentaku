@@ -67,6 +67,7 @@
 .headerLeft .logo a {
   display: flex;
   align-items: center;
+  outline: none;
 }
 
 .logoImg {
