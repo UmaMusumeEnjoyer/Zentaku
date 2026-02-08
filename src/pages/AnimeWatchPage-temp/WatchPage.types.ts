@@ -1,7 +1,7 @@
 // WatchPage.types.ts
 
 export interface AnimeInfo {
-  id: string;
+  id: string | number;
   title: string;
   posterUrl: string;
   rating: number;

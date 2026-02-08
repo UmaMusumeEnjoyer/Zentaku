@@ -269,8 +269,8 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
       ) : (
         <div className={styles.playerContainer}>
           <div className={styles.placeholder}>
-            <div className={styles.placeholderIcon}>🎬</div>
-            <p>Select an episode to watch</p>
+            
+            <p>Server error please try again</p>
           </div>
         </div>
       )}

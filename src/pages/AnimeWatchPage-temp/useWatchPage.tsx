@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import type { Episode, Server } from './WatchPage.types';
+import { animeService } from '@umamusumeenjoyer/shared-logic'; // ✅ Import service
 
 // Cấu hình API Backend
 const BACKEND_URL = 'http://localhost:5000/api';
@@ -15,7 +16,7 @@ export const useWatchPage = () => {
   // Lấy ID từ URL
   const { id: paramId } = useParams<{ id: string }>(); 
   
-  // State quản lý dữ liệu
+  // ✅ State quản lý dữ liệu THẬT từ AniList
   const [animeData, setAnimeData] = useState<any>(null);
   const [episodes, setEpisodes] = useState<Episode[]>([]);
   const [currentEpisode, setCurrentEpisode] = useState<Episode | null>(null);
@@ -35,7 +36,7 @@ export const useWatchPage = () => {
     { id: 'hd-2', name: 'Vidcloud (HD-2)', type: 'sub' },
   ];
 
-  // 1. Fetch danh sách tập phim khi vào trang (hoặc khi ID đổi)
+  // ✅ 1. Fetch ANIME DETAIL + EPISODES song song
   useEffect(() => {
     if (!paramId) {
         setError("Không tìm thấy ID Anime");
@@ -50,17 +51,20 @@ export const useWatchPage = () => {
       try {
         console.log(`Fetching data for AniList ID: ${paramId}`);
         
-        const res = await fetch(`${BACKEND_URL}/anime/${paramId}/episodes`);
-        
-        if (!res.ok) {
-            const errorData = await res.json();
-            throw new Error(errorData.error || 'Failed to fetch episodes');
-        }
-        
-        const data = await res.json();
+        // ✅ Gọi song song 2 API: anime detail + episodes
+        const [animeRes, episodesRes] = await Promise.all([
+          animeService.getById(paramId),  // Lấy thông tin chi tiết anime
+          fetch(`${BACKEND_URL}/anime/${paramId}/episodes`).then(res => {
+            if (!res.ok) throw new Error('Failed to fetch episodes');
+            return res.json();
+          })
+        ]);
 
-        // Map dữ liệu API
-        let mappedEpisodes: Episode[] = data.episodes.map((ep: any) => ({
+        // ✅ Set anime data THẬT từ AniList
+        setAnimeData(animeRes.data);
+
+        // Map episodes từ provider
+        let mappedEpisodes: Episode[] = episodesRes.episodes.map((ep: any) => ({
           id: ep.episodeId,
           number: ep.number,
           title: ep.title,
@@ -68,22 +72,11 @@ export const useWatchPage = () => {
           videoUrl: ''
         }));
 
-        // Sắp xếp tập phim theo thứ tự tăng dần để đảm bảo [0] là tập 1
+        // Sắp xếp tập phim theo thứ tự tăng dần
         mappedEpisodes = mappedEpisodes.sort((a, b) => a.number - b.number);
-
         setEpisodes(mappedEpisodes);
 
-        // Set metadata
-        setAnimeData({
-          id: data.providerId,
-          title: `Chưa tày đâu em`,
-          rating: 9.0,
-          posterUrl: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx178022-bA3dC4ae5t5u.jpg',
-          tags: ['Action', 'Supernatural'],
-          synopsis: 'Chưa tày đâu em.'
-        });
-
-        // CHỈNH SỬA QUAN TRỌNG: Tự động chọn tập đầu tiên sau khi load xong
+        // Tự động chọn tập đầu tiên
         if (mappedEpisodes.length > 0) {
           setCurrentEpisode(mappedEpisodes[0]);
         } else {
@@ -107,7 +100,7 @@ export const useWatchPage = () => {
 
     const fetchStreamSource = async () => {
       setLoadingStream(true);
-      setStreamData(null); // Reset stream data cũ để hiện loading
+      setStreamData(null);
       try {
         const url = `${BACKEND_URL}/anime/episode-src?id=${currentEpisode.id}&server=${activeServerId}&category=sub`;
         const res = await fetch(url);
@@ -147,6 +140,7 @@ export const useWatchPage = () => {
     setActiveServerId,
     streamData,
     loadingStream,
-    handleEpisodeChange
+    handleEpisodeChange,
+    animeId: paramId
   };
 };

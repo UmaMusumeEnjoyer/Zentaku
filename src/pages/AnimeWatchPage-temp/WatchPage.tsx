@@ -17,6 +17,7 @@ const WatchPage: React.FC = () => {
     setActiveServerId, 
     streamData, 
     loadingStream, 
+    animeId,
     handleEpisodeChange
   } = useWatchPage();
   
@@ -71,7 +72,7 @@ const WatchPage: React.FC = () => {
            </div>
         </div>
 
-        <Sidebar data={animeData} />
+        <Sidebar animeData={animeData} animeId={animeId} />
 
       </main>
     </div>
