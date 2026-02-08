@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useWatchPage } from './useWatchPage';
 import { VideoPlayer } from './components/VideoPlayer';
 import { Sidebar } from './components/Sidebar';
@@ -21,6 +21,8 @@ const WatchPage: React.FC = () => {
     handleEpisodeChange
   } = useWatchPage();
   
+  const [isTheaterMode, setIsTheaterMode] = useState(false);
+  
   if (loading) return <WatchPageSkeleton />;
   
   if (error || !animeData) {
@@ -34,7 +36,7 @@ const WatchPage: React.FC = () => {
   }
 
   return (
-    <div className={styles.container}>
+    <div className={`${styles.container} ${isTheaterMode ? styles.theaterModeActive : ''}`}>
       <main className={styles.mainLayout}>
         
         <div className={styles.videoWrapper}>
@@ -46,6 +48,8 @@ const WatchPage: React.FC = () => {
             activeServerId={activeServerId}
             onServerChange={setActiveServerId}
             currentEpisode={currentEpisode}
+            episodes={episodes}
+            onEpisodeClick={handleEpisodeChange}
             onNextEpisode={() => {
                 const idx = episodes.findIndex(e => e.id === currentEpisode?.id);
                 if (idx !== -1 && idx < episodes.length - 1) handleEpisodeChange(episodes[idx + 1]);
@@ -54,25 +58,13 @@ const WatchPage: React.FC = () => {
                 const idx = episodes.findIndex(e => e.id === currentEpisode?.id);
                 if (idx > 0) handleEpisodeChange(episodes[idx - 1]);
             }}
+            isTheaterMode={isTheaterMode}
+            onTheaterModeToggle={() => setIsTheaterMode(!isTheaterMode)}
           />
-
-           <div className={styles.episodeListContainer}>
-              <h3 className={styles.episodeListTitle}>Episodes ({episodes.length})</h3>
-              <div className={styles.episodeGrid}>
-                {episodes.map(ep => (
-                  <button 
-                    key={ep.id}
-                    onClick={() => handleEpisodeChange(ep)}
-                    className={`${styles.episodeBtn} ${currentEpisode?.id === ep.id ? styles.episodeBtnActive : ''}`}
-                  >
-                    {ep.number}
-                  </button>
-                ))}
-              </div>
-           </div>
+          
         </div>
 
-        <Sidebar animeData={animeData} animeId={animeId} />
+        {!isTheaterMode && <Sidebar animeData={animeData} animeId={animeId} />}
 
       </main>
     </div>

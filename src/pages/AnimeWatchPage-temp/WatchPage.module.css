@@ -13,7 +13,16 @@
   min-height: 100vh;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
+.theaterModeActive {
+  max-width: 100%;
+  padding: 0;
+}
 
+.theaterModeActive .mainLayout {
+  grid-template-columns: 1fr;
+  max-width: 100%;
+  gap: 0;
+}
 /* Layout Grid */
 .mainLayout {
   display: grid;
@@ -96,51 +105,6 @@
   box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
 }
 
-/* --- Episode List --- */
-.episodeListContainer {
-  margin-top: 1rem;
-  background-color: var(--bg-panel);
-  padding: 1rem;
-  border-radius: 8px;
-  border: 1px solid var(--border-subtle);
-}
-
-.episodeListTitle {
-  color: var(--text-primary);
-  margin-top: unset;
-  margin-bottom: 0.5rem;
-  font-weight: 600;
-}
-
-.episodeGrid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  max-height: 200px;
-  overflow-y: auto;
-}
-
-.episodeBtn {
-  padding: 0.5rem 1rem;
-  background-color: var(--bg-subtle);
-  color: var(--text-secondary);
-  border: 1px solid var(--border-subtle);
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.episodeBtn:hover {
-  background-color: var(--border-subtle);
-  color: var(--text-primary);
-}
-
-.episodeBtnActive {
-  background-color: var(--btn-primary-bg);
-  color: var(--btn-primary-text);
-  border-color: var(--btn-primary-bg);
-}
-
 /* --- SIDEBAR SECTION --- */
 
 .sidebarColumn {
@@ -209,7 +173,7 @@
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
-    margin-bottom: 1rem;
+    
     padding-bottom: 1rem;
     border-bottom: 1px dashed var(--border-subtle);
 }
