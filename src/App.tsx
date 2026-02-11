@@ -17,7 +17,7 @@ import AnimeListSearchPage from './pages/AnimeListSearch/AnimeListSearchPage';
 import ProfilePage from './pages/ProfilePage/ProfilePage';
 import AnimeListPage from './pages/AnimeListPage/AnimeListPage';
 import AnimeWatchPage from './pages/AnimeWatchPage-temp/WatchPage';
-
+import AnimeSchedule from './pages/ScheduleDashboard/Schedule';
 
 // Xác định API base URL dựa trên environment
 const isDevelopment = import.meta.env.DEV;
@@ -60,7 +60,8 @@ const HomeRoute = () => {
       </div>
     );
   }
-  return user ? <HomePageLogin /> : <HomePage />;
+  //return user ? <HomePageLogin /> : <HomePage />;
+  return user ? <AnimeSchedule /> : <HomePage />;
 };
 
 function App() {
