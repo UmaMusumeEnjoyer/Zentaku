@@ -1,5 +1,5 @@
 import React from 'react';
-import Skeleton from '../../components/PlaceholderSkeleton/Skeleton'; // Giả định path
+import Skeleton from '../../components/PlaceholderSkeleton/Skeleton';
 import styles from './Schedule.module.css';
 
 const AnimeScheduleSkeleton: React.FC = () => {
@@ -7,12 +7,12 @@ const AnimeScheduleSkeleton: React.FC = () => {
     <div className={styles.container}>
       {/* Skeleton Left Sidebar */}
       <aside className={styles.sidebarLeft}>
-        <div className="space-y-8">
+        <div className={styles.sidebarGroup}>
           <div>
             <Skeleton width="40%" height="10px" className="mb-4" />
-            <div className="space-y-2">
+            <div className={styles.navLinks}>
               {[1, 2, 3].map(i => (
-                <div key={i} className="flex items-center gap-3 p-2">
+                <div key={i} className={styles.skeletonRow}>
                   <Skeleton width="20px" height="20px" borderRadius="4px" />
                   <Skeleton width="60%" height="14px" />
                 </div>
@@ -21,9 +21,9 @@ const AnimeScheduleSkeleton: React.FC = () => {
           </div>
           <div>
             <Skeleton width="40%" height="10px" className="mb-4" />
-            <div className="space-y-4">
+            <div className={styles.navLinks}>
               {[1, 2].map(i => (
-                <div key={i} className="flex items-center gap-3">
+                <div key={i} className={styles.skeletonRow}>
                   <Skeleton width="32px" height="32px" borderRadius="6px" />
                   <Skeleton width="50%" height="14px" />
                 </div>
@@ -36,11 +36,11 @@ const AnimeScheduleSkeleton: React.FC = () => {
       {/* Skeleton Main Content */}
       <main className={styles.mainContent}>
         <div className={styles.headerControls}>
-          <div className="space-y-2">
+          <div className={styles.skeletonContent}>
             <Skeleton width="200px" height="32px" />
             <Skeleton width="120px" height="14px" />
           </div>
-          <div className="flex gap-2">
+          <div style={{display: 'flex', gap: '0.5rem'}}>
              <Skeleton width="80px" height="32px" borderRadius="8px" />
           </div>
         </div>
@@ -49,7 +49,7 @@ const AnimeScheduleSkeleton: React.FC = () => {
           <div className={styles.calendarCard}>
             <div className={styles.weekGrid}>
               {[1, 2, 3, 4, 5, 6, 7].map(i => (
-                <div key={i} className="p-3 flex justify-center">
+                <div key={i} className={styles.weekDay}>
                   <Skeleton width="30px" height="10px" />
                 </div>
               ))}
@@ -68,15 +68,15 @@ const AnimeScheduleSkeleton: React.FC = () => {
 
       {/* Skeleton Right Sidebar */}
       <aside className={styles.sidebarRight}>
-        <div className="flex justify-between mb-6">
+        <div className={styles.skeletonHeader}>
            <Skeleton width="100px" height="20px" />
            <Skeleton width="40px" height="16px" />
         </div>
-        <div className="space-y-6">
+        <div className={styles.sidebarGroup}>
           {[1, 2, 3].map(i => (
-            <div key={i} className="flex gap-4">
+            <div key={i} style={{display: 'flex', gap: '1rem'}}>
               <Skeleton width="4rem" height="6rem" borderRadius="0.5rem" />
-              <div className="flex-1 flex flex-col justify-center gap-2">
+              <div style={{flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '0.5rem'}}>
                 <Skeleton width="60%" height="10px" />
                 <Skeleton width="90%" height="16px" />
                 <Skeleton width="40%" height="10px" />
