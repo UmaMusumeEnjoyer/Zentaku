@@ -1,0 +1,294 @@
+/* Layout Structure */
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: var(--bg-app);
+  color: var(--text-primary);
+  font-family: 'Inter', sans-serif;
+  overflow: hidden;
+  padding-top: 70px; /* Thêm padding top theo yêu cầu */
+}
+
+/* --- ĐÃ XÓA CÁC CLASS NAVBAR (.navbar, .brand, .navSearch...) --- */
+
+/* Main Layout */
+.contentWrapper {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  /* Đảm bảo chiều cao full trừ đi padding-top */
+  height: 100%; 
+}
+
+/* Left Sidebar (Dynamic) */
+.leftSidebar {
+  background-color: var(--bg-panel);
+  border-right: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  transition: width 0.3s ease;
+  padding-bottom: 16px;
+}
+
+/* Viewer Left Sidebar: Small Icons */
+.leftSidebar.viewer {
+  width: 60px;
+  align-items: center;
+  padding-top: 16px;
+  overflow-x: hidden;
+}
+
+/* Owner Left Sidebar: Detailed Controls */
+.leftSidebar.owner {
+  width: 260px;
+}
+
+.sidebarContent {
+  flex: 1; /* Đẩy content lên trên để chừa chỗ cho nút Switch Role ở dưới */
+  width: 100%;
+  
+}
+
+.sidebarItem {
+  margin-bottom: 12px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background-color 0.2s;
+  position: relative;
+}
+
+.viewer .sidebarItem {
+  width: 40px;
+  height: 40px;
+  background-color: var(--bg-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.owner .sidebarItem {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  margin: 0 10px 10px 10px;
+  background-color: transparent;
+}
+
+.owner .sidebarItem:hover {
+  background-color: var(--bg-subtle);
+}
+
+.owner .itemInfo {
+  margin-left: 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+.itemLabel {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.itemDetail {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+/* Role Switcher Button (New Location) */
+.roleSwitchBtn {
+  margin: 0 10px;
+  padding: 10px;
+  border-radius: 8px;
+  background-color: var(--bg-subtle);
+  color: var(--accent-color);
+  border: 1px solid var(--border-subtle);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+
+.roleSwitchBtn:hover {
+  background-color: var(--bg-app);
+  border-color: var(--accent-color);
+}
+
+.viewer .roleSwitchBtn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  padding: 0;
+  margin: 0 auto;
+}
+
+/* Main Video Area */
+.mainArea {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: #000;
+  overflow-y: hidden;
+}
+
+.videoPlayer {
+  flex : 1;
+  width: 100%;
+  background-color: #000;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+}
+
+.videoOverlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px;
+  background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.videoPlayer:hover .videoOverlay {
+  opacity: 1;
+}
+
+.streamInfo {
+  padding: 20px;
+  background-color: var(--bg-app);
+  border-top: 1px solid var(--border-subtle);
+  flex-shrink: 0;
+}
+
+.infoHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.host {
+  color: var(--accent-color);
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.tags {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.tag {
+  background-color: var(--bg-subtle);
+  color: var(--text-secondary);
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* Right Sidebar (Chat) */
+.rightSidebar {
+  width: 340px;
+  background-color: var(--bg-panel);
+  border-left: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.chatHeader {
+  height: 50px;
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.chatList {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.message {
+  font-size: 0.9rem;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.timestamp {
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  margin-right: 6px;
+}
+
+.username {
+  font-weight: bold;
+  margin-right: 4px;
+  cursor: pointer;
+}
+
+.chatInputArea {
+  padding: 16px;
+  border-top: 1px solid var(--border-subtle);
+  background-color: var(--bg-subtle);
+}
+
+.chatInput {
+  width: 100%;
+  background-color: var(--bg-app);
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+  padding: 8px;
+  color: var(--text-primary);
+  resize: none;
+  min-height: 40px;
+}
+
+.chatInput:focus {
+  outline: 1px solid var(--accent-color);
+}
+
+.sendBtn {
+  margin-top: 8px;
+  background-color: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  border: none;
+  padding: 6px 16px;
+  border-radius: 4px;
+  font-weight: 600;
+  float: right;
+  cursor: pointer;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .leftSidebar, .rightSidebar {
+    display: none; 
+  }
+}
