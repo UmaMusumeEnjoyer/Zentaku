@@ -20,6 +20,7 @@ import AnimeWatchPage from './pages/AnimeWatchPage-temp/WatchPage';
 import AnimeSchedule from './pages/ScheduleDashboard/Schedule';
 import WatchAlongPage from './pages/WatchAlong/WatchAlong';
 import MangaReader from './pages/MangaReader/MangaReader';
+import { LightNovelReader } from './pages/NovelReader/NovelReader';
 
 // Xác định API base URL dựa trên environment
 const isDevelopment = import.meta.env.DEV;
@@ -106,6 +107,7 @@ function App() {
               <Route path="/list/:id" element={<AnimeListPage />} />
               <Route path="/watch-along" element={<WatchAlongPage />} />
               <Route path="/manga-reader" element={<MangaReader />} />
+              <Route path="/novel-reader" element={<LightNovelReader />} />
             </Routes>
           </main>
         </AuthProvider>

@@ -1,0 +1,200 @@
+/* Layout & Container */
+.container {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  padding-top: 70px;
+  background-color: var(--bg-app); /* Màu nền chính (Beige/Sepia trong hình) */
+  color: var(--text-primary);
+  overflow: hidden;
+  position: relative;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* --- Left Sidebar (Novel Info) --- */
+.leftSidebar {
+  width: 300px;
+  height: 100%;
+  background-color: var(--bg-panel);
+  border-right: 1px solid var(--border-subtle);
+  flex-shrink: 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow-y: auto;
+  z-index: 20;
+  margin-left: 0;
+}
+
+.leftSidebar.hidden {
+  margin-left: -300px;
+  opacity: 0.5;
+}
+
+/* Clone styles from MangaInfoSidebar for Left Sidebar Content */
+.sidebarContent {
+  padding: 1.5rem;
+}
+.coverImage {
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  margin-bottom: 1rem;
+}
+.novelTitle {
+  font-size: 1.2rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+.metaList {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* --- Main Reader Area --- */
+.readerArea {
+  flex: 1;
+  height: 100%;
+  overflow-y: auto;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 20px;
+}
+
+.contentWrapper {
+  max-width: 800px; /* Giới hạn chiều rộng dòng đọc cho dễ mắt */
+  width: 100%;
+  padding: 40px 0 100px 0;
+}
+
+/* Header Info (Vol 1, Chapter 01...) */
+.chapterHeader {
+  text-align: center;
+  margin-bottom: 3rem;
+  border-bottom: 1px solid var(--border-subtle); /* Optional separator */
+  padding-bottom: 1rem;
+}
+
+.volumeTitle {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.25rem;
+}
+
+.chapterTitle {
+  font-weight: 800;
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.metaInfo {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.metaInfo span {
+  position: relative;
+}
+.metaInfo span:not(:last-child)::after {
+  content: "•";
+  position: absolute;
+  right: -0.6rem;
+  color: var(--border-subtle);
+}
+
+/* Text Content */
+.paragraph {
+  margin-bottom: 1.2em;
+  text-align: justify;
+}
+
+.highlightedText {
+  background-color: rgba(59, 130, 246, 0.15); /* Màu xanh nhạt giống hình */
+  border-left: 3px solid #3b82f6;
+  padding: 0.5em 0.8em;
+  border-radius: 0 4px 4px 0;
+  margin-left: -0.8em; /* Pull back slightly */
+}
+
+/* --- Right Sidebar (Settings & Navigation) --- */
+.rightSidebar {
+  width: 60px; /* Collapsed state / Icons only styled based on image buttons */
+  height: 100%;
+  background-color: var(--bg-panel);
+  border-left: 1px solid var(--border-subtle);
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem 0;
+  gap: 1.5rem;
+  z-index: 20;
+  transition: width 0.3s ease;
+}
+
+.rightSidebar.expanded {
+  width: 280px;
+  align-items: stretch;
+  padding: 1rem;
+}
+
+.iconButton {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background 0.2s;
+}
+
+.iconButton:hover {
+  background-color: var(--bg-subtle);
+  color: var(--text-primary);
+}
+
+.settingGroup {
+  padding: 1rem 0;
+  border-bottom: 1px dashed var(--border-subtle);
+}
+
+.settingLabel {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.themeGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.themeBtn {
+  height: 32px;
+  border-radius: 4px;
+  border: 1px solid var(--border-subtle);
+  cursor: pointer;
+}
+
+/* Toggle Buttons (Floating triggers) */
+.toggleLeftBtn {
+  position: absolute;
+  left: 20px;
+  top: 20px;
+  z-index: 30;
+  /* Styling similar to existing codebase if needed */
+}
