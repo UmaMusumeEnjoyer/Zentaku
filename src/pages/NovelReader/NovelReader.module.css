@@ -192,9 +192,26 @@
 
 /* Toggle Buttons (Floating triggers) */
 .toggleLeftBtn {
-  position: absolute;
-  left: 20px;
-  top: 20px;
-  z-index: 30;
-  /* Styling similar to existing codebase if needed */
+position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%); /* Kỹ thuật căn giữa dọc chuẩn */
+  z-index: 80; /* Cao hơn nội dung text nhưng thấp hơn sidebar khi mở */
+  
+  /* Styling giống Manga Reader */
+  background-color: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-left: none; /* Bỏ viền trái để tạo cảm giác gắn liền màn hình */
+  border-radius: 0 8px 8px 0; /* Bo tròn góc phải */
+  
+  width: 24px;
+  height: 64px; /* Dài hơn một chút để dễ bấm trên mobile */
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.1); /* Đổ bóng nhẹ sang phải */
+  color: var(--text-secondary);
+  transition: all 0.2s ease;
 }
