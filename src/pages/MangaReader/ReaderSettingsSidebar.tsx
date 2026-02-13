@@ -56,17 +56,8 @@ export const ReaderSettingsSidebar: React.FC<ReaderSettingsSidebarProps> = ({
         <button className={styles.actionButton}>Report Chapter</button>
       </div>
 
-      <div className={styles.commentSection}>
-        💬 {chapterInfo.commentCount} comments
-      </div>
 
-      <div className={styles.uploaderInfo}>
-        <div className={styles.uploaderLabel}>Uploaded By</div>
-        <div className={styles.uploaderName}>
-            👥 {chapterInfo.groupName} <br/> 
-            👤 {chapterInfo.uploader}
-        </div>
-      </div>
+
 
       <div className={styles.settingsList}>
         <div className={styles.settingItem}>

@@ -143,32 +143,9 @@
   font-size: 0.875rem;
 }
 
-.commentSection {
-  margin-bottom: 24px;
-  font-size: 0.875rem;
-  color: var(--text-primary);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
 
-.uploaderInfo {
-  margin-bottom: 24px;
-}
 
-.uploaderLabel {
-  font-size: 0.75rem;
-  color: var(--text-secondary);
-  margin-bottom: 4px;
-}
 
-.uploaderName {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--text-primary);
-  font-weight: 500;
-}
 
 .settingsList {
   display: flex;
