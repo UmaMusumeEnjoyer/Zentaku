@@ -34,7 +34,7 @@
 
 /* Viewer Left Sidebar: Small Icons */
 .leftSidebar.viewer {
-  width: 60px;
+  width: 80px;
   align-items: center;
   padding-top: 16px;
   overflow-x: hidden;
@@ -166,6 +166,7 @@
 
 .streamInfo {
   padding: 20px;
+  padding-top: 10px;
   background-color: var(--bg-app);
   border-top: 1px solid var(--border-subtle);
   flex-shrink: 0;
