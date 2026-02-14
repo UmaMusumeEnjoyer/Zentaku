@@ -16,6 +16,7 @@ interface ReaderSettingsSidebarProps {
   chapterInfo: ChapterInfo;
   pages: MangaPage[];
   settings: ReaderSettings;
+  currentPage: number;
   actions: {
     updateSetting: (key: keyof ReaderSettings, value: any) => void;
     nextChapter: () => void;
@@ -30,8 +31,26 @@ export const ReaderSettingsSidebar: React.FC<ReaderSettingsSidebarProps> = ({
   chapterInfo,
   pages,
   settings,
+  currentPage,
   actions
 }) => {
+  const handlePageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const pageNumber = parseInt(e.target.value, 10);
+    actions.goToPage(pageNumber);
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      actions.goToPage(currentPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < pages.length) {
+      actions.goToPage(currentPage + 1);
+    }
+  };
+
   return (
     <aside className={`${styles.rightSidebar} ${!isOpen ? styles.hidden : ''}`}>
       <div className={styles.sidebarHeader}>
@@ -46,13 +65,25 @@ export const ReaderSettingsSidebar: React.FC<ReaderSettingsSidebarProps> = ({
 
       <div className={styles.navControls}>
         <div className={styles.navRow}>
-          <button className={styles.navButton} onClick={() => actions.goToPage(1)}>
+          <button 
+            className={styles.navButton} 
+            onClick={handlePrevPage}
+            disabled={currentPage <= 1}
+          >
             <ChevronLeft size={16} />
           </button>
-          <select className={styles.navSelect} defaultValue="1">
+          <select 
+            className={styles.navSelect} 
+            value={currentPage}
+            onChange={handlePageChange}
+          >
             {pages.map(p => <option key={p.id} value={p.pageNumber}>Page {p.pageNumber}</option>)}
           </select>
-          <button className={styles.navButton} onClick={() => actions.goToPage(pages.length)}>
+          <button 
+            className={styles.navButton} 
+            onClick={handleNextPage}
+            disabled={currentPage >= pages.length}
+          >
             <ChevronRight size={16} />
           </button>
         </div>

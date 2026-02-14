@@ -13,11 +13,13 @@ const MangaReader: React.FC = () => {
     chapterInfo, 
     mangaDetails,
     pages, 
-    settings, 
+    settings,
+    currentPage,
     actions 
   } = useMangaReader('ch-116');
 
   const readerAreaRef = useRef<HTMLDivElement>(null);
+  const itemsRef = useRef<Array<HTMLImageElement | null>>([]);
   const [showFsToast, setShowFsToast] = useState(false);
 
   useEffect(() => {
@@ -32,6 +34,18 @@ const MangaReader: React.FC = () => {
     document.addEventListener('fullscreenchange', handleFullscreenChange);
     return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
   }, [settings.isFullScreen, actions]);
+
+  useEffect(() => {
+    const pageIndex = currentPage - 1;
+    const targetElement = itemsRef.current[pageIndex];
+    
+    if (targetElement) {
+      targetElement.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start'
+      });
+    }
+  }, [currentPage]);
 
   const handleToggleFullScreen = () => {
     if (!document.fullscreenElement) {
@@ -86,16 +100,20 @@ const MangaReader: React.FC = () => {
           </>
         )}
 
-        {pages.map((page) => (
+        {pages.map((page, index) => (
           <img
             key={page.id}
+            ref={(el) => {
+              itemsRef.current[index] = el;
+            }}
             src={page.url}
             alt={`Page ${page.pageNumber}`}
             className={styles.pageImage}
             style={{
-              width: settings.fitMode === 'fit-width' ? '100%' : 'auto',
-              height: settings.fitMode === 'fit-height' ? '100vh' : 'auto',
-              maxWidth: settings.fitMode === 'fit-both' ? '100vh' : '100%',
+              width: '100%',
+              minHeight: '100vh',
+              height: 'auto',
+              objectFit: 'contain',
             }}
           />
         ))}
@@ -114,6 +132,7 @@ const MangaReader: React.FC = () => {
         chapterInfo={chapterInfo}
         pages={pages}
         settings={settings}
+        currentPage={currentPage}
         actions={extendedActions} 
       />
     </div>

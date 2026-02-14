@@ -47,6 +47,7 @@ export interface UseMangaReaderReturn {
   mangaDetails: MangaDetailsPlaceholder; // Data mới
   pages: MangaPage[];
   settings: ReaderSettings;
+  currentPage: number;
   actions: {
     toggleRightSidebar: () => void;
     toggleLeftSidebar: () => void; // Action mới
