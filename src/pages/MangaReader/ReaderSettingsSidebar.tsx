@@ -1,6 +1,5 @@
 import React from 'react';
 import { 
-  X, 
   Pin, 
   ChevronLeft, 
   ChevronRight, 
@@ -25,13 +24,12 @@ interface ReaderSettingsSidebarProps {
     nextChapter: () => void;
     prevChapter: () => void;
     goToPage: (pageNumber: number) => void;
-    toggleFullScreen: () => void; 
+    toggleFullScreen: () => void;
   };
 }
 
 export const ReaderSettingsSidebar: React.FC<ReaderSettingsSidebarProps> = ({
   isOpen,
-  onClose,
   chapterInfo,
   pages,
   settings,
@@ -39,10 +37,6 @@ export const ReaderSettingsSidebar: React.FC<ReaderSettingsSidebarProps> = ({
 }) => {
   return (
     <aside className={`${styles.rightSidebar} ${!isOpen ? styles.hidden : ''}`}>
-      <button className={styles.closeButton} onClick={onClose}>
-        <X size={24} />
-      </button>
-      
       <div className={styles.sidebarHeader}>
         <div className={styles.mangaInfo}>
           <h2>{chapterInfo.mangaTitle}</h2>
@@ -78,12 +72,7 @@ export const ReaderSettingsSidebar: React.FC<ReaderSettingsSidebarProps> = ({
           </button>
         </div>
 
-        <button className={styles.actionButton}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-            <Flag size={14} />
-            Report Chapter
-          </div>
-        </button>
+
       </div>
 
       <div className={styles.settingsList}>
@@ -102,23 +91,7 @@ export const ReaderSettingsSidebar: React.FC<ReaderSettingsSidebarProps> = ({
           <span>Left To Right</span>
           <ArrowRight size={18} />
         </div>
-        <div className={styles.settingItem}>
-          <span>Header Hidden</span>
-          <input 
-            type="checkbox" 
-            checked={settings.isHeaderHidden} 
-            onChange={() => actions.updateSetting('isHeaderHidden', !settings.isHeaderHidden)}
-            style={{ width: '16px', height: '16px', cursor: 'pointer' }}
-          />
-        </div>
-        <div className={styles.settingItem}>
-          <span>Progress Lightbar</span>
-          <SlidersHorizontal size={18} />
-        </div>
-        <div className={styles.settingItem}>
-          <span>Reader Settings</span>
-          <Settings size={18} />
-        </div>
+
       </div>
     </aside>
   );

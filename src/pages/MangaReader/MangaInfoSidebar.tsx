@@ -8,7 +8,7 @@ interface MangaInfoSidebarProps {
   onClose: () => void;
 }
 
-export const MangaInfoSidebar: React.FC<MangaInfoSidebarProps> = ({ data, isOpen, onClose }) => {
+export const MangaInfoSidebar: React.FC<MangaInfoSidebarProps> = ({ data, isOpen }) => {
   const [isSynopsisExpanded, setIsSynopsisExpanded] = useState(false);
 
   const releasedPercent = 100;
@@ -16,8 +16,6 @@ export const MangaInfoSidebar: React.FC<MangaInfoSidebarProps> = ({ data, isOpen
 
   return (
     <aside className={`${styles.leftSidebar} ${!isOpen ? styles.hidden : ''}`}>
-      <button className={styles.closeButton} onClick={onClose}>×</button>
-
       <div className={styles.posterWrapper}>
         <img src={data.coverImage} alt={data.title} className={styles.posterImg} />
       </div>

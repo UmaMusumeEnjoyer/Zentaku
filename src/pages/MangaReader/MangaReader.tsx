@@ -4,7 +4,7 @@ import { useMangaReader } from './useMangaReader';
 import { MangaInfoSidebar } from './MangaInfoSidebar';
 import { ReaderSettingsSidebar } from './ReaderSettingsSidebar';
 import MangaReaderSkeleton from './MangaReaderSkeleton'; 
-import { Minimize } from 'lucide-react';
+import { Minimize, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const MangaReader: React.FC = () => {
   const { 
@@ -20,7 +20,6 @@ const MangaReader: React.FC = () => {
   const readerAreaRef = useRef<HTMLDivElement>(null);
   const [showFsToast, setShowFsToast] = useState(false);
 
-  
   useEffect(() => {
     const handleFullscreenChange = () => {
       const isFs = !!document.fullscreenElement;
@@ -34,7 +33,6 @@ const MangaReader: React.FC = () => {
     return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
   }, [settings.isFullScreen, actions]);
 
-  
   const handleToggleFullScreen = () => {
     if (!document.fullscreenElement) {
       if (readerAreaRef.current) {
@@ -49,7 +47,6 @@ const MangaReader: React.FC = () => {
     }
   };
 
-  
   const extendedActions = {
     ...actions,
     toggleFullScreen: handleToggleFullScreen
@@ -67,14 +64,12 @@ const MangaReader: React.FC = () => {
         onClose={actions.toggleLeftSidebar} 
       />
       
-      {!settings.isLeftSidebarOpen && (
-        <button 
-            className={`${styles.toggleBtn} ${styles.leftToggle}`} 
-            onClick={actions.toggleLeftSidebar}
-        >
-            ❯
-        </button>
-      )}
+      <button 
+          className={`${styles.toggleBtn} ${settings.isLeftSidebarOpen ? styles.leftToggleOpen : styles.leftToggle}`} 
+          onClick={actions.toggleLeftSidebar}
+      >
+          {settings.isLeftSidebarOpen ? <ChevronLeft size={16} /> : <ChevronRight size={16} />}
+      </button>
 
       <div className={styles.readerArea} ref={readerAreaRef}>
         {settings.isFullScreen && (
@@ -84,8 +79,8 @@ const MangaReader: React.FC = () => {
               Exit Full Screen
             </button>
             {showFsToast && (
-              <div >
-                
+              <div className={styles.fullscreenToast}>
+                Press <b>Esc</b> to exit full screen
               </div>
             )}
           </>
@@ -106,14 +101,12 @@ const MangaReader: React.FC = () => {
         ))}
       </div>
 
-      {!settings.isRightSidebarOpen && (
-        <button 
-            className={`${styles.toggleBtn} ${styles.rightToggle}`} 
-            onClick={actions.toggleRightSidebar}
-        >
-            ❮
-        </button>
-      )}
+      <button 
+          className={`${styles.toggleBtn} ${settings.isRightSidebarOpen ? styles.rightToggleOpen : styles.rightToggle}`} 
+          onClick={actions.toggleRightSidebar}
+      >
+          {settings.isRightSidebarOpen ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
+      </button>
 
       <ReaderSettingsSidebar 
         isOpen={settings.isRightSidebarOpen}
