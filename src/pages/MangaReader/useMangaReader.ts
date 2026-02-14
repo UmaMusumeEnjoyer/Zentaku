@@ -3,8 +3,8 @@ import type{ UseMangaReaderReturn, ChapterInfo, MangaPage, ReaderSettings, Manga
 
 const MOCK_MANGA_DETAILS: MangaDetailsPlaceholder = {
   id: 'manga-1',
-  title: 'Reincarnation no Kaben',
-  coverImage: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx136765-C22i02y0sh1A.jpg', // Placeholder
+  title: 'Chưa tày đâu em',
+  coverImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmrwTvm7P0VehBV9Dwe0rAAtugA90C8r3x_g&s', // Placeholder
   season: 'Winter 2025',
   studio: 'MAPPA',
   status: 'Releasing',
@@ -17,14 +17,14 @@ const MOCK_MANGA_DETAILS: MangaDetailsPlaceholder = {
 
 const MOCK_PAGES: MangaPage[] = Array.from({ length: 10 }).map((_, index) => ({
   id: `page-${index}`,
-  url: `https://placehold.co/800x1200/222/FFF?text=Page+${index + 1}`,
+  url: `https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmrwTvm7P0VehBV9Dwe0rAAtugA90C8r3x_g&s`,
   pageNumber: index + 1,
 }));
 
 const MOCK_CHAPTER: ChapterInfo = {
   id: 'ch-116',
-  title: 'Nostalgia',
-  mangaTitle: 'Reincarnation no Kaben',
+  title: 'Tày',
+  mangaTitle: 'Chưa tày đâu em',
   chapterNumber: 'Chapter 116',
   uploader: 'PeppaMaster',
   groupName: 'Fandom of the Greats',
