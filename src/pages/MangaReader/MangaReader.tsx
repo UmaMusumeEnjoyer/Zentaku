@@ -47,6 +47,26 @@ const MangaReader: React.FC = () => {
     }
   }, [currentPage]);
 
+  // Thêm sự kiện bàn phím cho phím mũi tên trái/phải
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft') {
+        // Mũi tên trái - trang trước
+        if (currentPage > 1) {
+          actions.goToPage(currentPage - 1);
+        }
+      } else if (e.key === 'ArrowRight') {
+        // Mũi tên phải - trang sau
+        if (currentPage < pages.length) {
+          actions.goToPage(currentPage + 1);
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [currentPage, pages.length, actions]);
+
   const handleToggleFullScreen = () => {
     if (!document.fullscreenElement) {
       if (readerAreaRef.current) {
