@@ -37,6 +37,7 @@ export interface ReaderSettings {
   isProgressBarVisible: boolean;
   isRightSidebarOpen: boolean; // Đổi tên cho rõ nghĩa
   isLeftSidebarOpen: boolean;  // State mới
+  isFullScreen: boolean;
 }
 
 export interface UseMangaReaderReturn {
@@ -51,6 +52,7 @@ export interface UseMangaReaderReturn {
     toggleLeftSidebar: () => void; // Action mới
     updateSetting: (key: keyof ReaderSettings, value: any) => void;
     nextChapter: () => void;
+    
     prevChapter: () => void;
     goToPage: (pageNumber: number) => void;
   };

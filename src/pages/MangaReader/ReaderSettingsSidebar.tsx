@@ -5,7 +5,7 @@ import {
   ChevronLeft, 
   ChevronRight, 
   ArrowUpDown, 
-  Maximize2, 
+  Maximize, 
   ArrowRight, 
   Settings,
   Flag,
@@ -25,6 +25,7 @@ interface ReaderSettingsSidebarProps {
     nextChapter: () => void;
     prevChapter: () => void;
     goToPage: (pageNumber: number) => void;
+    toggleFullScreen: () => void; 
   };
 }
 
@@ -90,9 +91,12 @@ export const ReaderSettingsSidebar: React.FC<ReaderSettingsSidebarProps> = ({
           <span>Long Strip</span>
           <ArrowUpDown size={18} />
         </div>
-        <div className={`${styles.settingItem} ${settings.fitMode === 'fit-both' ? styles.active : ''}`}>
-          <span>Fit Both</span>
-          <Maximize2 size={18} />
+        <div 
+          className={`${styles.settingItem} ${settings.isFullScreen ? styles.active : ''}`}
+          onClick={actions.toggleFullScreen}
+        >
+          <span>Full Screen</span>
+          <Maximize size={18} />
         </div>
         <div className={styles.settingItem}>
           <span>Left To Right</span>

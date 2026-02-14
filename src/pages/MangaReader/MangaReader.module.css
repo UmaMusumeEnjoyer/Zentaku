@@ -421,3 +421,52 @@
   border-radius: 8px 0 0 8px;
   box-shadow: -2px 0 5px rgba(0,0,0,0.1);
 }
+
+.exitFullscreenBtn {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: var(--text-primary);
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  border: 1px solid var(--border-subtle);
+  backdrop-filter: blur(4px);
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.exitFullscreenBtn:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+  border-color: var(--text-secondary);
+}
+
+.fullscreenToast {
+  position: fixed;
+  top: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.75);
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 8px;
+  z-index: 1001;
+  pointer-events: none;
+  font-size: 0.95rem;
+  backdrop-filter: blur(4px);
+  animation: fadeOut 3.5s forwards;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+@keyframes fadeOut {
+  0% { opacity: 0; transform: translate(-50%, 10px); }
+  10% { opacity: 1; transform: translate(-50%, 0); }
+  70% { opacity: 1; }
+  100% { opacity: 0; }
+}

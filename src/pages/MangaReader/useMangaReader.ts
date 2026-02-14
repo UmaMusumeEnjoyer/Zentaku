@@ -44,7 +44,8 @@ export const useMangaReader = (chapterId: string): UseMangaReaderReturn => {
     isHeaderHidden: false,
     isProgressBarVisible: true,
     isRightSidebarOpen: true,
-    isLeftSidebarOpen: true, // Mặc định mở
+    isLeftSidebarOpen: true,
+    isFullScreen: false, 
   });
 
   useEffect(() => {
@@ -74,6 +75,8 @@ export const useMangaReader = (chapterId: string): UseMangaReaderReturn => {
   const updateSetting = useCallback((key: keyof ReaderSettings, value: any) => {
     setSettings(prev => ({ ...prev, [key]: value }));
   }, []);
+
+
 
   return {
     isLoading,
