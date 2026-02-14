@@ -20,8 +20,25 @@
   padding: 20px 0;
   transition: all 0.3s ease;
   position: relative;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-subtle) transparent;;
+}
+.readerArea::-webkit-scrollbar {
+  width: 8px;
 }
 
+.readerArea::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.readerArea::-webkit-scrollbar-thumb {
+  background-color: var(--border-subtle);
+  border-radius: 4px;
+}
+
+.readerArea::-webkit-scrollbar-thumb:hover {
+  background-color: var(--text-secondary);
+}
 .pageImage {
   max-width: 100%;
   height: auto;
