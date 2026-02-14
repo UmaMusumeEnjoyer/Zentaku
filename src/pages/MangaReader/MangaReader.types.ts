@@ -14,7 +14,6 @@ export interface ChapterInfo {
   commentCount: number;
 }
 
-// Thêm Type cho Mock Info Sidebar
 export interface MangaDetailsPlaceholder {
   id: string;
   title: string;
@@ -29,14 +28,16 @@ export interface MangaDetailsPlaceholder {
   readChapters: number;
 }
 
+export type ReadingMode = 'long-strip' | 'wide-strip' | 'single-page' | 'double-page';
+
 export interface ReaderSettings {
-  readingMode: 'long-strip' | 'single-page';
+  readingMode: ReadingMode;
   fitMode: 'fit-width' | 'fit-height' | 'fit-both';
   direction: 'ltr' | 'rtl' | 'vertical';
   isHeaderHidden: boolean;
   isProgressBarVisible: boolean;
-  isRightSidebarOpen: boolean; // Đổi tên cho rõ nghĩa
-  isLeftSidebarOpen: boolean;  // State mới
+  isRightSidebarOpen: boolean;
+  isLeftSidebarOpen: boolean;
   isFullScreen: boolean;
 }
 
@@ -44,16 +45,15 @@ export interface UseMangaReaderReturn {
   isLoading: boolean;
   error: string | null;
   chapterInfo: ChapterInfo | null;
-  mangaDetails: MangaDetailsPlaceholder; // Data mới
+  mangaDetails: MangaDetailsPlaceholder;
   pages: MangaPage[];
   settings: ReaderSettings;
   currentPage: number;
   actions: {
     toggleRightSidebar: () => void;
-    toggleLeftSidebar: () => void; // Action mới
+    toggleLeftSidebar: () => void;
     updateSetting: (key: keyof ReaderSettings, value: any) => void;
     nextChapter: () => void;
-    
     prevChapter: () => void;
     goToPage: (pageNumber: number) => void;
   };
