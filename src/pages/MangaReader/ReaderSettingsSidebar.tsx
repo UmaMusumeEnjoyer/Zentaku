@@ -6,9 +6,6 @@ import {
   ArrowUpDown, 
   Maximize, 
   ArrowRight, 
-  Settings,
-  Flag,
-  SlidersHorizontal
 } from 'lucide-react';
 import styles from './MangaReader.module.css';
 import type { ChapterInfo, MangaPage, ReaderSettings } from './MangaReader.types';
