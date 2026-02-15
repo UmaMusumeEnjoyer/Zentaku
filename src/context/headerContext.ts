@@ -2,5 +2,4 @@
 export const TRANSPARENT_ROUTES = [
  // /^\/$/,               // Trang chủ
   /^\/anime\/\d+$/,     // Ví dụ: /anime/123 (Dynamic ID)
-  ///^\/profile$/         // Trang profile
 ];

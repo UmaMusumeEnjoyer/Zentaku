@@ -44,7 +44,7 @@
 
 .pageImage {
   display: block;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+  
   object-fit: contain;
   transition: width 0.3s ease;
 }
