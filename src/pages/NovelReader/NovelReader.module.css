@@ -4,7 +4,7 @@
   width: 100vw;
   height: 100vh;
   padding-top: 70px;
-  background-color: var(--bg-app); /* Màu nền chính (Beige/Sepia trong hình) */
+  background-color: var(--bg-app); /* Sẽ được override bởi inline style */
   color: var(--text-primary);
   overflow: hidden;
   position: relative;
@@ -18,18 +18,17 @@
   background-color: var(--bg-panel);
   border-right: 1px solid var(--border-subtle);
   flex-shrink: 0;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   overflow-y: auto;
   z-index: 20;
   margin-left: 0;
+  position: relative;
 }
 
 .leftSidebar.hidden {
   margin-left: -300px;
-  opacity: 0.5;
 }
 
-/* Clone styles from MangaInfoSidebar for Left Sidebar Content */
 .sidebarContent {
   padding: 1.5rem;
 }
@@ -68,16 +67,17 @@
 }
 
 .contentWrapper {
-  max-width: 800px; /* Giới hạn chiều rộng dòng đọc cho dễ mắt */
+  max-width: 900px; /* Tăng max-width để "Bản lề" hoạt động rõ hơn */
   width: 100%;
   padding: 40px 0 100px 0;
+  transition: padding 0.3s ease;
 }
 
-/* Header Info (Vol 1, Chapter 01...) */
+/* Header Info */
 .chapterHeader {
   text-align: center;
   margin-bottom: 3rem;
-  border-bottom: 1px solid var(--border-subtle); /* Optional separator */
+  border-bottom: 1px solid var(--border-subtle);
   padding-bottom: 1rem;
 }
 
@@ -115,43 +115,69 @@
 /* Text Content */
 .paragraph {
   margin-bottom: 1.2em;
-  text-align: justify;
 }
 
 .highlightedText {
-  background-color: rgba(59, 130, 246, 0.15); /* Màu xanh nhạt giống hình */
+  background-color: rgba(59, 130, 246, 0.15);
   border-left: 3px solid #3b82f6;
   padding: 0.5em 0.8em;
   border-radius: 0 4px 4px 0;
-  margin-left: -0.8em; /* Pull back slightly */
+  margin-left: -0.8em;
 }
 
 /* --- Right Sidebar (Settings & Navigation) --- */
 .rightSidebar {
-  width: 60px; /* Collapsed state / Icons only styled based on image buttons */
+  width: 60px;
   height: 100%;
-  background-color: var(--bg-panel);
+  background-color: var(--bg-panel); /* Panel settings luôn giữ màu sáng/xám nhẹ */
   border-left: 1px solid var(--border-subtle);
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 1rem 0;
-  gap: 1.5rem;
   z-index: 20;
   transition: width 0.3s ease;
+  overflow-x: hidden;
 }
 
 .rightSidebar.expanded {
-  width: 280px;
+  width: 320px; /* Mở rộng hơn chút để vừa các control */
   align-items: stretch;
-  padding: 1rem;
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+
+/* Header with Toggle Button */
+.rightSidebarHeader {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.rightSidebar.expanded .rightSidebarHeader {
+  justify-content: flex-end;
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: 1rem;
+}
+
+/* Navigation Group - Collapsed State */
+.navigationGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+  align-items: center;
+  margin-top: auto;
+  padding-bottom: 2rem;
 }
 
 .iconButton {
   background: transparent;
   border: none;
-  color: var(--text-secondary);
+  color: #555;
   cursor: pointer;
   padding: 10px;
   border-radius: 8px;
@@ -162,58 +188,168 @@
 }
 
 .iconButton:hover {
-  background-color: var(--bg-subtle);
-  color: var(--text-primary);
+  background-color: rgba(0,0,0,0.05);
+}
+
+/* --- Expanded Settings Panel --- */
+.settingsPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  opacity: 0;
+  animation: fadeIn 0.3s forwards;
+  color: #333; /* Chữ trong panel luôn màu tối để dễ đọc trên nền panel */
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
 }
 
 .settingGroup {
-  padding: 1rem 0;
-  border-bottom: 1px dashed var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .settingLabel {
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  color: var(--text-secondary);
-  margin-bottom: 0.5rem;
-  font-weight: 600;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #333;
 }
 
-.themeGrid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+/* 1. Background Colors Grid */
+.colorGrid {
+  display: flex;
   gap: 8px;
+  flex-wrap: wrap;
 }
 
-.themeBtn {
-  height: 32px;
-  border-radius: 4px;
-  border: 1px solid var(--border-subtle);
+.colorSwatch {
+  width: 36px;
+  height: 36px;
+  border-radius: 4px; /* Hình vuông hơi bo góc như hình */
   cursor: pointer;
+  border: 1px solid #ddd;
+  position: relative;
 }
 
-/* Toggle Buttons (Floating triggers) */
+.colorSwatch.active {
+  border: 2px solid #20b2aa; /* Màu xanh ngọc của viền active */
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.5) inset;
+}
+
+/* 2. Font Select */
+.fontSelect {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: white;
+  font-size: 0.95rem;
+  color: #333;
+  cursor: pointer;
+  outline: none;
+}
+.fontSelect:focus {
+  border-color: #20b2aa;
+}
+
+/* 3. Steppers (Size & Margin) */
+.stepperControl {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+  overflow: hidden;
+  height: 40px;
+}
+
+.stepperBtn {
+  width: 40px;
+  height: 100%;
+  border: none;
+  background: transparent;
+  color: #20b2aa; /* Màu mũi tên xanh */
+  font-weight: bold;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.stepperBtn:hover {
+  background-color: #eee;
+}
+
+.stepperValue {
+  flex: 1;
+  text-align: center;
+  font-size: 0.95rem;
+  color: #666;
+  border-left: 1px solid #eee;
+  border-right: 1px solid #eee;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+}
+
+/* 4. Align Grid */
+.alignGrid {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.alignBtn {
+  flex: 1;
+  height: 40px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #333;
+  border-bottom: 2px solid transparent; /* Để tránh nhảy layout khi active */
+}
+
+.alignBtn:hover {
+  background-color: rgba(0,0,0,0.05);
+}
+
+.alignBtn.active {
+  border: 2px solid #20b2aa; /* Viền hộp active */
+  border-radius: 4px;
+  background-color: rgba(32, 178, 170, 0.05);
+}
+
+/* Toggle Buttons (Left Sidebar) */
 .toggleLeftBtn {
-position: absolute;
+  position: absolute;
   top: 50%;
-  left: 0;
-  transform: translateY(-50%); /* Kỹ thuật căn giữa dọc chuẩn */
-  z-index: 80; /* Cao hơn nội dung text nhưng thấp hơn sidebar khi mở */
-  
-  /* Styling giống Manga Reader */
+  transform: translateY(-50%);
+  z-index: 80;
   background-color: var(--bg-panel);
   border: 1px solid var(--border-subtle);
-  border-left: none; /* Bỏ viền trái để tạo cảm giác gắn liền màn hình */
-  border-radius: 0 8px 8px 0; /* Bo tròn góc phải */
-  
+  border-left: none;
+  border-radius: 0 8px 8px 0;
   width: 24px;
-  height: 64px; /* Dài hơn một chút để dễ bấm trên mobile */
-  
+  height: 64px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 2px 0 5px rgba(0,0,0,0.1); /* Đổ bóng nhẹ sang phải */
+  box-shadow: 2px 0 5px rgba(0,0,0,0.1);
   color: var(--text-secondary);
-  transition: all 0.2s ease;
+  left: 0;
+  transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.toggleLeftBtn.open {
+  left: 300px;
+  border-left: 1px solid var(--border-subtle);
 }

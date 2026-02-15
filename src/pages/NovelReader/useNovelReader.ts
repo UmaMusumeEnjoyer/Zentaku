@@ -4,35 +4,75 @@ import type { ChapterContent, NovelMetadata, UseLightNovelReaderReturn, ViewSett
 // Mock Data để hiển thị giống hình ảnh
 const MOCK_NOVEL: NovelMetadata = {
   id: '1',
-  title: 'Gimai Seikatsu',
-  coverImage: 'https://placehold.co/400x600/png', 
-  author: 'Mikawa Ghost',
-  illustrator: 'Hiten',
-  synopsis: 'Sau khi bố tái hôn, Asamura Yuuta có thêm một cô em gái mới...',
-  tags: ['Romance', 'School Life', 'Slice of Life'],
+  title: 'Chưa thấy quan tày là chưa nể độ',
+  coverImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSw5KvitHQou2tpnp1SqULjQERMrXI95mAZsA&s', 
+  author: 'Unknown',
+  illustrator: 'N/A',
+  synopsis: 'Demo hiển thị văn bản dài...',
+  tags: ['Drama', 'Psychological', 'Slice of Life'],
   status: 'Ongoing',
-  totalVolumes: 10,
+  totalVolumes: 1,
   currentVolume: 1
 };
 
 const MOCK_CHAPTER: ChapterContent = {
   id: 'c1',
   volumeTitle: 'Vol 1',
-  chapterTitle: 'Chương 01 (Phần 2)',
-  commentCount: 53,
-  wordCount: 3935,
-  lastUpdated: '3 năm',
+  chapterTitle: 'Chương 01: Cuộc gọi định mệnh',
+  commentCount: 99,
+  wordCount: 1500,
+  lastUpdated: 'Vừa xong',
   paragraphs: [
-    { id: 'p1', text: '“C-Cậu đang nói cái quái gì thế!?” Tôi vô thức hét lên.', type: 'dialogue' },
-    { id: 'p2', text: 'Mặt khác, Airi lại nở nụ cười đắc thắng.', type: 'text' },
-    { id: 'p3', text: '“...Chúng ta cứ thử hôn xem. Nếu cậu không xem tớ là một người phụ nữ thì... sẽ không sao đâu ha?”', type: 'dialogue', isHighlighted: true },
-    { id: 'p4', text: '“...Cái logic quái gì thế?”', type: 'dialogue' },
-    { id: 'p5', text: 'Chẳng phải là hôn ai đó vì thích người đó sao? Lí do của Airi thì hoàn toàn trái ngược với điều đó.', type: 'thought' },
-    { id: 'p6', text: '“Tớ nói là ‘hôn’, nhưng cũng chỉ là chạm môi nhau thôi mà, phải chứ? Nếu không có tình cảm với người kia, thì cậu có thể làm vậy một cách máy móc mà chẳng hề xấu hổ, đúng chứ?”', type: 'dialogue' },
-    { id: 'p7', text: '“K-Không, tớ không bảo chính xác là cậu sai... nhưng chắc chắn đó không phải việc cậu có thể làm một cách bình thường đâu... Cậu không nghĩ vậy sao?”', type: 'dialogue' },
-    { id: 'p8', text: 'Tôi chưa bao giờ hôn môi người khác.', type: 'thought' },
-    { id: 'p9', text: 'Theo như tôi biết thì Airi cũng thế.', type: 'thought' },
-    { id: 'p10', text: 'Quên tôi đi, với Airi, một cô gái, nụ hôn đầu sẽ là điều gì đó đặc biệt.', type: 'text' },
+    { 
+      id: 'p1', 
+      text: 'Alo em có phải X... không? Ui X... ơi em đừng có chối, thông tin về tên địa chỉ nhà, học trường gì, ở đâu, bố mẹ tên là gì anh có cả ở đây rồi.', 
+      type: 'dialogue' 
+    },
+    { 
+      id: 'p2', 
+      text: 'X... có cần anh đọc cho nghe một số thông tin không?... X ơi em còn trẻ quá, hơn con anh có mấy tuổi à, sao X... lại làm thế, còn cả tương lai đằng trước.', 
+      type: 'dialogue' 
+    },
+    { 
+      id: 'p3', 
+      text: 'X... thích anh cho người đến tận nhà nói chuyện với bố mẹ em đấy.', 
+      type: 'dialogue' 
+    },
+    { 
+      id: 'p4', 
+      text: 'Alo em có phải X... không? Ui X... ơi em đừng có chối, thông tin về tên địa chỉ nhà, học trường gì, ở đâu, bố mẹ tên là gì anh có cả ở đây rồi. X... có cần anh đọc cho nghe một số thông tin không?...', 
+      type: 'text' 
+    },
+    { 
+      id: 'p5', 
+      text: 'X ơi em còn trẻ quá, hơn con anh có mấy tuổi à, sao X... lại làm thế, còn cả tương lai đằng trước, X... thích anh cho người đến tận nhà nói chuyện với bố mẹ em đấy.', 
+      type: 'text' 
+    },
+    { 
+      id: 'p6', 
+      text: 'Alo em có phải X... không? Ui X... ơi em đừng có chối, thông tin về tên địa chỉ nhà, học trường gì, ở đâu, bố mẹ tên là gì anh có cả ở đây rồi.', 
+      type: 'dialogue' 
+    },
+    { 
+      id: 'p7', 
+      text: 'X... có cần anh đọc cho nghe một số thông tin không?... X ơi em còn trẻ quá, hơn con anh có mấy tuổi à, sao X... lại làm thế, còn cả tương lai đằng trước.', 
+      type: 'dialogue' 
+    },
+    { 
+      id: 'p8', 
+      text: 'X... thích anh cho người đến tận nhà nói chuyện với bố mẹ em đấy.', 
+      type: 'dialogue' 
+    },
+    { 
+      id: 'p9', 
+      text: 'Thật sự đấy X... à, đừng để mọi chuyện đi quá xa. Anh chỉ muốn tốt cho em thôi.', 
+      type: 'thought' 
+    },
+    { 
+      id: 'p10', 
+      text: 'Alo em có phải X... không? Ui X... ơi em đừng có chối, thông tin về tên địa chỉ nhà, học trường gì, ở đâu, bố mẹ tên là gì anh có cả ở đây rồi. X... có cần anh đọc cho nghe một số thông tin không?...X ơi em còn trẻ quá, hơn con anh có mấy tuổi à, sao X... lại làm thế, còn cả tương lai đằng trước, X... thích anh cho người đến tận nhà nói chuyện với bố mẹ em đấy.', 
+      type: 'text' 
+    },
   ]
 };
 
@@ -43,13 +83,15 @@ export const useLightNovelReader = (): UseLightNovelReaderReturn => {
   const [error, setError] = useState<string | null>(null);
 
   const [isLeftSidebarOpen, setIsLeftSidebarOpen] = useState<boolean>(false);
-  const [isRightSidebarOpen, setIsRightSidebarOpen] = useState<boolean>(true); // Mặc định mở setting như yêu cầu "thanh setting bên phải"
+  const [isRightSidebarOpen, setIsRightSidebarOpen] = useState<boolean>(false); // Mặc định mở setting
 
   const [viewSettings, setViewSettings] = useState<ViewSettings>({
     fontSize: 18,
-    fontFamily: 'serif',
+    fontFamily: 'Times New Roman',
     lineHeight: 1.8,
-    theme: 'sepia' // Theme giống hình
+    theme: 'cream', 
+    paddingX: 0,
+    textAlign: 'justify'
   });
 
   useEffect(() => {

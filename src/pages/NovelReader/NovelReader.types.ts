@@ -28,9 +28,11 @@ export interface ChapterContent {
 
 export interface ViewSettings {
   fontSize: number;
-  fontFamily: 'serif' | 'sans-serif';
+  fontFamily: string; // Thay đổi từ 'serif' | 'sans-serif'
   lineHeight: number;
-  theme: 'light' | 'dark' | 'sepia';
+  theme: 'white' | 'mint' | 'blue' | 'cream' | 'beige' | 'pink' | 'dark' | 'black';
+  paddingX?: number; // Thêm property mới
+  textAlign?: 'left' | 'center' | 'right' | 'justify'; // Thêm property mới
 }
 
 export interface UseLightNovelReaderReturn {

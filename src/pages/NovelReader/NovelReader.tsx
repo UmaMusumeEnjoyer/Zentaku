@@ -1,10 +1,23 @@
 import React from 'react';
 import styles from './NovelReader.module.css';
 import { useLightNovelReader } from './useNovelReader';
-// Giả định import Skeleton từ bước 3
 import LightNovelReaderSkeleton from './NovelReaderSkeleton';
-// Icons (Sử dụng lucid-react hoặc fontawesome giả định)
-import { BookOpen, Settings, ChevronLeft, ChevronRight, Type, Home, MessageSquare } from 'lucide-react';
+import { 
+  BookOpen, ChevronLeft, ChevronRight, Type, 
+  AlignLeft, AlignCenter, AlignRight, AlignJustify 
+} from 'lucide-react';
+
+// Danh sách màu nền theo hình
+const THEME_COLORS = [
+  { id: 'white' as const, hex: '#ffffff' },
+  { id: 'mint' as const, hex: '#e8f5e9' },
+  { id: 'blue' as const, hex: '#e3f2fd' },
+  { id: 'cream' as const, hex: '#fff8e1' },
+  { id: 'beige' as const, hex: '#f5f5dc' },
+  { id: 'pink' as const, hex: '#fce4ec' },
+  { id: 'dark' as const, hex: '#212121' },
+  { id: 'black' as const, hex: '#000000' },
+] as const;
 
 export const LightNovelReader: React.FC = () => {
   const {
@@ -23,20 +36,35 @@ export const LightNovelReader: React.FC = () => {
   if (isLoading) return <LightNovelReaderSkeleton />;
   if (error) return <div className={styles.error}>{error}</div>;
 
-  // Inline styles for dynamic view settings
+  // Xử lý background color riêng vì container bao trùm
+  const activeThemeColor = THEME_COLORS.find(c => c.id === viewSettings.theme)?.hex || '#ffffff';
+  const isDarkMode = viewSettings.theme === 'dark' || viewSettings.theme === 'black';
+
   const dynamicStyles = {
     fontSize: `${viewSettings.fontSize}px`,
-    fontFamily: viewSettings.fontFamily === 'serif' ? '"Merriweather", serif' : '"Inter", sans-serif',
-    lineHeight: viewSettings.lineHeight,
+    fontFamily: viewSettings.fontFamily,
+    // Bản lề (Margin) -> Padding trái/phải
+    paddingLeft: `${viewSettings.paddingX || 0}px`,
+    paddingRight: `${viewSettings.paddingX || 0}px`,
+    // Kiểu căn chỉnh
+    textAlign: viewSettings.textAlign || 'justify',
+    lineHeight: viewSettings.lineHeight || 1.6,
+  } as React.CSSProperties;
+
+  const containerStyle = {
+    backgroundColor: activeThemeColor,
+    color: isDarkMode ? '#e0e0e0' : '#2d2d2d',
+    '--bg-panel': isDarkMode ? '#333' : '#f5f5f5',
+    '--border-subtle': isDarkMode ? '#555' : '#ddd',
+    '--text-secondary': isDarkMode ? '#aaa' : '#666',
   } as React.CSSProperties;
 
   return (
-    <div className={styles.container}>
-      {/* --- Left Sidebar (Novel Info) --- */}
+    <div className={styles.container} style={containerStyle}>
+      {/* Left Sidebar */}
       <aside className={`${styles.leftSidebar} ${!isLeftSidebarOpen ? styles.hidden : ''}`}>
          {novelData && (
            <div className={styles.sidebarContent}>
-             <button onClick={toggleLeftSidebar} style={{marginBottom: '10px'}}>×</button>
              <img src={novelData.coverImage} alt={novelData.title} className={styles.coverImage} />
              <h2 className={styles.novelTitle}>{novelData.title}</h2>
              <div className={styles.metaList}>
@@ -51,14 +79,14 @@ export const LightNovelReader: React.FC = () => {
          )}
       </aside>
 
-      {/* --- Toggle Button for Left Sidebar --- */}
-      {!isLeftSidebarOpen && (
-        <button className={styles.toggleLeftBtn} onClick={toggleLeftSidebar}>
-          <BookOpen size={20} />
-        </button>
-      )}
+      <button 
+        className={`${styles.toggleLeftBtn} ${isLeftSidebarOpen ? styles.open : ''}`} 
+        onClick={toggleLeftSidebar}
+      >
+        {isLeftSidebarOpen ? <ChevronLeft size={20} /> : <BookOpen size={20} />}
+      </button>
 
-      {/* --- Main Reader Area --- */}
+      {/* Main Reader */}
       <main className={styles.readerArea}>
         <div className={styles.contentWrapper} style={dynamicStyles}>
           {chapterData && (
@@ -88,61 +116,128 @@ export const LightNovelReader: React.FC = () => {
         </div>
       </main>
 
-      {/* --- Right Sidebar (Settings & Tools) --- */}
+      {/* Right Sidebar */}
       <aside className={`${styles.rightSidebar} ${isRightSidebarOpen ? styles.expanded : ''}`}>
-        <button className={styles.iconButton} onClick={toggleRightSidebar}>
-          {isRightSidebarOpen ? '×' : <Settings size={20} />}
-        </button>
+        
+        <div className={styles.rightSidebarHeader}>
+            <button 
+              className={styles.iconButton} 
+              onClick={toggleRightSidebar}
+              title={isRightSidebarOpen ? "Close Settings" : "Open Settings"}
+              style={isRightSidebarOpen ? {backgroundColor: '#ddd', color: '#000'} : {}}
+            >
+              {isRightSidebarOpen ? '×' : <Type size={20} />}
+            </button>
+        </div>
 
-        {isRightSidebarOpen ? (
-          <div style={{width: '100%'}}>
-             {/* Navigation Controls */}
-             <div className={styles.settingGroup}>
-               <div className={styles.settingLabel}>Navigation</div>
-               <div style={{display: 'flex', gap: '10px'}}>
-                 <button className={styles.iconButton} style={{flex:1, border: '1px solid var(--border-subtle)'}}>
-                    <ChevronLeft size={16}/> Prev
-                 </button>
-                 <button className={styles.iconButton} style={{flex:1, border: '1px solid var(--border-subtle)'}}>
-                    Next <ChevronRight size={16}/>
-                 </button>
-               </div>
-             </div>
-
-             {/* Font Controls */}
-             <div className={styles.settingGroup}>
-                <div className={styles.settingLabel}>Appearance</div>
-                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px'}}>
-                   <button onClick={() => updateSettings({fontSize: viewSettings.fontSize - 1})}>A-</button>
-                   <span>{viewSettings.fontSize}px</span>
-                   <button onClick={() => updateSettings({fontSize: viewSettings.fontSize + 1})}>A+</button>
-                </div>
-                <div className={styles.themeGrid}>
-                   <button 
-                    className={styles.themeBtn} 
-                    style={{background: '#ffffff'}} 
-                    onClick={() => updateSettings({theme: 'light'})}
-                   />
-                   <button 
-                    className={styles.themeBtn} 
-                    style={{background: '#f4ecd8'}} // Sepia/Beige
-                    onClick={() => updateSettings({theme: 'sepia'})}
-                   />
-                   <button 
-                    className={styles.themeBtn} 
-                    style={{background: '#1a1a1a'}} 
-                    onClick={() => updateSettings({theme: 'dark'})}
-                   />
-                </div>
-             </div>
+        {!isRightSidebarOpen && (
+          <div className={styles.navigationGroup}>
+              <button className={styles.iconButton} title="Previous Chapter">
+                  <ChevronLeft size={20} />
+              </button>
+              <button className={styles.iconButton} title="Next Chapter">
+                  <ChevronRight size={20} />
+              </button>
           </div>
-        ) : (
-          /* Collapsed Icons Mode (Simulating the floating buttons in image) */
-          <>
-            <button className={styles.iconButton}><Home size={20} /></button>
-            <button className={styles.iconButton}><Type size={20} /></button>
-            <button className={styles.iconButton}><MessageSquare size={20} /></button>
-          </>
+        )}
+
+        {isRightSidebarOpen && (
+          <div className={styles.settingsPanel}>
+             
+             {/* 1. Màu nền */}
+             <div className={styles.settingGroup}>
+                <label className={styles.settingLabel}>Màu nền</label>
+                <div className={styles.colorGrid}>
+                  {THEME_COLORS.map((color) => (
+                    <div 
+                      key={color.id}
+                      className={`${styles.colorSwatch} ${viewSettings.theme === color.id ? styles.active : ''}`}
+                      style={{ backgroundColor: color.hex }}
+                      onClick={() => updateSettings({ theme: color.id })}
+                    />
+                  ))}
+                </div>
+             </div>
+
+             {/* 2. Font chữ */}
+             <div className={styles.settingGroup}>
+                <label className={styles.settingLabel}>Font chữ</label>
+                <select 
+                  className={styles.fontSelect} 
+                  value={viewSettings.fontFamily}
+                  onChange={(e) => updateSettings({ fontFamily: e.target.value })}
+                >
+                  <option value="Times New Roman">Times New Roman</option>
+                  <option value="Arial">Arial</option>
+                  <option value="Inter">Inter</option>
+                  <option value="Merriweather">Merriweather</option>
+                </select>
+             </div>
+
+             {/* 3. Kích cỡ chữ */}
+             <div className={styles.settingGroup}>
+                <label className={styles.settingLabel}>Kích cỡ chữ</label>
+                <div className={styles.stepperControl}>
+                  <button 
+                    className={styles.stepperBtn} 
+                    onClick={() => updateSettings({ fontSize: Math.max(12, viewSettings.fontSize - 1) })}
+                  >‹</button>
+                  <div className={styles.stepperValue}>{viewSettings.fontSize}px</div>
+                  <button 
+                    className={styles.stepperBtn} 
+                    onClick={() => updateSettings({ fontSize: Math.min(32, viewSettings.fontSize + 1) })}
+                  >›</button>
+                </div>
+             </div>
+
+             {/* 4. Bản lề (Margin/Padding) */}
+             <div className={styles.settingGroup}>
+                <label className={styles.settingLabel}>Bản lề</label>
+                <div className={styles.stepperControl}>
+                  <button 
+                    className={styles.stepperBtn} 
+                    onClick={() => updateSettings({ paddingX: Math.max(0, (viewSettings.paddingX || 0) - 10) })}
+                  >‹</button>
+                  <div className={styles.stepperValue}>{viewSettings.paddingX || 0}px</div>
+                  <button 
+                    className={styles.stepperBtn} 
+                    onClick={() => updateSettings({ paddingX: Math.min(200, (viewSettings.paddingX || 0) + 10) })}
+                  >›</button>
+                </div>
+             </div>
+
+             {/* 5. Kiểu căn chỉnh */}
+             <div className={styles.settingGroup}>
+                <label className={styles.settingLabel}>Kiểu căn chỉnh</label>
+                <div className={styles.alignGrid}>
+                   <button 
+                     className={`${styles.alignBtn} ${(viewSettings.textAlign === 'left') ? styles.active : ''}`}
+                     onClick={() => updateSettings({ textAlign: 'left' })}
+                   >
+                     <AlignLeft size={20} />
+                   </button>
+                   <button 
+                     className={`${styles.alignBtn} ${(viewSettings.textAlign === 'center') ? styles.active : ''}`}
+                     onClick={() => updateSettings({ textAlign: 'center' })}
+                   >
+                     <AlignCenter size={20} />
+                   </button>
+                   <button 
+                     className={`${styles.alignBtn} ${(viewSettings.textAlign === 'right') ? styles.active : ''}`}
+                     onClick={() => updateSettings({ textAlign: 'right' })}
+                   >
+                     <AlignRight size={20} />
+                   </button>
+                   <button 
+                     className={`${styles.alignBtn} ${(viewSettings.textAlign === 'justify' || !viewSettings.textAlign) ? styles.active : ''}`}
+                     onClick={() => updateSettings({ textAlign: 'justify' })}
+                   >
+                     <AlignJustify size={20} />
+                   </button>
+                </div>
+             </div>
+
+          </div>
         )}
       </aside>
     </div>
