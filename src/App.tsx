@@ -21,6 +21,7 @@ import AnimeSchedule from './pages/ScheduleDashboard/Schedule';
 import WatchAlongPage from './pages/WatchAlong/WatchAlong';
 import MangaReader from './pages/MangaReader/MangaReader';
 import { LightNovelReader } from './pages/NovelReader/NovelReader';
+import ChatMessenger from './pages/ChatApp/ChatApp';
 
 // Xác định API base URL dựa trên environment
 const isDevelopment = import.meta.env.DEV;
@@ -108,6 +109,7 @@ function App() {
               <Route path="/watch-along" element={<WatchAlongPage />} />
               <Route path="/manga-reader" element={<MangaReader />} />
               <Route path="/novel-reader" element={<LightNovelReader />} />
+              <Route path="/chat" element={<ChatMessenger />} />
             </Routes>
           </main>
         </AuthProvider>
