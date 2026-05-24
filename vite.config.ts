@@ -9,6 +9,9 @@ export default defineConfig(({ mode }) => {
     plugins: [react()],
     server: {
       host: true,
+      allowedHosts: [
+      'dry-scalping-surgical.ngrok-free.dev'
+    ],
       proxy: {
         '/api': {
           target: env.VITE_BACKEND_DOMAIN,

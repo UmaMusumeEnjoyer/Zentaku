@@ -19,17 +19,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   // Hàm refresh token thủ công
   const refreshAccessToken = async () => {
     try {
-      const refreshToken = localStorage.getItem('refreshToken');
-      if (!refreshToken) return;
-
-      const response = await authService.refreshToken(refreshToken);
-      const newAccessToken = response.data.access;
-      const newRefreshToken = response.data.refresh;
+      const response = await authService.refreshToken();
+      const newAccessToken = response.data.accessToken;
 
       localStorage.setItem('authToken', newAccessToken);
-      if (newRefreshToken) {
-        localStorage.setItem('refreshToken', newRefreshToken);
-      }
 
       console.log('Token refreshed successfully');
     } catch (error) {
