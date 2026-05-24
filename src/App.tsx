@@ -16,7 +16,7 @@ import AnimeSearchPage from './pages/AnimeSearch/AnimeSearchPage';
 import AnimeListSearchPage from './pages/AnimeListSearch/AnimeListSearchPage';
 import ProfilePage from './pages/ProfilePage/ProfilePage';
 import AnimeListPage from './pages/AnimeListPage/AnimeListPage';
-import AnimeWatchPage from './pages/AnimeWatchPage-temp/WatchPage';
+import AnimeWatchPage from './pages/AnimeWatchPage/WatchPage';
 import AnimeSchedule from './pages/ScheduleDashboard/Schedule';
 import WatchAlongPage from './pages/WatchAlong/WatchAlong';
 import MangaReader from './pages/MangaReader/MangaReader';

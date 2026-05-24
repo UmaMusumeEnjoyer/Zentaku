@@ -1,10 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import type { Episode, Server } from './WatchPage.types';
-import { animeService } from '@umamusumeenjoyer/shared-logic'; // ✅ Import service
-
-// Cấu hình API Backend
-const BACKEND_URL = 'http://localhost:5000/api';
+import { animeService, streamingService } from '@umamusumeenjoyer/shared-logic';
 
 interface StreamData {
   videoUrl: string;
@@ -13,30 +10,25 @@ interface StreamData {
 }
 
 export const useWatchPage = () => {
-  // Lấy ID từ URL
   const { id: paramId } = useParams<{ id: string }>(); 
   
-  // ✅ State quản lý dữ liệu THẬT từ AniList
   const [animeData, setAnimeData] = useState<any>(null);
   const [episodes, setEpisodes] = useState<Episode[]>([]);
   const [currentEpisode, setCurrentEpisode] = useState<Episode | null>(null);
   
-  // State cho player
   const [streamData, setStreamData] = useState<StreamData | null>(null);
   const [loadingStream, setLoadingStream] = useState<boolean>(false);
   
-  // State chung
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [activeServerId, setActiveServerId] = useState<string>('hd-1');
 
-  // Danh sách server
+  // Currently Zentaku_BE will probably return the best streams based on internal logic.
+  // The server list here might become dynamic later if the API returns multiple servers.
   const servers: Server[] = [
-    { id: 'hd-1', name: 'Vidstreaming (HD-1)', type: 'sub' },
-    { id: 'hd-2', name: 'Vidcloud (HD-2)', type: 'sub' },
+    { id: 'hd-1', name: 'Zentaku Server (Auto)', type: 'sub' },
   ];
 
-  // ✅ 1. Fetch ANIME DETAIL + EPISODES song song
   useEffect(() => {
     if (!paramId) {
         setError("Không tìm thấy ID Anime");
@@ -51,36 +43,31 @@ export const useWatchPage = () => {
       try {
         console.log(`Fetching data for AniList ID: ${paramId}`);
         
-        // ✅ Gọi song song 2 API: anime detail + episodes
         const [animeRes, episodesRes] = await Promise.all([
-          animeService.getById(paramId),  // Lấy thông tin chi tiết anime
-          fetch(`${BACKEND_URL}/anime/${paramId}/episodes`).then(res => {
-            if (!res.ok) throw new Error('Failed to fetch episodes');
-            return res.json();
-          })
+          animeService.getById(paramId),
+          streamingService.getEpisodes(paramId)
         ]);
 
-        // ✅ Set anime data THẬT từ AniList
         setAnimeData(animeRes.data);
 
-        // Map episodes từ provider
-        let mappedEpisodes: Episode[] = episodesRes.episodes.map((ep: any) => ({
-          id: ep.episodeId,
+        // Map episodes from Zentaku_BE format to UI format
+        const rawEpisodes = Array.isArray(episodesRes.data) ? episodesRes.data : episodesRes.data?.episodes || [];
+        
+        let mappedEpisodes: Episode[] = rawEpisodes.map((ep: any) => ({
+          id: ep.id || ep.episodeId || String(ep.number),
           number: ep.number,
-          title: ep.title,
-          thumbnail: '', 
+          title: ep.title || `Tập ${ep.number}`,
+          thumbnail: ep.thumbnail || '', 
           videoUrl: ''
         }));
 
-        // Sắp xếp tập phim theo thứ tự tăng dần
         mappedEpisodes = mappedEpisodes.sort((a, b) => a.number - b.number);
         setEpisodes(mappedEpisodes);
 
-        // Tự động chọn tập đầu tiên
         if (mappedEpisodes.length > 0) {
           setCurrentEpisode(mappedEpisodes[0]);
         } else {
-            setError("Anime này chưa có tập nào.");
+          setError("Anime này chưa có tập nào.");
         }
 
       } catch (err: any) {
@@ -94,7 +81,6 @@ export const useWatchPage = () => {
     fetchInitialData();
   }, [paramId]);
 
-  // 2. Fetch Link Stream khi đổi tập/server
   useEffect(() => {
     if (!currentEpisode || !paramId) return;
 
@@ -102,17 +88,20 @@ export const useWatchPage = () => {
       setLoadingStream(true);
       setStreamData(null);
       try {
-        const url = `${BACKEND_URL}/anime/episode-src?id=${currentEpisode.id}&server=${activeServerId}&category=sub`;
-        const res = await fetch(url);
+        const res = await streamingService.getEpisodeSources(paramId, currentEpisode.number);
+        const data = res.data;
         
-        if (!res.ok) throw new Error('Không lấy được nguồn phát');
-        
-        const data = await res.json();
-        
+        // Flexible mapping to handle unknown BE schema
+        const videoUrl = data.video || (data.sources && data.sources[0]?.url) || '';
+        const subUrl = data.sub || (data.subtitles && data.subtitles.find((s: any) => s.lang?.toLowerCase() === 'english')?.url) || null;
+        const referer = data.referer || data.headers?.Referer || null;
+
+        if (!videoUrl) throw new Error('Không tìm thấy link video.');
+
         setStreamData({
-          videoUrl: data.video,
-          subUrl: data.sub,
-          referer: data.referer
+          videoUrl,
+          subUrl,
+          referer
         });
 
       } catch (err) {
