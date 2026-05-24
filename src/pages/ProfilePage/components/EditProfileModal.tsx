@@ -78,40 +78,51 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
 
             {/* FORM FIELDS */}
             <div className={styles.formGroup}>
-              <label className={styles.formLabel}>{t('fields.first_name.label')}</label>
+              <label className={styles.formLabel}>{t('fields.displayName.label')}</label>
               <input 
                 type="text" 
-                name="first_name" 
+                name="displayName" 
                 className={styles.formInput}
-                value={formData.first_name}
+                value={formData.displayName}
                 onChange={handleChange}
+                placeholder="Your display name"
               />
             </div>
 
             <div className={styles.formGroup}>
-              <label className={styles.formLabel}>{t('fields.last_name.label')}</label>
-              <input 
-                type="text" 
-                name="last_name" 
-                className={styles.formInput}
-                value={formData.last_name}
-                onChange={handleChange}
+              <label className={styles.formLabel}>{t('fields.bio.label')}</label>
+              <textarea 
+                name="bio" 
+                className={`${styles.formInput} ${styles.formTextarea}`}
+                value={formData.bio}
+                onChange={(e: any) => handleChange(e)}
+                placeholder="Tell us about yourself"
+                rows={4}
               />
             </div>
 
             <div className={styles.formGroup}>
-              <label className={styles.formLabel}>{t('fields.username.label')}</label>
+              <label className={styles.formLabel}>{t('fields.location.label')}</label>
               <input 
                 type="text" 
-                name="username" 
+                name="location" 
                 className={styles.formInput}
-                value={formData.username}
+                value={formData.location}
                 onChange={handleChange}
-                required
+                placeholder="Your location"
               />
-              <div className={styles.usernameHint}>
-                {t('fields.username.hint')}
-              </div>
+            </div>
+
+            <div className={styles.formGroup}>
+              <label className={styles.formLabel}>{t('fields.website.label')}</label>
+              <input 
+                type="text" 
+                name="website" 
+                className={styles.formInput}
+                value={formData.website}
+                onChange={handleChange}
+                placeholder="https://yourwebsite.com"
+              />
             </div>
           </div>
 

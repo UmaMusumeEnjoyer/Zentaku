@@ -2,7 +2,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from './Header.module.css';
-import GlobalSearchModal from '../GlobalSearch/GlobalSearch';
 import { useTheme } from '../../context/ThemeContext';
 import { useAuth } from '../../context/AuthContext';
 import { useTranslation } from 'react-i18next';
@@ -49,13 +48,10 @@ const Header: React.FC = () => {
   // Logic: Noti, Search, Dropdown, Settings
   const {
     isDropdownOpen,
-    isSearchModalOpen,
     isNotiModalOpen,
     isSettingsModalOpen,
     notifications,
     toggleDropdown,
-    openSearchModal,
-    closeSearchModal,
     closeNotificationModal,
     openSettingsModal,
     closeSettingsModal,
@@ -128,17 +124,6 @@ const Header: React.FC = () => {
              </div>
           ) : isAuthenticated ? (
             <>
-              <button
-                className={styles.btnSearch}
-                aria-label={t('Header:accessibility.search')}
-                onClick={openSearchModal}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="11" cy="11" r="8"></circle>
-                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                </svg>
-              </button>
-            
               <div className={styles.userMenuContainer}
                    onMouseEnter={handleMouseEnter} // Di chuột vào vùng này (gồm cả ảnh và menu) thì mở
                 onMouseLeave={handleMouseLeave}
@@ -201,8 +186,6 @@ const Header: React.FC = () => {
           )}
         </div>
       </header>
-
-      <GlobalSearchModal isOpen={isSearchModalOpen} onClose={closeSearchModal} />
 
       {/* Notification Modal */}
       {isNotiModalOpen && (
