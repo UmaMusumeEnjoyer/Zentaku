@@ -60,7 +60,7 @@ const SummarySection: React.FC<SummarySectionProps> = ({ anime, hasBanner }) => 
       <div className={sectionClass}>
         <div className={styles.summaryLeft}>
           <img 
-            src={anime.cover_image} 
+            src={anime.coverImage?.large || anime.coverImage || anime.cover_image} 
             alt="Cover" 
             className={styles.summaryCover} 
           />
@@ -74,7 +74,7 @@ const SummarySection: React.FC<SummarySectionProps> = ({ anime, hasBanner }) => 
         </div>
 
         <div className={styles.summaryRight}>
-          <h1 className={styles.animeTitleMain}>{anime.name_romaji}</h1>
+          <h1 className={styles.animeTitleMain}>{anime.title?.romaji || anime.name_romaji}</h1>
           
           {/* Description Block */}
           <div 

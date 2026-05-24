@@ -48,11 +48,11 @@ const InfoSidebar: React.FC<InfoSidebarProps> = ({ anime }) => {
       {/* Các thông tin cơ bản */}
       <InfoBlock 
         label={t('AnimeDetail:sidebar.format')} 
-        value={anime.airing_format} 
+        value={anime.format || anime.airing_format} 
       />
       <InfoBlock 
         label={t('AnimeDetail:sidebar.episodes')} 
-        value={anime.airing_episodes} 
+        value={anime.episodes || anime.airing_episodes} 
       />
       <InfoBlock 
         label={t('AnimeDetail:sidebar.episode_duration')} 
@@ -60,31 +60,31 @@ const InfoSidebar: React.FC<InfoSidebarProps> = ({ anime }) => {
       />
       <InfoBlock 
         label={t('AnimeDetail:sidebar.status')} 
-        value={anime.airing_status?.replace(/_/g, ' ')} 
+        value={(anime.status || anime.airing_status)?.replace(/_/g, ' ')} 
       />
       
       {/* Ngày tháng */}
       <InfoBlock 
         label={t('AnimeDetail:sidebar.start_date')} 
-        value={formatDateByLanguage(anime.starting_time)} 
+        value={formatDateByLanguage(anime.startDate || anime.starting_time)} 
       />
       <InfoBlock 
         label={t('AnimeDetail:sidebar.end_date')} 
-        value={formatDateByLanguage(anime.ending_time)} 
+        value={formatDateByLanguage(anime.endDate || anime.ending_time)} 
       />
       
       {/* Thông tin mùa và điểm số */}
       <InfoBlock 
         label={t('AnimeDetail:sidebar.season')} 
-        value={anime.season && anime.season_year ? `${anime.season} ${anime.season_year}` : null} 
+        value={anime.season && (anime.seasonYear || anime.season_year) ? `${anime.season} ${anime.seasonYear || anime.season_year}` : null} 
       />
       <InfoBlock 
         label={t('AnimeDetail:sidebar.average_score')} 
-        value={anime.average_score ? `${anime.average_score}%` : null} 
+        value={(anime.score || anime.average_score) ? `${(anime.score || anime.average_score)}%` : null} 
       />
       <InfoBlock 
         label={t('AnimeDetail:sidebar.mean_score')} 
-        value={anime.mean_score ? `${anime.mean_score}%` : null} 
+        value={(anime.meanScore || anime.mean_score) ? `${(anime.meanScore || anime.mean_score)}%` : null} 
       />
       
       {/* Số liệu thống kê */}
@@ -114,11 +114,11 @@ const InfoSidebar: React.FC<InfoSidebarProps> = ({ anime }) => {
       />
       <InfoBlock 
         label={t('AnimeDetail:sidebar.native_title')} 
-        value={anime.name_native} 
+        value={anime.title?.native || anime.name_native} 
       />
       <InfoBlock 
         label={t('AnimeDetail:sidebar.english_title')} 
-        value={anime.name_english} 
+        value={anime.title?.english || anime.name_english} 
       />
     </aside>
   );

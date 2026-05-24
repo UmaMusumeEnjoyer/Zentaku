@@ -9,23 +9,26 @@ interface CharacterCardProps {
   character: Character;
 }
 
-const CharacterCard: React.FC<CharacterCardProps> = ({ character }) => {
-  const voiceActor = character.voice_actors?.[0];
+const CharacterCard: React.FC<CharacterCardProps> = ({ character: edge }) => {
+  const node = (edge as any).node || edge;
+  const role = (edge as any).role || node.role;
+  const voiceActors = (edge as any).voiceActors || node.voiceActors || node.voice_actors;
+  const voiceActor = voiceActors?.[0];
 
   return (
     // 2. Sử dụng class từ module
     <div className={styles.characterCard}>
       {/* Link Character */}
-      <Link to={`/character/${character.id}`} className={styles.cardLink}>
+      <Link to={`/character/${node.id}`} className={styles.cardLink}>
         <div className={styles.personInfo}>
           <img 
-            src={character.image} 
-            alt={character.name_full} 
+            src={node.image?.large || node.image || node.image_url} 
+            alt={node.name?.full || node.name_full} 
             className={styles.personAvatar} 
           />
           <div className={styles.personDetails}>
-            <p className={styles.personName}>{character.name_full}</p>
-            <p className={styles.personRole}>{character.role}</p>
+            <p className={styles.personName}>{node.name?.full || node.name_full}</p>
+            <p className={styles.personRole}>{role}</p>
           </div>
         </div>
       </Link>
@@ -35,12 +38,12 @@ const CharacterCard: React.FC<CharacterCardProps> = ({ character }) => {
         <Link to={`/staff/${voiceActor.id}`} className={`${styles.cardLink} ${styles.vaPart}`}>
           <div className={`${styles.personInfo} ${styles.vaInfo}`}>
             <div className={`${styles.personDetails} ${styles.vaDetails}`}>
-              <p className={styles.personName}>{voiceActor.name_full}</p>
-              <p className={styles.personRole}>{voiceActor.language}</p>
+              <p className={styles.personName}>{voiceActor.name?.full || voiceActor.name_full}</p>
+              <p className={styles.personRole}>{voiceActor.languageV2 || voiceActor.language}</p>
             </div>
             <img 
-              src={voiceActor.image} 
-              alt={voiceActor.name_full} 
+              src={voiceActor.image?.large || voiceActor.image || voiceActor.image_url} 
+              alt={voiceActor.name?.full || voiceActor.name_full} 
               className={styles.personAvatar} 
             />
           </div>  

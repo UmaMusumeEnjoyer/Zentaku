@@ -15,8 +15,8 @@ const EditorModalHeader: React.FC<EditorModalHeaderProps> = ({
       <button className={styles.btnClose} onClick={onClose}>×</button>
       
       <div className={styles.headerInfo}>
-        <img src={anime.cover_image} alt="thumb" className={styles.thumb} />
-        <span className={styles.animeTitle}>{anime.name_romaji}</span>
+        <img src={anime.coverImage?.large || anime.coverImage || anime.cover_image} alt="thumb" className={styles.thumb} />
+        <span className={styles.animeTitle}>{anime.title?.romaji || anime.name_romaji}</span>
       </div>
       
       <div className={styles.headerActions}>

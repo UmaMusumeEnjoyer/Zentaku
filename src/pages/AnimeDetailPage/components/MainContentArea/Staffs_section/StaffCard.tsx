@@ -5,10 +5,13 @@ import type { StaffCardProps } from '@umamusumeenjoyer/shared-logic';
 // 1. Import CSS Module
 import styles from './StaffCard.module.css';
 
-const StaffCard: React.FC<StaffCardProps> = ({ staffMember }) => {
+const StaffCard: React.FC<StaffCardProps> = ({ staffMember: edge }) => {
   const { t } = useTranslation(['StaffSection', 'common']);
+  
+  const node = (edge as any).node || edge;
+  const role = (edge as any).role || node.role;
 
-  const hasDefaultImage = staffMember.image?.includes('default.jpg');
+  const hasDefaultImage = node.image?.large?.includes('default.jpg') || node.image?.includes('default.jpg') || node.image_url?.includes('default.jpg');
   
   return (
     // 2. Sử dụng class từ module
@@ -19,14 +22,14 @@ const StaffCard: React.FC<StaffCardProps> = ({ staffMember }) => {
         </div>
       ) : (
         <img 
-          src={staffMember.image} 
-          alt={staffMember.name_full} 
+          src={node.image?.large || node.image || node.image_url} 
+          alt={node.name?.full || node.name_full} 
           className={styles.staffAvatar} 
         />
       )}
       <div className={styles.staffDetails}>
-        <p className={styles.staffName}>{staffMember.name_full}</p>
-        <p className={styles.staffRole}>{staffMember.role}</p>
+        <p className={styles.staffName}>{node.name?.full || node.name_full}</p>
+        <p className={styles.staffRole}>{role}</p>
       </div>
     </div>
   );

@@ -101,21 +101,21 @@ const StaffPage: React.FC = () => {
                 <div className={styles.leftColumn}>
                     <img 
                         src={staff.image} 
-                        alt={staff.name_full} 
+                        alt={staff.name?.full || staff.name_full} 
                         className={styles.staffImage} 
                     />
                 </div>
 
                 {/* Cột phải: Thông tin chi tiết */}
                 <div className={styles.rightColumn}>
-                    <h1 className={styles.staffName}>{staff.name_full}</h1>
-                    <p className={styles.nativeName}>{staff.name_native}</p>
+                    <h1 className={styles.staffName}>{staff.name?.full || staff.name_full}</h1>
+                    <p className={styles.nativeName}>{staff.name?.native || staff.name_native}</p>
                     
                     <div className={styles.infoGrid}>
-                        <p><strong>{t('info.birth')}:</strong> {formatDateByLanguage(staff.date_of_birth)}</p>
+                        <p><strong>{t('info.birth')}:</strong> {formatDateByLanguage(staff.dateOfBirth || staff.date_of_birth)}</p>
                         <p><strong>{t('info.age')}:</strong> {staff.age || t('info.not_available')}</p>
                         <p><strong>{t('info.gender')}:</strong> {staff.gender || t('info.not_available')}</p>
-                        <p><strong>{t('info.hometown')}:</strong> {staff.home_town || t('info.not_available')}</p>
+                        <p><strong>{t('info.hometown')}:</strong> {staff.homeTown || staff.home_town || t('info.not_available')}</p>
                     </div>
                     
                     {/* Phần mô tả có tính năng Show More/Less */}
@@ -145,12 +145,12 @@ const StaffPage: React.FC = () => {
                                 >
                                     <div className={styles.roleCard}>
                                         <img 
-                                            src={role.cover_image} 
-                                            alt={role.title_romaji} 
+                                            src={role.coverImage?.large || role.coverImage || role.cover_image} 
+                                            alt={role.title?.romaji || role.title_romaji} 
                                             className={styles.roleImage} 
                                         />
                                         <div className={styles.roleDetails}>
-                                            <p className={styles.roleMainText}>{role.title_romaji}</p>
+                                            <p className={styles.roleMainText}>{role.title?.romaji || role.title_romaji}</p>
                                             <p className={styles.roleSubText}>{role.format}</p>
                                         </div>
                                     </div>

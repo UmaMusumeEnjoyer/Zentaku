@@ -16,10 +16,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ animeData, animeId }) => {
 
   const anime = useMemo(() => ({
     id: animeId || animeData?.id,
-    cover_image: animeData?.cover_image,
-    name_romaji: animeData?.name_romaji,
+    cover_image: animeData?.coverImage?.large || animeData?.coverImage || animeData?.cover_image,
+    name_romaji: animeData?.title?.romaji || animeData?.name_romaji,
     desc: animeData?.desc
-  }), [animeId, animeData?.id, animeData?.cover_image, animeData?.name_romaji, animeData?.desc]);
+  }), [animeId, animeData?.id, animeData?.coverImage, animeData?.cover_image, animeData?.title, animeData?.name_romaji, animeData?.desc]);
 
   const {
     isModalOpen,
@@ -41,15 +41,15 @@ export const Sidebar: React.FC<SidebarProps> = ({ animeData, animeId }) => {
     return t('AnimeModal:status_options.default') || 'Add to List';
   }, [isLoadingStatus, isFollowing, watchStatus, t]);
 
-  const totalEpisodes = animeData?.airing_episodes || 0;
+  const totalEpisodes = animeData?.episodes || animeData?.airing_episodes || 0;
   const releasedEpisodes = totalEpisodes;
   const watchedEpisodes = currentStatusData?.episode_progress || 0;
 
   const releasedPercent = totalEpisodes > 0 ? (releasedEpisodes / totalEpisodes) * 100 : 0;
   const watchedPercent = totalEpisodes > 0 ? (watchedEpisodes / totalEpisodes) * 100 : 0;
 
-  const season = animeData?.season && animeData?.season_year 
-    ? `${animeData.season} ${animeData.season_year}` 
+  const season = animeData?.season && (animeData?.seasonYear || animeData?.season_year) 
+    ? `${animeData.season} ${animeData.seasonYear || animeData.season_year}` 
     : 'Unknown';
   
   const studio = animeData?.studios && animeData.studios.length > 0 
@@ -68,13 +68,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ animeData, animeId }) => {
         <div className={styles.sidebarCard}>
           <div className={styles.posterWrapper}>
             <img
-              src={animeData.cover_image}
-              alt={animeData.name_romaji}
+              src={animeData.coverImage?.large || animeData.coverImage || animeData.cover_image}
+              alt={animeData.title?.romaji || animeData.name_romaji}
               className={styles.posterImg}
             />
           </div>
 
-          <h2 className={styles.animeTitleSidebar}>{animeData.name_romaji}</h2>
+          <h2 className={styles.animeTitleSidebar}>{animeData.title?.romaji || animeData.name_romaji}</h2>
 
           <div className={styles.metaInfo}>
               <div className={styles.metaItem}>
@@ -87,11 +87,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ animeData, animeId }) => {
               </div>
               <div className={styles.metaItem}>
                   <span className={styles.metaLabel}>Status:</span>
-                  <span className={styles.metaValue}>{animeData.airing_status || 'Unknown'}</span>
+                  <span className={styles.metaValue}>{animeData.status || animeData.airing_status || 'Unknown'}</span>
               </div>
               <div className={styles.metaItem}>
                   <span className={styles.metaLabel}>Format:</span>
-                  <span className={styles.metaValue}>{animeData.airing_format || 'Unknown'}</span>
+                  <span className={styles.metaValue}>{animeData.format || animeData.airing_format || 'Unknown'}</span>
               </div>
           </div>
 

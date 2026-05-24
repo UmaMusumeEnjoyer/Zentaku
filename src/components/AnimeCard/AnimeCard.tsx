@@ -40,7 +40,7 @@ const AnimeCard: React.FC<AnimeCardProps> = ({ anime }) => {
       {/* 4. Xóa class logic theo theme, chỉ dùng class gốc từ module */}
       <div className={styles['anime-card']} title={title}>
         <img 
-          src={anime.cover_image} 
+          src={anime.coverImage?.large || anime.coverImage || anime.cover_image} 
           alt={title} 
           className={styles['anime-poster']} 
           loading="lazy"
