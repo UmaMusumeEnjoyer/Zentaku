@@ -5,7 +5,7 @@ import styles from './Header.module.css';
 import { useTheme } from '../../context/ThemeContext';
 import { useAuth } from '../../context/AuthContext';
 import { useTranslation } from 'react-i18next';
-import { useHeader } from '@umamusumeenjoyer/shared-logic';
+import { useHeader, userService } from '@umamusumeenjoyer/shared-logic';
 // Import hook logic hoạt hình mới tạo
 import { useHeaderAnimation } from './useHeaderAnimation';
 
@@ -21,6 +21,34 @@ const Header: React.FC = () => {
   // 1. Hook xử lý UI Animation (Local ViewModel)
   // Logic: Ẩn/Hiện khi scroll + Trong suốt ở trang chỉ định
   const { isVisible, isTransparent, animationHandlers } = useHeaderAnimation();
+
+  // Notification Preferences State
+  const [emailNoti, setEmailNoti] = React.useState(true);
+  const [pushNoti, setPushNoti] = React.useState(true);
+
+  const handleToggleEmail = async () => {
+    const newVal = !emailNoti;
+    setEmailNoti(newVal);
+    if (isAuthenticated) {
+      try {
+        await userService.updatePreferences({ notificationSettings: { email: newVal, push: pushNoti } });
+      } catch (err) {
+        console.error('Failed to update email preferences', err);
+      }
+    }
+  };
+
+  const handleTogglePush = async () => {
+    const newVal = !pushNoti;
+    setPushNoti(newVal);
+    if (isAuthenticated) {
+      try {
+        await userService.updatePreferences({ notificationSettings: { email: emailNoti, push: newVal } });
+      } catch (err) {
+        console.error('Failed to update push preferences', err);
+      }
+    }
+  };
 
   const avatarUrl = React.useMemo(() => {
     if (!user?.avatar_url) return DEFAULT_AVATAR;
@@ -48,11 +76,7 @@ const Header: React.FC = () => {
   // Logic: Noti, Search, Dropdown, Settings
   const {
     isDropdownOpen,
-    isNotiModalOpen,
-    isSettingsModalOpen,
-    notifications,
     toggleDropdown,
-    closeNotificationModal,
     openSettingsModal,
     closeSettingsModal,
     formatDateTime,
@@ -187,54 +211,6 @@ const Header: React.FC = () => {
         </div>
       </header>
 
-      {/* Notification Modal */}
-      {isNotiModalOpen && (
-        <div className={styles.notiModalOverlay} onClick={closeNotificationModal}>
-          <div className={styles.notiModalContent} data-theme={theme} onClick={(e) => e.stopPropagation()}>
-            <div className={styles.notiHeader}>
-              <h3>{t('Header:notifications.title')}</h3>
-              <button className={styles.btnCloseNoti} onClick={closeNotificationModal}>
-                &times;
-              </button>
-            </div>
-            <div className={styles.notiList}>
-              {notifications.length > 0 ? (
-                notifications.map((noti) => (
-                  <div key={noti.notification_id} className={styles.notiItem}>
-                    <div className={styles.notiIcon}>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--btn-primary-bg)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-                        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-                      </svg>
-                    </div>
-                    <div className={styles.notiInfo}>
-                      <p className={styles.notiText}>
-                        <strong>{t('Header:notifications.episode')} {noti.episode_number}</strong>
-                        <span className={styles.animeTitleHighlight}>
-                          {noti.anime_title || `${t('Header:notifications.anime_id')}: ${noti.anilist_id}`}
-                        </span>
-                      </p>
-                      <div className={styles.notiMetaRow}>
-                        <span className={styles.notiTime}>{t('Header:notifications.sent')}: {formatDateTime(noti.sent_at)}</span>
-                        <span className={`${styles.notiCountdown} ${getRelativeTime(noti.airing_at) === 'Aired' ? styles.aired : ''}`}>
-                          <svg style={{ marginRight: '4px', marginBottom: '-1px' }} xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <polyline points="12 6 12 12 16 14"></polyline>
-                          </svg>
-                          {renderRelativeTime(getRelativeTime(noti.airing_at))}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <p className={styles.notiEmpty}>{t('Header:notifications.empty')}</p>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* Settings Modal */}
       {isSettingsModalOpen && (
         <div className={styles.settingsModalOverlay} onClick={closeSettingsModal}>
@@ -299,6 +275,34 @@ const Header: React.FC = () => {
                   >
                     <span className={styles.languageFlag}>🇯🇵</span>
                     <span>{t('Header:settings.language.japanese')}</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Notifications Section */}
+              <div className={styles.settingsSection}>
+                <h4 className={styles.settingsSectionTitle}>{t('Header:notifications.title')}</h4>
+                <p className={styles.settingsSectionDescription}>{t('Header:notifications.description')}</p>
+                <div className={styles.settingsOptions}>
+                  <button
+                    className={`${styles.settingsOptionBtn} ${emailNoti ? styles.active : ''}`}
+                    onClick={handleToggleEmail}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                      <polyline points="22,6 12,13 2,6"></polyline>
+                    </svg>
+                    <span>{t('Header:notifications.email')}</span>
+                  </button>
+                  <button
+                    className={`${styles.settingsOptionBtn} ${pushNoti ? styles.active : ''}`}
+                    onClick={handleTogglePush}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                      <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                    </svg>
+                    <span>{t('Header:notifications.push')}</span>
                   </button>
                 </div>
               </div>
