@@ -43,7 +43,8 @@ const ProfilePage: React.FC = () => {
     favoriteList, favLoading,
     showEditModal, setShowEditModal, handleUpdateSuccess,
     showCreateModal, setShowCreateModal, newListData, creating,
-    handleCreateListSubmit, handleNewListInputChange
+    handleCreateListSubmit, handleNewListInputChange,
+    followers, following, isFollowing, socialLoading, toggleFollow
   } = useProfilePage(username, {
     onNavigateToList: (listId) => navigate(`/list/${listId}`),
     onNavigateToUserProfile: (newUsername) => { }
@@ -83,12 +84,20 @@ const ProfilePage: React.FC = () => {
                   <span className={styles.profileUsername}>{userProfile?.username || targetUsername}</span>
                 </div>
 
-                {(isOwnProfile || userProfile?.is_own_profile) && (
+                {(isOwnProfile || userProfile?.is_own_profile) ? (
                   <button
                     className={styles.btnEditProfile}
                     onClick={() => setShowEditModal(true)}
                   >
                     {t('sidebar.edit_profile')}
+                  </button>
+                ) : (
+                  <button
+                    className={styles.btnEditProfile} // Tạm thời dùng style nút này, có thể tùy chỉnh sau
+                    style={{ backgroundColor: isFollowing ? '#5c5c5c' : 'var(--primary-color)' }}
+                    onClick={toggleFollow}
+                  >
+                    {isFollowing ? 'Hủy theo dõi' : 'Theo dõi'}
                   </button>
                 )}
 
@@ -253,6 +262,53 @@ const ProfilePage: React.FC = () => {
                         <AnimeCard anime={anime} />
                       </div>
                     ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* --- TAB: SOCIAL --- */}
+            {activeTab === 'Social' && (
+              <div className={styles.favoritesContainer}>
+                <div className={styles.sectionHeader}>
+                  <h2 className={styles.sectionTitle}>Mạng lưới kết nối</h2>
+                </div>
+
+                {socialLoading ? (
+                  <SectionTitleSkeleton width={300} />
+                ) : (
+                  <div style={{ display: 'flex', gap: '40px', flexWrap: 'wrap' }}>
+                    {/* Followers Column */}
+                    <div style={{ flex: '1 1 300px' }}>
+                      <h3 style={{ marginBottom: '15px', color: 'var(--text-secondary)' }}>
+                        Người theo dõi ({followers.length})
+                      </h3>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        {followers.map((f: any) => (
+                          <div key={f.id} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px', backgroundColor: 'var(--bg-secondary)', borderRadius: '8px' }}>
+                            <img src={f.avatarUrl || 'https://i.pravatar.cc/150'} alt="avatar" style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }} />
+                            <span style={{ fontWeight: 'bold' }}>{f.username || f.name}</span>
+                          </div>
+                        ))}
+                        {followers.length === 0 && <div className={styles.emptyText}>Chưa có người theo dõi nào.</div>}
+                      </div>
+                    </div>
+
+                    {/* Following Column */}
+                    <div style={{ flex: '1 1 300px' }}>
+                      <h3 style={{ marginBottom: '15px', color: 'var(--text-secondary)' }}>
+                        Đang theo dõi ({following.length})
+                      </h3>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        {following.map((f: any) => (
+                          <div key={f.id} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px', backgroundColor: 'var(--bg-secondary)', borderRadius: '8px' }}>
+                            <img src={f.avatarUrl || 'https://i.pravatar.cc/150'} alt="avatar" style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }} />
+                            <span style={{ fontWeight: 'bold' }}>{f.username || f.name}</span>
+                          </div>
+                        ))}
+                        {following.length === 0 && <div className={styles.emptyText}>Chưa theo dõi ai.</div>}
+                      </div>
+                    </div>
                   </div>
                 )}
               </div>
