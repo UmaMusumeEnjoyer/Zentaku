@@ -48,7 +48,7 @@ initSharedLogic({
 // Component để render trang home dựa trên trạng thái đăng nhập
 const HomeRoute = () => {
   const { user, isInitializing } = useAuth();
-  const hasToken = localStorage.getItem('authToken');
+  const hasToken = localStorage.getItem('accessToken');
   if (isInitializing) {
     return (
       <div >

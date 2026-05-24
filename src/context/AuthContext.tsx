@@ -22,7 +22,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const response = await authService.refreshToken();
       const newAccessToken = response.data.accessToken;
 
-      localStorage.setItem('authToken', newAccessToken);
+      localStorage.setItem('accessToken', newAccessToken);
 
       console.log('Token refreshed successfully');
     } catch (error) {
@@ -39,7 +39,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
     // Refresh mỗi 25 phút (trước khi token hết hạn)
     refreshTimerRef.current = window.setInterval(() => {
-      const token = localStorage.getItem('authToken');
+      const token = localStorage.getItem('accessToken');
       if (token) {
         refreshAccessToken();
       }
@@ -49,7 +49,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   // Khôi phục phiên đăng nhập khi F5
   useEffect(() => {
     const initAuth = async () => {
-      const token = localStorage.getItem('authToken');
+      const token = localStorage.getItem('accessToken');
       const username = localStorage.getItem('username');
 
       try{

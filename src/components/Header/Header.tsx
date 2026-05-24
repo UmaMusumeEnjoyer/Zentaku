@@ -30,7 +30,7 @@ const Header: React.FC = () => {
   }, [user?.avatar_url]);
 
   const isAuthenticated = !!user;
-  const hasToken = localStorage.getItem('authToken');
+  const hasToken = localStorage.getItem('accessToken');
   const isUserLoading = !user && hasToken;
 
   const handleMouseEnter = () => {
