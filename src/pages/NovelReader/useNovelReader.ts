@@ -1,89 +1,21 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { mediaService } from '@umamusumeenjoyer/shared-logic';
 import type { ChapterContent, NovelMetadata, UseLightNovelReaderReturn, ViewSettings } from './NovelReader.types';
 
-// Mock Data để hiển thị giống hình ảnh
-const MOCK_NOVEL: NovelMetadata = {
-  id: '1',
-  title: 'Chưa thấy quan tày là chưa nể độ',
-  coverImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSw5KvitHQou2tpnp1SqULjQERMrXI95mAZsA&s', 
-  author: 'Unknown',
-  illustrator: 'N/A',
-  synopsis: 'Demo hiển thị văn bản dài...',
-  tags: ['Drama', 'Psychological', 'Slice of Life'],
-  status: 'Ongoing',
-  totalVolumes: 1,
-  currentVolume: 1
-};
-
-const MOCK_CHAPTER: ChapterContent = {
-  id: 'c1',
-  volumeTitle: 'Vol 1',
-  chapterTitle: 'Chương 01: Cuộc gọi định mệnh',
-  commentCount: 99,
-  wordCount: 1500,
-  lastUpdated: 'Vừa xong',
-  paragraphs: [
-    { 
-      id: 'p1', 
-      text: 'Alo em có phải X... không? Ui X... ơi em đừng có chối, thông tin về tên địa chỉ nhà, học trường gì, ở đâu, bố mẹ tên là gì anh có cả ở đây rồi.', 
-      type: 'dialogue' 
-    },
-    { 
-      id: 'p2', 
-      text: 'X... có cần anh đọc cho nghe một số thông tin không?... X ơi em còn trẻ quá, hơn con anh có mấy tuổi à, sao X... lại làm thế, còn cả tương lai đằng trước.', 
-      type: 'dialogue' 
-    },
-    { 
-      id: 'p3', 
-      text: 'X... thích anh cho người đến tận nhà nói chuyện với bố mẹ em đấy.', 
-      type: 'dialogue' 
-    },
-    { 
-      id: 'p4', 
-      text: 'Alo em có phải X... không? Ui X... ơi em đừng có chối, thông tin về tên địa chỉ nhà, học trường gì, ở đâu, bố mẹ tên là gì anh có cả ở đây rồi. X... có cần anh đọc cho nghe một số thông tin không?...', 
-      type: 'text' 
-    },
-    { 
-      id: 'p5', 
-      text: 'X ơi em còn trẻ quá, hơn con anh có mấy tuổi à, sao X... lại làm thế, còn cả tương lai đằng trước, X... thích anh cho người đến tận nhà nói chuyện với bố mẹ em đấy.', 
-      type: 'text' 
-    },
-    { 
-      id: 'p6', 
-      text: 'Alo em có phải X... không? Ui X... ơi em đừng có chối, thông tin về tên địa chỉ nhà, học trường gì, ở đâu, bố mẹ tên là gì anh có cả ở đây rồi.', 
-      type: 'dialogue' 
-    },
-    { 
-      id: 'p7', 
-      text: 'X... có cần anh đọc cho nghe một số thông tin không?... X ơi em còn trẻ quá, hơn con anh có mấy tuổi à, sao X... lại làm thế, còn cả tương lai đằng trước.', 
-      type: 'dialogue' 
-    },
-    { 
-      id: 'p8', 
-      text: 'X... thích anh cho người đến tận nhà nói chuyện với bố mẹ em đấy.', 
-      type: 'dialogue' 
-    },
-    { 
-      id: 'p9', 
-      text: 'Thật sự đấy X... à, đừng để mọi chuyện đi quá xa. Anh chỉ muốn tốt cho em thôi.', 
-      type: 'thought' 
-    },
-    { 
-      id: 'p10', 
-      text: 'Alo em có phải X... không? Ui X... ơi em đừng có chối, thông tin về tên địa chỉ nhà, học trường gì, ở đâu, bố mẹ tên là gì anh có cả ở đây rồi. X... có cần anh đọc cho nghe một số thông tin không?...X ơi em còn trẻ quá, hơn con anh có mấy tuổi à, sao X... lại làm thế, còn cả tương lai đằng trước, X... thích anh cho người đến tận nhà nói chuyện với bố mẹ em đấy.', 
-      type: 'text' 
-    },
-  ]
-};
-
 export const useLightNovelReader = (): UseLightNovelReaderReturn => {
+  const { id: paramId, chapterId: paramChapterId } = useParams<{ id: string; chapterId?: string }>();
+  const navigate = useNavigate();
+
   const [novelData, setNovelData] = useState<NovelMetadata | null>(null);
+  const [chapterList, setChapterList] = useState<any[]>([]);
   const [chapterData, setChapterData] = useState<ChapterContent | null>(null);
+  
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   const [isLeftSidebarOpen, setIsLeftSidebarOpen] = useState<boolean>(false);
-  const [isRightSidebarOpen, setIsRightSidebarOpen] = useState<boolean>(false); // Mặc định mở setting
+  const [isRightSidebarOpen, setIsRightSidebarOpen] = useState<boolean>(false);
 
   const [viewSettings, setViewSettings] = useState<ViewSettings>({
     fontSize: 18,
@@ -94,22 +26,110 @@ export const useLightNovelReader = (): UseLightNovelReaderReturn => {
     textAlign: 'justify'
   });
 
+  // 1. Fetch Novel Details and Chapters
   useEffect(() => {
-    // Giả lập fetch data
-    const fetchData = async () => {
+    if (!paramId) {
+      setError('Novel ID is missing');
+      setIsLoading(false);
+      return;
+    }
+
+    const fetchNovelInfo = async () => {
       setIsLoading(true);
+      setError(null);
       try {
-        await new Promise(resolve => setTimeout(resolve, 800)); // Mock delay
-        setNovelData(MOCK_NOVEL);
-        setChapterData(MOCK_CHAPTER);
-      } catch (err) {
-        setError('Failed to load chapter');
+        const [detailsRes, chaptersRes] = await Promise.all([
+          mediaService.getNovelDetails(paramId),
+          mediaService.getNovelChapters(paramId)
+        ]);
+
+        const data = detailsRes.data;
+        setNovelData({
+          id: data.id || paramId,
+          title: data.title?.romaji || data.title?.english || 'Unknown Title',
+          coverImage: data.coverImage?.extraLarge || data.coverImage?.large || '',
+          author: data.staff?.edges?.find((e: any) => e.role?.toLowerCase().includes('story'))?.node?.name?.full || 'Unknown',
+          illustrator: data.staff?.edges?.find((e: any) => e.role?.toLowerCase().includes('art'))?.node?.name?.full || 'Unknown',
+          synopsis: data.description || 'No synopsis available.',
+          tags: data.genres || [],
+          status: data.status || 'Unknown',
+          totalVolumes: data.volumes || 1,
+          currentVolume: 1,
+        });
+
+        const chaps = Array.isArray(chaptersRes.data) ? chaptersRes.data : chaptersRes.data?.chapters || [];
+        setChapterList(chaps);
+
+        // Auto-navigate to first chapter if not specified
+        if (!paramChapterId && chaps.length > 0) {
+          const firstChapter = chaps[0];
+          navigate(`/novel/${paramId}/read/${firstChapter.id || firstChapter.number}`, { replace: true });
+        }
+
+      } catch (err: any) {
+        console.error('Failed to load novel info:', err);
+        setError(err.message || 'Failed to load novel info');
       } finally {
         setIsLoading(false);
       }
     };
-    fetchData();
-  }, []);
+
+    fetchNovelInfo();
+  }, [paramId, paramChapterId, navigate]);
+
+  // 2. Fetch Chapter Content when paramChapterId changes
+  useEffect(() => {
+    if (!paramId || !paramChapterId || chapterList.length === 0) return;
+
+    const fetchChapterContent = async () => {
+      setIsLoading(true);
+      try {
+        const contentRes = await mediaService.getNovelChapterContent(paramId, paramChapterId);
+        
+        const chInfo = chapterList.find((c: any) => String(c.id) === paramChapterId || String(c.number) === paramChapterId);
+        
+        const rawContent = contentRes.data?.content || contentRes.data?.text || contentRes.data || '';
+        
+        // Flexible parsing: if it's an array of paragraphs, use it, otherwise split by newline
+        let paragraphs: any[] = [];
+        if (Array.isArray(rawContent)) {
+          paragraphs = rawContent.map((p, i) => ({
+            id: p.id || `p${i}`,
+            text: p.text || (typeof p === 'string' ? p : ''),
+            type: p.type || 'text',
+          }));
+        } else if (typeof rawContent === 'string') {
+          paragraphs = rawContent.split('\n').filter(t => t.trim().length > 0).map((text, i) => {
+            // Very simple heuristic for dialogue
+            const isDialogue = text.trim().startsWith('"') || text.trim().startsWith('“') || text.trim().startsWith('-');
+            return {
+              id: `p${i}`,
+              text,
+              type: isDialogue ? 'dialogue' : 'text',
+            };
+          });
+        }
+
+        setChapterData({
+          id: String(chInfo?.id || paramChapterId),
+          volumeTitle: `Volume ${chInfo?.volume || 1}`,
+          chapterTitle: chInfo?.title || `Chapter ${chInfo?.number || paramChapterId}`,
+          commentCount: 0,
+          wordCount: paragraphs.reduce((acc, p) => acc + p.text.split(' ').length, 0),
+          lastUpdated: 'Recently',
+          paragraphs,
+        });
+
+      } catch (err: any) {
+        console.error('Failed to load chapter content:', err);
+        setError('Failed to load chapter content.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchChapterContent();
+  }, [paramId, paramChapterId, chapterList]);
 
   const toggleLeftSidebar = useCallback(() => setIsLeftSidebarOpen(prev => !prev), []);
   const toggleRightSidebar = useCallback(() => setIsRightSidebarOpen(prev => !prev), []);
@@ -119,9 +139,17 @@ export const useLightNovelReader = (): UseLightNovelReaderReturn => {
   }, []);
 
   const navigateChapter = useCallback((direction: 'next' | 'prev') => {
-    console.log(`Navigating ${direction}`);
-    // Logic fetch chapter mới sẽ ở đây
-  }, []);
+    if (!chapterList.length || !paramChapterId) return;
+    const currentIndex = chapterList.findIndex(c => String(c.id) === paramChapterId || String(c.number) === paramChapterId);
+    
+    if (direction === 'next' && currentIndex >= 0 && currentIndex < chapterList.length - 1) {
+      const nextCh = chapterList[currentIndex + 1];
+      navigate(`/novel/${paramId}/read/${nextCh.id || nextCh.number}`);
+    } else if (direction === 'prev' && currentIndex > 0) {
+      const prevCh = chapterList[currentIndex - 1];
+      navigate(`/novel/${paramId}/read/${prevCh.id || prevCh.number}`);
+    }
+  }, [chapterList, paramChapterId, paramId, navigate]);
 
   return {
     novelData,

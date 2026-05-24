@@ -16,7 +16,7 @@ const MangaReader: React.FC = () => {
     settings,
     currentPage,
     actions 
-  } = useMangaReader('ch-116');
+  } = useMangaReader();
 
   const readerAreaRef = useRef<HTMLDivElement>(null);
   const itemsRef = useRef<Array<HTMLImageElement | null>>([]);

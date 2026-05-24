@@ -1,49 +1,18 @@
 import { useState, useEffect, useCallback } from 'react';
-import type{ UseMangaReaderReturn, ChapterInfo, MangaPage, ReaderSettings, MangaDetailsPlaceholder } from './MangaReader.types';
+import { useParams, useNavigate } from 'react-router-dom';
+import { mediaService } from '@umamusumeenjoyer/shared-logic';
+import type { UseMangaReaderReturn, ChapterInfo, MangaPage, ReaderSettings, MangaDetailsPlaceholder } from './MangaReader.types';
 
-const MOCK_MANGA_DETAILS: MangaDetailsPlaceholder = {
-  id: 'manga-1',
-  title: 'Chưa tày đâu em',
-  coverImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmrwTvm7P0VehBV9Dwe0rAAtugA90C8r3x_g&s',
-  season: 'Winter 2025',
-  studio: 'MAPPA',
-  status: 'Releasing',
-  format: 'Manga',
-  genres: ['Action', 'Fantasy', 'Supernatural', 'Historical'],
-  description: 'In a world where "talents" can be derived from past lives...',
-  totalChapters: 120,
-  readChapters: 116,
-};
+export const useMangaReader = (): UseMangaReaderReturn => {
+  const { id: paramId, chapterId: paramChapterId } = useParams<{ id: string; chapterId?: string }>();
+  const navigate = useNavigate();
 
-// SỬA ĐỔI TẠI ĐÂY: Logic chẵn/lẻ cho URL
-const MOCK_PAGES: MangaPage[] = Array.from({ length: 10 }).map((_, index) => {
-  const pageNumber = index + 1;
-  const isOdd = pageNumber % 2 !== 0;
-
-  return {
-    id: `page-${index}`,
-    // Nếu là trang lẻ -> dùng link cũ
-    // Nếu là trang chẵn -> dùng link placeholder mới (màu xám)
-    url: isOdd 
-      ? 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmrwTvm7P0VehBV9Dwe0rAAtugA90C8r3x_g&s'
-      : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQLei_ChHG0-sbNfee7zrultlliVp5DMcRf6A&s', 
-    pageNumber: pageNumber,
-  };
-});
-
-const MOCK_CHAPTER: ChapterInfo = {
-  id: 'ch-116',
-  title: 'Tày',
-  mangaTitle: 'Chưa tày đâu em',
-  chapterNumber: 'Chapter 116',
-  uploader: 'PeppaMaster',
-  groupName: 'Fandom of the Greats',
-  commentCount: 10,
-};
-
-export const useMangaReader = (chapterId: string): UseMangaReaderReturn => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  
+  const [mangaDetails, setMangaDetails] = useState<MangaDetailsPlaceholder | null>(null);
+  const [chapterList, setChapterList] = useState<any[]>([]);
+  
   const [chapterInfo, setChapterInfo] = useState<ChapterInfo | null>(null);
   const [pages, setPages] = useState<MangaPage[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -59,22 +28,102 @@ export const useMangaReader = (chapterId: string): UseMangaReaderReturn => {
     isFullScreen: false, 
   });
 
+  // 1. Fetch Manga Details and Chapters
   useEffect(() => {
-    const fetchData = async () => {
+    if (!paramId) {
+      setError('Manga ID is missing');
+      setIsLoading(false);
+      return;
+    }
+
+    const fetchMangaInfo = async () => {
       setIsLoading(true);
+      setError(null);
       try {
-        await new Promise((resolve) => setTimeout(resolve, 800));
-        setChapterInfo(MOCK_CHAPTER);
-        setPages(MOCK_PAGES);
-        setCurrentPage(1);
-      } catch (err) {
-        setError('Failed to load data.');
+        const [detailsRes, chaptersRes] = await Promise.all([
+          mediaService.getMangaDetails(paramId),
+          mediaService.getMangaChapters(paramId)
+        ]);
+
+        const data = detailsRes.data;
+        const mappedDetails: MangaDetailsPlaceholder = {
+          id: data.id || paramId,
+          title: data.title?.romaji || data.title?.english || 'Unknown Title',
+          coverImage: data.coverImage?.extraLarge || data.coverImage?.large || '',
+          season: data.season || 'Unknown',
+          studio: data.studios?.edges?.[0]?.node?.name || 'Unknown',
+          status: data.status || 'Unknown',
+          format: data.format || 'Manga',
+          genres: data.genres || [],
+          description: data.description || 'No description available.',
+          totalChapters: data.chapters || 0,
+          readChapters: 0,
+        };
+        setMangaDetails(mappedDetails);
+
+        const chaps = Array.isArray(chaptersRes.data) ? chaptersRes.data : chaptersRes.data?.chapters || [];
+        setChapterList(chaps);
+
+        // If no chapterId is specified in the URL, and there are chapters, auto-navigate to the first one
+        if (!paramChapterId && chaps.length > 0) {
+          const firstChapter = chaps[0];
+          navigate(`/manga/${paramId}/read/${firstChapter.id || firstChapter.number}`, { replace: true });
+        }
+
+      } catch (err: any) {
+        console.error('Failed to load manga info:', err);
+        setError(err.message || 'Failed to load manga info');
       } finally {
         setIsLoading(false);
       }
     };
-    fetchData();
-  }, [chapterId]);
+    
+    fetchMangaInfo();
+  }, [paramId, paramChapterId, navigate]);
+
+  // 2. Fetch Chapter Pages when paramChapterId changes
+  useEffect(() => {
+    if (!paramId || !paramChapterId || chapterList.length === 0) return;
+
+    const fetchPages = async () => {
+      setIsLoading(true);
+      try {
+        const pagesRes = await mediaService.getMangaChapterPages(paramId, paramChapterId);
+        
+        // Find chapter info from the list
+        const chInfo = chapterList.find((c: any) => String(c.id) === paramChapterId || String(c.number) === paramChapterId);
+        if (chInfo) {
+          setChapterInfo({
+            id: String(chInfo.id || paramChapterId),
+            title: chInfo.title || `Chapter ${chInfo.number}`,
+            mangaTitle: mangaDetails?.title || '',
+            chapterNumber: `Chapter ${chInfo.number}`,
+            uploader: 'Zentaku',
+            groupName: 'Unknown',
+            commentCount: 0,
+          });
+        }
+
+        const rawPages = Array.isArray(pagesRes.data) ? pagesRes.data : pagesRes.data?.pages || pagesRes.data?.images || [];
+        
+        const mappedPages: MangaPage[] = rawPages.map((p: any, index: number) => ({
+          id: p.id || `page-${index}`,
+          url: p.url || p.image || p.link || (typeof p === 'string' ? p : ''),
+          pageNumber: index + 1,
+        }));
+        
+        setPages(mappedPages);
+        setCurrentPage(1);
+
+      } catch (err: any) {
+        console.error('Failed to load pages:', err);
+        setError('Failed to load chapter pages.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchPages();
+  }, [paramId, paramChapterId, chapterList, mangaDetails]);
 
   const toggleRightSidebar = useCallback(() => {
     setSettings(prev => ({ ...prev, isRightSidebarOpen: !prev.isRightSidebarOpen }));
@@ -95,18 +144,32 @@ export const useMangaReader = (chapterId: string): UseMangaReaderReturn => {
   }, [pages.length]);
 
   const nextChapter = useCallback(() => {
-    console.log('Next chapter');
-  }, []);
+    if (!chapterList.length || !paramChapterId) return;
+    const currentIndex = chapterList.findIndex(c => String(c.id) === paramChapterId || String(c.number) === paramChapterId);
+    if (currentIndex >= 0 && currentIndex < chapterList.length - 1) {
+      const nextCh = chapterList[currentIndex + 1];
+      navigate(`/manga/${paramId}/read/${nextCh.id || nextCh.number}`);
+    } else {
+      console.log('Already at the last chapter');
+    }
+  }, [chapterList, paramChapterId, paramId, navigate]);
 
   const prevChapter = useCallback(() => {
-    console.log('Previous chapter');
-  }, []);
+    if (!chapterList.length || !paramChapterId) return;
+    const currentIndex = chapterList.findIndex(c => String(c.id) === paramChapterId || String(c.number) === paramChapterId);
+    if (currentIndex > 0) {
+      const prevCh = chapterList[currentIndex - 1];
+      navigate(`/manga/${paramId}/read/${prevCh.id || prevCh.number}`);
+    } else {
+      console.log('Already at the first chapter');
+    }
+  }, [chapterList, paramChapterId, paramId, navigate]);
 
   return {
     isLoading,
     error,
     chapterInfo,
-    mangaDetails: MOCK_MANGA_DETAILS,
+    mangaDetails: mangaDetails || ({} as MangaDetailsPlaceholder),
     pages,
     settings,
     currentPage,
