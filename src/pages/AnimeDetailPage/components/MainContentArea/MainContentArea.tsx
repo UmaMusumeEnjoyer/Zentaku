@@ -27,7 +27,9 @@ interface TrailerInfo {
 
 interface Anime_mainContentArea {
   id: number | string;
-  trailer?: TrailerInfo;
+  trailer?: TrailerInfo | string;
+  trailerUrl?: string;
+  trailer_url?: string;
 }
 
 // CẬP NHẬT: Thêm stats vào props interface
@@ -44,7 +46,7 @@ interface SectionProps {
 }
 
 interface TrailerProps {
-  trailerInfo?: TrailerInfo;
+  trailerData?: any;
 }
 
 // ------------------- Helper Components -------------------
@@ -56,15 +58,41 @@ const Section: React.FC<SectionProps> = ({ title, children }) => (
   </section>
 );
 
-const Trailer: React.FC<TrailerProps> = ({ trailerInfo }) => {
+const Trailer: React.FC<TrailerProps> = ({ trailerData }) => {
   const { t } = useTranslation(['MainContentArea']);
 
-  if (!trailerInfo || !trailerInfo.id || trailerInfo.site !== 'youtube') {
+  let embedUrl = '';
+
+  if (trailerData) {
+    const youtubeBaseUrl = import.meta.env.VITE_YOUTUBE_EMBED_URL || 'https://www.youtube.com/embed';
+    
+    // Nếu trailerData là Object có cấu trúc { id, site: 'youtube' }
+    if (typeof trailerData === 'object' && trailerData.id && trailerData.site === 'youtube') {
+      embedUrl = `${youtubeBaseUrl}/${trailerData.id}`;
+    } 
+    // Nếu trailerData là chuỗi URL YouTube
+    else if (typeof trailerData === 'string') {
+      let videoId = '';
+      if (trailerData.includes('youtube.com/watch?v=')) {
+        try {
+          const url = new URL(trailerData);
+          videoId = url.searchParams.get('v') || '';
+        } catch (e) {
+          // ignore parsing error
+        }
+      } else if (trailerData.includes('youtu.be/')) {
+        videoId = trailerData.split('youtu.be/')[1]?.split('?')[0] || '';
+      }
+      
+      if (videoId) {
+        embedUrl = `${youtubeBaseUrl}/${videoId}`;
+      }
+    }
+  }
+
+  if (!embedUrl) {
     return <p>{t('MainContentArea:trailer.no_data')}</p>;
   }
-  
-  const youtubeBaseUrl = import.meta.env.VITE_YOUTUBE_EMBED_URL;
-  const embedUrl = `${youtubeBaseUrl}/${trailerInfo.id}`;
   
   return (
     <div className={styles.trailerContainer}>
@@ -115,16 +143,16 @@ const MainContentArea: React.FC<MainContentAreaProps> = ({
       {/* Distribution Sections - Dữ liệu từ stats prop */}
       <div className={styles.distributionContainer}>
         <Section title={t('MainContentArea:sections.status_distribution')}>
-          <StatusDistribution distribution={(stats?.status_distribution as StatusItem[]) || []} />
+          <StatusDistribution distribution={(stats?.stats?.statusDistribution || stats?.statusDistribution || stats?.status_distribution) as StatusItem[] || []} />
         </Section>
         <Section title={t('MainContentArea:sections.score_distribution')}>
-          <ScoreDistribution distribution={(stats?.score_distribution as ScoreItem[]) || []} />
+          <ScoreDistribution distribution={(stats?.stats?.scoreDistribution || stats?.scoreDistribution || stats?.score_distribution) as ScoreItem[] || []} />
         </Section>
       </div>
       
       {/* Trailer Section */}
       <Section title={t('MainContentArea:sections.trailer')}>
-        <Trailer trailerInfo={anime.trailer} />
+        <Trailer trailerData={anime.trailer || anime.trailerUrl || anime.trailer_url} />
       </Section>
     </main>
   );
