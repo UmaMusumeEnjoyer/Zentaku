@@ -19,7 +19,6 @@ import {
   ProfileBannerSkeleton,
   AnimeListsSkeleton,
   FavoritesSkeleton,
-  ActivityHistorySkeleton, // <--- Import mới
   ActivityFeedSkeleton,
   SectionTitleSkeleton
 } from './ProfileSkeletons'; // Điều chỉnh path nếu cần
@@ -47,7 +46,7 @@ const ProfilePage: React.FC = () => {
     followers, following, isFollowing, socialLoading, toggleFollow
   } = useProfilePage(username, {
     onNavigateToList: (listId) => navigate(`/list/${listId}`),
-    onNavigateToUserProfile: (newUsername) => { }
+    onNavigateToUserProfile: (_newUsername) => { }
   });
 
   React.useEffect(() => {
@@ -153,7 +152,7 @@ const ProfilePage: React.FC = () => {
                     <Skeleton height={150} width="100%" />
                   ) : (
                     <ActivityHistory
-                      username={targetUsername}
+                      userId={userProfile?.id}
                       onTotalCountChange={setTotalContributions}
                       selectedDate={selectedDate}
                       onDateSelect={handleDateSelect}
@@ -166,6 +165,7 @@ const ProfilePage: React.FC = () => {
                     <ActivityFeedSkeleton />
                   ) : (
                     <ActivityFeed
+                      userId={userProfile?.id}
                       username={targetUsername}
                       filterDate={selectedDate || undefined}
                     />

@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 // [CHANGE] Import styles from module
 import styles from './ActivityFeed.module.css';
 
-const ActivityFeed: React.FC<ActivityFeedProps> = ({ username, filterDate }) => {
+const ActivityFeed: React.FC<ActivityFeedProps> = ({ userId, username, filterDate }) => {
   const navigate = useNavigate();
   const { theme } = useTheme();
   const { t } = useTranslation(['ActivityFeed']);
@@ -25,7 +25,7 @@ const ActivityFeed: React.FC<ActivityFeedProps> = ({ username, filterDate }) => 
     getActionIconChar,
     getActionDescription,
     getTargetName
-  } = useActivityFeed({ username, filterDate, t });
+  } = useActivityFeed({ userId, username, filterDate, t });
 
   const handleTargetClick = (item: any) => {
     const url = getTargetUrl(item);

@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import styles from './ActivityHistory.module.css';
 
 const ActivityHistory: React.FC<ActivityHistoryProps> = ({ 
-  username,
+  userId,
   onTotalCountChange, 
   selectedDate, 
   onDateSelect 
@@ -25,7 +25,7 @@ const ActivityHistory: React.FC<ActivityHistoryProps> = ({
     loading, 
     yearWeeks, 
     getLevelClass 
-  } = useActivityHistory(username,onTotalCountChange);
+  } = useActivityHistory(userId, onTotalCountChange);
 
   // Format date theo ngôn ngữ
   const formatDateByLanguage = (dateString: string) => {
