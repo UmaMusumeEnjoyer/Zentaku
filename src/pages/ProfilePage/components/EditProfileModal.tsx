@@ -124,6 +124,32 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
                 placeholder="https://yourwebsite.com"
               />
             </div>
+
+            <div className={styles.formGroup}>
+              <label className={styles.formLabel}>{t('fields.gender.label', { defaultValue: 'Gender' })}</label>
+              <select 
+                name="gender" 
+                className={styles.formInput}
+                value={formData.gender}
+                onChange={handleChange as any}
+              >
+                <option value="">{t('fields.gender.options.unspecified', { defaultValue: 'Not specified' })}</option>
+                <option value="male">{t('fields.gender.options.male', { defaultValue: 'Male' })}</option>
+                <option value="female">{t('fields.gender.options.female', { defaultValue: 'Female' })}</option>
+                <option value="other">{t('fields.gender.options.other', { defaultValue: 'Other' })}</option>
+              </select>
+            </div>
+
+            <div className={styles.formGroup}>
+              <label className={styles.formLabel}>{t('fields.birthday.label', { defaultValue: 'Birthday' })}</label>
+              <input 
+                type="date" 
+                name="birthday" 
+                className={styles.formInput}
+                value={formData.birthday}
+                onChange={handleChange}
+              />
+            </div>
           </div>
 
           {/* FOOTER */}
