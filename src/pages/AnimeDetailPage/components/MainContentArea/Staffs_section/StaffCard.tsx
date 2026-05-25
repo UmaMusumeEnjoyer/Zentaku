@@ -11,7 +11,8 @@ const StaffCard: React.FC<StaffCardProps> = ({ staffMember: edge }) => {
   const node = (edge as any).node || edge;
   const role = (edge as any).role || node.role;
 
-  const hasDefaultImage = node.image?.large?.includes('default.jpg') || node.image?.includes('default.jpg') || node.image_url?.includes('default.jpg');
+  const isDefault = (val: any) => typeof val === 'string' && val.includes('default.jpg');
+  const hasDefaultImage = isDefault(node.image?.large) || isDefault(node.image) || isDefault(node.image_url);
   
   return (
     // 2. Sử dụng class từ module
@@ -22,7 +23,7 @@ const StaffCard: React.FC<StaffCardProps> = ({ staffMember: edge }) => {
         </div>
       ) : (
         <img 
-          src={node.image?.large || node.image || node.image_url} 
+          src={node.image?.large || (typeof node.image === 'string' ? node.image : undefined) || node.image_url} 
           alt={node.name?.full || node.name_full} 
           className={styles.staffAvatar} 
         />
