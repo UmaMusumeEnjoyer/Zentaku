@@ -56,7 +56,7 @@ const AnimeDetailPage: React.FC = () => {
       {hasBanner ? (
         <div 
           className={styles.bannerImage} 
-          style={{ backgroundImage: `url(${anime.banner_image})` }}
+          style={{ backgroundImage: `url(${anime.bannerImage || anime.banner_image})` }}
         ></div>
       ) : (
         <div className={styles.bannerPlaceholder}></div>
