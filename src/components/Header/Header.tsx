@@ -76,6 +76,7 @@ const Header: React.FC = () => {
   // Logic: Noti, Search, Dropdown, Settings
   const {
     isDropdownOpen,
+    isSettingsModalOpen,
     toggleDropdown,
     openSettingsModal,
     closeSettingsModal,
