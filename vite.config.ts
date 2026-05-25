@@ -18,6 +18,11 @@ export default defineConfig(({ mode }) => {
           changeOrigin: true,
           secure: false,
           rewrite: (path) => path.replace(/^\/api/, '/api')
+        },
+        '/uploads': {
+          target: env.VITE_BACKEND_DOMAIN,
+          changeOrigin: true,
+          secure: false,
         }
       }
     }

@@ -51,10 +51,12 @@ const Header: React.FC = () => {
   };
 
   const avatarUrl = React.useMemo(() => {
-    if (!user?.avatar_url) return DEFAULT_AVATAR;
-    if (user.avatar_url.startsWith('http')) return user.avatar_url;
-    return `${BACKEND_DOMAIN}${user.avatar_url}`;
-  }, [user?.avatar_url]);
+    const url = user?.avatar || user?.avatar_url;
+    if (!url) return DEFAULT_AVATAR;
+    if (url.startsWith('/uploads')) return url;
+    if (url.startsWith('http')) return url;
+    return `${BACKEND_DOMAIN}${url}`;
+  }, [user?.avatar, user?.avatar_url]);
 
   const isAuthenticated = !!user;
   const hasToken = localStorage.getItem('accessToken');

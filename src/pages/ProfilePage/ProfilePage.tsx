@@ -73,7 +73,7 @@ const ProfilePage: React.FC = () => {
               <>
                 <div className={styles.profileAvatarWrapper}>
                   <img
-                    src={getAvatarUrl(userProfile?.avatar_url)}
+                    src={getAvatarUrl(userProfile?.avatar || userProfile?.avatar_url)}
                     alt="Profile"
                     className={styles.profileAvatar}
                   />
