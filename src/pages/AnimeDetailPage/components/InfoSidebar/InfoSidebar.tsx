@@ -15,24 +15,47 @@ const InfoSidebar: React.FC<InfoSidebarProps> = ({ anime }) => {
   
   const { t, i18n } = useTranslation(['AnimeDetail', 'common']);
 
-  const formatDateByLanguage = (dateString?: string) => {
-        if (!dateString) return t('info.not_available');
+  const formatDateByLanguage = (dateInput?: any) => {
+        if (!dateInput) return null; // Fallback handled by UI
         
-        const date = new Date(dateString);
         const currentLang = i18n.language;
-        
-        if (currentLang === 'jp') {
-            const year = date.getFullYear();
-            const month = date.getMonth() + 1;
-            const day = date.getDate();
-            return `${year}年${month}月${day}日`;
-        } else {
-            return date.toLocaleDateString('en-US', { 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
-            });
+
+        // 1. Handle Object format { year, month, day }
+        if (typeof dateInput === 'object' && dateInput.year) {
+            const { year, month, day } = dateInput;
+            
+            if (currentLang === 'jp') {
+                if (!month) return `${year}年`;
+                if (!day) return `${year}年${month}月`;
+                return `${year}年${month}月${day}日`;
+            } else {
+                if (!month) return `${year}`;
+                if (!day) {
+                    const d = new Date(year, month - 1);
+                    return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long' });
+                }
+                const d = new Date(year, month - 1, day);
+                return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+            }
         }
+        
+        // 2. Handle String format "2025-04-06"
+        if (typeof dateInput === 'string') {
+            const date = new Date(dateInput);
+            if (isNaN(date.getTime())) return null;
+            
+            if (currentLang === 'jp') {
+                return `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`;
+            } else {
+                return date.toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                });
+            }
+        }
+
+        return null;
     };
 
   return (
