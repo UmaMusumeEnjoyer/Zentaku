@@ -47,13 +47,14 @@ const SummarySection: React.FC<SummarySectionProps> = ({ anime, hasBanner, activ
   };
 
   const getDisplayTitle = () => {
-    if (i18n.language === 'ja') {
-      return anime.title?.native || anime.title?.romaji || anime.name_romaji;
+    const title = anime.title as any;
+    if (i18n.language === 'jp') {
+      return title?.native || title?.romaji || anime.name_romaji;
     }
     if (i18n.language === 'en') {
-      return anime.title?.english || anime.title?.romaji || anime.name_romaji;
+      return title?.english || title?.romaji || anime.name_romaji;
     }
-    return anime.title?.romaji || anime.name_romaji;
+    return title?.romaji || anime.name_romaji;
   };
 
   const sectionClass = !hasBanner 

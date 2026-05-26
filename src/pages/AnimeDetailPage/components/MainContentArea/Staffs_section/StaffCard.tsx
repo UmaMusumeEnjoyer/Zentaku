@@ -6,7 +6,7 @@ import type { StaffCardProps } from '@umamusumeenjoyer/shared-logic';
 import styles from './StaffCard.module.css';
 
 const StaffCard: React.FC<StaffCardProps> = ({ staffMember: edge }) => {
-  const { t } = useTranslation(['StaffSection', 'common']);
+  const { t, i18n } = useTranslation(['StaffSection', 'common']);
   
   const node = (edge as any).node || edge;
   const role = (edge as any).role || node.role;
@@ -16,7 +16,7 @@ const StaffCard: React.FC<StaffCardProps> = ({ staffMember: edge }) => {
   
   const getPersonName = (personNode: any) => {
     if (!personNode) return '';
-    if (i18n.language === 'ja') {
+    if (i18n.language === 'jp') {
       return personNode.name?.native || personNode.name_native || personNode.name?.full || personNode.name_full;
     }
     return personNode.name?.full || personNode.name_full;

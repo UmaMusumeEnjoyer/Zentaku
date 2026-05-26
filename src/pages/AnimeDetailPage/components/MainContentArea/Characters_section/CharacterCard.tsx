@@ -19,7 +19,7 @@ const CharacterCard: React.FC<CharacterCardProps> = ({ character: edge }) => {
 
   const getPersonName = (personNode: any) => {
     if (!personNode) return '';
-    if (i18n.language === 'ja') {
+    if (i18n.language === 'jp') {
       return personNode.name?.native || personNode.name_native || personNode.name?.full || personNode.name_full;
     }
     return personNode.name?.full || personNode.name_full;

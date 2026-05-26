@@ -51,6 +51,8 @@
 .summaryRight {
   padding-top: 100px;
   flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .noBanner .summaryRight {
@@ -97,6 +99,7 @@
 .seeMoreBtn {
   background: none;
   border: none;
+  align-self: flex-start;
   padding: 0;
   margin-top: 8px;
   font-size: 0.9rem;
@@ -115,10 +118,9 @@
   display: flex;
   gap: 25px;
   margin-top: auto; /* Đẩy xuống đáy nếu container có chiều cao cố định */
-  padding-top: 30px;
   justify-content: space-between;
   align-items: center;
- 
+  padding-bottom: 10px;
 }
 
 .navItem {
