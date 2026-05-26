@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next';
 const NAV_ITEMS = ['Overview', 'Watch', 'Characters', 'Staff'];
 
 const SummarySection: React.FC<SummarySectionProps> = ({ anime, hasBanner, activeTab, setActiveTab }) => {
-  const { t } = useTranslation(['AnimeModal', 'common']); 
+  const { t, i18n } = useTranslation(['AnimeModal', 'common']); 
   const navigate = useNavigate(); // [2] Khởi tạo hook navigate
   
   const [isExpanded, setIsExpanded] = useState(false);
@@ -46,6 +46,16 @@ const SummarySection: React.FC<SummarySectionProps> = ({ anime, hasBanner, activ
     }
   };
 
+  const getDisplayTitle = () => {
+    if (i18n.language === 'ja') {
+      return anime.title?.native || anime.title?.romaji || anime.name_romaji;
+    }
+    if (i18n.language === 'en') {
+      return anime.title?.english || anime.title?.romaji || anime.name_romaji;
+    }
+    return anime.title?.romaji || anime.name_romaji;
+  };
+
   const sectionClass = !hasBanner 
     ? `${styles.summarySection} ${styles.noBanner}` 
     : styles.summarySection;
@@ -73,7 +83,7 @@ const SummarySection: React.FC<SummarySectionProps> = ({ anime, hasBanner, activ
         </div>
 
         <div className={styles.summaryRight}>
-          <h1 className={styles.animeTitleMain}>{anime.title?.romaji || anime.name_romaji}</h1>
+          <h1 className={styles.animeTitleMain}>{getDisplayTitle()}</h1>
           
           {/* Description Block */}
           <div 

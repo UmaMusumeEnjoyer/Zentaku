@@ -6,7 +6,7 @@ import './i18n/config'; // Import i18n configuration
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Header from './components/Header/Header';
 import HomePage from './pages/HomePage/HomePage';
-import HomePageLogin from './pages/HomePageLogin/HomePagelogin';
+//import HomePageLogin from './pages/HomePageLogin/HomePagelogin';
 import NewsDetailPage from './pages/NewsDetailPage/NewsDetailPage';
 import CharacterPage from './pages/CharacterPage/CharacterPage';
 import AnimeDetailPage from './pages/AnimeDetailPage/AnimeDetailPage';
