@@ -1,5 +1,5 @@
 // src/pages/AnimeDetail/AnimeDetailPage.tsx
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useAnimeDetail } from '@umamusumeenjoyer/shared-logic';
 
@@ -14,9 +14,14 @@ import styles from './AnimeDetailPage.module.css';
 import SummarySection from './components/MainContentArea/Summary_section/SummarySection';
 import InfoSidebar from './components/InfoSidebar/InfoSidebar';
 import MainContentArea from './components/MainContentArea/MainContentArea';
+import CharacterCard from './components/MainContentArea/Characters_section/CharacterCard';
+import charStyles from './components/MainContentArea/Characters_section/CharactersSection.module.css';
+import StaffCard from './components/MainContentArea/Staffs_section/StaffCard';
+import staffStyles from './components/MainContentArea/Staffs_section/StaffSection.module.css';
 
 const AnimeDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const [activeTab, setActiveTab] = useState('Overview');
   
   // 3. Xóa destructuring theme
   const { anime, loading, error, hasBanner, staffList, characterList, stats } = useAnimeDetail(id);
@@ -66,19 +71,41 @@ const AnimeDetailPage: React.FC = () => {
       <div className={styles.mainContentContainer}>
         <div className={styles.contentWrapper}>
           
-          <SummarySection anime={anime as any} hasBanner={hasBanner} />
+          <SummarySection anime={anime as any} hasBanner={hasBanner} activeTab={activeTab} setActiveTab={setActiveTab} />
           
           <div className={styles.gridContainer}>
             {/* Cột trái */}
             <InfoSidebar anime={anime as any} />
             
             {/* Cột phải */}
-            <MainContentArea 
-              anime={anime as any}
-              staffList={staffList} 
-              characterList={characterList}
-              stats={stats}
-             />
+            {activeTab === 'Overview' && (
+              <MainContentArea 
+                anime={anime as any}
+                staffList={staffList} 
+                characterList={characterList}
+                stats={stats}
+              />
+            )}
+            
+            {activeTab === 'Characters' && (
+              <main className={styles.mainContentArea}>
+                <div className={charStyles.charactersGrid}>
+                  {characterList.map(char => (
+                    <CharacterCard key={char.id} character={char} />
+                  ))}
+                </div>
+              </main>
+            )}
+            
+            {activeTab === 'Staff' && (
+              <main className={styles.mainContentArea}>
+                <div className={staffStyles.staffGrid}>
+                  {staffList.map(member => (
+                    <StaffCard key={member.id} staffMember={member} />
+                  ))}
+                </div>
+              </main>
+            )}
           </div>
           
         </div>

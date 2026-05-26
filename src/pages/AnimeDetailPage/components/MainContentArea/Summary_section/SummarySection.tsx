@@ -8,9 +8,9 @@ import { useSummarySection } from '@umamusumeenjoyer/shared-logic';
 import { useTranslation } from 'react-i18next';
 
 // Danh sách các nút chức năng
-const NAV_ITEMS = ['Overview', 'Watch', 'Characters', 'Staff', 'Stats'];
+const NAV_ITEMS = ['Overview', 'Watch', 'Characters', 'Staff'];
 
-const SummarySection: React.FC<SummarySectionProps> = ({ anime, hasBanner }) => {
+const SummarySection: React.FC<SummarySectionProps> = ({ anime, hasBanner, activeTab, setActiveTab }) => {
   const { t } = useTranslation(['AnimeModal', 'common']); 
   const navigate = useNavigate(); // [2] Khởi tạo hook navigate
   
@@ -41,9 +41,8 @@ const SummarySection: React.FC<SummarySectionProps> = ({ anime, hasBanner }) => 
     if (item === 'Watch') {
       // Điều hướng tới /anime/:id/watch
       navigate(`/anime/${anime.id}/watch`);
-    } else {
-      // Logic cho các tab khác (nếu cần)
-      console.log(`Clicked on ${item}`);
+    } else if (setActiveTab) {
+      setActiveTab(item);
     }
   };
 
@@ -94,7 +93,7 @@ const SummarySection: React.FC<SummarySectionProps> = ({ anime, hasBanner }) => 
             {NAV_ITEMS.map((item) => (
               <button 
                 key={item} 
-                className={styles.navItem}
+                className={`${styles.navItem} ${activeTab === item ? styles.active : ''}`}
                 onClick={() => handleNavClick(item)} // [4] Gắn hàm xử lý vào đây
               >
                 {t(`AnimeModal:navBar.${item}`) }
