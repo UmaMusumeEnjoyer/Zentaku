@@ -22,6 +22,7 @@ interface StreamData {
   videoUrl: string;
   subUrl: string | null;
   referer: string | null;
+  requiresProxy: boolean;
 }
 
 interface VideoPlayerProps {
@@ -44,6 +45,11 @@ const setSubtitleBackgroundVar = (artRef: HTMLElement | null, color: string) => 
   if (artRef) {
     artRef.style.setProperty('--subtitle-background', color);
   }
+};
+
+const getTargetUrl = (url: string, referer: string, useProxy: boolean) => {
+  if (!useProxy) return url;
+  return createProxyUrl(url, referer);
 };
 
 const AnimePlayer: React.FC<{
@@ -78,6 +84,7 @@ const AnimePlayer: React.FC<{
 
     const originalBase = stream.videoUrl.substring(0, stream.videoUrl.lastIndexOf('/') + 1);
     const refererHeader = stream.referer || 'https://megacloud.blog/';
+    const useProxy = stream.requiresProxy;
 
     const art = new Artplayer({
       container: artRef.current,
@@ -95,7 +102,7 @@ const AnimePlayer: React.FC<{
       theme: '#3b82f6',
       
       subtitle: stream.subUrl ? {
-        url: createProxyUrl(stream.subUrl, refererHeader),
+        url: getTargetUrl(stream.subUrl, refererHeader, useProxy),
         type: 'vtt',
         style: {
           color: savedStyle.color,
@@ -178,15 +185,17 @@ const AnimePlayer: React.FC<{
           if (Hls.isSupported()) {
             const hls = new Hls({
               xhrSetup: function (xhr, u) {
+                if (!useProxy) return;
+
                 let targetUrl = u;
                 if (!u.startsWith('http')) {
                   targetUrl = originalBase + u;
-                } else if (u.includes('localhost:5000') && !u.includes('/proxy')) {
+                } else if (useProxy && u.includes('localhost:5000') && !u.includes('/proxy')) {
                   const parts = u.split('/');
                   targetUrl = originalBase + parts[parts.length - 1];
                 }
 
-                if (!targetUrl.startsWith(PROXY_BASE)) {
+                if (useProxy && !targetUrl.startsWith(PROXY_BASE)) {
                   const proxied = createProxyUrl(targetUrl, refererHeader);
                   xhr.open('GET', proxied, true);
                 } else {
@@ -219,7 +228,7 @@ const AnimePlayer: React.FC<{
             });
             (art as any).hls = hls;
           } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-            video.src = createProxyUrl(url, refererHeader);
+            video.src = getTargetUrl(url, refererHeader, useProxy);
           }
         },
       },

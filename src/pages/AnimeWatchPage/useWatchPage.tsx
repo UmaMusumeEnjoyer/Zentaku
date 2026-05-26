@@ -7,6 +7,7 @@ interface StreamData {
   videoUrl: string;
   subUrl: string | null;
   referer: string | null;
+  requiresProxy: boolean;
 }
 
 export const useWatchPage = () => {
@@ -91,17 +92,21 @@ export const useWatchPage = () => {
         const res = await streamingService.getEpisodeSources(paramId, currentEpisode.number);
         const data = res.data;
         
-        // Flexible mapping to handle unknown BE schema
-        const videoUrl = data.video || (data.sources && data.sources[0]?.url) || '';
-        const subUrl = data.sub || (data.subtitles && data.subtitles.find((s: any) => s.lang?.toLowerCase() === 'english')?.url) || null;
+        // Flexible mapping to handle unknown BE schema + Zentaku_BE explicit schema
+        const innerData = data.data;
+        const videoUrl = innerData?.streamLinks?.[0] || data.video || (data.sources && data.sources[0]?.url) || '';
+        const subUrl = innerData?.subtitles?.find((s: any) => s.lang === 'en' || s.lang?.toLowerCase() === 'english')?.url || data.sub || (data.subtitles && data.subtitles.find((s: any) => s.lang?.toLowerCase() === 'english')?.url) || null;
         const referer = data.referer || data.headers?.Referer || null;
+        
+        const isFilmServer = innerData?.meta?.source === 'filmserver';
 
         if (!videoUrl) throw new Error('Không tìm thấy link video.');
 
         setStreamData({
           videoUrl,
           subUrl,
-          referer
+          referer,
+          requiresProxy: !isFilmServer
         });
 
       } catch (err) {
