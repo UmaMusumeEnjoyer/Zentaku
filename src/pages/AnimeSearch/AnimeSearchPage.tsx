@@ -10,13 +10,7 @@ import AnimeCard from '../../components/AnimeCard/AnimeCard';
 import AnimeSearchSkeleton from './AnimeSearchSkeleton';
 
 import { useAnimeSearchPage } from '@umamusumeenjoyer/shared-logic';
-import {
-  heroList,
-  trendingAnime,
-  popularSeason,
-  upcomingNext,
-  allTimePopular
-} from '@umamusumeenjoyer/shared-logic';
+import { heroList } from '@umamusumeenjoyer/shared-logic';
 
 const AnimeSearchPage: React.FC = () => {
   const { t } = useTranslation('AnimeSearch');
@@ -28,6 +22,13 @@ const AnimeSearchPage: React.FC = () => {
     viewTitle,
     canLoadMore,
     currentFilters,
+    // Section data (API-loaded)
+    trendingAnime,
+    popularSeason,
+    upcomingNext,
+    allTimePopular,
+    sectionsLoading,
+    // Actions
     handleSearch,
     handleBackToHome,
     handleViewAllClick,
@@ -82,34 +83,38 @@ const AnimeSearchPage: React.FC = () => {
             </div>
           )
         ) : (
-          <>
-            <SectionGrid 
-                title={t('sections.trendingNow')}
-                data={trendingAnime} 
-                onViewAll={() => handleViewAllClick('TRENDING_NOW')}
-            />
-            
-            <SectionGrid 
-              title={t('sections.popularThisSeason')}
-              data={popularSeason} 
-              onViewAll={() => handleViewAllClick('POPULAR_THIS_SEASON')}
-            />
-            
-            <SectionGrid 
-              title={t('sections.upcomingNextSeason')}
-              data={upcomingNext} 
-              onViewAll={() => handleViewAllClick('UPCOMING_NEXT_SEASON')}
-            />
-            
-            <SectionGrid 
-              title={t('sections.allTimePopular')}
-              data={allTimePopular} 
-            />
-          </>
+          sectionsLoading ? (
+            <AnimeSearchSkeleton />
+          ) : (
+            <>
+              <SectionGrid 
+                  title={t('sections.trendingNow')}
+                  data={trendingAnime} 
+                  onViewAll={() => handleViewAllClick('TRENDING_NOW')}
+              />
+              
+              <SectionGrid 
+                title={t('sections.popularThisSeason')}
+                data={popularSeason} 
+                onViewAll={() => handleViewAllClick('POPULAR_THIS_SEASON')}
+              />
+              
+              <SectionGrid 
+                title={t('sections.upcomingNextSeason')}
+                data={upcomingNext} 
+                onViewAll={() => handleViewAllClick('UPCOMING_NEXT_SEASON')}
+              />
+              
+              <SectionGrid 
+                title={t('sections.allTimePopular')}
+                data={allTimePopular} 
+              />
+            </>
+          )
         )}
       </div>
     </div>
   );
 };
 
-export default AnimeSearchPage;
+export default AnimeSearchPage;
