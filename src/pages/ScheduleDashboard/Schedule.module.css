@@ -288,13 +288,22 @@
   border-radius: 0.25rem;
   font-size: 9px;
   font-weight: 700;
-  border-left-width: 2px;
+  border-left-width: 3px;
   border-left-style: solid;
   overflow: hidden;
   white-space: nowrap;
-  background-color: var(--bg-subtle);
-  color: var(--text-secondary);
+  background-color: rgba(59, 130, 246, 0.1);
+  color: var(--text-primary);
   text-overflow: ellipsis;
+}
+
+.todayDay {
+  background-color: rgba(239, 68, 68, 0.03);
+}
+
+.todayNumber {
+  color: #ef4444;
+  background-color: rgba(239, 68, 68, 0.1);
 }
 
 /* --- Detail Panel Slide-in --- */

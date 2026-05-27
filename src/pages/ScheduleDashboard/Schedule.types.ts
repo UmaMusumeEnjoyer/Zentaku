@@ -17,6 +17,7 @@ export interface CalendarDay {
 
 export interface UpNextItem extends AnimeInfo {
   airingIn: string; // e.g., "00:24:12"
+  airingAtTimestamp: number;
 }
 
 export interface ScheduleData {

@@ -38,7 +38,8 @@ import {
   userAnimeGroupEN, userAnimeGroupJP,
   userItemEN, userItemJP,
   userSearchModalEN, userSearchModalJP,
-  animeListPageEN, animeListPageJP
+  animeListPageEN, animeListPageJP,
+  scheduleDashboardEN, scheduleDashboardJP
 
 } from '@umamusumeenjoyer/shared-logic';
 
@@ -89,7 +90,8 @@ i18n
         userAnimeGroup: userAnimeGroupEN,
         userItem: userItemEN,
         userSearchModal: userSearchModalEN,
-        animeListPage: animeListPageEN
+        animeListPage: animeListPageEN,
+        ScheduleDashboard: scheduleDashboardEN
       },
       jp: {
         common: commonJp,
@@ -126,7 +128,8 @@ i18n
         userAnimeGroup: userAnimeGroupJP,
         userItem: userItemJP,
         userSearchModal: userSearchModalJP,
-        animeListPage: animeListPageJP
+        animeListPage: animeListPageJP,
+        ScheduleDashboard: scheduleDashboardJP
       },
     },
     lng: localStorage.getItem('language') || DEFAULT_LANG,
@@ -139,7 +142,7 @@ i18n
       , 'HomePageLogin', 'AnimeListSearch', 'ProfilePage', 'ActivityHistory'
       , 'EditProfileModal', 'ProfilePagePage', 'ActivityFeed'
       , 'addAnimeModal', 'editListModal', 'likersModal', 'listHeader', 'requestList', 'requestModal', 'sidebar'
-      , 'userAnimeGroup', 'userItem', 'userSearchModal', 'animeListPage'
+      , 'userAnimeGroup', 'userItem', 'userSearchModal', 'animeListPage', 'ScheduleDashboard'
     ],
     interpolation: {
       escapeValue: false,
