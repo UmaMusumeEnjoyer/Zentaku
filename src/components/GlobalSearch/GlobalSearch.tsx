@@ -86,17 +86,15 @@ const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({ isOpen, onClose }
                   className={styles['gs-avatar']} 
                 />
                 <div className={styles['gs-info']}>
-                  <span className={styles['gs-username']}>{user.username}</span>
+                  <span className={styles['gs-displayname']}>{user.displayName || user.username}</span>
+                  <span className={styles['gs-username']}>@{user.username}</span>
                 </div>
-                <span 
-                  className="material-symbols-outlined" 
-                  style={{
-                    marginLeft: 'auto', 
-                    color: 'var(--text-secondary)'
-                  }}
-                >
-                  chevron_right
-                </span>
+                {user.followersCount !== undefined && (
+                  <div className={styles['gs-followers']}>
+                    <span className="material-symbols-outlined">group</span>
+                    <span>{user.followersCount} followers</span>
+                  </div>
+                )}
               </div>
             ))}
           </div>

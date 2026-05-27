@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { useHeader, userService } from '@umamusumeenjoyer/shared-logic';
 // Import hook logic hoạt hình mới tạo
 import { useHeaderAnimation } from './useHeaderAnimation';
+import GlobalSearchModal from '../GlobalSearch/GlobalSearch';
 
 const BACKEND_DOMAIN = import.meta.env.VITE_BACKEND_DOMAIN;
 const DEFAULT_AVATAR = import.meta.env.VITE_DEFAULT_AVATAR_URL;
@@ -17,6 +18,22 @@ const Header: React.FC = () => {
   const { theme, toggleTheme } = useTheme();
   const { user, logout: authLogout } = useAuth();
   const { t, i18n } = useTranslation(['Header']);
+
+  // Command Palette State
+  const [isSearchModalOpen, setIsSearchModalOpen] = React.useState(false);
+
+  // Keyboard shortcut listener
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!user) return; // Only allow shortcut if logged in
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setIsSearchModalOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [user]);
 
   // 1. Hook xử lý UI Animation (Local ViewModel)
   // Logic: Ẩn/Hiện khi scroll + Trong suốt ở trang chỉ định
@@ -123,6 +140,18 @@ const Header: React.FC = () => {
             <>
               <Link to="/animelist">{t('Header:navigation.anime_list')}</Link>
               <Link to="/profile">{t('Header:navigation.profile')}</Link>
+
+              {/* COMMAND PALETTE TRIGGER */}
+              <div 
+                className={styles.commandPaletteTrigger} 
+                onClick={() => setIsSearchModalOpen(true)}
+                role="button"
+                aria-label="Search users or anime"
+              >
+                <span className="material-symbols-outlined">search</span>
+                <span className={styles.placeholder}>Search users...</span>
+                <kbd className={styles.shortcut}>Ctrl K</kbd>
+              </div>
             </>
           )}
         </nav>
@@ -301,6 +330,12 @@ const Header: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* COMMAND PALETTE MODAL */}
+      <GlobalSearchModal 
+        isOpen={isSearchModalOpen} 
+        onClose={() => setIsSearchModalOpen(false)} 
+      />
     </>
   );
 };
