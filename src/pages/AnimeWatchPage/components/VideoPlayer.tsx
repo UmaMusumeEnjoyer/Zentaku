@@ -55,8 +55,7 @@ const getTargetUrl = (url: string, referer: string, useProxy: boolean) => {
 const AnimePlayer: React.FC<{
   stream: StreamData;
   onEnded: () => void;
-  setArtInstance: (art: Artplayer | null) => void;
-}> = ({ stream, onEnded, setArtInstance }) => {
+}> = ({ stream, onEnded }) => {
   const artRef = useRef<HTMLDivElement>(null);
   const playerRef = useRef<Artplayer | null>(null);
   
@@ -74,7 +73,6 @@ const AnimePlayer: React.FC<{
       }
       playerRef.current.destroy(false);
       playerRef.current = null;
-      setArtInstance(null);
     }
 
     if (!artRef.current || !stream.videoUrl) return;
@@ -96,7 +94,6 @@ const AnimePlayer: React.FC<{
       autoMini: true,
       setting: true,
       hotkey: true,
-      focus: true,
       pip: true,
       lock: true,
       playbackRate: true,
@@ -273,7 +270,7 @@ const AnimePlayer: React.FC<{
 
     // Focus player khi ready để hotkeys hoạt động ngay
     art.on('ready', () => {
-      art.focus = true;
+      (art as any).focus = true;
     });
 
     // Quản lý cursor: chỉ ẩn khi video đang phát và mouse idle > 3s
@@ -309,7 +306,6 @@ const AnimePlayer: React.FC<{
     }
 
     playerRef.current = art;
-    setArtInstance(art);
 
     return () => {
       // Cleanup cursor management
@@ -329,7 +325,6 @@ const AnimePlayer: React.FC<{
         }
         playerRef.current.destroy(false);
         playerRef.current = null;
-        setArtInstance(null);
       }
     };
   }, [stream.videoUrl, stream.subUrl, stream.referer]);
@@ -350,8 +345,6 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
   isTheaterMode = false,
   onTheaterModeToggle
 }) => {
-    const [artInstance, setArtInstance] = useState<Artplayer | null>(null);
-    
     // Autoplay State
     const [autoPlay, setAutoPlay] = useState<boolean>(() => {
         const saved = localStorage.getItem('player_autoplay');
@@ -429,7 +422,6 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
             key={streamData.videoUrl} 
             stream={streamData} 
             onEnded={handleVideoEnded}
-            setArtInstance={setArtInstance}
         />
       ) : (
         <div className={styles.playerContainer}>

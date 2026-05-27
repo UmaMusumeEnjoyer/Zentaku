@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import type { AnimeInfo, ScheduleData, UseAnimeScheduleReturn, CalendarDay, UpNextItem } from './Schedule.types';
+import type { ScheduleData, UseAnimeScheduleReturn, CalendarDay, UpNextItem } from './Schedule.types';
 import { animeService } from '@umamusumeenjoyer/shared-logic';
 
 const generateEmptyCalendar = (year: number, month: number): CalendarDay[] => {

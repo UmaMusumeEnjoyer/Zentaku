@@ -79,7 +79,16 @@ const AnimeListPage: React.FC = () => {
     <div className={styles.pageContainer}>
       <div className={styles.mainLayout}>
         <main className="content-area"> {/* Class này có vẻ là layout global hoặc không style trong file css gốc, giữ nguyên string */}
-          <ListHeader listInfo={listInfo} listId={id || ''} />
+          <ListHeader 
+            listInfo={{
+              list_name: listInfo.name,
+              description: listInfo.description,
+              is_private: listInfo.privacy === 'private',
+              is_owner: listInfo.isOwner,
+              color: listInfo.color
+            } as any} 
+            listId={id || ''} 
+          />
 
           <div className={styles.filterBarSticky}>
             <div className={styles.searchWrapper}>
@@ -171,7 +180,7 @@ const AnimeListPage: React.FC = () => {
 
         <div className="sidebar-area">
           <div className={`${styles.actionButtons} ${styles.sidebarActions}`}>
-            {listInfo.is_owner ? (
+            {listInfo.isOwner ? (
               <>
                 <button className={`${styles.btn} ${styles.btnSecondary}`} onClick={handleEditListClick}>
                   {t('animeListPage.sidebarActions.editDetails')}
@@ -206,12 +215,35 @@ const AnimeListPage: React.FC = () => {
             onRemoveMember={handleRemoveMember}
           />
 
-          {listInfo.is_owner && (
+          {listInfo.isOwner && (
             <RequestList
-              requests={pendingRequests}
-              onAccept={handleAcceptRequest}
-              onReject={handleRejectRequest}
-              currentMembers={members}
+              requests={pendingRequests.map(req => ({
+                request_id: req.id,
+                username: req.username,
+                request_type: req.type === 'edit' ? 'edit_permission' : 'join',
+                status: req.status === 'PENDING' ? 'pending' : req.status === 'ACCEPT' ? 'approved' : 'rejected',
+                message: req.message,
+                requested_at: req.createdAt
+              })) as any}
+              onAccept={(req: any) => handleAcceptRequest({
+                id: req.request_id,
+                username: req.username,
+                type: req.request_type === 'edit_permission' ? 'edit' : 'join',
+                status: 'PENDING',
+                createdAt: req.requested_at
+              } as any)}
+              onReject={(req: any) => handleRejectRequest({
+                id: req.request_id,
+                username: req.username,
+                type: req.request_type === 'edit_permission' ? 'edit' : 'join',
+                status: 'PENDING',
+                createdAt: req.requested_at
+              } as any)}
+              currentMembers={members.map(m => ({
+                username: m.username,
+                is_owner: m.isOwner,
+                permission_level: m.permission === 'viewer' ? 'view' : m.permission === 'editor' ? 'edit' : m.permission,
+              })) as any}
             />
           )}
         </div>
@@ -228,8 +260,18 @@ const AnimeListPage: React.FC = () => {
         isOpen={showEditModal}
         onClose={() => setShowEditModal(false)}
         listId={id || ''}
-        initialData={listInfo}
-        onUpdateSuccess={handleUpdateSuccess}
+        initialData={{
+          list_name: listInfo.name,
+          description: listInfo.description,
+          is_private: listInfo.privacy === 'private',
+          color: listInfo.color
+        }}
+        onUpdateSuccess={(data) => handleUpdateSuccess({
+          name: data.list_name,
+          description: data.description,
+          privacy: data.is_private ? 'private' : 'public',
+          color: data.color
+        })}
       />
 
       <UserSearchModal

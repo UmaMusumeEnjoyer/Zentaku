@@ -50,13 +50,7 @@ const Header: React.FC = () => {
     }
   };
 
-  const avatarUrl = React.useMemo(() => {
-    const url = user?.avatar || user?.avatar_url;
-    if (!url) return DEFAULT_AVATAR;
-    if (url.startsWith('/uploads')) return url;
-    if (url.startsWith('http')) return url;
-    return `${BACKEND_DOMAIN}${url}`;
-  }, [user?.avatar, user?.avatar_url]);
+
 
   const isAuthenticated = !!user;
   const hasToken = localStorage.getItem('accessToken');
@@ -82,8 +76,7 @@ const Header: React.FC = () => {
     toggleDropdown,
     openSettingsModal,
     closeSettingsModal,
-    formatDateTime,
-    getRelativeTime,
+    getAvatarUrl,
   } = useHeader({
     isAuthenticated,
     defaultAvatar: DEFAULT_AVATAR,
@@ -95,12 +88,7 @@ const Header: React.FC = () => {
     navigate('/login');
   };
 
-  const renderRelativeTime = (timeString: string) => {
-    if (timeString === 'Aired') {
-      return t('Header:notifications.aired');
-    }
-    return timeString;
-  };
+
 
   const handleLanguageChange = (lang: string) => {
     i18n.changeLanguage(lang);
@@ -157,7 +145,7 @@ const Header: React.FC = () => {
               >
                 <div className={styles.userAvatarTrigger} >
                   <img
-                    src={avatarUrl}
+                    src={getAvatarUrl(user?.avatar || user?.avatar_url)}
                     alt="User Avatar"
                     className={styles.userAvatarImg}
                   />

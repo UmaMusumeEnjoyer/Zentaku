@@ -5,7 +5,7 @@ import AnimeScheduleSkeleton from './ScheduleSkeleton';
 import styles from './Schedule.module.css';
 
 const CountdownTimer: React.FC<{ airingAtTimestamp: number }> = ({ airingAtTimestamp }) => {
-  const { t, i18n } = useTranslation('ScheduleDashboard');
+  const { t } = useTranslation('ScheduleDashboard');
   const [timeLeft, setTimeLeft] = useState(airingAtTimestamp - Math.floor(Date.now() / 1000));
   
   useEffect(() => {

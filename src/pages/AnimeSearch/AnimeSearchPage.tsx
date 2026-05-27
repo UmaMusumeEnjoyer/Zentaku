@@ -57,7 +57,7 @@ const AnimeSearchPage: React.FC = () => {
               
               <div className={styles.animeGrid}>
                 {searchResults.length > 0 ? (
-                  searchResults.map((anime, index) => ({
+                  searchResults.map((anime) => ({
                     ...anime,
                     nextAiringEpisode: anime.nextAiringEpisode || undefined
                   }) as any).map((anime, index) => (
