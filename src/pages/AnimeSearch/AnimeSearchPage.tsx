@@ -57,7 +57,10 @@ const AnimeSearchPage: React.FC = () => {
               
               <div className={styles.animeGrid}>
                 {searchResults.length > 0 ? (
-                  searchResults.map((anime, index) => (
+                  searchResults.map((anime, index) => ({
+                    ...anime,
+                    nextAiringEpisode: anime.nextAiringEpisode || undefined
+                  }) as any).map((anime, index) => (
                     <div key={`${anime.id}-${index}`} className={styles.gridItem}>
                       <AnimeCard anime={anime} />
                     </div>

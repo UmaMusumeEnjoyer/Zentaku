@@ -10,12 +10,16 @@ const EditorModalHeader: React.FC<EditorModalHeaderProps> = ({
   isFavorite, 
   toggleFavorite 
 }) => {
+  const coverImageUrl = typeof anime.coverImage === 'string' 
+    ? anime.coverImage 
+    : anime.coverImage?.large || anime.cover_image || '';
+
   return (
     <div className={styles.header}>
       <button className={styles.btnClose} onClick={onClose}>×</button>
       
       <div className={styles.headerInfo}>
-        <img src={anime.coverImage?.large || anime.coverImage || anime.cover_image} alt="thumb" className={styles.thumb} />
+        <img src={coverImageUrl} alt="thumb" className={styles.thumb} />
         <span className={styles.animeTitle}>{anime.title?.romaji || anime.name_romaji}</span>
       </div>
       

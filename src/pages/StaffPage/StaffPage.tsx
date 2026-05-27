@@ -63,24 +63,33 @@ const StaffPage: React.FC = () => {
     } = useStaffPage(id);
 
     // Format date theo ngôn ngữ
-    const formatDateByLanguage = (dateString?: string) => {
-        if (!dateString) return t('info.not_available');
+    const formatDateByLanguage = (dateObj?: { year?: number; month?: number; day?: number }) => {
+        if (!dateObj || (!dateObj.year && !dateObj.month && !dateObj.day)) return t('info.not_available');
         
-        const date = new Date(dateString);
+        const year = dateObj.year;
+        const month = dateObj.month;
+        const day = dateObj.day;
+        
         const currentLang = i18n.language;
         
         if (currentLang === 'jp') {
             // Format Nhật: YYYY年MM月DD日
-            const year = date.getFullYear();
-            const month = date.getMonth() + 1;
-            const day = date.getDate();
-            return `${year}年${month}月${day}日`;
+            let str = '';
+            if (year) str += `${year}年`;
+            if (month) str += `${month}月`;
+            if (day) str += `${day}日`;
+            return str || t('info.not_available');
         } else {
             // Format Anh: Month DD, YYYY
+            const date = new Date();
+            if (year) date.setFullYear(year);
+            if (month) date.setMonth(month - 1);
+            if (day) date.setDate(day);
+            
             return date.toLocaleDateString('en-US', { 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
+                year: year ? 'numeric' : undefined, 
+                month: month ? 'long' : undefined, 
+                day: day ? 'numeric' : undefined 
             });
         }
     };
@@ -100,22 +109,22 @@ const StaffPage: React.FC = () => {
                 {/* Cột trái: Ảnh */}
                 <div className={styles.leftColumn}>
                     <img 
-                        src={staff.image} 
-                        alt={staff.name?.full || staff.name_full} 
+                        src={staff.image?.large} 
+                        alt={staff.name?.full} 
                         className={styles.staffImage} 
                     />
                 </div>
 
                 {/* Cột phải: Thông tin chi tiết */}
                 <div className={styles.rightColumn}>
-                    <h1 className={styles.staffName}>{staff.name?.full || staff.name_full}</h1>
-                    <p className={styles.nativeName}>{staff.name?.native || staff.name_native}</p>
+                    <h1 className={styles.staffName}>{staff.name?.full}</h1>
+                    <p className={styles.nativeName}>{staff.name?.native}</p>
                     
                     <div className={styles.infoGrid}>
-                        <p><strong>{t('info.birth')}:</strong> {formatDateByLanguage(staff.dateOfBirth || staff.date_of_birth)}</p>
+                        <p><strong>{t('info.birth')}:</strong> {formatDateByLanguage(staff.dateOfBirth)}</p>
                         <p><strong>{t('info.age')}:</strong> {staff.age || t('info.not_available')}</p>
                         <p><strong>{t('info.gender')}:</strong> {staff.gender || t('info.not_available')}</p>
-                        <p><strong>{t('info.hometown')}:</strong> {staff.homeTown || staff.home_town || t('info.not_available')}</p>
+                        <p><strong>{t('info.hometown')}:</strong> {staff.homeTown || t('info.not_available')}</p>
                     </div>
                     
                     {/* Phần mô tả có tính năng Show More/Less */}
@@ -140,17 +149,17 @@ const StaffPage: React.FC = () => {
                             {rolesByYear[year].map(role => (
                                 <Link 
                                     to={`/anime/${role.id}`} 
-                                    key={`${role.id}-${role.character_role || Math.random()}`} 
+                                    key={`${role.id}-${Math.random()}`} 
                                     className={styles.roleCardLink}
                                 >
                                     <div className={styles.roleCard}>
                                         <img 
-                                            src={role.coverImage?.large || role.coverImage || role.cover_image} 
-                                            alt={role.title?.romaji || role.title_romaji} 
+                                            src={role.coverImage?.large} 
+                                            alt={role.title?.romaji} 
                                             className={styles.roleImage} 
                                         />
                                         <div className={styles.roleDetails}>
-                                            <p className={styles.roleMainText}>{role.title?.romaji || role.title_romaji}</p>
+                                            <p className={styles.roleMainText}>{role.title?.romaji}</p>
                                             <p className={styles.roleSubText}>{role.format}</p>
                                         </div>
                                     </div>
