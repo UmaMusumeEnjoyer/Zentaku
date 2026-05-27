@@ -44,16 +44,16 @@ const CharacterPage: React.FC = () => {
           {/* Cột trái: Ảnh */}
           <div className={styles.leftColumn}>
             <img 
-              src={character.image} 
-              alt={character.name_full} 
+              src={character.image?.large} 
+              alt={character.name?.full} 
               className={styles.characterImage} 
             />
           </div>
 
           {/* Cột phải: Thông tin */}
           <div className={styles.rightColumn}>
-            <h1 className={styles.characterName}>{character.name_full}</h1>
-            <p className={styles.nativeName}>{character.name_native}</p>
+            <h1 className={styles.characterName}>{character.name?.full}</h1>
+            <p className={styles.nativeName}>{character.name?.native}</p>
             <div className={styles.description}>
               {renderDescriptionWithSpoilers(cleanDescription)}
             </div>
@@ -65,8 +65,8 @@ const CharacterPage: React.FC = () => {
           <h2>{t('sections.media_appearances')}</h2>
           
           <div className={styles.mediaGrid}>
-            {character.media.map((item) => (
-              <AnimeCard key={item.id} anime={item} />
+            {(character.media?.nodes || []).map((item) => (
+              <AnimeCard key={item.id} anime={item as any} />
             ))}
           </div>
         </div>
