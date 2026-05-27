@@ -21,6 +21,7 @@ const ActivityFeed: React.FC<ActivityFeedProps> = ({ userId, username, filterDat
     handleLoadMore,
     getTargetUrl,
     formatTimeAgo,
+    getAgoSeconds,
     getActionClass,
     getActionIconChar,
     getActionDescription,
@@ -64,14 +65,14 @@ const ActivityFeed: React.FC<ActivityFeedProps> = ({ userId, username, filterDat
     <div className={styles.feedContainer} data-theme={theme}>
       {displayItems.map((item, index) => {
         const isLast = index === displayItems.length - 1;
-        const actionClass = getActionClass(item.action_type);
+        const actionClass = getActionClass(item);
 
         return (
           <div key={item.id} className={styles.feedRow}>
             {/* Timeline Column */}
             <div className={styles.feedTimeline}>
                <div className={`${styles.feedIconCircle} ${getModuleActionClass(actionClass)}`}>
-                   {getActionIconChar(item.action_type)}
+                   {getActionIconChar(item)}
                </div>
                {!isLast && <div className={styles.feedLine}></div>}
             </div>
@@ -82,7 +83,7 @@ const ActivityFeed: React.FC<ActivityFeedProps> = ({ userId, username, filterDat
                     <span className={styles.feedUser}>{username}</span>
                     
                     <span className={styles.feedAction}>
-                        {getActionDescription(item.action_type)}
+                        {getActionDescription(item)}
                     </span>
                     
                     <span 
@@ -94,7 +95,7 @@ const ActivityFeed: React.FC<ActivityFeedProps> = ({ userId, username, filterDat
                         {getTargetName(item)}
                     </span>
                     
-                    <span className={styles.feedTime}>{formatTimeAgo(item.ago_seconds)}</span>
+                    <span className={styles.feedTime}>{formatTimeAgo(getAgoSeconds(item))}</span>
                 </div>
             </div>
           </div>
