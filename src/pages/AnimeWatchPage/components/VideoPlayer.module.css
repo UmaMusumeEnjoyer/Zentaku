@@ -304,3 +304,23 @@
     font-weight: bold !important;
     background: none !important;
 }
+
+/* --- CURSOR MANAGEMENT OVERRIDES --- */
+/* Override Artplayer default cursor hiding - managed via JS instead */
+.playerContainer :global(.art-video-player.art-hide-cursor) {
+    cursor: default !important;
+}
+
+.playerContainer :global(.art-video-player) {
+    cursor: default;
+}
+
+/* Ensure controls always show pointer cursor */
+.playerContainer :global(.art-bottom),
+.playerContainer :global(.art-control),
+.playerContainer :global(.art-progress),
+.playerContainer :global(.art-progress-hover),
+.playerContainer :global(.art-progress-loaded),
+.playerContainer :global(.art-progress-played) {
+    cursor: pointer !important;
+}

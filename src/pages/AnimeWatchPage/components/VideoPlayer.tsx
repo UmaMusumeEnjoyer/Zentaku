@@ -95,6 +95,10 @@ const AnimePlayer: React.FC<{
       autoplay: false,
       autoMini: true,
       setting: true,
+      hotkey: true,
+      focus: true,
+      pip: true,
+      lock: true,
       playbackRate: true,
       aspectRatio: true,
       fullscreen: true,
@@ -267,10 +271,53 @@ const AnimePlayer: React.FC<{
       }
     }
 
+    // Focus player khi ready để hotkeys hoạt động ngay
+    art.on('ready', () => {
+      art.focus = true;
+    });
+
+    // Quản lý cursor: chỉ ẩn khi video đang phát và mouse idle > 3s
+    let cursorTimer: ReturnType<typeof setTimeout> | null = null;
+
+    const showCursor = () => {
+      if (artRef.current) {
+        artRef.current.style.cursor = '';
+      }
+      if (cursorTimer) clearTimeout(cursorTimer);
+      cursorTimer = setTimeout(() => {
+        if (art.playing && artRef.current) {
+          artRef.current.style.cursor = 'none';
+        }
+      }, 3000);
+    };
+
+    art.on('video:playing', () => {
+      showCursor();
+    });
+
+    art.on('video:pause', () => {
+      if (cursorTimer) clearTimeout(cursorTimer);
+      if (artRef.current) artRef.current.style.cursor = '';
+    });
+
+    const containerEl = artRef.current;
+    if (containerEl) {
+      containerEl.addEventListener('mousemove', showCursor);
+      containerEl.addEventListener('mouseenter', () => {
+        if (containerEl) containerEl.style.cursor = '';
+      });
+    }
+
     playerRef.current = art;
     setArtInstance(art);
 
     return () => {
+      // Cleanup cursor management
+      if (cursorTimer) clearTimeout(cursorTimer);
+      if (containerEl) {
+        containerEl.removeEventListener('mousemove', showCursor);
+      }
+
       if (playerRef.current) {
         // Cleanup video element listener
         if (playerRef.current.video) {
