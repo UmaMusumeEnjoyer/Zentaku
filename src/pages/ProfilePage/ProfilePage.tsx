@@ -59,6 +59,19 @@ const ProfilePage: React.FC = () => {
     <span className={styles.privateBadge}>{t('anime_list.badges.private')}</span>
   );
 
+  const handleMessage = async () => {
+    try {
+      if (!userProfile?.id) return;
+      // Make sure you import chatService if not already imported
+      const { chatService } = await import('@umamusumeenjoyer/shared-logic');
+      const res = await chatService.createOrGetPrivateChannel(userProfile.id);
+      const data = res.data?.data || res.data;
+      navigate(`/chat?channelId=${data.id}`);
+    } catch (err) {
+      console.error('Failed to create/get DM', err);
+    }
+  };
+
   return (
     <div className={styles.profilePage} data-theme={theme}>
       <div className={styles.profileContainer}>
@@ -108,13 +121,22 @@ const ProfilePage: React.FC = () => {
                     {t('sidebar.edit_profile')}
                   </button>
                 ) : (
-                  <button
-                    className={styles.btnEditProfile} // Tạm thời dùng style nút này, có thể tùy chỉnh sau
-                    style={{ backgroundColor: isFollowing ? '#5c5c5c' : 'var(--primary-color)' }}
-                    onClick={toggleFollow}
-                  >
-                    {isFollowing ? t('sidebar.unfollow') : t('sidebar.follow')}
-                  </button>
+                  <div style={{ display: 'flex', gap: '10px' }}>
+                    <button
+                      className={styles.btnEditProfile} // Tạm thời dùng style nút này, có thể tùy chỉnh sau
+                      style={{ flex: 1, backgroundColor: isFollowing ? '#5c5c5c' : 'var(--primary-color)' }}
+                      onClick={toggleFollow}
+                    >
+                      {isFollowing ? t('sidebar.unfollow') : t('sidebar.follow')}
+                    </button>
+                    <button
+                      className={styles.btnEditProfile}
+                      style={{ flex: 1, backgroundColor: 'var(--primary-color)' }}
+                      onClick={handleMessage}
+                    >
+                      Nhắn tin
+                    </button>
+                  </div>
                 )}
 
                 <div className={styles.profileMeta}>

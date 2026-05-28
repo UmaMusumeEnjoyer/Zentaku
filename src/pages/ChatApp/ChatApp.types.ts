@@ -27,9 +27,11 @@ export interface ChatRoom {
 
 export interface UseChatMessengerReturn {
   chatRooms: ChatRoom[] | null;
+  privateRooms: ChatRoom[] | null;
   activeRoom: ChatRoom | null;
   loading: boolean;
   error: Error | null;
   setActiveRoomId: (id: string) => void;
   sendMessage: (content: string) => void;
+  typingUsers: string[];
 }
