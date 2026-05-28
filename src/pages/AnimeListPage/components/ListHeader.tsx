@@ -24,17 +24,17 @@ const ListHeader: React.FC<ListHeaderProps> = ({ listInfo, listId }) => {
   const bannerStr = listInfo.bannerImage || '';
   const isColor = bannerStr.startsWith('#');
   const hasBanner = bannerStr.length > 0 && !isColor;
-  
+
   // Nếu bannerImage là mã màu (bắt đầu bằng #), ta dùng làm màu nền.
   // Nếu không, ta fallback về listInfo.color hoặc màu mặc định.
-  const bgColor = isColor 
-    ? bannerStr 
+  const bgColor = isColor
+    ? bannerStr
     : (listInfo.color || 'var(--bg-panel)');
 
   const headerStyle: React.CSSProperties = {
     backgroundColor: hasBanner ? 'transparent' : bgColor,
-    backgroundImage: hasBanner 
-      ? `linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.8)), url(${bannerStr.startsWith('http') || bannerStr.startsWith('/') ? bannerStr : `https://${bannerStr}`})` 
+    backgroundImage: hasBanner
+      ? `linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.8)), url(${bannerStr.startsWith('http') || bannerStr.startsWith('/') ? bannerStr : `https://${bannerStr}`})`
       : 'none',
     backgroundSize: 'cover',
     backgroundPosition: 'center',
@@ -47,7 +47,7 @@ const ListHeader: React.FC<ListHeaderProps> = ({ listInfo, listId }) => {
     alignItems: hasBanner ? 'flex-end' : 'flex-start',
     gap: '16px',
     marginBottom: '24px',
-    minHeight: hasBanner ? '240px' : 'auto'
+    minHeight: hasBanner ? '440px' : 'auto'
   };
 
   return (
@@ -72,8 +72,8 @@ const ListHeader: React.FC<ListHeaderProps> = ({ listInfo, listId }) => {
 
       <div className={styles.headerActions} style={{ backgroundColor: hasBanner ? 'rgba(0,0,0,0.5)' : 'var(--bg-panel)', borderColor: hasBanner ? 'rgba(255,255,255,0.2)' : 'var(--border-subtle)' }}>
         {/* NÚT 1: CHỈ ĐỂ LIKE */}
-        <button 
-          className={`${styles.actionBtn} ${styles.likeBtn} ${isLiked ? styles.liked : ''}`} 
+        <button
+          className={`${styles.actionBtn} ${styles.likeBtn} ${isLiked ? styles.liked : ''}`}
           onClick={handleToggleLike}
           disabled={isLoadingLike}
           title={isLiked ? t('listHeader.unlike') : t('listHeader.like')}
@@ -85,7 +85,7 @@ const ListHeader: React.FC<ListHeaderProps> = ({ listInfo, listId }) => {
         </button>
 
         {/* NÚT 2: HIỂN THỊ SỐ LƯỢNG & XEM DANH SÁCH */}
-        <button 
+        <button
           className={`
             ${styles.actionBtn} 
             ${styles.countBtn} 
@@ -94,7 +94,7 @@ const ListHeader: React.FC<ListHeaderProps> = ({ listInfo, listId }) => {
           onClick={listInfo.is_owner ? handleViewLikers : undefined}
           title={listInfo.is_owner ? t('listHeader.viewLikers') : ""}
           disabled={!listInfo.is_owner && likeCount === 0}
-          style={{ 
+          style={{
             color: hasBanner ? 'white' : 'var(--text-primary)',
             borderColor: hasBanner ? 'rgba(255,255,255,0.2)' : 'var(--border-subtle)'
           }}
@@ -104,7 +104,7 @@ const ListHeader: React.FC<ListHeaderProps> = ({ listInfo, listId }) => {
         </button>
       </div>
 
-      <LikersModal 
+      <LikersModal
         isOpen={showLikersModal}
         onClose={handleCloseLikersModal}
         likersData={likersList}
