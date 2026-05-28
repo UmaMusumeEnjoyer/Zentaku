@@ -96,7 +96,7 @@ const ProfilePage: React.FC = () => {
                     style={{ backgroundColor: isFollowing ? '#5c5c5c' : 'var(--primary-color)' }}
                     onClick={toggleFollow}
                   >
-                    {isFollowing ? 'Hủy theo dõi' : 'Theo dõi'}
+                    {isFollowing ? t('sidebar.unfollow') : t('sidebar.follow')}
                   </button>
                 )}
 
