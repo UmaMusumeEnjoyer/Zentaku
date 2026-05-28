@@ -21,16 +21,48 @@ const ListHeader: React.FC<ListHeaderProps> = ({ listInfo, listId }) => {
     handleCloseLikersModal,
   } = useListHeader(listId, listInfo.is_owner);
 
+  const bannerStr = listInfo.bannerImage || '';
+  const isColor = bannerStr.startsWith('#');
+  const hasBanner = bannerStr.length > 0 && !isColor;
+  
+  // Nếu bannerImage là mã màu (bắt đầu bằng #), ta dùng làm màu nền.
+  // Nếu không, ta fallback về listInfo.color hoặc màu mặc định.
+  const bgColor = isColor 
+    ? bannerStr 
+    : (listInfo.color || 'var(--bg-panel)');
+
+  const headerStyle: React.CSSProperties = {
+    backgroundColor: hasBanner ? 'transparent' : bgColor,
+    backgroundImage: hasBanner 
+      ? `linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.8)), url(${bannerStr.startsWith('http') || bannerStr.startsWith('/') ? bannerStr : `https://${bannerStr}`})` 
+      : 'none',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    padding: hasBanner ? '80px 32px 32px 32px' : '0',
+    borderRadius: hasBanner ? '16px' : '0',
+    color: hasBanner ? 'white' : 'var(--text-primary)',
+    display: 'flex',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    alignItems: hasBanner ? 'flex-end' : 'flex-start',
+    gap: '16px',
+    marginBottom: '24px',
+    minHeight: hasBanner ? '240px' : 'auto'
+  };
+
   return (
-    <div className={styles.pageHeader}>
+    <div style={headerStyle}>
       <div className={styles.headerText}>
-        <h1 className={styles.pageTitle}>{listInfo.list_name}</h1>
+        <h1 className={styles.pageTitle} style={{ color: hasBanner ? 'white' : 'var(--text-primary)' }}>
+          {listInfo.list_name}
+        </h1>
         {listInfo.description && (
-          <p className={styles.pageDescription}>{listInfo.description}</p>
+          <p className={styles.pageDescription} style={{ color: hasBanner ? 'rgba(255,255,255,0.8)' : 'var(--text-secondary)' }}>
+            {listInfo.description}
+          </p>
         )}
         {listInfo.is_private && (
           <div className={styles.privateBadgeWrapper}>
-            {/* Giữ class 'count-badge' nếu nó là class global, thêm styles.privateBadge để override màu */}
             <span className={`count-badge ${styles.privateBadge}`}>
               {t('listHeader.private')}
             </span>
@@ -38,15 +70,16 @@ const ListHeader: React.FC<ListHeaderProps> = ({ listInfo, listId }) => {
         )}
       </div>
 
-      <div className={styles.headerActions}>
+      <div className={styles.headerActions} style={{ backgroundColor: hasBanner ? 'rgba(0,0,0,0.5)' : 'var(--bg-panel)', borderColor: hasBanner ? 'rgba(255,255,255,0.2)' : 'var(--border-subtle)' }}>
         {/* NÚT 1: CHỈ ĐỂ LIKE */}
         <button 
           className={`${styles.actionBtn} ${styles.likeBtn} ${isLiked ? styles.liked : ''}`} 
           onClick={handleToggleLike}
           disabled={isLoadingLike}
           title={isLiked ? t('listHeader.unlike') : t('listHeader.like')}
+          style={{ color: hasBanner ? 'rgba(255,255,255,0.8)' : 'var(--text-secondary)' }}
         >
-          <span className={`material-symbols-outlined ${styles.heartIcon} ${isLiked ? styles.filled : ''}`}>
+          <span className={`material-symbols-outlined ${styles.heartIcon} ${isLiked ? styles.filled : ''}`} style={{ color: isLiked ? '#ef4444' : 'inherit' }}>
             favorite
           </span>
         </button>
@@ -61,9 +94,13 @@ const ListHeader: React.FC<ListHeaderProps> = ({ listInfo, listId }) => {
           onClick={listInfo.is_owner ? handleViewLikers : undefined}
           title={listInfo.is_owner ? t('listHeader.viewLikers') : ""}
           disabled={!listInfo.is_owner && likeCount === 0}
+          style={{ 
+            color: hasBanner ? 'white' : 'var(--text-primary)',
+            borderColor: hasBanner ? 'rgba(255,255,255,0.2)' : 'var(--border-subtle)'
+          }}
         >
-          <span className={styles.countNumber}>{likeCount}</span>
-          <span className={styles.countLabel}>{t('listHeader.likesLabel')}</span>
+          <span className={styles.countNumber} style={{ color: hasBanner ? 'white' : 'var(--text-primary)' }}>{likeCount}</span>
+          <span className={styles.countLabel} style={{ color: hasBanner ? 'rgba(255,255,255,0.8)' : 'inherit' }}>{t('listHeader.likesLabel')}</span>
         </button>
       </div>
 

@@ -404,6 +404,33 @@ const ProfilePage: React.FC = () => {
                   />
                 </div>
 
+                {/* 3. Banner Image Options */}
+                <div className={styles.formGroup} style={{ marginBottom: '15px' }}>
+                  <label className={styles.inputLabel} style={{ display: 'block', marginBottom: '5px' }}>
+                    Banner Image (Tùy chọn)
+                  </label>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    <input
+                      type="text"
+                      name="bannerImage"
+                      placeholder="Nhập URL hình ảnh..."
+                      value={newListData.bannerImage || ''}
+                      onChange={handleNewListInputChange}
+                      className={styles.inputField}
+                      style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
+                      disabled={!!newListData.bannerImageFile}
+                    />
+                    <div style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>Hoặc tải ảnh lên:</div>
+                    <input
+                      type="file"
+                      name="bannerImageFile"
+                      accept="image/*"
+                      onChange={handleNewListInputChange}
+                      style={{ padding: '8px' }}
+                    />
+                  </div>
+                </div>
+
                 {/* 3. Checkbox Private */}
                 <div className={styles.formCheckboxGroup} style={{ marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <input

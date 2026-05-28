@@ -85,7 +85,8 @@ const AnimeListPage: React.FC = () => {
               description: listInfo.description,
               is_private: listInfo.privacy === 'private',
               is_owner: listInfo.isOwner,
-              color: listInfo.color
+              color: listInfo.color,
+              bannerImage: listInfo.bannerImage
             } as any} 
             listId={id || ''} 
           />
@@ -264,13 +265,15 @@ const AnimeListPage: React.FC = () => {
           list_name: listInfo.name,
           description: listInfo.description,
           is_private: listInfo.privacy === 'private',
-          color: listInfo.color
+          color: (listInfo.bannerImage && listInfo.bannerImage.startsWith('#')) ? listInfo.bannerImage : listInfo.color,
+          bannerImage: (listInfo.bannerImage && !listInfo.bannerImage.startsWith('#')) ? listInfo.bannerImage : ''
         }}
         onUpdateSuccess={(data) => handleUpdateSuccess({
           name: data.list_name,
           description: data.description,
           privacy: data.is_private ? 'private' : 'public',
-          color: data.color
+          color: data.color,
+          bannerImage: data.bannerImage
         })}
       />
 

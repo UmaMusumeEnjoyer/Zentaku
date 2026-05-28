@@ -76,6 +76,33 @@ const EditListModal: React.FC<EditListModalProps> = ({
             />
           </div>
 
+          <div className={styles.formGroup}>
+            <label>Banner Image (Tùy chọn)</label>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <input
+                type="text"
+                name="bannerImage"
+                placeholder="Nhập URL hình ảnh..."
+                value={formData.bannerImage || ''}
+                onChange={handleInputChangeWrapper}
+                disabled={!!formData.bannerImageFile || isSubmitting}
+                style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-secondary)', color: 'var(--text-primary)' }}
+              />
+              <div style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>Hoặc tải ảnh lên:</div>
+              <input
+                type="file"
+                name="bannerImageFile"
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files?.[0] || null;
+                  handleInputChange('bannerImageFile', file);
+                }}
+                disabled={isSubmitting}
+                style={{ padding: '8px' }}
+              />
+            </div>
+          </div>
+
           <div className={styles.formRow}>
             <div className={styles.formGroup}>
               <label>{t('editListModal.themeColor')}</label>
