@@ -135,7 +135,7 @@
   display: flex;
   flex-direction: column;
   background-color: #000;
-  overflow-y: hidden;
+  overflow: hidden;
 }
 
 .videoPlayer {

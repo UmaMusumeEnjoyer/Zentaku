@@ -11,7 +11,7 @@ import {
   SUB_BACKGROUNDS
 } from './PlayerConfig';
 
-const PROXY_BASE = 'http://localhost:5000/api/proxy';
+const PROXY_BASE = '/api/proxy';
 
 const createProxyUrl = (url: string, referer: string) => {
   if (!url) return '';
@@ -102,18 +102,20 @@ const AnimePlayer: React.FC<{
       fullscreenWeb: false,
       theme: '#3b82f6',
       
-      subtitle: stream.subUrl ? {
-        url: getTargetUrl(stream.subUrl, refererHeader, useProxy),
-        type: 'vtt',
-        style: {
-          color: savedStyle.color,
-          fontSize: savedStyle.fontSize,
-          background: 'none',
-          padding: '0',
-        } as any,
-        encoding: 'utf-8',
-        escape: false,
-      } : undefined,
+      ...(stream.subUrl ? {
+        subtitle: {
+          url: getTargetUrl(stream.subUrl, refererHeader, useProxy),
+          type: 'vtt',
+          style: {
+            color: savedStyle.color,
+            fontSize: savedStyle.fontSize,
+            background: 'none',
+            padding: '0',
+          } as any,
+          encoding: 'utf-8',
+          escape: false,
+        }
+      } : {}),
 
       settings: [
         {
@@ -205,8 +207,10 @@ const AnimePlayer: React.FC<{
               }
             });
 
-            hls.loadSource(url);
             hls.attachMedia(video);
+            hls.on(Hls.Events.MEDIA_ATTACHED, function () {
+              hls.loadSource(url);
+            });
 
             hls.on(Hls.Events.MANIFEST_PARSED, (_, data) => {
               const levels = data.levels.map((level, index) => ({
@@ -270,51 +274,66 @@ const AnimePlayer: React.FC<{
 
     // Focus player khi ready để hotkeys hoạt động ngay
     art.on('ready', () => {
-      (art as any).focus = true;
+      if (art.template.$container) {
+        art.template.$container.tabIndex = 0;
+        art.template.$container.focus();
+      }
     });
 
-    // Quản lý cursor: chỉ ẩn khi video đang phát và mouse idle > 3s
-    let cursorTimer: ReturnType<typeof setTimeout> | null = null;
-
-    const showCursor = () => {
-      if (artRef.current) {
-        artRef.current.style.cursor = '';
+    // Bắt sự kiện click vào toàn bộ player để Play/Pause (xử lý thủ công, bỏ qua control bar)
+    const handlePlayerClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      // Bỏ qua nếu user click vào thanh điều khiển hoặc các nút setting
+      if (target.closest('.art-bottom') || target.closest('.art-controls') || target.closest('.art-setting')) {
+        return;
       }
-      if (cursorTimer) clearTimeout(cursorTimer);
-      cursorTimer = setTimeout(() => {
-        if (art.playing && artRef.current) {
-          artRef.current.style.cursor = 'none';
-        }
-      }, 3000);
+      art.toggle();
     };
 
-    art.on('video:playing', () => {
-      showCursor();
-    });
-
-    art.on('video:pause', () => {
-      if (cursorTimer) clearTimeout(cursorTimer);
-      if (artRef.current) artRef.current.style.cursor = '';
-    });
-
-    const containerEl = artRef.current;
-    if (containerEl) {
-      containerEl.addEventListener('mousemove', showCursor);
-      containerEl.addEventListener('mouseenter', () => {
-        if (containerEl) containerEl.style.cursor = '';
-      });
+    if (art.template.$player) {
+      art.template.$player.addEventListener('click', handlePlayerClick);
     }
+
+    // Xử lý phím tắt toàn cục (ngoại trừ khi đang gõ chat)
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (document.activeElement?.tagName === 'INPUT' || document.activeElement?.tagName === 'TEXTAREA') {
+        return;
+      }
+      
+      switch(e.code) {
+        case 'Space':
+          e.preventDefault();
+          art.toggle();
+          break;
+        case 'ArrowLeft':
+          e.preventDefault();
+          art.backward = 5;
+          break;
+        case 'ArrowRight':
+          e.preventDefault();
+          art.forward = 5;
+          break;
+        case 'ArrowUp':
+          e.preventDefault();
+          art.volume += 0.1;
+          break;
+        case 'ArrowDown':
+          e.preventDefault();
+          art.volume -= 0.1;
+          break;
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyDown);
 
     playerRef.current = art;
 
     return () => {
-      // Cleanup cursor management
-      if (cursorTimer) clearTimeout(cursorTimer);
-      if (containerEl) {
-        containerEl.removeEventListener('mousemove', showCursor);
-      }
-
+      window.removeEventListener('keydown', handleKeyDown);
       if (playerRef.current) {
+        if (playerRef.current.template?.$player) {
+           playerRef.current.template.$player.removeEventListener('click', handlePlayerClick);
+        }
         // Cleanup video element listener
         if (playerRef.current.video) {
             playerRef.current.video.removeEventListener('ended', handleEnd);
@@ -329,7 +348,11 @@ const AnimePlayer: React.FC<{
     };
   }, [stream.videoUrl, stream.subUrl, stream.referer]);
 
-  return <div ref={artRef} className={styles.playerContainer} />;
+  return (
+    <div className={styles.playerContainer}>
+      <div ref={artRef} key={stream.videoUrl} style={{ width: '100%', height: '100%' }}></div>
+    </div>
+  );
 };
 
 export const VideoPlayer: React.FC<VideoPlayerProps> = ({
@@ -419,7 +442,6 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
         </div>
       ) : streamData && streamData.videoUrl ? (
         <AnimePlayer 
-            key={streamData.videoUrl} 
             stream={streamData} 
             onEnded={handleVideoEnded}
         />

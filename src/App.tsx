@@ -107,6 +107,7 @@ function App() {
               <Route path="/user/:username" element={<ProfilePage />} />
               <Route path="/list/:id" element={<AnimeListPage />} />
               <Route path="/watch-along" element={<WatchAlongPage />} />
+              <Route path="/watch-along/:roomId" element={<WatchAlongPage />} />
               <Route path="/manga/:id/read/:chapterId?" element={<MangaReader />} />
               <Route path="/novel/:id/read/:chapterId?" element={<LightNovelReader />} />
               <Route path="/chat" element={<ChatMessenger />} />
