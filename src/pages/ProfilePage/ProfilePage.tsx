@@ -83,6 +83,23 @@ const ProfilePage: React.FC = () => {
                   <span className={styles.profileUsername}>{userProfile?.username || targetUsername}</span>
                 </div>
 
+                <div className={styles.followStats} style={{ display: 'flex', gap: '15px', marginTop: '10px', marginBottom: '15px', justifyContent: 'center' }}>
+                  <div 
+                    onClick={() => handleTabChange('Social')} 
+                    style={{ cursor: 'pointer', textAlign: 'center' }}
+                  >
+                    <span style={{ fontWeight: 'bold', display: 'block', fontSize: '1.1rem' }}>{followers.length}</span>
+                    <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Người theo dõi</span>
+                  </div>
+                  <div 
+                    onClick={() => handleTabChange('Social')} 
+                    style={{ cursor: 'pointer', textAlign: 'center' }}
+                  >
+                    <span style={{ fontWeight: 'bold', display: 'block', fontSize: '1.1rem' }}>{following.length}</span>
+                    <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Đang theo dõi</span>
+                  </div>
+                </div>
+
                 {(isOwnProfile || userProfile?.is_own_profile) ? (
                   <button
                     className={styles.btnEditProfile}
@@ -285,9 +302,9 @@ const ProfilePage: React.FC = () => {
                       </h3>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                         {followers.map((f: any) => (
-                          <div key={f.id} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px', backgroundColor: 'var(--bg-secondary)', borderRadius: '8px' }}>
-                            <img src={f.avatarUrl || 'https://i.pravatar.cc/150'} alt="avatar" style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }} />
-                            <span style={{ fontWeight: 'bold' }}>{f.username || f.name}</span>
+                          <div key={f.id} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px', backgroundColor: 'var(--bg-secondary)', borderRadius: '8px', cursor: 'pointer' }} onClick={() => navigate(`/user/${f.username}`)}>
+                            <img src={getAvatarUrl(f.avatar)} alt="avatar" style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }} />
+                            <span style={{ fontWeight: 'bold' }}>{f.displayName || f.username}</span>
                           </div>
                         ))}
                         {followers.length === 0 && <div className={styles.emptyText}>Chưa có người theo dõi nào.</div>}
@@ -301,9 +318,9 @@ const ProfilePage: React.FC = () => {
                       </h3>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                         {following.map((f: any) => (
-                          <div key={f.id} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px', backgroundColor: 'var(--bg-secondary)', borderRadius: '8px' }}>
-                            <img src={f.avatarUrl || 'https://i.pravatar.cc/150'} alt="avatar" style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }} />
-                            <span style={{ fontWeight: 'bold' }}>{f.username || f.name}</span>
+                          <div key={f.id} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px', backgroundColor: 'var(--bg-secondary)', borderRadius: '8px', cursor: 'pointer' }} onClick={() => navigate(`/user/${f.username}`)}>
+                            <img src={getAvatarUrl(f.avatar)} alt="avatar" style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }} />
+                            <span style={{ fontWeight: 'bold' }}>{f.displayName || f.username}</span>
                           </div>
                         ))}
                         {following.length === 0 && <div className={styles.emptyText}>Chưa theo dõi ai.</div>}
