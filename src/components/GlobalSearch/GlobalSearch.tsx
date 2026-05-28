@@ -5,10 +5,12 @@ import { useNavigate } from 'react-router-dom';
 import styles from './GlobalSearch.module.css'; 
 import { useGlobalSearch, type GlobalSearchModalProps } from '@umamusumeenjoyer/shared-logic';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '../../context/AuthContext';
 
 const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
   const { t } = useTranslation(['GlobalSearch']);
+  const { user: currentUser } = useAuth();
 
   const handleUserSelect = (username: string) => {
     navigate(`/user/${username}`);
@@ -21,6 +23,8 @@ const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({ isOpen, onClose }
     handleInputChange, 
     handleUserClick 
   } = useGlobalSearch(isOpen, onClose, handleUserSelect);
+
+  const filteredResults = results.filter((u) => u.username !== currentUser?.username);
 
   if (!isOpen) return null;
 
@@ -63,18 +67,18 @@ const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({ isOpen, onClose }
         <div className={styles['gs-body']}>
           {loading && <div className={styles['gs-loading']}>{t('GlobalSearch:loading')}</div>}
 
-          {!loading && results.length === 0 && searchTerm && (
+          {!loading && filteredResults.length === 0 && searchTerm && (
             <div className={styles['gs-empty']}>
               {t('GlobalSearch:no_results', { query: searchTerm })}
             </div>
           )}
           
-          {!loading && results.length === 0 && !searchTerm && (
+          {!loading && filteredResults.length === 0 && !searchTerm && (
             <div className={styles['gs-empty']}>{t('GlobalSearch:start_typing')}</div>
           )}
 
           <div className={styles['gs-results-list']}>
-            {results.map((user) => (
+            {filteredResults.map((user) => (
               <div 
                 key={user.id || user.username} 
                 className={styles['gs-result-item']}
