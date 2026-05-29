@@ -200,6 +200,11 @@ const WatchAlongPage: React.FC = () => {
                 }}
                 isTheaterMode={isTheaterMode}
                 onTheaterModeToggle={() => setIsTheaterMode(!isTheaterMode)}
+                isHost={isHost}
+                remotePlaybackState={remotePlaybackState}
+                onPlay={(time) => actions.play(time)}
+                onPause={(time) => actions.pause(time)}
+                onSeek={(time) => actions.seek(time)}
              />
              {/* Note: In a real app, we would sync remotePlaybackState with VideoPlayer here */}
           </div>

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import Artplayer from 'artplayer';
 import Hls from 'hls.js';
 import type { Server, Episode } from '../WatchPage.types';
@@ -25,6 +25,12 @@ interface StreamData {
   requiresProxy: boolean;
 }
 
+interface RemotePlaybackState {
+  isPlaying: boolean;
+  currentTimestamp: number;
+  updatedAt: number;
+}
+
 interface VideoPlayerProps {
   streamData: StreamData | null;
   isLoading: boolean;
@@ -38,6 +44,12 @@ interface VideoPlayerProps {
   onPrevEpisode?: () => void;
   isTheaterMode?: boolean;
   onTheaterModeToggle?: () => void;
+  // Watch-Along sync props
+  isHost?: boolean;
+  remotePlaybackState?: RemotePlaybackState | null;
+  onPlay?: (currentTime: number) => void;
+  onPause?: (currentTime: number) => void;
+  onSeek?: (currentTime: number) => void;
 }
 
 // Helper set CSS var
@@ -55,16 +67,33 @@ const getTargetUrl = (url: string, referer: string, useProxy: boolean) => {
 const AnimePlayer: React.FC<{
   stream: StreamData;
   onEnded: () => void;
-}> = ({ stream, onEnded }) => {
+  isHost?: boolean;
+  remotePlaybackState?: RemotePlaybackState | null;
+  onPlay?: (currentTime: number) => void;
+  onPause?: (currentTime: number) => void;
+  onSeek?: (currentTime: number) => void;
+}> = ({ stream, onEnded, isHost = true, remotePlaybackState, onPlay, onPause, onSeek }) => {
   const artRef = useRef<HTMLDivElement>(null);
   const playerRef = useRef<Artplayer | null>(null);
   
   // ✅ Sử dụng ref để giữ hàm onEnded mới nhất
   const onEndedRef = useRef(onEnded);
+  // Refs for sync callbacks to avoid stale closures
+  const onPlayRef = useRef(onPlay);
+  const onPauseRef = useRef(onPause);
+  const onSeekRef = useRef(onSeek);
+  // Track whether we're programmatically syncing (to avoid feedback loops)
+  const isSyncingRef = useRef(false);
 
   useEffect(() => {
     onEndedRef.current = onEnded;
   }, [onEnded]);
+
+  useEffect(() => {
+    onPlayRef.current = onPlay;
+    onPauseRef.current = onPause;
+    onSeekRef.current = onSeek;
+  }, [onPlay, onPause, onSeek]);
 
   useEffect(() => {
     if (playerRef.current) {
@@ -265,6 +294,25 @@ const AnimePlayer: React.FC<{
         art.video.addEventListener('ended', handleEnd);
     }
 
+    // ========== Watch-Along: Host emits playback events ==========
+    if (isHost) {
+      art.on('video:play', () => {
+        if (!isSyncingRef.current && onPlayRef.current) {
+          onPlayRef.current(art.currentTime);
+        }
+      });
+      art.on('video:pause', () => {
+        if (!isSyncingRef.current && onPauseRef.current) {
+          onPauseRef.current(art.currentTime);
+        }
+      });
+      art.on('video:seeked', () => {
+        if (!isSyncingRef.current && onSeekRef.current) {
+          onSeekRef.current(art.currentTime);
+        }
+      });
+    }
+
     if (!savedStyle.visible) {
       art.subtitle.show = false;
       if (art.template.$subtitle) {
@@ -282,6 +330,8 @@ const AnimePlayer: React.FC<{
 
     // Bắt sự kiện click vào toàn bộ player để Play/Pause (xử lý thủ công, bỏ qua control bar)
     const handlePlayerClick = (e: MouseEvent) => {
+      // Viewers cannot toggle play/pause by clicking
+      if (!isHost) return;
       const target = e.target as HTMLElement;
       // Bỏ qua nếu user click vào thanh điều khiển hoặc các nút setting
       if (target.closest('.art-bottom') || target.closest('.art-controls') || target.closest('.art-setting')) {
@@ -303,23 +353,23 @@ const AnimePlayer: React.FC<{
       switch(e.code) {
         case 'Space':
           e.preventDefault();
-          art.toggle();
+          if (isHost) art.toggle();
           break;
         case 'ArrowLeft':
           e.preventDefault();
-          art.backward = 5;
+          if (isHost) art.backward = 5;
           break;
         case 'ArrowRight':
           e.preventDefault();
-          art.forward = 5;
+          if (isHost) art.forward = 5;
           break;
         case 'ArrowUp':
           e.preventDefault();
-          art.volume += 0.1;
+          art.volume += 0.1; // Volume is always local
           break;
         case 'ArrowDown':
           e.preventDefault();
-          art.volume -= 0.1;
+          art.volume -= 0.1; // Volume is always local
           break;
       }
     };
@@ -346,10 +396,52 @@ const AnimePlayer: React.FC<{
         playerRef.current = null;
       }
     };
-  }, [stream.videoUrl, stream.subUrl, stream.referer]);
+  }, [stream.videoUrl, stream.subUrl, stream.referer, isHost]);
+
+  // ========== Watch-Along: Viewer sync interval ==========
+  useEffect(() => {
+    // Only run for viewers with an active remote state
+    if (isHost || !remotePlaybackState || !playerRef.current) return;
+
+    const SYNC_THRESHOLD = 1.5; // seconds
+    const art = playerRef.current;
+
+    const syncInterval = setInterval(() => {
+      if (!playerRef.current || !remotePlaybackState) return;
+
+      const now = Date.now();
+      const elapsed = (now - remotePlaybackState.updatedAt) / 1000;
+      const expectedTime = remotePlaybackState.isPlaying
+        ? remotePlaybackState.currentTimestamp + elapsed
+        : remotePlaybackState.currentTimestamp;
+
+      const drift = Math.abs(playerRef.current.currentTime - expectedTime);
+
+      isSyncingRef.current = true;
+
+      // Sync time if drift exceeds threshold
+      if (drift > SYNC_THRESHOLD) {
+        playerRef.current.currentTime = expectedTime;
+      }
+
+      // Sync play/pause state
+      if (remotePlaybackState.isPlaying && playerRef.current.video?.paused) {
+        playerRef.current.play().catch(() => {
+          // Browser autoplay policy blocked - user needs to interact
+        });
+      } else if (!remotePlaybackState.isPlaying && !playerRef.current.video?.paused) {
+        playerRef.current.pause();
+      }
+
+      // Reset the flag after a tick to allow natural events to fire
+      setTimeout(() => { isSyncingRef.current = false; }, 50);
+    }, 1000);
+
+    return () => clearInterval(syncInterval);
+  }, [isHost, remotePlaybackState]);
 
   return (
-    <div className={styles.playerContainer}>
+    <div className={`${styles.playerContainer} ${!isHost ? styles.viewerMode : ''}`}>
       <div ref={artRef} key={stream.videoUrl} style={{ width: '100%', height: '100%' }}></div>
     </div>
   );
@@ -366,7 +458,12 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
   onEpisodeClick,
   onNextEpisode,
   isTheaterMode = false,
-  onTheaterModeToggle
+  onTheaterModeToggle,
+  isHost = true,
+  remotePlaybackState,
+  onPlay,
+  onPause,
+  onSeek,
 }) => {
     // Autoplay State
     const [autoPlay, setAutoPlay] = useState<boolean>(() => {
@@ -444,6 +541,11 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
         <AnimePlayer 
             stream={streamData} 
             onEnded={handleVideoEnded}
+            isHost={isHost}
+            remotePlaybackState={remotePlaybackState}
+            onPlay={onPlay}
+            onPause={onPause}
+            onSeek={onSeek}
         />
       ) : (
         <div className={styles.playerContainer}>

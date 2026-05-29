@@ -47,6 +47,17 @@
   transition: all 0.3s ease;
 }
 
+/* ========== Watch-Along: Viewer Mode - disable progress bar & play/pause ========== */
+.viewerMode :global(.art-control-progress) {
+  pointer-events: none !important;
+  opacity: 0.5;
+}
+
+.viewerMode :global(.art-control-playAndPause) {
+  pointer-events: none !important;
+  opacity: 0.5;
+}
+
 .playerLoading {
   display: flex;
   align-items: center;
