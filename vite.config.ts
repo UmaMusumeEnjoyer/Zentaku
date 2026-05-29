@@ -25,6 +25,9 @@ export default defineConfig(({ mode }) => {
           secure: false,
         }
       }
+    },
+    optimizeDeps: {
+      exclude: ['@umamusumeenjoyer/shared-logic']
     }
   };
 });

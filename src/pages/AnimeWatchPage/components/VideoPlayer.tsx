@@ -297,23 +297,17 @@ const AnimePlayer: React.FC<{
     // ========== Watch-Along: Host emits playback events ==========
     if (isHost) {
       art.on('video:play', () => {
-        console.log('[WatchAlong Host] video:play emitted by Artplayer. currentTime:', art.currentTime);
         if (!isSyncingRef.current && onPlayRef.current) {
-          console.log('[WatchAlong Host] Calling onPlayRef with', art.currentTime);
           onPlayRef.current(art.currentTime);
         }
       });
       art.on('video:pause', () => {
-        console.log('[WatchAlong Host] video:pause emitted by Artplayer. currentTime:', art.currentTime);
         if (!isSyncingRef.current && onPauseRef.current) {
-          console.log('[WatchAlong Host] Calling onPauseRef with', art.currentTime);
           onPauseRef.current(art.currentTime);
         }
       });
       art.on('video:seeked', () => {
-        console.log('[WatchAlong Host] video:seeked emitted by Artplayer. currentTime:', art.currentTime);
         if (!isSyncingRef.current && onSeekRef.current) {
-          console.log('[WatchAlong Host] Calling onSeekRef with', art.currentTime);
           onSeekRef.current(art.currentTime);
         }
       });
@@ -440,7 +434,6 @@ const AnimePlayer: React.FC<{
         // If the host wants us to play but we are paused (e.g. autoplay block), do NOT scrub continuously.
         if (!art.video?.paused || !state.isPlaying) {
           if (!autoplayBlocked) {
-            console.log(`[WatchAlong Sync] Drift ${drift.toFixed(1)}s → seeking to ${expectedTime.toFixed(1)}`);
             art.currentTime = expectedTime;
           }
         }
@@ -449,7 +442,6 @@ const AnimePlayer: React.FC<{
       // Sync play/pause state
       if (state.isPlaying && art.video?.paused) {
         if (!autoplayBlocked) {
-          console.log('[WatchAlong Sync] Remote is playing → art.play()');
           art.play().then(() => {
             setAutoplayBlocked(false);
           }).catch((err: any) => {
@@ -458,7 +450,6 @@ const AnimePlayer: React.FC<{
           });
         }
       } else if (!state.isPlaying && !art.video?.paused) {
-        console.log('[WatchAlong Sync] Remote is paused → art.pause()');
         art.pause();
       }
 

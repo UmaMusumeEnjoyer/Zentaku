@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useWatchAlong } from './useWatchAlong';
 import styles from './WatchAlong.module.css';
 import WatchAlongSkeleton from './WatchAlongSkeleton';
@@ -8,6 +8,16 @@ import type { Episode } from '../AnimeWatchPage/WatchPage.types';
 
 const WatchAlongPage: React.FC = () => {
   const { room, isHost, isLoading, error, remotePlaybackState, streamData: originalStreamData, actions } = useWatchAlong();
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [room?.messages]);
+
   const [chatMessage, setChatMessage] = useState('');
   const [episodes, setEpisodes] = useState<Episode[]>([]);
   const [currentEpisode, setCurrentEpisode] = useState<Episode | null>(null);
@@ -218,6 +228,16 @@ const WatchAlongPage: React.FC = () => {
             <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', textAlign: 'center', padding: 8 }}>
               Welcome to the watch party!
             </div>
+            {room?.messages?.map((msg: any) => (
+              <div key={msg.id} style={{ marginBottom: 12, wordBreak: 'break-word' }}>
+                <strong style={{ color: 'var(--primary)', fontSize: '0.9rem' }}>{msg.senderName}</strong>
+                <span style={{ fontSize: '0.75rem', color: 'gray', marginLeft: 8 }}>
+                  {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                </span>
+                <div style={{ fontSize: '0.9rem', marginTop: 4 }}>{msg.content}</div>
+              </div>
+            ))}
+            <div ref={messagesEndRef} />
           </div>
 
           <div className={styles.chatInputArea}>
@@ -227,11 +247,29 @@ const WatchAlongPage: React.FC = () => {
               rows={1}
               value={chatMessage}
               onChange={(e) => setChatMessage(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault();
+                  if (chatMessage.trim()) {
+                    actions.sendMessage(chatMessage);
+                    setChatMessage('');
+                  }
+                }
+              }}
             />
             <div style={{ marginTop: 8, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>{chatMessage.length}/500</span>
                <button className={styles.sendBtn} onClick={() => {
-                 setChatMessage('');
+                 console.log("Sending chat message:", chatMessage);
+                 if (chatMessage.trim()) {
+                   try {
+                     actions.sendMessage(chatMessage);
+                     console.log("actions.sendMessage executed!");
+                     setChatMessage('');
+                   } catch (err) {
+                     console.error("Error calling sendMessage:", err);
+                   }
+                 }
                }}>Chat</button>
             </div>
           </div>
