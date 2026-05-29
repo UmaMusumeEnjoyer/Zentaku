@@ -111,7 +111,6 @@ export const useChatMessenger = (): UseChatMessengerReturn => {
     if (!activeRoomId) return;
 
     const isCommunity = chatRooms?.some(r => r.id === activeRoomId);
-    const isPrivate = privateRooms?.some(r => r.id === activeRoomId);
     
     // Prevent infinite loop if the room has 0 messages
     if (loadedRoomsRef.current.has(activeRoomId)) return;

@@ -43,7 +43,7 @@ const WatchAlongPage: React.FC = () => {
             id: ep.id || ep.episodeId || String(ep.number),
             number: ep.number,
             title: ep.title || `Tập ${ep.number}`,
-            thumbnail: ep.thumbnail || '', 
+            thumbnail: ep.thumbnail || '',
             videoUrl: ''
           }));
           mappedEpisodes = mappedEpisodes.sort((a, b) => a.number - b.number);
@@ -78,8 +78,6 @@ const WatchAlongPage: React.FC = () => {
     );
   }
 
-  const role = isHost ? 'owner' : 'viewer';
-
   // Handle play/pause/seek from VideoPlayer
   // But wait, VideoPlayer from AnimeWatchPage doesn't expose onPlay/onPause directly, it uses Artplayer.
   // This means we need to either modify VideoPlayer to accept onPlay/onPause, or just use it as is for now and let the host control.
@@ -90,114 +88,185 @@ const WatchAlongPage: React.FC = () => {
   return (
     <div className={styles.container}>
       <div className={styles.contentWrapper}>
-        <aside className={`${styles.leftSidebar} ${role === 'owner' ? styles.owner : styles.viewer}`}>
+        <aside className={`${styles.leftSidebar} ${styles.owner}`}>
           <div className={styles.sidebarContent}>
-            {role === 'owner' && (
-              <div style={{ padding: '16px', fontWeight: 'bold', fontSize: '0.8rem', color: '#adadb8', textTransform: 'uppercase' }}>
-                Host Controls
-              </div>
-            )}
-            
-            <div className={styles.sidebarItem}>
-              <i className="material-icons" style={{ color: role === 'owner' ? '#a970ff' : '#fff' }}>
-                people
-              </i>
-              {role === 'owner' && (
-                <div className={styles.itemInfo}>
-                  <span className={styles.itemLabel}>Viewers</span>
-                  <span className={styles.itemDetail}>Waiting for sync...</span>
+
+
+            {/* Host Section */}
+            {(() => {
+              const hostParticipants = room?.participants?.filter(p => p.userId === room.hostId) || [];
+              const viewerParticipants = room?.participants?.filter(p => p.userId !== room.hostId) || [];
+
+              return (
+                <div style={{ padding: '0 16px' }}>
+                  {hostParticipants.length > 0 && (
+                    <div style={{ marginBottom: '24px' }}>
+                      <div style={{ fontSize: '0.75rem', fontWeight: 600, color: '#adadb8', textTransform: 'uppercase', marginBottom: '12px' }}>
+                        Host — {hostParticipants.length}
+                      </div>
+                      {hostParticipants.map((p, index) => (
+                        <div key={p.userId || index} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px', padding: '6px', borderRadius: '4px', cursor: 'pointer', transition: 'background-color 0.2s' }} className={styles.participantItem}>
+                          {p.avatar ? (
+                            <img src={p.avatar} alt={p.displayName} style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover', marginRight: '12px', border: '2px solid gold' }} />
+                          ) : (
+                            <div style={{
+                              width: '32px', height: '32px', borderRadius: '50%', backgroundColor: 'var(--bg-subtle)',
+                              display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: '12px',
+                              border: '2px solid gold', color: 'gold'
+                            }}>
+                              <i className="material-icons" style={{ fontSize: '18px' }}>star</i>
+                            </div>
+                          )}
+                          <div style={{ fontSize: '0.9rem', fontWeight: 500, color: 'var(--text-primary)' }}>
+                            {p.displayName || 'Unknown User'}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Viewers Section */}
+                  {viewerParticipants.length > 0 && (
+                    <div>
+                      <div style={{ fontSize: '0.75rem', fontWeight: 600, color: '#adadb8', textTransform: 'uppercase', marginBottom: '12px' }}>
+                        Viewers — {viewerParticipants.length}
+                      </div>
+                      {viewerParticipants.map((p, index) => (
+                        <div key={p.userId || index} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px', padding: '6px', borderRadius: '4px', cursor: 'pointer', transition: 'background-color 0.2s' }} className={styles.participantItem}>
+                          {p.avatar ? (
+                            <img src={p.avatar} alt={p.displayName} style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover', marginRight: '12px' }} />
+                          ) : (
+                            <div style={{
+                              width: '32px', height: '32px', borderRadius: '50%', backgroundColor: 'var(--bg-subtle)',
+                              display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: '12px',
+                              color: 'var(--text-secondary)'
+                            }}>
+                              <i className="material-icons" style={{ fontSize: '18px' }}>person</i>
+                            </div>
+                          )}
+                          <div style={{ fontSize: '0.9rem', fontWeight: 500, color: 'var(--text-primary)', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                            {p.displayName || 'Unknown User'}
+                          </div>
+                          {isHost && (
+                            <button
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                console.log('Kick clicked for:', p.userId, 'actions:', actions);
+                                if (actions.kickParticipant) {
+                                  actions.kickParticipant(p.userId);
+                                } else {
+                                  console.error('actions.kickParticipant is undefined');
+                                }
+                              }}
+                              title="Kick participant"
+                              className={styles.kickButton}
+                            >
+                              <i className="material-icons" style={{ fontSize: '18px' }}>person_remove</i>
+                            </button>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {(!room?.participants || room.participants.length === 0) && (
+                    <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', textAlign: 'center', marginTop: '20px' }}>
+                      Waiting for others to join...
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
+              );
+            })()}
           </div>
         </aside>
 
         <main className={styles.mainArea}>
           <div className={styles.videoPlayer}>
-             <VideoPlayer 
-                streamData={displayStreamData} 
-                isLoading={fetchingStream || isLoading}
-                servers={[{ id: 'hd-1', name: 'Zentaku Server', type: 'sub' }]}
-                activeServerId="hd-1"
-                onServerChange={() => {}}
-                currentEpisode={currentEpisode}
-                episodes={episodes}
-                onEpisodeClick={async (episode) => {
-                  if (!isHost) return;
-                  setCurrentEpisode(episode);
+            <VideoPlayer
+              streamData={displayStreamData}
+              isLoading={fetchingStream || isLoading}
+              servers={[{ id: 'hd-1', name: 'Zentaku Server', type: 'sub' }]}
+              activeServerId="hd-1"
+              onServerChange={() => { }}
+              currentEpisode={currentEpisode}
+              episodes={episodes}
+              onEpisodeClick={async (episode) => {
+                if (!isHost) return;
+                setCurrentEpisode(episode);
+                setFetchingStream(true);
+                try {
+                  const res = await streamingService.getEpisodeSources(room?.settings?.anilistId, episode.number);
+                  const data = res.data;
+                  const innerData = data.data;
+                  const videoUrl = innerData?.streamLinks?.[0] || data.video || (data.sources && data.sources[0]?.url) || '';
+                  const subUrl = innerData?.subtitles?.find((s: any) => s.lang === 'en' || s.lang?.toLowerCase() === 'english')?.url || data.sub || null;
+                  const referer = data.referer || data.headers?.Referer || null;
+                  if (videoUrl) {
+                    actions.changeEpisode(videoUrl, episode.number, subUrl, referer);
+                  }
+                } catch (err) {
+                  console.error("Failed to fetch new stream", err);
+                } finally {
+                  setFetchingStream(false);
+                }
+              }}
+              onNextEpisode={async () => {
+                if (!isHost) return;
+                const idx = episodes.findIndex(e => e.id === currentEpisode?.id);
+                if (idx !== -1 && idx < episodes.length - 1) {
+                  const nextEp = episodes[idx + 1];
+                  // Trigger episode click logic
+                  setCurrentEpisode(nextEp);
                   setFetchingStream(true);
                   try {
-                    const res = await streamingService.getEpisodeSources(room?.settings?.anilistId, episode.number);
+                    const res = await streamingService.getEpisodeSources(room?.settings?.anilistId, nextEp.number);
                     const data = res.data;
-                    const innerData = data.data;
-                    const videoUrl = innerData?.streamLinks?.[0] || data.video || (data.sources && data.sources[0]?.url) || '';
-                    const subUrl = innerData?.subtitles?.find((s: any) => s.lang === 'en' || s.lang?.toLowerCase() === 'english')?.url || data.sub || null;
+                    const videoUrl = data.data?.streamLinks?.[0] || data.video || (data.sources && data.sources[0]?.url) || '';
+                    const subUrl = data.data?.subtitles?.find((s: any) => s.lang === 'en' || s.lang?.toLowerCase() === 'english')?.url || data.sub || null;
                     const referer = data.referer || data.headers?.Referer || null;
                     if (videoUrl) {
-                      actions.changeEpisode(videoUrl, episode.number, subUrl, referer);
+                      actions.changeEpisode(videoUrl, nextEp.number, subUrl, referer);
                     }
                   } catch (err) {
-                    console.error("Failed to fetch new stream", err);
+                    console.error("Failed to load next episode", err);
                   } finally {
                     setFetchingStream(false);
                   }
-                }}
-                onNextEpisode={async () => {
-                  if (!isHost) return;
-                  const idx = episodes.findIndex(e => e.id === currentEpisode?.id);
-                  if (idx !== -1 && idx < episodes.length - 1) {
-                    const nextEp = episodes[idx + 1];
-                    // Trigger episode click logic
-                    setCurrentEpisode(nextEp);
-                    setFetchingStream(true);
-                    try {
-                      const res = await streamingService.getEpisodeSources(room?.settings?.anilistId, nextEp.number);
-                      const data = res.data;
-                      const videoUrl = data.data?.streamLinks?.[0] || data.video || (data.sources && data.sources[0]?.url) || '';
-                      const subUrl = data.data?.subtitles?.find((s: any) => s.lang === 'en' || s.lang?.toLowerCase() === 'english')?.url || data.sub || null;
-                      const referer = data.referer || data.headers?.Referer || null;
-                      if (videoUrl) {
-                        actions.changeEpisode(videoUrl, nextEp.number, subUrl, referer);
-                      }
-                    } catch (err) {
-                      console.error("Failed to load next episode", err);
-                    } finally {
-                      setFetchingStream(false);
+                }
+              }}
+              onPrevEpisode={async () => {
+                if (!isHost) return;
+                const idx = episodes.findIndex(e => e.id === currentEpisode?.id);
+                if (idx > 0) {
+                  const prevEp = episodes[idx - 1];
+                  setCurrentEpisode(prevEp);
+                  setFetchingStream(true);
+                  try {
+                    const res = await streamingService.getEpisodeSources(room?.settings?.anilistId, prevEp.number);
+                    const data = res.data;
+                    const videoUrl = data.data?.streamLinks?.[0] || data.video || (data.sources && data.sources[0]?.url) || '';
+                    const subUrl = data.data?.subtitles?.find((s: any) => s.lang === 'en' || s.lang?.toLowerCase() === 'english')?.url || data.sub || null;
+                    const referer = data.referer || data.headers?.Referer || null;
+                    if (videoUrl) {
+                      actions.changeEpisode(videoUrl, prevEp.number, subUrl, referer);
                     }
+                  } catch (err) {
+                    console.error("Failed to load previous episode", err);
+                  } finally {
+                    setFetchingStream(false);
                   }
-                }}
-                onPrevEpisode={async () => {
-                  if (!isHost) return;
-                  const idx = episodes.findIndex(e => e.id === currentEpisode?.id);
-                  if (idx > 0) {
-                    const prevEp = episodes[idx - 1];
-                    setCurrentEpisode(prevEp);
-                    setFetchingStream(true);
-                    try {
-                      const res = await streamingService.getEpisodeSources(room?.settings?.anilistId, prevEp.number);
-                      const data = res.data;
-                      const videoUrl = data.data?.streamLinks?.[0] || data.video || (data.sources && data.sources[0]?.url) || '';
-                      const subUrl = data.data?.subtitles?.find((s: any) => s.lang === 'en' || s.lang?.toLowerCase() === 'english')?.url || data.sub || null;
-                      const referer = data.referer || data.headers?.Referer || null;
-                      if (videoUrl) {
-                        actions.changeEpisode(videoUrl, prevEp.number, subUrl, referer);
-                      }
-                    } catch (err) {
-                      console.error("Failed to load previous episode", err);
-                    } finally {
-                      setFetchingStream(false);
-                    }
-                  }
-                }}
-                isTheaterMode={isTheaterMode}
-                onTheaterModeToggle={() => setIsTheaterMode(!isTheaterMode)}
-                isHost={isHost}
-                remotePlaybackState={remotePlaybackState}
-                onPlay={(time) => actions.play(time)}
-                onPause={(time) => actions.pause(time)}
-                onSeek={(time) => actions.seek(time)}
-             />
-             {/* Note: In a real app, we would sync remotePlaybackState with VideoPlayer here */}
+                }
+              }}
+              isTheaterMode={isTheaterMode}
+              onTheaterModeToggle={() => setIsTheaterMode(!isTheaterMode)}
+              isHost={isHost}
+              remotePlaybackState={remotePlaybackState}
+              onPlay={(time) => actions.play(time)}
+              onPause={(time) => actions.pause(time)}
+              onSeek={(time) => actions.seek(time)}
+            />
+            {/* Note: In a real app, we would sync remotePlaybackState with VideoPlayer here */}
           </div>
 
           <div className={styles.streamInfo}>
@@ -210,10 +279,10 @@ const WatchAlongPage: React.FC = () => {
                 </div>
               </div>
               <div style={{ textAlign: 'right' }}>
-                 <div style={{ color: 'red', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 4 }}>
-                    <span style={{ width: 8, height: 8, background: 'red', borderRadius: '50%' }}></span>
-                    LIVE
-                 </div>
+                <div style={{ color: 'red', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 4 }}>
+                  <span style={{ width: 8, height: 8, background: 'red', borderRadius: '50%' }}></span>
+                  LIVE
+                </div>
               </div>
             </div>
           </div>
@@ -223,7 +292,7 @@ const WatchAlongPage: React.FC = () => {
           <div className={styles.chatHeader}>
             <span>Room Chat</span>
           </div>
-          
+
           <div className={styles.chatList}>
             <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', textAlign: 'center', padding: 8 }}>
               Welcome to the watch party!
@@ -241,9 +310,9 @@ const WatchAlongPage: React.FC = () => {
           </div>
 
           <div className={styles.chatInputArea}>
-            <textarea 
-              className={styles.chatInput} 
-              placeholder="Send a message..." 
+            <textarea
+              className={styles.chatInput}
+              placeholder="Send a message..."
               rows={1}
               value={chatMessage}
               onChange={(e) => setChatMessage(e.target.value)}
@@ -258,19 +327,19 @@ const WatchAlongPage: React.FC = () => {
               }}
             />
             <div style={{ marginTop: 8, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-               <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>{chatMessage.length}/500</span>
-               <button className={styles.sendBtn} onClick={() => {
-                 console.log("Sending chat message:", chatMessage);
-                 if (chatMessage.trim()) {
-                   try {
-                     actions.sendMessage(chatMessage);
-                     console.log("actions.sendMessage executed!");
-                     setChatMessage('');
-                   } catch (err) {
-                     console.error("Error calling sendMessage:", err);
-                   }
-                 }
-               }}>Chat</button>
+              <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>{chatMessage.length}/500</span>
+              <button className={styles.sendBtn} onClick={() => {
+                console.log("Sending chat message:", chatMessage);
+                if (chatMessage.trim()) {
+                  try {
+                    actions.sendMessage(chatMessage);
+                    console.log("actions.sendMessage executed!");
+                    setChatMessage('');
+                  } catch (err) {
+                    console.error("Error calling sendMessage:", err);
+                  }
+                }
+              }}>Chat</button>
             </div>
           </div>
         </aside>
