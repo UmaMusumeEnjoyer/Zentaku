@@ -297,17 +297,23 @@ const AnimePlayer: React.FC<{
     // ========== Watch-Along: Host emits playback events ==========
     if (isHost) {
       art.on('video:play', () => {
+        console.log('[WatchAlong Host] video:play emitted by Artplayer. currentTime:', art.currentTime);
         if (!isSyncingRef.current && onPlayRef.current) {
+          console.log('[WatchAlong Host] Calling onPlayRef with', art.currentTime);
           onPlayRef.current(art.currentTime);
         }
       });
       art.on('video:pause', () => {
+        console.log('[WatchAlong Host] video:pause emitted by Artplayer. currentTime:', art.currentTime);
         if (!isSyncingRef.current && onPauseRef.current) {
+          console.log('[WatchAlong Host] Calling onPauseRef with', art.currentTime);
           onPauseRef.current(art.currentTime);
         }
       });
       art.on('video:seeked', () => {
+        console.log('[WatchAlong Host] video:seeked emitted by Artplayer. currentTime:', art.currentTime);
         if (!isSyncingRef.current && onSeekRef.current) {
+          console.log('[WatchAlong Host] Calling onSeekRef with', art.currentTime);
           onSeekRef.current(art.currentTime);
         }
       });
@@ -398,39 +404,62 @@ const AnimePlayer: React.FC<{
     };
   }, [stream.videoUrl, stream.subUrl, stream.referer, isHost]);
 
+  // Keep latest remote state in a ref for the sync interval
+  const remotePlaybackRef = useRef(remotePlaybackState);
+  useEffect(() => {
+    remotePlaybackRef.current = remotePlaybackState;
+  }, [remotePlaybackState]);
+
+  // Autoplay blocker state for Watch Along
+  const [autoplayBlocked, setAutoplayBlocked] = useState(false);
+
   // ========== Watch-Along: Viewer sync interval ==========
   useEffect(() => {
-    // Only run for viewers with an active remote state
-    if (isHost || !remotePlaybackState || !playerRef.current) return;
-
-    const SYNC_THRESHOLD = 1.5; // seconds
-    const art = playerRef.current;
+    // Only run for viewers. Don't bail if playerRef is null yet — 
+    // the interval will guard internally.
+    if (isHost) return;
 
     const syncInterval = setInterval(() => {
-      if (!playerRef.current || !remotePlaybackState) return;
+      const art = playerRef.current;
+      const state = remotePlaybackRef.current;
+      if (!art || !state) return;
 
       const now = Date.now();
-      const elapsed = (now - remotePlaybackState.updatedAt) / 1000;
-      const expectedTime = remotePlaybackState.isPlaying
-        ? remotePlaybackState.currentTimestamp + elapsed
-        : remotePlaybackState.currentTimestamp;
+      const elapsed = (now - state.updatedAt) / 1000;
+      const expectedTime = state.isPlaying
+        ? state.currentTimestamp + elapsed
+        : state.currentTimestamp;
 
-      const drift = Math.abs(playerRef.current.currentTime - expectedTime);
+      const drift = Math.abs(art.currentTime - expectedTime);
 
       isSyncingRef.current = true;
 
-      // Sync time if drift exceeds threshold
+      const SYNC_THRESHOLD = 1.5; // seconds
       if (drift > SYNC_THRESHOLD) {
-        playerRef.current.currentTime = expectedTime;
+        // Only seek if we are currently playing, OR if the host wants us to pause.
+        // If the host wants us to play but we are paused (e.g. autoplay block), do NOT scrub continuously.
+        if (!art.video?.paused || !state.isPlaying) {
+          if (!autoplayBlocked) {
+            console.log(`[WatchAlong Sync] Drift ${drift.toFixed(1)}s → seeking to ${expectedTime.toFixed(1)}`);
+            art.currentTime = expectedTime;
+          }
+        }
       }
 
       // Sync play/pause state
-      if (remotePlaybackState.isPlaying && playerRef.current.video?.paused) {
-        playerRef.current.play().catch(() => {
-          // Browser autoplay policy blocked - user needs to interact
-        });
-      } else if (!remotePlaybackState.isPlaying && !playerRef.current.video?.paused) {
-        playerRef.current.pause();
+      if (state.isPlaying && art.video?.paused) {
+        if (!autoplayBlocked) {
+          console.log('[WatchAlong Sync] Remote is playing → art.play()');
+          art.play().then(() => {
+            setAutoplayBlocked(false);
+          }).catch((err: any) => {
+            console.error('[WatchAlong Sync] Browser autoplay policy blocked playback!', err);
+            setAutoplayBlocked(true);
+          });
+        }
+      } else if (!state.isPlaying && !art.video?.paused) {
+        console.log('[WatchAlong Sync] Remote is paused → art.pause()');
+        art.pause();
       }
 
       // Reset the flag after a tick to allow natural events to fire
@@ -438,10 +467,30 @@ const AnimePlayer: React.FC<{
     }, 1000);
 
     return () => clearInterval(syncInterval);
-  }, [isHost, remotePlaybackState]);
+  }, [isHost, autoplayBlocked]);
 
   return (
     <div className={`${styles.playerContainer} ${!isHost ? styles.viewerMode : ''}`}>
+      {/* Autoplay Block Overlay */}
+      {autoplayBlocked && (
+        <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
+          <div className="flex flex-col items-center p-6 bg-gray-900 rounded-xl border border-gray-700 shadow-2xl max-w-md text-center">
+            <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mb-4 cursor-pointer hover:bg-blue-500 transition shadow-lg shadow-blue-500/50" 
+                 onClick={() => {
+                   if (playerRef.current) {
+                     playerRef.current.play().then(() => setAutoplayBlocked(false));
+                   }
+                 }}>
+              <svg className="w-8 h-8 text-white ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            </div>
+            <h3 className="text-xl font-bold text-white mb-2">Trình duyệt đã chặn tự động phát</h3>
+            <p className="text-gray-400 text-sm">
+              Do chính sách của trình duyệt, bạn cần tương tác với trang web để bắt đầu đồng bộ phim với Host. Hãy nhấn nút Play để tiếp tục.
+            </p>
+          </div>
+        </div>
+      )}
+
       <div ref={artRef} key={stream.videoUrl} style={{ width: '100%', height: '100%' }}></div>
     </div>
   );

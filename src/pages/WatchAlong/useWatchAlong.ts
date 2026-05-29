@@ -17,8 +17,8 @@ export const useWatchAlong = () => {
   // For now, we will construct it from room's currentSourceUrl.
   const streamData = logic.room?.currentSourceUrl ? {
     videoUrl: logic.room.currentSourceUrl,
-    subUrl: null, // Subtitles not fully supported in sync yet
-    referer: 'https://megacloud.blog/',
+    subUrl: logic.room.settings?.subUrl || null,
+    referer: logic.room.settings?.referer || 'https://megacloud.blog/',
     requiresProxy: !logic.room.currentSourceUrl.includes('localhost') && !logic.room.currentSourceUrl.includes('filmserver')
   } : null;
 

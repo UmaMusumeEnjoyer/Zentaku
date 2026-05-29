@@ -15,10 +15,7 @@ const WatchAlongPage: React.FC = () => {
   const [fetchingStream, setFetchingStream] = useState(false);
   const [isTheaterMode, setIsTheaterMode] = useState(false);
 
-  // Mảng streamData cục bộ khi host chọn tập mới (tạm thời ghi đè originalStreamData)
-  const [localStreamData, setLocalStreamData] = useState<any>(null);
-
-  const displayStreamData = localStreamData || originalStreamData;
+  const displayStreamData = originalStreamData;
 
   useEffect(() => {
     if (room?.settings?.anilistId) {
@@ -55,10 +52,9 @@ const WatchAlongPage: React.FC = () => {
       const found = episodes.find(ep => ep.number === room.settings?.episodeNumber);
       if (found && found.number !== currentEpisode?.number) {
         setCurrentEpisode(found);
-        setLocalStreamData(null); // xoá local stream data để ưu tiên streamData từ room cập nhật
       }
     }
-  }, [room?.settings?.episodeNumber, episodes]);
+  }, [room?.settings?.episodeNumber, episodes, currentEpisode?.number]);
 
   if (isLoading) {
     return <WatchAlongSkeleton role={isHost ? 'owner' : 'viewer'} />;
@@ -126,14 +122,9 @@ const WatchAlongPage: React.FC = () => {
                     const innerData = data.data;
                     const videoUrl = innerData?.streamLinks?.[0] || data.video || (data.sources && data.sources[0]?.url) || '';
                     const subUrl = innerData?.subtitles?.find((s: any) => s.lang === 'en' || s.lang?.toLowerCase() === 'english')?.url || data.sub || null;
+                    const referer = data.referer || data.headers?.Referer || null;
                     if (videoUrl) {
-                      setLocalStreamData({
-                        videoUrl,
-                        subUrl,
-                        referer: data.referer || data.headers?.Referer || null,
-                        requiresProxy: !videoUrl.includes('localhost')
-                      });
-                      actions.changeEpisode(videoUrl, episode.number);
+                      actions.changeEpisode(videoUrl, episode.number, subUrl, referer);
                     }
                   } catch (err) {
                     console.error("Failed to fetch new stream", err);
@@ -154,14 +145,9 @@ const WatchAlongPage: React.FC = () => {
                       const data = res.data;
                       const videoUrl = data.data?.streamLinks?.[0] || data.video || (data.sources && data.sources[0]?.url) || '';
                       const subUrl = data.data?.subtitles?.find((s: any) => s.lang === 'en' || s.lang?.toLowerCase() === 'english')?.url || data.sub || null;
+                      const referer = data.referer || data.headers?.Referer || null;
                       if (videoUrl) {
-                        setLocalStreamData({
-                          videoUrl,
-                          subUrl,
-                          referer: data.referer || data.headers?.Referer || null,
-                          requiresProxy: !videoUrl.includes('localhost')
-                        });
-                        actions.changeEpisode(videoUrl, nextEp.number);
+                        actions.changeEpisode(videoUrl, nextEp.number, subUrl, referer);
                       }
                     } catch (err) {
                       console.error("Failed to load next episode", err);
@@ -182,14 +168,9 @@ const WatchAlongPage: React.FC = () => {
                       const data = res.data;
                       const videoUrl = data.data?.streamLinks?.[0] || data.video || (data.sources && data.sources[0]?.url) || '';
                       const subUrl = data.data?.subtitles?.find((s: any) => s.lang === 'en' || s.lang?.toLowerCase() === 'english')?.url || data.sub || null;
+                      const referer = data.referer || data.headers?.Referer || null;
                       if (videoUrl) {
-                        setLocalStreamData({
-                          videoUrl,
-                          subUrl,
-                          referer: data.referer || data.headers?.Referer || null,
-                          requiresProxy: !videoUrl.includes('localhost')
-                        });
-                        actions.changeEpisode(videoUrl, prevEp.number);
+                        actions.changeEpisode(videoUrl, prevEp.number, subUrl, referer);
                       }
                     } catch (err) {
                       console.error("Failed to load previous episode", err);
