@@ -222,9 +222,9 @@ const AnimeListPage: React.FC = () => {
                 request_id: req.id,
                 username: req.username,
                 request_type: req.type === 'edit' ? 'edit_permission' : 'join',
-                status: req.status === 'PENDING' ? 'pending' : req.status === 'ACCEPT' ? 'approved' : 'rejected',
+                status: (req.status === 'pending' || req.status === 'PENDING' || req.status_code === 'PENDING') ? 'pending' : (req.status === 'approved' || req.status === 'ACCEPTED' || req.status_code === 'ACCEPTED') ? 'approved' : 'rejected',
                 message: req.message,
-                requested_at: req.createdAt
+                requested_at: req.requested_at || req.requestedAt || req.createdAt
               })) as any}
               onAccept={(req: any) => handleAcceptRequest({
                 id: req.request_id,
