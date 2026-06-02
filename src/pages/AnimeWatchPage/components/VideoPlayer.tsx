@@ -10,6 +10,7 @@ import {
   SUB_SIZES,
   SUB_BACKGROUNDS
 } from './PlayerConfig';
+import { useTranslation } from 'react-i18next';
 
 const PROXY_BASE = '/api/proxy';
 
@@ -73,6 +74,7 @@ const AnimePlayer: React.FC<{
   onPause?: (currentTime: number) => void;
   onSeek?: (currentTime: number) => void;
 }> = ({ stream, onEnded, isHost = true, remotePlaybackState, onPlay, onPause, onSeek }) => {
+  const { t } = useTranslation(['WatchPage']);
   const artRef = useRef<HTMLDivElement>(null);
   const playerRef = useRef<Artplayer | null>(null);
   
@@ -148,18 +150,18 @@ const AnimePlayer: React.FC<{
 
       settings: [
         {
-          html: 'Subtitle Settings',
+          html: t('WatchPage:subtitleSettings'),
           width: 250,
-          tooltip: 'Customize',
+          tooltip: t('WatchPage:customize'),
           icon: '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"><path fill="#ffffff" d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V6h16v12zM6 10h2v2H6zm0 4h8v2H6zm10 0h2v2h-2zm-6-4h8v2h-8z"/></svg>',
           selector: [
             {
-              html: 'Show Subtitles',
-              tooltip: savedStyle.visible ? 'On' : 'Off',
+              html: t('WatchPage:showSubtitles'),
+              tooltip: savedStyle.visible ? t('WatchPage:on') : t('WatchPage:off'),
               switch: savedStyle.visible,
               onSwitch: function (item) {
                 const isVisible = !item.switch;
-                item.tooltip = isVisible ? 'On' : 'Off';
+                item.tooltip = isVisible ? t('WatchPage:on') : t('WatchPage:off');
                 art.subtitle.show = isVisible;
                 saveSubtitleSetting('visible', isVisible);
 
@@ -170,8 +172,8 @@ const AnimePlayer: React.FC<{
               },
             },
             {
-              html: 'Color',
-              tooltip: 'Select',
+              html: t('WatchPage:color'),
+              tooltip: t('WatchPage:select'),
               selector: SUB_COLORS.map(item => ({
                 ...item,
                 default: item.value === savedStyle.color
@@ -183,8 +185,8 @@ const AnimePlayer: React.FC<{
               },
             },
             {
-              html: 'Size',
-              tooltip: 'Select',
+              html: t('WatchPage:size'),
+              tooltip: t('WatchPage:select'),
               selector: SUB_SIZES.map(item => ({
                 ...item,
                 default: item.value === savedStyle.fontSize
@@ -196,8 +198,8 @@ const AnimePlayer: React.FC<{
               },
             },
             {
-              html: 'Background',
-              tooltip: 'Select',
+              html: t('WatchPage:background'),
+              tooltip: t('WatchPage:select'),
               selector: SUB_BACKGROUNDS.map(item => ({
                 ...item,
                 default: item.value === savedStyle.background
@@ -249,12 +251,12 @@ const AnimePlayer: React.FC<{
                 default: false
               }));
               const levelsDesc = levels.reverse();
-              const autoOption = { html: 'Auto', current: true, index: -1 };
+              const autoOption = { html: t('WatchPage:auto'), current: true, index: -1 };
               if (art.setting) {
                 art.setting.add({
-                  html: 'Quality',
+                  html: t('WatchPage:quality'),
                   width: 150,
-                  tooltip: 'Auto',
+                  tooltip: t('WatchPage:auto'),
                   selector: [...levelsDesc, autoOption],
                   onSelect: (item: any) => { hls.currentLevel = item.index; return item.html; },
                 });
@@ -474,9 +476,9 @@ const AnimePlayer: React.FC<{
                  }}>
               <svg className="w-8 h-8 text-white ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
             </div>
-            <h3 className="text-xl font-bold text-white mb-2">Trình duyệt đã chặn tự động phát</h3>
+            <h3 className="text-xl font-bold text-white mb-2">{t('WatchPage:browserBlockedAutoplay')}</h3>
             <p className="text-gray-400 text-sm">
-              Do chính sách của trình duyệt, bạn cần tương tác với trang web để bắt đầu đồng bộ phim với Host. Hãy nhấn nút Play để tiếp tục.
+              {t('WatchPage:autoplayBlockedDesc')}
             </p>
           </div>
         </div>
@@ -505,6 +507,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
   onPause,
   onSeek,
 }) => {
+    const { t } = useTranslation(['WatchPage']);
     // Autoplay State
     const [autoPlay, setAutoPlay] = useState<boolean>(() => {
         const saved = localStorage.getItem('player_autoplay');
@@ -575,7 +578,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
       {/* 1. Video Player */}
       {isLoading ? (
         <div className={`${styles.playerContainer} ${styles.playerLoading}`}>
-          <p>Loading Stream...</p>
+          <p>{t('WatchPage:loadingStreamText')}</p>
         </div>
       ) : streamData && streamData.videoUrl ? (
         <AnimePlayer 
@@ -590,7 +593,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
       ) : (
         <div className={styles.playerContainer}>
           <div className={styles.placeholder}>
-            <p>Server error please try again</p>
+            <p>{t('WatchPage:serverError')}</p>
           </div>
         </div>
       )}
@@ -604,7 +607,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
                     checked={autoPlay} 
                     onChange={(e) => setAutoPlay(e.target.checked)} 
                 />
-                <span className={styles.toggleText}>Auto Play</span>
+                <span className={styles.toggleText}>{t('WatchPage:autoPlay')}</span>
                 <span className={styles.toggleSwitch}></span>
             </label>
           </div>
@@ -612,7 +615,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
           <div className={styles.controlRight}>
              <button 
                 className={`${styles.iconBtn} ${isTheaterMode ? styles.iconBtnActive : ''} hint--rounded hint--top`} 
-                aria-label={isTheaterMode ? "Exit Theater Mode" : "Theater Mode"}
+                aria-label={isTheaterMode ? t('WatchPage:exitTheaterMode') : t('WatchPage:theaterMode')}
                 onClick={onTheaterModeToggle}
              >
                  {isTheaterMode ? (
@@ -636,7 +639,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
           {/* Episode List */}
           <div className={styles.controlPanel}>
             <div className={styles.panelHeader}>
-              <span className={styles.panelTitle}>Episodes ({episodes.length})</span>
+              <span className={styles.panelTitle}>{t('WatchPage:episodesLabel')} ({episodes.length})</span>
             </div>
             <div className={styles.episodeGrid}>
               {episodes.map(ep => (
@@ -654,7 +657,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
           {/* Server Selection */}
           <div className={styles.controlPanel}>
             <div className={styles.panelHeader}>
-              <span className={styles.panelTitle}>Server Selection</span>
+              <span className={styles.panelTitle}>{t('WatchPage:serverSelection')}</span>
             </div>
             <div className={styles.serverGrid}>
               {servers.map(server => (

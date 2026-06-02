@@ -6,6 +6,7 @@ import { Sidebar } from './components/Sidebar';
 import WatchPageSkeleton from './WatchPageSkeleton';
 import styles from './WatchPage.module.css';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const WatchPage: React.FC = () => {
   const {
@@ -26,10 +27,11 @@ const WatchPage: React.FC = () => {
   const navigate = useNavigate();
   const [isTheaterMode, setIsTheaterMode] = useState(false);
   const [creatingRoom, setCreatingRoom] = useState(false);
+  const { t } = useTranslation(['WatchPage']);
 
   const handleCreateWatchParty = async () => {
     if (!streamData?.videoUrl) {
-      alert('Vui lòng đợi stream load xong.');
+      alert(t('WatchPage:waitStreamLoad'));
       return;
     }
     try {
@@ -44,7 +46,7 @@ const WatchPage: React.FC = () => {
       navigate(`/watch-along/${data.channelId}`);
     } catch (err) {
       console.error('Failed to create watch party', err);
-      alert('Có lỗi xảy ra khi tạo phòng xem chung.');
+      alert(t('WatchPage:errorCreateWatchParty'));
     } finally {
       setCreatingRoom(false);
     }
@@ -56,7 +58,7 @@ const WatchPage: React.FC = () => {
     return (
       <div className={styles.container}>
         <div className={styles.errorContainer}>
-          <p className={styles.errorText}>⚠️ {error || 'Data not found'}</p>
+          <p className={styles.errorText}>⚠️ {error || t('WatchPage:dataNotFound')}</p>
         </div>
       </div>
     );
@@ -104,14 +106,14 @@ const WatchPage: React.FC = () => {
                   fontWeight: 'bold',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '8px'
-                }}
-              >
-                <i className="material-icons">people</i>
-                {creatingRoom ? 'Đang tạo phòng...' : 'Xem Chung (Watch Together)'}
-              </button>
-            </div>
-          )}
+                gap: '8px'
+              }}
+            >
+              <i className="material-icons">people</i>
+              {creatingRoom ? t('WatchPage:creatingRoom') : t('WatchPage:watchTogether')}
+            </button>
+          </div>
+        )}
 
         </div>
 

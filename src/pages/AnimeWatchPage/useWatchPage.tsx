@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import type { Episode, Server } from './WatchPage.types';
 import { animeService, streamingService } from '@umamusumeenjoyer/shared-logic';
+import { useTranslation } from 'react-i18next';
 
 interface StreamData {
   videoUrl: string;
@@ -12,6 +13,7 @@ interface StreamData {
 
 export const useWatchPage = () => {
   const { id: paramId } = useParams<{ id: string }>(); 
+  const { t } = useTranslation(['WatchPage']);
   
   const [animeData, setAnimeData] = useState<any>(null);
   const [episodes, setEpisodes] = useState<Episode[]>([]);
@@ -32,7 +34,7 @@ export const useWatchPage = () => {
 
   useEffect(() => {
     if (!paramId) {
-        setError("Không tìm thấy ID Anime");
+        setError(t('WatchPage:errorAnimeIdNotFound'));
         setLoading(false);
         return;
     }
@@ -57,7 +59,7 @@ export const useWatchPage = () => {
         let mappedEpisodes: Episode[] = rawEpisodes.map((ep: any) => ({
           id: ep.id || ep.episodeId || String(ep.number),
           number: ep.number,
-          title: ep.title || `Tập ${ep.number}`,
+          title: ep.title || `${t('WatchPage:episode')} ${ep.number}`,
           thumbnail: ep.thumbnail || '', 
           videoUrl: ''
         }));
@@ -68,12 +70,12 @@ export const useWatchPage = () => {
         if (mappedEpisodes.length > 0) {
           setCurrentEpisode(mappedEpisodes[0]);
         } else {
-          setError("Anime này chưa có tập nào.");
+          setError(t('WatchPage:errorNoEpisodes'));
         }
 
       } catch (err: any) {
         console.error(err);
-        setError(err.message || 'Lỗi tải trang');
+        setError(err.message || t('WatchPage:errorLoadingPage'));
       } finally {
         setLoading(false);
       }
@@ -100,7 +102,7 @@ export const useWatchPage = () => {
         
         const isFilmServer = innerData?.meta?.source === 'filmserver';
 
-        if (!videoUrl) throw new Error('Không tìm thấy link video.');
+        if (!videoUrl) throw new Error(t('WatchPage:errorVideoLinkNotFound'));
 
         setStreamData({
           videoUrl,

@@ -6,6 +6,7 @@ import {
   BookOpen, ChevronLeft, ChevronRight, Type, 
   AlignLeft, AlignCenter, AlignRight, AlignJustify 
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 // Danh sách màu nền theo hình
 const THEME_COLORS = [
@@ -32,6 +33,7 @@ export const LightNovelReader: React.FC = () => {
     toggleRightSidebar,
     updateSettings,
   } = useLightNovelReader();
+  const { t } = useTranslation(['NovelReader']);
 
   if (isLoading) return <LightNovelReaderSkeleton />;
   if (error) return <div className={styles.error}>{error}</div>;
@@ -68,9 +70,9 @@ export const LightNovelReader: React.FC = () => {
              <img src={novelData.coverImage} alt={novelData.title} className={styles.coverImage} />
              <h2 className={styles.novelTitle}>{novelData.title}</h2>
              <div className={styles.metaList}>
-               <p>Author: {novelData.author}</p>
-               <p>Vol: {novelData.currentVolume}/{novelData.totalVolumes}</p>
-               <p>Status: {novelData.status}</p>
+               <p>{t('NovelReader:author')}: {novelData.author}</p>
+               <p>{t('NovelReader:volume')}: {novelData.currentVolume}/{novelData.totalVolumes}</p>
+               <p>{t('NovelReader:status')}: {novelData.status}</p>
              </div>
              <p style={{fontSize: '0.9rem', marginTop: '1rem', color: 'var(--text-secondary)'}}>
                {novelData.synopsis}
@@ -95,9 +97,9 @@ export const LightNovelReader: React.FC = () => {
                 <div className={styles.volumeTitle}>{chapterData.volumeTitle}</div>
                 <h1 className={styles.chapterTitle}>{chapterData.chapterTitle}</h1>
                 <div className={styles.metaInfo}>
-                  <span>{chapterData.commentCount} Bình luận</span>
-                  <span>Độ dài: {chapterData.wordCount} từ</span>
-                  <span>Cập nhật: {chapterData.lastUpdated}</span>
+                  <span>{chapterData.commentCount} {t('NovelReader:comments')}</span>
+                  <span>{t('NovelReader:length')}: {chapterData.wordCount} {t('NovelReader:words')}</span>
+                  <span>{t('NovelReader:lastUpdated')}: {chapterData.lastUpdated}</span>
                 </div>
               </header>
 
@@ -123,7 +125,7 @@ export const LightNovelReader: React.FC = () => {
             <button 
               className={styles.iconButton} 
               onClick={toggleRightSidebar}
-              title={isRightSidebarOpen ? "Close Settings" : "Open Settings"}
+              title={isRightSidebarOpen ? t('NovelReader:closeSettings') : t('NovelReader:openSettings')}
               style={isRightSidebarOpen ? {backgroundColor: '#ddd', color: '#000'} : {}}
             >
               {isRightSidebarOpen ? '×' : <Type size={20} />}
@@ -132,10 +134,10 @@ export const LightNovelReader: React.FC = () => {
 
         {!isRightSidebarOpen && (
           <div className={styles.navigationGroup}>
-              <button className={styles.iconButton} title="Previous Chapter">
+              <button className={styles.iconButton} title={t('NovelReader:previousChapter')}>
                   <ChevronLeft size={20} />
               </button>
-              <button className={styles.iconButton} title="Next Chapter">
+              <button className={styles.iconButton} title={t('NovelReader:nextChapter')}>
                   <ChevronRight size={20} />
               </button>
           </div>
@@ -146,7 +148,7 @@ export const LightNovelReader: React.FC = () => {
              
              {/* 1. Màu nền */}
              <div className={styles.settingGroup}>
-                <label className={styles.settingLabel}>Màu nền</label>
+                <label className={styles.settingLabel}>{t('NovelReader:backgroundColor')}</label>
                 <div className={styles.colorGrid}>
                   {THEME_COLORS.map((color) => (
                     <div 
@@ -161,7 +163,7 @@ export const LightNovelReader: React.FC = () => {
 
              {/* 2. Font chữ */}
              <div className={styles.settingGroup}>
-                <label className={styles.settingLabel}>Font chữ</label>
+                <label className={styles.settingLabel}>{t('NovelReader:fontFamily')}</label>
                 <select 
                   className={styles.fontSelect} 
                   value={viewSettings.fontFamily}
@@ -176,7 +178,7 @@ export const LightNovelReader: React.FC = () => {
 
              {/* 3. Kích cỡ chữ */}
              <div className={styles.settingGroup}>
-                <label className={styles.settingLabel}>Kích cỡ chữ</label>
+                <label className={styles.settingLabel}>{t('NovelReader:fontSize')}</label>
                 <div className={styles.stepperControl}>
                   <button 
                     className={styles.stepperBtn} 
@@ -192,7 +194,7 @@ export const LightNovelReader: React.FC = () => {
 
              {/* 4. Bản lề (Margin/Padding) */}
              <div className={styles.settingGroup}>
-                <label className={styles.settingLabel}>Bản lề</label>
+                <label className={styles.settingLabel}>{t('NovelReader:margin')}</label>
                 <div className={styles.stepperControl}>
                   <button 
                     className={styles.stepperBtn} 
@@ -208,7 +210,7 @@ export const LightNovelReader: React.FC = () => {
 
              {/* 5. Kiểu căn chỉnh */}
              <div className={styles.settingGroup}>
-                <label className={styles.settingLabel}>Kiểu căn chỉnh</label>
+                <label className={styles.settingLabel}>{t('NovelReader:textAlign')}</label>
                 <div className={styles.alignGrid}>
                    <button 
                      className={`${styles.alignBtn} ${(viewSettings.textAlign === 'left') ? styles.active : ''}`}

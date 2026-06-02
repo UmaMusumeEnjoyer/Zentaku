@@ -39,8 +39,12 @@ import {
   userItemEN, userItemJP,
   userSearchModalEN, userSearchModalJP,
   animeListPageEN, animeListPageJP,
-  scheduleDashboardEN, scheduleDashboardJP
-
+  scheduleDashboardEN, scheduleDashboardJP,
+  MangaReaderEn, MangaReaderJp,
+  WatchPageEn, WatchPageJp,
+  WatchAlongEn, WatchAlongJp,
+  ChatAppEn, ChatAppJp,
+  NovelReaderEn, NovelReaderJp
 } from '@umamusumeenjoyer/shared-logic';
 
 
@@ -91,7 +95,12 @@ i18n
         userItem: userItemEN,
         userSearchModal: userSearchModalEN,
         animeListPage: animeListPageEN,
-        ScheduleDashboard: scheduleDashboardEN
+        ScheduleDashboard: scheduleDashboardEN,
+        MangaReader: MangaReaderEn,
+        WatchPage: WatchPageEn,
+        WatchAlong: WatchAlongEn,
+        ChatApp: ChatAppEn,
+        NovelReader: NovelReaderEn
       },
       jp: {
         common: commonJp,
@@ -129,7 +138,12 @@ i18n
         userItem: userItemJP,
         userSearchModal: userSearchModalJP,
         animeListPage: animeListPageJP,
-        ScheduleDashboard: scheduleDashboardJP
+        ScheduleDashboard: scheduleDashboardJP,
+        MangaReader: MangaReaderJp,
+        WatchPage: WatchPageJp,
+        WatchAlong: WatchAlongJp,
+        ChatApp: ChatAppJp,
+        NovelReader: NovelReaderJp
       },
     },
     lng: localStorage.getItem('language') || DEFAULT_LANG,
@@ -143,6 +157,7 @@ i18n
       , 'EditProfileModal', 'ProfilePagePage', 'ActivityFeed'
       , 'addAnimeModal', 'editListModal', 'likersModal', 'listHeader', 'requestList', 'requestModal', 'sidebar'
       , 'userAnimeGroup', 'userItem', 'userSearchModal', 'animeListPage', 'ScheduleDashboard'
+      , 'MangaReader', 'WatchPage', 'WatchAlong', 'ChatApp', 'NovelReader'
     ],
     interpolation: {
       escapeValue: false,

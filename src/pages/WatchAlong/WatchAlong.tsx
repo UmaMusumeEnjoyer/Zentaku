@@ -5,8 +5,10 @@ import WatchAlongSkeleton from './WatchAlongSkeleton';
 import { VideoPlayer } from '../AnimeWatchPage/components/VideoPlayer';
 import { animeService, streamingService } from '@umamusumeenjoyer/shared-logic';
 import type { Episode } from '../AnimeWatchPage/WatchPage.types';
+import { useTranslation } from 'react-i18next';
 
 const WatchAlongPage: React.FC = () => {
+  const { t } = useTranslation(['WatchAlong', 'WatchPage']);
   const { room, isHost, isLoading, error, remotePlaybackState, streamData: originalStreamData, actions } = useWatchAlong();
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -42,7 +44,7 @@ const WatchAlongPage: React.FC = () => {
           let mappedEpisodes: Episode[] = rawEpisodes.map((ep: any) => ({
             id: ep.id || ep.episodeId || String(ep.number),
             number: ep.number,
-            title: ep.title || `Tập ${ep.number}`,
+            title: ep.title || `${t('WatchPage:episode')} ${ep.number}`,
             thumbnail: ep.thumbnail || '',
             videoUrl: ''
           }));
@@ -73,7 +75,7 @@ const WatchAlongPage: React.FC = () => {
   if (error || !room) {
     return (
       <div className={styles.container} style={{ justifyContent: 'center', alignItems: 'center' }}>
-        <h2>Error: {error || 'No data available'}</h2>
+        <h2>Error: {error || t('WatchAlong:noDataAvailable')}</h2>
       </div>
     );
   }
@@ -102,7 +104,7 @@ const WatchAlongPage: React.FC = () => {
                   {hostParticipants.length > 0 && (
                     <div style={{ marginBottom: '24px' }}>
                       <div style={{ fontSize: '0.75rem', fontWeight: 600, color: '#adadb8', textTransform: 'uppercase', marginBottom: '12px' }}>
-                        Host — {hostParticipants.length}
+                        {t('WatchAlong:host')} — {hostParticipants.length}
                       </div>
                       {hostParticipants.map((p, index) => (
                         <div key={p.userId || index} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px', padding: '6px', borderRadius: '4px', cursor: 'pointer', transition: 'background-color 0.2s' }} className={styles.participantItem}>
@@ -118,7 +120,7 @@ const WatchAlongPage: React.FC = () => {
                             </div>
                           )}
                           <div style={{ fontSize: '0.9rem', fontWeight: 500, color: 'var(--text-primary)' }}>
-                            {p.displayName || 'Unknown User'}
+                            {p.displayName || t('WatchAlong:unknownUser')}
                           </div>
                         </div>
                       ))}
@@ -129,7 +131,7 @@ const WatchAlongPage: React.FC = () => {
                   {viewerParticipants.length > 0 && (
                     <div>
                       <div style={{ fontSize: '0.75rem', fontWeight: 600, color: '#adadb8', textTransform: 'uppercase', marginBottom: '12px' }}>
-                        Viewers — {viewerParticipants.length}
+                        {t('WatchAlong:viewers')} — {viewerParticipants.length}
                       </div>
                       {viewerParticipants.map((p, index) => (
                         <div key={p.userId || index} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px', padding: '6px', borderRadius: '4px', cursor: 'pointer', transition: 'background-color 0.2s' }} className={styles.participantItem}>
@@ -145,7 +147,7 @@ const WatchAlongPage: React.FC = () => {
                             </div>
                           )}
                           <div style={{ fontSize: '0.9rem', fontWeight: 500, color: 'var(--text-primary)', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                            {p.displayName || 'Unknown User'}
+                            {p.displayName || t('WatchAlong:unknownUser')}
                           </div>
                           {isHost && (
                             <button
@@ -172,7 +174,7 @@ const WatchAlongPage: React.FC = () => {
 
                   {(!room?.participants || room.participants.length === 0) && (
                     <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', textAlign: 'center', marginTop: '20px' }}>
-                      Waiting for others to join...
+                      {t('WatchAlong:waitingForOthers')}
                     </div>
                   )}
                 </div>
@@ -272,16 +274,16 @@ const WatchAlongPage: React.FC = () => {
           <div className={styles.streamInfo}>
             <div className={styles.infoHeader}>
               <div>
-                <h1 className={styles.title}>{animeData?.title?.userPreferred || 'Watch Party Room'}</h1>
+                <h1 className={styles.title}>{animeData?.title?.userPreferred || t('WatchAlong:watchPartyRoom')}</h1>
                 <div className={styles.host}>
-                  Host ID: {room.hostId}
-                  {currentEpisode && ` • Tập ${currentEpisode.number}`}
+                  {t('WatchAlong:hostId')} {room.hostId}
+                  {currentEpisode && ` • ${t('WatchPage:episode')} ${currentEpisode.number}`}
                 </div>
               </div>
               <div style={{ textAlign: 'right' }}>
                 <div style={{ color: 'red', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 4 }}>
                   <span style={{ width: 8, height: 8, background: 'red', borderRadius: '50%' }}></span>
-                  LIVE
+                  {t('WatchAlong:live')}
                 </div>
               </div>
             </div>
@@ -290,12 +292,12 @@ const WatchAlongPage: React.FC = () => {
 
         <aside className={styles.rightSidebar}>
           <div className={styles.chatHeader}>
-            <span>Room Chat</span>
+            <span>{t('WatchAlong:roomChat')}</span>
           </div>
 
           <div className={styles.chatList}>
             <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', textAlign: 'center', padding: 8 }}>
-              Welcome to the watch party!
+              {t('WatchAlong:welcomeMessage')}
             </div>
             {room?.messages?.map((msg: any) => (
               <div key={msg.id} style={{ marginBottom: 12, wordBreak: 'break-word' }}>
@@ -312,7 +314,7 @@ const WatchAlongPage: React.FC = () => {
           <div className={styles.chatInputArea}>
             <textarea
               className={styles.chatInput}
-              placeholder="Send a message..."
+              placeholder={t('WatchAlong:sendPlaceholder')}
               rows={1}
               value={chatMessage}
               onChange={(e) => setChatMessage(e.target.value)}
@@ -339,7 +341,7 @@ const WatchAlongPage: React.FC = () => {
                     console.error("Error calling sendMessage:", err);
                   }
                 }
-              }}>Chat</button>
+              }}>{t('WatchAlong:chatBtn')}</button>
             </div>
           </div>
         </aside>

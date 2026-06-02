@@ -218,14 +218,17 @@ const AnimeListPage: React.FC = () => {
 
           {listInfo.isOwner && (
             <RequestList
-              requests={pendingRequests.map(req => ({
-                request_id: req.id,
-                username: req.username,
-                request_type: req.type === 'edit' ? 'edit_permission' : 'join',
-                status: (req.status === 'pending' || req.status === 'PENDING' || req.status_code === 'PENDING') ? 'pending' : (req.status === 'approved' || req.status === 'ACCEPTED' || req.status_code === 'ACCEPTED') ? 'approved' : 'rejected',
-                message: req.message,
-                requested_at: req.requested_at || req.requestedAt || req.createdAt
-              })) as any}
+              requests={pendingRequests.map(req => {
+                const r: any = req;
+                return {
+                  request_id: r.id,
+                  username: r.username,
+                  request_type: r.type === 'edit' ? 'edit_permission' : 'join',
+                  status: (r.status === 'pending' || r.status === 'PENDING' || r.status_code === 'PENDING') ? 'pending' : (r.status === 'approved' || r.status === 'ACCEPTED' || r.status === 'ACCEPT' || r.status_code === 'ACCEPTED') ? 'approved' : 'rejected',
+                  message: r.message,
+                  requested_at: r.requested_at || r.requestedAt || r.createdAt
+                };
+              }) as any}
               onAccept={(req: any) => handleAcceptRequest({
                 id: req.request_id,
                 username: req.username,

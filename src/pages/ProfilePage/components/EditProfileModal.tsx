@@ -85,7 +85,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
                 className={styles.formInput}
                 value={formData.displayName}
                 onChange={handleChange}
-                placeholder="Your display name"
+                placeholder={t('fields.displayName.placeholder')}
               />
             </div>
 
@@ -96,7 +96,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
                 className={`${styles.formInput} ${styles.formTextarea}`}
                 value={formData.bio}
                 onChange={(e: any) => handleChange(e)}
-                placeholder="Tell us about yourself"
+                placeholder={t('fields.bio.placeholder')}
                 rows={4}
               />
             </div>
@@ -109,7 +109,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
                 className={styles.formInput}
                 value={formData.location}
                 onChange={handleChange}
-                placeholder="Your location"
+                placeholder={t('fields.location.placeholder')}
               />
             </div>
 
@@ -121,7 +121,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
                 className={styles.formInput}
                 value={formData.website}
                 onChange={handleChange}
-                placeholder="https://yourwebsite.com"
+                placeholder={t('fields.website.placeholder')}
               />
             </div>
 

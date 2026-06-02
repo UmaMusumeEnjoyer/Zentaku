@@ -2,6 +2,7 @@
 import React from 'react';
 import type { EditorModalHeaderProps } from '@umamusumeenjoyer/shared-logic';
 import styles from './EditorModal.module.css'; // Import cùng file module
+import { useTranslation } from 'react-i18next';
 
 const EditorModalHeader: React.FC<EditorModalHeaderProps> = ({ 
   anime, 
@@ -10,6 +11,7 @@ const EditorModalHeader: React.FC<EditorModalHeaderProps> = ({
   isFavorite, 
   toggleFavorite 
 }) => {
+  const { t } = useTranslation(['AnimeModal']);
   const coverImageUrl = typeof anime.coverImage === 'string' 
     ? anime.coverImage 
     : anime.coverImage?.large || anime.cover_image || '';
@@ -30,7 +32,7 @@ const EditorModalHeader: React.FC<EditorModalHeaderProps> = ({
         >
           ♥
         </button>
-        <button className={styles.btnSave} onClick={onSave}>Save</button>
+        <button className={styles.btnSave} onClick={onSave}>{t('AnimeModal:buttons.save')}</button>
       </div>
     </div>
   );

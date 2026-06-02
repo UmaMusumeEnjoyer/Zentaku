@@ -5,6 +5,7 @@ import { MangaInfoSidebar } from './MangaInfoSidebar';
 import { ReaderSettingsSidebar } from './ReaderSettingsSidebar';
 import MangaReaderSkeleton from './MangaReaderSkeleton'; 
 import { Minimize, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const MangaReader: React.FC = () => {
   const { 
@@ -17,6 +18,8 @@ const MangaReader: React.FC = () => {
     currentPage,
     actions 
   } = useMangaReader();
+
+  const { t } = useTranslation(['MangaReader']);
 
   const readerAreaRef = useRef<HTMLDivElement>(null);
   const itemsRef = useRef<Array<HTMLImageElement | null>>([]);
@@ -242,13 +245,14 @@ const MangaReader: React.FC = () => {
           <>
             <button className={styles.exitFullscreenBtn} onClick={handleToggleFullScreen}>
               <Minimize size={18} />
-              Exit Full Screen
+              {t('MangaReader:exitFullScreen')}
             </button>
             {showFsToast && (
               <div className={styles.fullscreenToast}>
-                Press <b>Esc</b> to exit full screen
+                <span dangerouslySetInnerHTML={{ __html: t('MangaReader:pressEsc') }}></span>
               </div>
             )}
+
           </>
         )}
 

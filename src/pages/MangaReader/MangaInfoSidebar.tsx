@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styles from './MangaReader.module.css';
 import type { MangaDetailsPlaceholder } from './MangaReader.types';
+import { useTranslation } from 'react-i18next';
 
 interface MangaInfoSidebarProps {
   data: MangaDetailsPlaceholder;
@@ -10,6 +11,7 @@ interface MangaInfoSidebarProps {
 
 export const MangaInfoSidebar: React.FC<MangaInfoSidebarProps> = ({ data, isOpen }) => {
   const [isSynopsisExpanded, setIsSynopsisExpanded] = useState(false);
+  const { t } = useTranslation(['MangaReader']);
 
   const releasedPercent = 100;
   const watchedPercent = (data.readChapters / data.totalChapters) * 100;
@@ -24,28 +26,28 @@ export const MangaInfoSidebar: React.FC<MangaInfoSidebarProps> = ({ data, isOpen
 
       <div className={styles.metaInfo}>
         <div className={styles.metaItem}>
-          <span className={styles.metaLabel}>Season:</span>
+          <span className={styles.metaLabel}>{t('MangaReader:season')}:</span>
           <span className={styles.metaValue}>{data.season}</span>
         </div>
         <div className={styles.metaItem}>
-          <span className={styles.metaLabel}>Studio:</span>
+          <span className={styles.metaLabel}>{t('MangaReader:studio')}:</span>
           <span className={styles.metaValue}>{data.studio}</span>
         </div>
         <div className={styles.metaItem}>
-          <span className={styles.metaLabel}>Status:</span>
+          <span className={styles.metaLabel}>{t('MangaReader:status')}:</span>
           <span className={styles.metaValue}>{data.status}</span>
         </div>
         <div className={styles.metaItem}>
-          <span className={styles.metaLabel}>Format:</span>
+          <span className={styles.metaLabel}>{t('MangaReader:format')}:</span>
           <span className={styles.metaValue}>{data.format}</span>
         </div>
       </div>
 
-      <button className={styles.modalBtn}>Reading</button>
+      <button className={styles.modalBtn}>{t('MangaReader:reading')}</button>
 
       <div className={styles.progressContainer}>
         <div className={styles.progressHeader}>
-          <span className={styles.progressLabel}>Progress</span>
+          <span className={styles.progressLabel}>{t('MangaReader:progress')}</span>
           <span className={styles.metaValue}>
              {data.readChapters} / {data.totalChapters}
           </span>
@@ -63,7 +65,7 @@ export const MangaInfoSidebar: React.FC<MangaInfoSidebarProps> = ({ data, isOpen
       </div>
 
       <div className={styles.synopsis}>
-        <h3 className={styles.synopsisTitle}>Synopsis</h3>
+        <h3 className={styles.synopsisTitle}>{t('MangaReader:synopsis')}</h3>
         <p className={`${styles.synopsisText} ${!isSynopsisExpanded ? styles.synopsisCollapsed : ''}`}>
           {data.description}
         </p>
@@ -71,7 +73,7 @@ export const MangaInfoSidebar: React.FC<MangaInfoSidebarProps> = ({ data, isOpen
           className={styles.seeMoreBtn}
           onClick={() => setIsSynopsisExpanded(!isSynopsisExpanded)}
         >
-          {isSynopsisExpanded ? 'See less' : 'See more'}
+          {isSynopsisExpanded ? t('MangaReader:seeLess') : t('MangaReader:seeMore')}
         </button>
       </div>
     </aside>

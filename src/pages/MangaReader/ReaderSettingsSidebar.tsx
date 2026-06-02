@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import styles from './MangaReader.module.css';
 import type { ChapterInfo, MangaPage, ReaderSettings } from './MangaReader.types';
+import { useTranslation } from 'react-i18next';
 
 interface ReaderSettingsSidebarProps {
   isOpen: boolean;
@@ -33,6 +34,7 @@ export const ReaderSettingsSidebar: React.FC<ReaderSettingsSidebarProps> = ({
   currentPage,
   actions
 }) => {
+  const { t } = useTranslation(['MangaReader']);
   const isDouble = settings.readingMode === 'double-page';
 
   // Tính toán trang hiện tại (nếu double: luôn là số lẻ)
@@ -74,7 +76,7 @@ export const ReaderSettingsSidebar: React.FC<ReaderSettingsSidebarProps> = ({
   const renderPageOptions = () => {
     if (!isDouble) {
       return pages.map(p => (
-        <option key={p.id} value={p.pageNumber}>Page {p.pageNumber}</option>
+        <option key={p.id} value={p.pageNumber}>{t('MangaReader:page')} {p.pageNumber}</option>
       ));
     }
 
@@ -82,7 +84,7 @@ export const ReaderSettingsSidebar: React.FC<ReaderSettingsSidebarProps> = ({
     const options = [];
     for (let i = 1; i <= pages.length; i += 2) {
       const hasNext = i + 1 <= pages.length;
-      const label = hasNext ? `Page ${i} - ${i + 1}` : `Page ${i}`;
+      const label = hasNext ? `${t('MangaReader:page')} ${i} - ${i + 1}` : `${t('MangaReader:page')} ${i}`;
       options.push(
         <option key={`pair-${i}`} value={i}>{label}</option>
       );
@@ -148,16 +150,16 @@ export const ReaderSettingsSidebar: React.FC<ReaderSettingsSidebarProps> = ({
 
       <div className={styles.settingsList}>
         <div className={`${styles.settingItem} ${styles.hasControl}`}>
-          <span>Reading Mode</span>
+          <span>{t('MangaReader:readingMode')}</span>
           <select 
             className={styles.settingSelect}
             value={settings.readingMode}
             onChange={(e) => actions.updateSetting('readingMode', e.target.value)}
           >
-            <option value="long-strip">Long Strip</option>
-            <option value="wide-strip">Wide Strip</option>
-            <option value="single-page">Single Page</option>
-            <option value="double-page">Double Page</option>
+            <option value="long-strip">{t('MangaReader:longStrip')}</option>
+            <option value="wide-strip">{t('MangaReader:wideStrip')}</option>
+            <option value="single-page">{t('MangaReader:singlePage')}</option>
+            <option value="double-page">{t('MangaReader:doublePage')}</option>
           </select>
         </div>
 
@@ -165,11 +167,11 @@ export const ReaderSettingsSidebar: React.FC<ReaderSettingsSidebarProps> = ({
           className={`${styles.settingItem} ${settings.isFullScreen ? styles.active : ''}`}
           onClick={actions.toggleFullScreen}
         >
-          <span>Full Screen</span>
+          <span>{t('MangaReader:fullScreen')}</span>
           <Maximize size={18} />
         </div>
         <div className={styles.settingItem}>
-          <span>Left To Right</span>
+          <span>{t('MangaReader:leftToRight')}</span>
           <ArrowRight size={18} />
         </div>
       </div>

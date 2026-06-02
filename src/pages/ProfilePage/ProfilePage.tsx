@@ -102,14 +102,14 @@ const ProfilePage: React.FC = () => {
                     style={{ cursor: 'pointer', textAlign: 'center' }}
                   >
                     <span style={{ fontWeight: 'bold', display: 'block', fontSize: '1.1rem' }}>{followers.length}</span>
-                    <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Người theo dõi</span>
+                    <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>{t('sidebar.followers')}</span>
                   </div>
                   <div 
                     onClick={() => handleTabChange('Social')} 
                     style={{ cursor: 'pointer', textAlign: 'center' }}
                   >
                     <span style={{ fontWeight: 'bold', display: 'block', fontSize: '1.1rem' }}>{following.length}</span>
-                    <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Đang theo dõi</span>
+                    <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>{t('sidebar.following')}</span>
                   </div>
                 </div>
 
@@ -134,7 +134,7 @@ const ProfilePage: React.FC = () => {
                       style={{ flex: 1, backgroundColor: 'var(--primary-color)' }}
                       onClick={handleMessage}
                     >
-                      Nhắn tin
+                      {t('sidebar.message')}
                     </button>
                   </div>
                 )}
@@ -310,7 +310,7 @@ const ProfilePage: React.FC = () => {
             {activeTab === 'Social' && (
               <div className={styles.favoritesContainer}>
                 <div className={styles.sectionHeader}>
-                  <h2 className={styles.sectionTitle}>Mạng lưới kết nối</h2>
+                  <h2 className={styles.sectionTitle}>{t('social.title')}</h2>
                 </div>
 
                 {socialLoading ? (
@@ -320,7 +320,7 @@ const ProfilePage: React.FC = () => {
                     {/* Followers Column */}
                     <div style={{ flex: '1 1 300px' }}>
                       <h3 style={{ marginBottom: '15px', color: 'var(--text-secondary)' }}>
-                        Người theo dõi ({followers.length})
+                        {t('social.followers_count', { count: followers.length })}
                       </h3>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                         {followers.map((f: any) => (
@@ -329,14 +329,14 @@ const ProfilePage: React.FC = () => {
                             <span style={{ fontWeight: 'bold' }}>{f.displayName || f.username}</span>
                           </div>
                         ))}
-                        {followers.length === 0 && <div className={styles.emptyText}>Chưa có người theo dõi nào.</div>}
+                        {followers.length === 0 && <div className={styles.emptyText}>{t('social.no_followers')}</div>}
                       </div>
                     </div>
 
                     {/* Following Column */}
                     <div style={{ flex: '1 1 300px' }}>
                       <h3 style={{ marginBottom: '15px', color: 'var(--text-secondary)' }}>
-                        Đang theo dõi ({following.length})
+                        {t('social.following_count', { count: following.length })}
                       </h3>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                         {following.map((f: any) => (
@@ -345,7 +345,7 @@ const ProfilePage: React.FC = () => {
                             <span style={{ fontWeight: 'bold' }}>{f.displayName || f.username}</span>
                           </div>
                         ))}
-                        {following.length === 0 && <div className={styles.emptyText}>Chưa theo dõi ai.</div>}
+                        {following.length === 0 && <div className={styles.emptyText}>{t('social.no_following')}</div>}
                       </div>
                     </div>
                   </div>
@@ -407,20 +407,20 @@ const ProfilePage: React.FC = () => {
                 {/* 3. Banner Image Options */}
                 <div className={styles.formGroup} style={{ marginBottom: '15px' }}>
                   <label className={styles.inputLabel} style={{ display: 'block', marginBottom: '5px' }}>
-                    Banner Image (Tùy chọn)
+                    {t('create_list_modal.fields.banner.label')}
                   </label>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                     <input
                       type="text"
                       name="bannerImage"
-                      placeholder="Nhập URL hình ảnh..."
+                      placeholder={t('create_list_modal.fields.banner.placeholder')}
                       value={newListData.bannerImage || ''}
                       onChange={handleNewListInputChange}
                       className={styles.inputField}
                       style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
                       disabled={!!newListData.bannerImageFile}
                     />
-                    <div style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>Hoặc tải ảnh lên:</div>
+                    <div style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>{t('create_list_modal.fields.banner.upload_label')}</div>
                     <input
                       type="file"
                       name="bannerImageFile"

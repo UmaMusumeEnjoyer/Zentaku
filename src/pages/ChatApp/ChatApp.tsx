@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useChatMessenger } from './useChatApp';
 import styles from './ChatApp.module.css';
 import ChatMessengerSkeleton from './ChatAppSkeleton';
 import { socketService } from '@umamusumeenjoyer/shared-logic';
 
 const ChatMessenger: React.FC = () => {
+  const { t } = useTranslation(['ChatApp']);
   const { chatRooms, privateRooms, activeRoom, loading, error, setActiveRoomId, sendMessage, typingUsers } = useChatMessenger();
   const [inputValue, setInputValue] = useState('');
   const [activeTab, setActiveTab] = useState<'dm' | 'community'>('dm');
@@ -20,7 +22,7 @@ const ChatMessenger: React.FC = () => {
   }, [activeRoom?.messages]);
 
   if (loading) return <ChatMessengerSkeleton />;
-  if (error) return <div style={{ color: 'var(--text-primary)' }}>Đã xảy ra lỗi tải dữ liệu.</div>;
+  if (error) return <div style={{ color: 'var(--text-primary)' }}>{error.message || t('ChatApp:errorLoadingData')}</div>;
 
   const handleSend = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && inputValue.trim()) {
@@ -52,19 +54,19 @@ const ChatMessenger: React.FC = () => {
       {/* Left Sidebar: Room List */}
       <aside className={styles.sidebarLeft}>
         <div className={styles.sidebarHeader}>
-          <h1 className={styles.sidebarHeaderTitle}>Chats</h1>
+          <h1 className={styles.sidebarHeaderTitle}>{t('ChatApp:chatsTitle')}</h1>
           <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
             <button 
               onClick={() => setActiveTab('dm')}
               style={{ flex: 1, padding: '5px', background: activeTab === 'dm' ? 'var(--primary-color)' : 'transparent', color: 'white', border: '1px solid var(--border-color)', borderRadius: '4px', cursor: 'pointer' }}
             >
-              Direct
+              {t('ChatApp:directTab')}
             </button>
             <button 
               onClick={() => setActiveTab('community')}
               style={{ flex: 1, padding: '5px', background: activeTab === 'community' ? 'var(--primary-color)' : 'transparent', color: 'white', border: '1px solid var(--border-color)', borderRadius: '4px', cursor: 'pointer' }}
             >
-              Groups
+              {t('ChatApp:groupsTab')}
             </button>
           </div>
         </div>
@@ -81,13 +83,13 @@ const ChatMessenger: React.FC = () => {
               </div>
               <div className={styles.chatItemInfo}>
                 <h3 className={styles.chatItemName}>{room.name}</h3>
-                <p className={styles.chatItemLastMsg}>{room.messages[room.messages.length - 1]?.content || 'Chưa có tin nhắn'}</p>
+                <p className={styles.chatItemLastMsg}>{room.messages[room.messages.length - 1]?.content || t('ChatApp:noMessagesYet')}</p>
               </div>
             </div>
           ))}
           {currentList?.length === 0 && (
             <div style={{ padding: '20px', textAlign: 'center', color: 'var(--text-secondary)' }}>
-              Không có cuộc trò chuyện nào.
+              {t('ChatApp:noConversations')}
             </div>
           )}
         </div>
@@ -122,7 +124,7 @@ const ChatMessenger: React.FC = () => {
               {typingUsers.length > 0 && (
                 <div className={styles.messageRow} style={{ opacity: 0.7 }}>
                   <div className={styles.messageContent}>
-                    <div className={styles.messageText}><i>Ai đó đang gõ...</i></div>
+                    <div className={styles.messageText}><i>{t('ChatApp:someoneIsTyping')}</i></div>
                   </div>
                 </div>
               )}
@@ -134,7 +136,7 @@ const ChatMessenger: React.FC = () => {
                 <input 
                   type="text" 
                   className={styles.inputField}
-                  placeholder={`Gửi tin nhắn tới ${activeRoom.name}`}
+                  placeholder={`${t('ChatApp:sendMessageTo')} ${activeRoom.name}`}
                   value={inputValue}
                   onChange={handleInputChange}
                   onKeyDown={handleSend}
@@ -144,7 +146,7 @@ const ChatMessenger: React.FC = () => {
           </>
         ) : (
           <div style={{ display: 'flex', flex: 1, alignItems: 'center', justifyContent: 'center', color: 'var(--text-secondary)' }}>
-            Chọn một đoạn chat để bắt đầu nhắn tin
+            {t('ChatApp:selectChatToStart')}
           </div>
         )}
       </main>
@@ -153,7 +155,7 @@ const ChatMessenger: React.FC = () => {
       {activeTab === 'community' && activeRoom && (
         <aside className={styles.sidebarRight}>
           <div>
-            <h3 className={styles.memberCategory}>Online — {onlineMembers.length}</h3>
+            <h3 className={styles.memberCategory}>{t('ChatApp:online')} — {onlineMembers.length}</h3>
             <div className={styles.chatList}>
               {onlineMembers.map(member => (
                 <div key={member.id} className={styles.chatItem}>
@@ -171,7 +173,7 @@ const ChatMessenger: React.FC = () => {
           
           {offlineMembers.length > 0 && (
             <div style={{ marginTop: '1rem' }}>
-              <h3 className={styles.memberCategory}>Offline — {offlineMembers.length}</h3>
+              <h3 className={styles.memberCategory}>{t('ChatApp:offline')} — {offlineMembers.length}</h3>
               <div className={styles.chatList}>
                 {offlineMembers.map(member => (
                   <div key={member.id} className={styles.chatItem} style={{ opacity: 0.5 }}>
