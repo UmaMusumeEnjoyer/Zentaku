@@ -173,9 +173,7 @@
   background-size: cover;
   background-position: center;
   position: relative;
-  border-right: 1px solid rgba(0,0,0,0.1); /* Nhẹ nhàng hơn cho viền ảnh */
 }
-.alcCover:last-child { border-right: none; }
 
 .alcOverlay {
   position: absolute;

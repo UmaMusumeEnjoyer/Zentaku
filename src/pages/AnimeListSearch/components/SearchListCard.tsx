@@ -9,24 +9,40 @@ import styles from '../AnimeListSearchPage.module.css';
 const SearchListCard: React.FC<SearchListCardProps> = ({ listData }) => {
   
   const navigate = useNavigate();
-  const { handleCardClick, cardColor } = useSearchListCard(listData, navigate);
+  const { 
+    handleCardClick, 
+    cardColor,
+    avatarUrl,
+    username,
+    bannerImage,
+    placeholderAvatar
+  } = useSearchListCard(listData, navigate);
   return (
     <div 
       className={styles.animeListCard} 
       onClick={handleCardClick}
       style={{ cursor: 'pointer' }}
     >
-      {/* KHU VỰC MÀU */}
-      <div 
-        className={styles.alcColorPreview} 
-        style={{ backgroundColor: cardColor }}
-      >
-        <FaListAlt className={styles.alcColorIcon} />
+      {/* KHU VỰC ẢNH BANNER / MÀU */}
+      <div className={styles.alcPreview}>
+        {bannerImage ? (
+          <div 
+            className={styles.alcCover} 
+            style={{ backgroundImage: `url(${bannerImage})` }}
+          />
+        ) : (
+          <div 
+            className={styles.alcColorPreview} 
+            style={{ backgroundColor: cardColor, width: '100%', height: '100%' }}
+          >
+            <FaListAlt className={styles.alcColorIcon} />
+          </div>
+        )}
       </div>
 
       {/* THÔNG TIN LIST */}
       <div className={styles.alcInfo}>
-        <h3 className={styles.alcTitle}>{listData.list_name}</h3>
+        <h3 className={styles.alcTitle}>{listData.name}</h3>
         
         {listData.description && (
              <p className={styles.alcDescription}>
@@ -34,9 +50,20 @@ const SearchListCard: React.FC<SearchListCardProps> = ({ listData }) => {
              </p>
         )}
 
-        <div className={`${styles.alcMeta} ${styles.noAvatar}`}>
+        <div className={styles.alcMeta}>
+          {/* USER INFO */}
+          <div className={styles.alcUser}>
+            <img 
+              src={avatarUrl} 
+              alt="user" 
+              className={styles.alcAvatar}
+              onError={(e) => { e.currentTarget.src = placeholderAvatar; }}
+            />
+            <span>{username}</span>
+          </div>
+
           <div className={styles.alcLikes}>
-            <FaHeart className={styles.heartIcon}/> {listData.like_count ?? 0}
+            <FaHeart className={styles.heartIcon}/> {listData.likeCount ?? 0}
           </div>
         </div>
       </div>

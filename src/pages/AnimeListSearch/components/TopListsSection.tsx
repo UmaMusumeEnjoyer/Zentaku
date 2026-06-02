@@ -20,7 +20,7 @@ const TopListsSection: React.FC<TopListsSectionProps> = ({ title, lists }) => {
       
       <div className={styles.listsGrid}>
         {lists.map((list) => (
-          <AnimeListCard key={list.list_id} listData={list} />
+          <AnimeListCard key={list.id} listData={list} />
         ))}
       </div>
     </section>

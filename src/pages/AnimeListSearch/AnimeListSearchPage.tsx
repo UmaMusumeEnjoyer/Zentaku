@@ -56,7 +56,7 @@ const AnimeListSearchPage: React.FC = () => {
             ) : searchResults.length > 0 ? (
               <div className={styles.listsGrid}>
                 {searchResults.map((list) => (
-                  <SearchListCard key={list.list_id} listData={list} />
+                  <SearchListCard key={list.id} listData={list} />
                 ))}
               </div>
             ) : (

@@ -15,7 +15,7 @@ const AnimeListCard: React.FC<AnimeListCardProps> = ({ listData }) => {
     handleCardClick, 
     avatarUrl, 
     username, 
-    coverImages, 
+    bannerImage, 
     placeholderAvatar 
   } = useAnimeListCard(listData, navigate);
 
@@ -25,27 +25,24 @@ const AnimeListCard: React.FC<AnimeListCardProps> = ({ listData }) => {
       onClick={handleCardClick}
       style={{ cursor: 'pointer' }}
     >
-      {/* KHU VỰC 3 ẢNH PREVIEW */}
+      {/* KHU VỰC ẢNH BANNER */}
       <div className={styles.alcPreview}>
-        {coverImages.map((img, index) => (
-          <div 
-            key={index} 
-            className={styles.alcCover} 
-            style={{ backgroundImage: `url(${img})` }}
-          />
-        ))}
+        <div 
+          className={styles.alcCover} 
+          style={bannerImage ? { backgroundImage: `url(${bannerImage})` } : {}}
+        />
         
         {/* LỚP PHỦ HIỂN THỊ SỐ LƯỢNG ITEM */}
         <div className={styles.alcOverlay}>
             <span className={styles.alcCount}>
-                <FaLayerGroup /> {t('AnimeListSearch:card.items_count', { count: listData.anime_count ?? 0 })}
+                <FaLayerGroup /> {t('AnimeListSearch:card.items_count', { count: listData.itemCount ?? 0 })}
             </span>
         </div>
       </div>
 
       {/* THÔNG TIN LIST */}
       <div className={styles.alcInfo}>
-        <h3 className={styles.alcTitle}>{listData.list_name}</h3>
+        <h3 className={styles.alcTitle}>{listData.name}</h3>
         
         <div className={styles.alcMeta}>
           {/* USER INFO */}
@@ -61,7 +58,7 @@ const AnimeListCard: React.FC<AnimeListCardProps> = ({ listData }) => {
           
           {/* LIKES */}
           <div className={styles.alcLikes}>
-            <FaHeart className={styles.heartIcon}/> {listData.like_count ?? 0}
+            <FaHeart className={styles.heartIcon}/> {listData.likeCount ?? 0}
           </div>
         </div>
       </div>
