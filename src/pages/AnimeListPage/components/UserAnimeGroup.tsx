@@ -59,7 +59,7 @@ const UserAnimeGroup: React.FC<UserAnimeGroupProps> = ({
           <h3>{t('userAnimeGroup.addedBy', { user })}</h3>
           <span className="count-badge">{animeCount}</span>
           
-          {hasEditPermission && !deleteMode && (
+          {hasEditPermission && !deleteMode && isCurrentUser && (
             <button 
               className={styles.btnAddCircle} 
               title={t('userAnimeGroup.addAnimeTitle')}
