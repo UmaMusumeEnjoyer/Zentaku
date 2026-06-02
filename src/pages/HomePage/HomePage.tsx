@@ -96,16 +96,21 @@ const HomePage: React.FC = () => {
       <section className={styles.trendingSection}>
         <h2>{t('HomePage:sections.popular')}</h2>
         <div className={styles.animeGrid}>
-          {trendingAnime.map(anime => (
-            <Link to={`/anime/${anime.id}`} key={anime.id} className={styles.animeCard}>
-              <img src={anime.img} alt={anime.title} />
-              <div className={styles.cardContent}>
-                <h3>{anime.title}</h3>
-                <p>{anime.desc}</p>
-                <span className={styles.cardButton}>{t('common:buttons.learn_more')}</span>
-              </div>
-            </Link>
-          ))}
+          {trendingAnime.map((anime: any) => {
+            const title = anime.title?.english || anime.title?.romaji || anime.title?.native || 'Unknown Title';
+            const imgUrl = anime.coverImage?.large || anime.coverImage?.medium || anime.coverImage?.extraLarge || anime.img || '';
+            
+            return (
+              <Link to={`/anime/${anime.id}`} key={anime.id} className={styles.animeCard}>
+                <img src={imgUrl} alt={title} />
+                <div className={styles.cardContent}>
+                  <h3>{title}</h3>
+                  {anime.description && <p>{anime.description}</p>}
+                  <span className={styles.cardButton}>{t('common:buttons.learn_more')}</span>
+                </div>
+              </Link>
+            );
+          })}
         </div>
       </section>
 
