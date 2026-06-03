@@ -94,7 +94,8 @@ const HomePage: React.FC = () => {
                 <Skeleton width="100%" height="300px" borderRadius="12px" />
                 <div className={styles.cardContent} style={{ padding: '16px 0' }}>
                   <Skeleton width="80%" height="24px" style={{ marginBottom: '8px' }} />
-                  <Skeleton width="100%" height="16px" count={2} style={{ marginBottom: '4px' }} />
+                  <Skeleton width="100%" height="16px" style={{ marginBottom: '4px' }} />
+                  <Skeleton width="100%" height="16px" style={{ marginBottom: '4px' }} />
                   <Skeleton width="120px" height="36px" borderRadius="20px" style={{ marginTop: '16px' }} />
                 </div>
               </div>
@@ -141,7 +142,9 @@ const HomePage: React.FC = () => {
                 <Skeleton width="100%" height="200px" borderRadius="12px 12px 0 0" />
                 <div className={styles.newsContent} style={{ padding: '16px 0' }}>
                   <Skeleton width="90%" height="24px" style={{ marginBottom: '8px' }} />
-                  <Skeleton width="100%" height="16px" count={3} style={{ marginBottom: '4px' }} />
+                  <Skeleton width="100%" height="16px" style={{ marginBottom: '4px' }} />
+                  <Skeleton width="100%" height="16px" style={{ marginBottom: '4px' }} />
+                  <Skeleton width="100%" height="16px" style={{ marginBottom: '4px' }} />
                   <Skeleton width="100px" height="20px" style={{ marginTop: '12px' }} />
                 </div>
               </article>
