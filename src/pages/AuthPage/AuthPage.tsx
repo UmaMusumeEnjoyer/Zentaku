@@ -29,15 +29,19 @@ const AuthPage: React.FC = () => {
 
   const {
     isActive,
-    isLoading, // 1. Destructure isLoading từ useAuthPage
+    isLoading,
     registerData,
     loginData,
+    loginErrors,
+    registerErrors,
     handleRegisterChange,
     handleLoginChange,
     handleRegisterSubmit,
     handleLoginSubmit,
     handleRegisterClick,
-    handleLoginClick
+    handleLoginClick,
+    handleLoginBlur,
+    handleRegisterBlur,
   } = useAuthPage(
     {
       onLoginSuccess: (message) => {
@@ -68,47 +72,79 @@ const AuthPage: React.FC = () => {
           <form onSubmit={handleRegisterSubmit}>
             <h1>{t('Auth:signup.title')}</h1>
             
-            {/* ... (Các input giữ nguyên) ... */}
-            <input 
-              name="email" 
-              type="email" 
-              placeholder={t('Auth:placeholders.email')} 
-              value={registerData.email} 
-              onChange={handleRegisterChange} 
-              required 
-            />
-             {/* ... (Các input khác giữ nguyên) ... */}
-            <input 
+            {/* Email */}
+            <div className={styles.inputGroup}>
+              <input 
+                name="email" 
+                type="email" 
+                placeholder={t('Auth:placeholders.email')} 
+                value={registerData.email} 
+                onChange={handleRegisterChange}
+                onBlur={handleRegisterBlur}
+                className={registerErrors.email ? styles.inputError : ''}
+                required 
+              />
+              {registerErrors.email && (
+                <span className={styles.errorText}>{t(registerErrors.email)}</span>
+              )}
+            </div>
+
+            {/* Username */}
+            <div className={styles.inputGroup}>
+              <input 
                 name="username" 
                 type="text" 
                 placeholder={t('Auth:placeholders.username')} 
                 value={registerData.username} 
-                onChange={handleRegisterChange} 
+                onChange={handleRegisterChange}
+                onBlur={handleRegisterBlur}
+                className={registerErrors.username ? styles.inputError : ''}
                 required 
-            />
-            <input 
+              />
+              {registerErrors.username && (
+                <span className={styles.errorText}>{t(registerErrors.username)}</span>
+              )}
+            </div>
+
+            {/* Password */}
+            <div className={styles.inputGroup}>
+              <input 
                 name="password" 
                 type="password" 
                 placeholder={t('Auth:placeholders.password')} 
                 value={registerData.password} 
-                onChange={handleRegisterChange} 
+                onChange={handleRegisterChange}
+                onBlur={handleRegisterBlur}
+                className={registerErrors.password ? styles.inputError : ''}
                 required 
-            />
-            <input 
+              />
+              {registerErrors.password && (
+                <span className={styles.errorText}>{t(registerErrors.password)}</span>
+              )}
+            </div>
+
+            {/* Confirm Password */}
+            <div className={styles.inputGroup}>
+              <input 
                 name="confirm_password" 
                 type="password" 
                 placeholder={t('Auth:placeholders.confirm_password')} 
                 value={registerData.confirm_password} 
-                onChange={handleRegisterChange} 
+                onChange={handleRegisterChange}
+                onBlur={handleRegisterBlur}
+                className={registerErrors.confirm_password ? styles.inputError : ''}
                 required 
-            />
+              />
+              {registerErrors.confirm_password && (
+                <span className={styles.errorText}>{t(registerErrors.confirm_password)}</span>
+              )}
+            </div>
             
             <div className={styles.terms}>
               <input type="checkbox" id="terms" required />
               <label htmlFor="terms">{t('Auth:signup.terms')}</label>
             </div>
             
-            {/* 2. Thêm disabled={isLoading} */}
             <button type="submit" disabled={isLoading}>
                 {isLoading ? 'Processing...' : t('Auth:signup.submit')}
             </button>
@@ -130,26 +166,42 @@ const AuthPage: React.FC = () => {
             
             <span>{t('Auth:signin.divider')}</span>
             
-            <input 
-              name="email" 
-              type="email" 
-              placeholder={t('Auth:placeholders.email')} 
-              value={loginData.email} 
-              onChange={handleLoginChange} 
-              required 
-            />
-            <input 
-              name="password" 
-              type="password" 
-              placeholder={t('Auth:placeholders.password')} 
-              value={loginData.password} 
-              onChange={handleLoginChange} 
-              required 
-            />
+            {/* Email */}
+            <div className={styles.inputGroup}>
+              <input 
+                name="email" 
+                type="email" 
+                placeholder={t('Auth:placeholders.email')} 
+                value={loginData.email} 
+                onChange={handleLoginChange}
+                onBlur={handleLoginBlur}
+                className={loginErrors.email ? styles.inputError : ''}
+                required 
+              />
+              {loginErrors.email && (
+                <span className={styles.errorText}>{t(loginErrors.email)}</span>
+              )}
+            </div>
+
+            {/* Password */}
+            <div className={styles.inputGroup}>
+              <input 
+                name="password" 
+                type="password" 
+                placeholder={t('Auth:placeholders.password')} 
+                value={loginData.password} 
+                onChange={handleLoginChange}
+                onBlur={handleLoginBlur}
+                className={loginErrors.password ? styles.inputError : ''}
+                required 
+              />
+              {loginErrors.password && (
+                <span className={styles.errorText}>{t(loginErrors.password)}</span>
+              )}
+            </div>
             
             <a href="#">{t('Auth:signin.forgot_password')}</a>
             
-            {/* 3. Thêm disabled={isLoading} */}
             <button type="submit" disabled={isLoading}>
                 {isLoading ? 'Processing...' : t('Auth:signin.submit')}
             </button>

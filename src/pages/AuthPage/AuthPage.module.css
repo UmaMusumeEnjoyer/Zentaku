@@ -449,3 +449,47 @@
         font-size: 13px;
     }
 }
+
+/* =========================================
+   VALIDATION ERROR STYLES
+   ========================================= */
+
+/* Input wrapper for positioning error text */
+.inputGroup {
+    width: 100%;
+    position: relative;
+}
+
+/* Input with validation error — red border */
+.inputError {
+    border-color: #ef4444 !important;
+    box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.15) !important;
+}
+
+.inputError:focus {
+    border-color: #ef4444 !important;
+    box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.25) !important;
+}
+
+/* Error message text below input */
+.errorText {
+    display: block;
+    color: #ef4444;
+    font-size: 11px;
+    margin-top: 2px;
+    margin-bottom: 4px;
+    padding-left: 4px;
+    text-align: left;
+    animation: fadeInError 0.3s ease;
+}
+
+@keyframes fadeInError {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
