@@ -33,6 +33,7 @@ export const useChatMessenger = (): UseChatMessengerReturn => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
   const [typingUsers, setTypingUsers] = useState<string[]>([]);
+  const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
   
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -130,8 +131,10 @@ export const useChatMessenger = (): UseChatMessengerReturn => {
 
     const fetchMessages = async () => {
       try {
-        const msgRes = await chatService.getChannelMessages(activeRoomId);
+        const msgRes = await chatService.getChannelMessages(activeRoomId, { limit: 20 });
         const messagesData = Array.isArray(msgRes.data) ? msgRes.data : msgRes.data?.items || msgRes.data?.data || [];
+        const nextCursor = msgRes.data?.nextCursor || null;
+        const hasMore = !!msgRes.data?.hasMore;
         
         const mappedMessages: Message[] = messagesData.reverse().map((m: any) => ({
           id: String(m.id),
@@ -146,9 +149,9 @@ export const useChatMessenger = (): UseChatMessengerReturn => {
         }));
 
         if (isCommunity) {
-          setChatRooms(prev => prev?.map(room => room.id === activeRoomId ? { ...room, messages: mappedMessages } : room) || null);
+          setChatRooms(prev => prev?.map(room => room.id === activeRoomId ? { ...room, messages: mappedMessages, nextCursor, hasMore } : room) || null);
         } else {
-          setPrivateRooms(prev => prev?.map(room => room.id === activeRoomId ? { ...room, messages: mappedMessages } : room) || null);
+          setPrivateRooms(prev => prev?.map(room => room.id === activeRoomId ? { ...room, messages: mappedMessages, nextCursor, hasMore } : room) || null);
         }
         
         // Mark as loaded successfully
@@ -288,5 +291,48 @@ export const useChatMessenger = (): UseChatMessengerReturn => {
     }
   }, [activeRoomId, chatRooms, privateRooms]);
 
-  return { chatRooms, privateRooms, activeRoom, loading, error, setActiveRoomId, sendMessage, typingUsers };
+  const loadMoreMessages = useCallback(async () => {
+    if (!activeRoom || !activeRoom.hasMore || !activeRoom.nextCursor || isLoadingMore) return;
+    
+    try {
+      setIsLoadingMore(true);
+      const msgRes = await chatService.getChannelMessages(activeRoom.id, { cursor: activeRoom.nextCursor, limit: 20 });
+      const messagesData = Array.isArray(msgRes.data) ? msgRes.data : msgRes.data?.items || msgRes.data?.data || [];
+      
+      const mappedMessages: Message[] = messagesData.reverse().map((m: any) => ({
+        id: String(m.id),
+        sender: {
+          id: String(m.sender?.id || m.senderId || 'unknown'),
+          name: m.sender?.displayName || m.sender?.username || 'Unknown User',
+          avatar: m.sender?.avatar || 'https://i.pravatar.cc/150',
+          status: 'online'
+        },
+        content: m.content || '',
+        timestamp: formatMessageTime(m.createdAt || Date.now())
+      }));
+
+      const nextCursor = msgRes.data?.nextCursor || null;
+      const hasMore = !!msgRes.data?.hasMore;
+
+      const updateRoom = (rooms: ChatRoom[] | null) => {
+        return rooms?.map(room => 
+          room.id === activeRoom.id 
+            ? { ...room, messages: [...mappedMessages, ...room.messages], nextCursor, hasMore } 
+            : room
+        ) || null;
+      };
+
+      if (chatRooms?.some(r => r.id === activeRoom.id)) {
+        setChatRooms(updateRoom);
+      } else {
+        setPrivateRooms(updateRoom);
+      }
+    } catch (err) {
+      console.error('Failed to load more messages', err);
+    } finally {
+      setIsLoadingMore(false);
+    }
+  }, [activeRoom, chatRooms, privateRooms, isLoadingMore]);
+
+  return { chatRooms, privateRooms, activeRoom, loading, error, setActiveRoomId, sendMessage, typingUsers, loadMoreMessages, isLoadingMore };
 };

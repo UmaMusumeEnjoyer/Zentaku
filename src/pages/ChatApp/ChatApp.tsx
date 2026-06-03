@@ -7,18 +7,33 @@ import { socketService } from '@umamusumeenjoyer/shared-logic';
 
 const ChatMessenger: React.FC = () => {
   const { t } = useTranslation(['ChatApp']);
-  const { chatRooms, privateRooms, activeRoom, loading, error, setActiveRoomId, sendMessage, typingUsers } = useChatMessenger();
+  const { chatRooms, privateRooms, activeRoom, loading, error, setActiveRoomId, sendMessage, typingUsers, loadMoreMessages, isLoadingMore } = useChatMessenger();
   const [inputValue, setInputValue] = useState('');
   const [activeTab, setActiveTab] = useState<'dm' | 'community'>('dm');
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messageAreaRef = useRef<HTMLDivElement>(null);
+  const previousScrollHeightRef = useRef<number>(0);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({ behavior: 'auto' }); // changed to auto to prevent jumpy behavior when typing fast or switching rooms
+  };
+
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    if (e.currentTarget.scrollTop === 0 && activeRoom?.hasMore && !isLoadingMore) {
+      previousScrollHeightRef.current = e.currentTarget.scrollHeight;
+      loadMoreMessages();
+    }
   };
 
   useEffect(() => {
-    scrollToBottom();
+    if (previousScrollHeightRef.current > 0 && messageAreaRef.current) {
+      const newScrollHeight = messageAreaRef.current.scrollHeight;
+      messageAreaRef.current.scrollTop = newScrollHeight - previousScrollHeightRef.current;
+      previousScrollHeightRef.current = 0; // reset
+    } else {
+      scrollToBottom();
+    }
   }, [activeRoom?.messages]);
 
   if (loading) return <ChatMessengerSkeleton />;
@@ -106,7 +121,9 @@ const ChatMessenger: React.FC = () => {
               )}
             </header>
 
-            <div className={styles.messageArea}>
+            <div className={styles.messageArea} ref={messageAreaRef} onScroll={handleScroll}>
+              <div style={{ marginTop: 'auto' }}></div>
+              {isLoadingMore && <div style={{ textAlign: 'center', padding: '10px', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Loading older messages...</div>}
               {activeRoom.messages.map(msg => (
                 <div key={msg.id} className={styles.messageRow}>
                   <div className={styles.avatarContainer}>

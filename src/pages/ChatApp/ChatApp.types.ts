@@ -23,6 +23,8 @@ export interface ChatRoom {
   members: User[];
   messages: Message[];
   unreadCount?: number;
+  nextCursor?: string | null;
+  hasMore?: boolean;
 }
 
 export interface UseChatMessengerReturn {
@@ -34,4 +36,6 @@ export interface UseChatMessengerReturn {
   setActiveRoomId: (id: string) => void;
   sendMessage: (content: string) => void;
   typingUsers: string[];
+  loadMoreMessages: () => Promise<void>;
+  isLoadingMore: boolean;
 }
