@@ -5,21 +5,13 @@ import { useHomeLogic } from '@umamusumeenjoyer/shared-logic';
 import { useTranslation } from 'react-i18next';
 // 1. Import CSS Module
 import styles from './HomePage.module.css';
+import Skeleton from '../../components/PlaceholderSkeleton/Skeleton';
 
 const HomePage: React.FC = () => {
   const { trendingAnime, genres, latestNews, isLoading } = useHomeLogic();
   const { t } = useTranslation(['HomePage', 'common']);
 
-  if (isLoading) {
-    return (
-      // 2. Sử dụng class loading từ module
-      <div className={styles.homePage}>
-        <div className={styles.loadingState}>
-          {t('common:loading')}
-        </div>
-      </div>
-    );
-  }
+
 
   return (
     // 3. Áp dụng styles module cho toàn bộ trang
@@ -96,21 +88,34 @@ const HomePage: React.FC = () => {
       <section className={styles.trendingSection}>
         <h2>{t('HomePage:sections.popular')}</h2>
         <div className={styles.animeGrid}>
-          {trendingAnime.map((anime: any) => {
-            const title = anime.title?.english || anime.title?.romaji || anime.title?.native || 'Unknown Title';
-            const imgUrl = anime.coverImage?.large || anime.coverImage?.medium || anime.coverImage?.extraLarge || anime.img || '';
-            
-            return (
-              <Link to={`/anime/${anime.id}`} key={anime.id} className={styles.animeCard}>
-                <img src={imgUrl} alt={title} />
-                <div className={styles.cardContent}>
-                  <h3>{title}</h3>
-                  {anime.description && <p>{anime.description}</p>}
-                  <span className={styles.cardButton}>{t('common:buttons.learn_more')}</span>
+          {isLoading ? (
+            Array.from({ length: 4 }).map((_, idx) => (
+              <div key={idx} className={styles.animeCard} style={{ border: 'none', background: 'transparent' }}>
+                <Skeleton width="100%" height="300px" borderRadius="12px" />
+                <div className={styles.cardContent} style={{ padding: '16px 0' }}>
+                  <Skeleton width="80%" height="24px" style={{ marginBottom: '8px' }} />
+                  <Skeleton width="100%" height="16px" count={2} style={{ marginBottom: '4px' }} />
+                  <Skeleton width="120px" height="36px" borderRadius="20px" style={{ marginTop: '16px' }} />
                 </div>
-              </Link>
-            );
-          })}
+              </div>
+            ))
+          ) : (
+            trendingAnime.map((anime: any) => {
+              const title = anime.title?.english || anime.title?.romaji || anime.title?.native || 'Unknown Title';
+              const imgUrl = anime.coverImage?.large || anime.coverImage?.medium || anime.coverImage?.extraLarge || anime.img || '';
+              
+              return (
+                <Link to={`/anime/${anime.id}`} key={anime.id} className={styles.animeCard}>
+                  <img src={imgUrl} alt={title} />
+                  <div className={styles.cardContent}>
+                    <h3>{title}</h3>
+                    {anime.description && <p>{anime.description}</p>}
+                    <span className={styles.cardButton}>{t('common:buttons.learn_more')}</span>
+                  </div>
+                </Link>
+              );
+            })
+          )}
         </div>
       </section>
 
@@ -130,18 +135,31 @@ const HomePage: React.FC = () => {
       <section className={styles.latestNewsSection}>
         <h2>{t('HomePage:sections.latest_news')}</h2>
         <div className={styles.newsGrid}>
-          {latestNews.map(news => (
-            <article key={news.id} className={styles.newsArticle}>
-              <img src={news.img} alt={news.title} />
-              <div className={styles.newsContent}>
-                <h4>{news.title}</h4>
-                <p>{news.snippet}</p>
-                <Link to={`/news/${news.id}`} className={styles.readMoreLink}>
-                  {t('common:buttons.read_more')} &rarr;
-                </Link>
-              </div>
-            </article>
-          ))}
+          {isLoading ? (
+            Array.from({ length: 3 }).map((_, idx) => (
+              <article key={idx} className={styles.newsArticle} style={{ border: 'none', background: 'transparent', padding: 0 }}>
+                <Skeleton width="100%" height="200px" borderRadius="12px 12px 0 0" />
+                <div className={styles.newsContent} style={{ padding: '16px 0' }}>
+                  <Skeleton width="90%" height="24px" style={{ marginBottom: '8px' }} />
+                  <Skeleton width="100%" height="16px" count={3} style={{ marginBottom: '4px' }} />
+                  <Skeleton width="100px" height="20px" style={{ marginTop: '12px' }} />
+                </div>
+              </article>
+            ))
+          ) : (
+            latestNews.map(news => (
+              <article key={news.id} className={styles.newsArticle}>
+                <img src={news.img} alt={news.title} />
+                <div className={styles.newsContent}>
+                  <h4>{news.title}</h4>
+                  <p>{news.snippet}</p>
+                  <Link to={`/news/${news.id}`} className={styles.readMoreLink}>
+                    {t('common:buttons.read_more')} &rarr;
+                  </Link>
+                </div>
+              </article>
+            ))
+          )}
         </div>
       </section>
 

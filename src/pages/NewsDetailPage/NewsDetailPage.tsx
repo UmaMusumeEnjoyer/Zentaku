@@ -5,12 +5,17 @@ import { useNewsDetailLogic } from '@umamusumeenjoyer/shared-logic';
 import { useTheme } from '../../context/ThemeContext';
 // [CHANGE] Import styles module
 import styles from './NewsDetail.module.css';
+import NewsDetailSkeleton from './NewsDetailSkeleton';
 
 const NewsDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { theme } = useTheme();
   const { t } = useTranslation('NewsDetailPage');
-  const { newsItem, contentParagraphs, isNotFound } = useNewsDetailLogic(id);
+  const { newsItem, contentParagraphs, isNotFound, isLoading } = useNewsDetailLogic(id);
+
+  if (isLoading) {
+    return <NewsDetailSkeleton />;
+  }
 
   if (isNotFound || !newsItem) {
     return (
