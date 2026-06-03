@@ -3,6 +3,19 @@ import { chatService, socketService } from '@umamusumeenjoyer/shared-logic';
 import type { UseChatMessengerReturn, ChatRoom, Message, User } from './ChatApp.types';
 import { useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import moment from 'moment';
+
+const formatMessageTime = (dateInput: string | number | Date | undefined) => {
+  if (!dateInput) return moment().format('DD/MM/YYYY HH:mm');
+  const date = moment(dateInput);
+  const today = moment().startOf('day');
+
+  if (date.isSame(today, 'd')) {
+    return `Today at ${date.format('HH:mm')}`;
+  } else {
+    return date.format('DD/MM/YYYY HH:mm');
+  }
+};
 
 export const useChatMessenger = (): UseChatMessengerReturn => {
   const { user } = useAuth();
@@ -129,7 +142,7 @@ export const useChatMessenger = (): UseChatMessengerReturn => {
             status: 'online'
           },
           content: m.content || '',
-          timestamp: m.createdAt ? new Date(m.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+          timestamp: formatMessageTime(m.createdAt || Date.now())
         }));
 
         if (isCommunity) {
@@ -176,7 +189,7 @@ export const useChatMessenger = (): UseChatMessengerReturn => {
           status: 'online'
         },
         content: data.content,
-        timestamp: new Date(data.createdAt || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        timestamp: formatMessageTime(data.createdAt || Date.now())
       };
 
       // Update the correct room
@@ -241,7 +254,7 @@ export const useChatMessenger = (): UseChatMessengerReturn => {
       id: tempId,
       sender: currentUser,
       content,
-      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      timestamp: formatMessageTime(Date.now())
     };
 
     // Optimistic UI Update
