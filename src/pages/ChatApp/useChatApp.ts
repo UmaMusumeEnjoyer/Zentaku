@@ -5,9 +5,11 @@ import { useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import moment from 'moment';
 
+const removeZ = (dateInput: any) => typeof dateInput === 'string' ? dateInput.replace(/Z$/, '') : dateInput;
+
 const formatMessageTime = (dateInput: string | number | Date | undefined) => {
   if (!dateInput) return moment().format('DD/MM/YYYY HH:mm');
-  const date = moment(dateInput);
+  const date = moment(removeZ(dateInput));
   const today = moment().startOf('day');
 
   if (date.isSame(today, 'd')) {
@@ -44,7 +46,10 @@ export const useChatMessenger = (): UseChatMessengerReturn => {
 
   // 1. Connect Socket and Fetch Rooms
   useEffect(() => {
-    socketService.connect();
+    // Connect socket if not already connected (shared with FloatingChat)
+    if (!socketService.isConnected) {
+      socketService.connect();
+    }
 
     const fetchRooms = async () => {
       try {
@@ -112,9 +117,7 @@ export const useChatMessenger = (): UseChatMessengerReturn => {
     
     fetchRooms();
 
-    return () => {
-      socketService.disconnect();
-    };
+    // No disconnect on unmount – socket is shared with FloatingChat
   }, [initialChannelId]);
 
   // Ref to track which rooms have fetched their initial messages

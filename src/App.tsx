@@ -22,6 +22,7 @@ import WatchAlongPage from './pages/WatchAlong/WatchAlong';
 import MangaReader from './pages/MangaReader/MangaReader';
 import { LightNovelReader } from './pages/NovelReader/NovelReader';
 import ChatMessenger from './pages/ChatApp/ChatApp';
+import FloatingChat from './components/FloatingChat/FloatingChat';
 
 // Xác định API base URL dựa trên environment
 const isDevelopment = import.meta.env.DEV;
@@ -91,6 +92,7 @@ function App() {
       <Router>
         <AuthProvider>
           <Header />
+          <FloatingChat />
           <main>
             <Routes>
               <Route path="/" element={<HomeRoute />} />
