@@ -333,20 +333,21 @@ const AnimePlayer: React.FC<{
       }
     });
 
-    // Bắt sự kiện click vào toàn bộ player để Play/Pause (xử lý thủ công, bỏ qua control bar)
-    const handlePlayerClick = (e: MouseEvent) => {
-      // Viewers cannot toggle play/pause by clicking
-      if (!isHost) return;
+    // Ngăn chặn Viewer (người xem) click vào video để Play/Pause
+    // Bắt sự kiện ở Capture Phase (true) để chặn trước khi Artplayer xử lý
+    const blockViewerClick = (e: MouseEvent) => {
+      if (isHost) return;
       const target = e.target as HTMLElement;
-      // Bỏ qua nếu user click vào thanh điều khiển hoặc các nút setting
-      if (target.closest('.art-bottom') || target.closest('.art-controls') || target.closest('.art-setting')) {
+      // Cho phép click vào bottom control bar và setting panel
+      if (target.closest('.art-bottom') || target.closest('.art-setting') || target.closest('.art-setting-panel')) {
         return;
       }
-      art.toggle();
+      // Chặn các click còn lại (lên video)
+      e.stopPropagation();
     };
 
     if (art.template.$player) {
-      art.template.$player.addEventListener('click', handlePlayerClick);
+      art.template.$player.addEventListener('click', blockViewerClick, true);
     }
 
     // Xử lý phím tắt toàn cục (ngoại trừ khi đang gõ chat)
@@ -387,7 +388,7 @@ const AnimePlayer: React.FC<{
       window.removeEventListener('keydown', handleKeyDown);
       if (playerRef.current) {
         if (playerRef.current.template?.$player) {
-           playerRef.current.template.$player.removeEventListener('click', handlePlayerClick);
+           playerRef.current.template.$player.removeEventListener('click', blockViewerClick, true);
         }
         // Cleanup video element listener
         if (playerRef.current.video) {

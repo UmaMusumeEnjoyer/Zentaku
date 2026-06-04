@@ -54,8 +54,7 @@
 }
 
 .viewerMode :global(.art-control-playAndPause) {
-  pointer-events: none !important;
-  opacity: 0.5;
+  display: none !important;
 }
 
 .playerLoading {
