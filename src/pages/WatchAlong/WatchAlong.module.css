@@ -25,6 +25,8 @@
 
 /* Left Sidebar (Dynamic) */
 .leftSidebar {
+  width: 260px;
+  flex-shrink: 0;
   background-color: var(--bg-panel);
   border: 1px solid var(--border-subtle);
   border-radius: 12px;
@@ -48,23 +50,11 @@
   box-shadow: none !important;
 }
 
-/* Viewer Left Sidebar: Small Icons */
-.leftSidebar.viewer {
-  width: 80px;
-  align-items: center;
-  padding-top: 16px;
-  overflow-x: hidden;
-}
-
-/* Owner Left Sidebar: Detailed Controls */
-.leftSidebar.owner {
-  width: 260px;
-}
-
 .sidebarContent {
   flex: 1; /* Đẩy content lên trên để chừa chỗ cho nút Switch Role ở dưới */
   width: 100%;
   overflow-y: auto;
+  padding-top: 16px;
 }
 
 .sidebarItem {
@@ -124,14 +114,19 @@
   border: none;
   color: #ef4444;
   cursor: pointer;
-  padding: 6px;
+  padding: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 6px;
-  margin-left: 8px;
+  margin-left: 4px;
   opacity: 0;
   transition: all 0.2s ease;
+  flex-shrink: 0; /* Đảm bảo nút không bị bóp méo */
+}
+
+.participantItem:hover .kickButton {
+  opacity: 1;
 }
 
 .kickButton:hover {
@@ -336,21 +331,28 @@
   gap: 6px;
 }
 
+.messageWrapper {
+  margin-bottom: 12px;
+  word-break: break-word;
+}
+
 .message {
-  font-size: 0.9rem;
+  font-size: 0.95rem; /* Tăng cỡ chữ nội dung chat cho dễ đọc */
   line-height: 1.4;
   word-break: break-word;
+  margin-top: 4px;
 }
 
 .timestamp {
   color: var(--text-secondary);
   font-size: 0.75rem;
-  margin-right: 6px;
+  margin-left: 8px; /* Tách xa tên một chút */
 }
 
 .username {
-  font-weight: bold;
-  margin-right: 4px;
+  font-weight: 600;
+  color: var(--primary);
+  font-size: 0.95rem;
   cursor: pointer;
 }
 
@@ -367,6 +369,8 @@
   border-radius: 4px;
   padding: 8px;
   color: var(--text-primary);
+  font-family: inherit; /* Kế thừa font chữ chung của dự án */
+  font-size: 0.95rem; /* Cỡ chữ nhập liệu dễ nhìn */
   resize: none;
   min-height: 40px;
 }

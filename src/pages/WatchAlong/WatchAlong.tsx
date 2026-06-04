@@ -6,7 +6,7 @@ import { VideoPlayer } from '../AnimeWatchPage/components/VideoPlayer';
 import { animeService, streamingService } from '@umamusumeenjoyer/shared-logic';
 import type { Episode } from '../AnimeWatchPage/WatchPage.types';
 import { useTranslation } from 'react-i18next';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, UserMinus, User, Star } from 'lucide-react';
 
 const WatchAlongPage: React.FC = () => {
   const { t } = useTranslation(['WatchAlong', 'WatchPage']);
@@ -120,7 +120,7 @@ const WatchAlongPage: React.FC = () => {
                               display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: '12px',
                               border: '2px solid gold', color: 'gold'
                             }}>
-                              <i className="material-icons" style={{ fontSize: '18px' }}>star</i>
+                              <Star size={18} />
                             </div>
                           )}
                           <div style={{ fontSize: '0.9rem', fontWeight: 500, color: 'var(--text-primary)' }}>
@@ -147,7 +147,7 @@ const WatchAlongPage: React.FC = () => {
                               display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: '12px',
                               color: 'var(--text-secondary)'
                             }}>
-                              <i className="material-icons" style={{ fontSize: '18px' }}>person</i>
+                              <User size={18} />
                             </div>
                           )}
                           <div style={{ fontSize: '0.9rem', fontWeight: 500, color: 'var(--text-primary)', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
@@ -168,7 +168,7 @@ const WatchAlongPage: React.FC = () => {
                               title="Kick participant"
                               className={styles.kickButton}
                             >
-                              <i className="material-icons" style={{ fontSize: '18px' }}>person_remove</i>
+                              <UserMinus size={16} />
                             </button>
                           )}
                         </div>
@@ -294,16 +294,16 @@ const WatchAlongPage: React.FC = () => {
               </div>
 
           <div className={styles.chatList}>
-            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', textAlign: 'center', padding: 8 }}>
+            <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', textAlign: 'center', padding: 8 }}>
               {t('WatchAlong:welcomeMessage')}
             </div>
             {room?.messages?.map((msg: { id: string; senderName: string; createdAt: string | number | Date; content: string }) => (
-              <div key={msg.id} style={{ marginBottom: 12, wordBreak: 'break-word' }}>
-                <strong style={{ color: 'var(--primary)', fontSize: '0.9rem' }}>{msg.senderName}</strong>
-                <span style={{ fontSize: '0.75rem', color: 'gray', marginLeft: 8 }}>
+              <div key={msg.id} className={styles.messageWrapper}>
+                <span className={styles.username}>{msg.senderName}</span>
+                <span className={styles.timestamp}>
                   {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </span>
-                <div style={{ fontSize: '0.9rem', marginTop: 4 }}>{msg.content}</div>
+                <div className={styles.message}>{msg.content}</div>
               </div>
             ))}
             <div ref={messagesEndRef} />
