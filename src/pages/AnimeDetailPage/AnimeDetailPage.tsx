@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useAnimeDetail } from '@umamusumeenjoyer/shared-logic';
+import NotFoundPage from '../NotFoundPage/NotFoundPage';
 
 import PlaceholderSkeleton from '../../components/PlaceholderSkeleton/Skeleton';
 import SummarySkeleton from './components/MainContentArea/Summary_section/SummarySkeleton';
@@ -48,11 +49,7 @@ const AnimeDetailPage: React.FC = () => {
   }
 
   if (error || !anime) {
-    return (
-      <div className={`${styles.pageWrapper} ${styles.errorState}`}>
-        {error || "Anime not found"}
-      </div>
-    );
+    return <NotFoundPage />;
   }
   return (
     // 4. Áp dụng styles.pageWrapper để lấy màu nền var(--bg-app)

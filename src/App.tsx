@@ -23,6 +23,7 @@ import MangaReader from './pages/MangaReader/MangaReader';
 import { LightNovelReader } from './pages/NovelReader/NovelReader';
 import ChatMessenger from './pages/ChatApp/ChatApp';
 import FloatingChat from './components/FloatingChat/FloatingChat';
+import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
 
 // Xác định API base URL dựa trên environment
 const isDevelopment = import.meta.env.DEV;
@@ -113,6 +114,7 @@ function App() {
               <Route path="/manga/:id/read/:chapterId?" element={<MangaReader />} />
               <Route path="/novel/:id/read/:chapterId?" element={<LightNovelReader />} />
               <Route path="/chat" element={<ChatMessenger />} />
+              <Route path="*" element={<NotFoundPage />} />
             </Routes>
           </main>
         </AuthProvider>

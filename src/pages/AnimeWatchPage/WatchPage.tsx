@@ -4,6 +4,7 @@ import { watchPartyService } from '@umamusumeenjoyer/shared-logic';
 import { VideoPlayer } from './components/VideoPlayer';
 import { Sidebar } from './components/Sidebar';
 import WatchPageSkeleton from './WatchPageSkeleton';
+import NotFoundPage from '../NotFoundPage/NotFoundPage';
 import styles from './WatchPage.module.css';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -55,13 +56,7 @@ const WatchPage: React.FC = () => {
   if (loading) return <WatchPageSkeleton />;
 
   if (error || !animeData) {
-    return (
-      <div className={styles.container}>
-        <div className={styles.errorContainer}>
-          <p className={styles.errorText}>⚠️ {error || t('WatchPage:dataNotFound')}</p>
-        </div>
-      </div>
-    );
+    return <NotFoundPage />;
   }
 
   return (
