@@ -84,31 +84,10 @@ const WatchPage: React.FC = () => {
             }}
             isTheaterMode={isTheaterMode}
             onTheaterModeToggle={() => setIsTheaterMode(!isTheaterMode)}
+            onCreateWatchParty={handleCreateWatchParty}
+            creatingRoom={creatingRoom}
+            canCreateWatchParty={!loadingStream && !!streamData?.videoUrl}
           />
-
-          {!isTheaterMode && (
-            <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'flex-end' }}>
-              <button
-                onClick={handleCreateWatchParty}
-                disabled={creatingRoom || loadingStream || !streamData?.videoUrl}
-                style={{
-                  padding: '10px 20px',
-                  backgroundColor: '#a970ff',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '6px',
-                  cursor: 'pointer',
-                  fontWeight: 'bold',
-                  display: 'flex',
-                  alignItems: 'center',
-                gap: '8px'
-              }}
-            >
-              <i className="material-icons">people</i>
-              {creatingRoom ? t('WatchPage:creatingRoom') : t('WatchPage:watchTogether')}
-            </button>
-          </div>
-        )}
 
         </div>
 

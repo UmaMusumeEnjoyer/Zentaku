@@ -5,9 +5,6 @@ import styles from './NotFoundPage.module.css';
 const NotFoundPage: React.FC = () => {
   const navigate = useNavigate();
 
-  const handleRefresh = () => {
-    window.location.reload();
-  };
 
   const handleGoHome = () => {
     navigate('/');
