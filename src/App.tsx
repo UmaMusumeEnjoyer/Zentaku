@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { initSharedLogic } from '@umamusumeenjoyer/shared-logic';
+import { initSharedLogic, useNotificationSocket } from '@umamusumeenjoyer/shared-logic';
+import type { NotificationItem } from '@umamusumeenjoyer/shared-logic';
 import './App.css';
 import './i18n/config'; // Import i18n configuration
 import { AuthProvider, useAuth } from './context/AuthContext';
@@ -24,6 +25,7 @@ import { LightNovelReader } from './pages/NovelReader/NovelReader';
 import ChatMessenger from './pages/ChatApp/ChatApp';
 import FloatingChat from './components/FloatingChat/FloatingChat';
 import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
+import NotificationToast from './components/Notification/NotificationToast';
 
 // Xác định API base URL dựa trên environment
 const isDevelopment = import.meta.env.DEV;
@@ -70,6 +72,27 @@ const HomeRoute = () => {
   return user ? <AnimeSchedule /> : <HomePage />;
 };
 
+// Component to initialize notification socket listener
+const NotificationSetup = () => {
+  const { user } = useAuth();
+
+  useNotificationSocket(
+    user
+      ? {
+          onNewNotification: (notification: NotificationItem) => {
+            // Trigger toast via global function exposed by NotificationToast
+            const showToast = (window as any).__showNotificationToast;
+            if (showToast) {
+              showToast(notification);
+            }
+          },
+        }
+      : undefined
+  );
+
+  return null;
+};
+
 function App() {
   useEffect(() => {
     // --- Thay đổi Tiêu đề (Title) ---
@@ -92,8 +115,10 @@ function App() {
   return (
       <Router>
         <AuthProvider>
+          <NotificationSetup />
           <Header />
           <FloatingChat />
+          <NotificationToast />
           <main>
             <Routes>
               <Route path="/" element={<HomeRoute />} />

@@ -9,6 +9,7 @@ import { useHeader, userService } from '@umamusumeenjoyer/shared-logic';
 // Import hook logic hoạt hình mới tạo
 import { useHeaderAnimation } from './useHeaderAnimation';
 import GlobalSearchModal from '../GlobalSearch/GlobalSearch';
+import NotificationBell from '../Notification/NotificationBell';
 
 const BACKEND_DOMAIN = import.meta.env.VITE_BACKEND_DOMAIN;
 const DEFAULT_AVATAR = import.meta.env.VITE_DEFAULT_AVATAR_URL;
@@ -168,6 +169,7 @@ const Header: React.FC = () => {
              </div>
           ) : isAuthenticated ? (
             <>
+              <NotificationBell />
               <div className={styles.userMenuContainer}
                    onMouseEnter={handleMouseEnter} // Di chuột vào vùng này (gồm cả ảnh và menu) thì mở
                 onMouseLeave={handleMouseLeave}
