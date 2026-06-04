@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styles from './FloatingChat.module.css';
 import { useFloatingChat } from './useFloatingChat';
 import FloatingChatIcon from './FloatingChatIcon';
@@ -26,6 +26,22 @@ const FloatingChat: React.FC = () => {
     emitTyping,
   } = useFloatingChat();
 
+  const [isHidden, setIsHidden] = useState<boolean>(() => {
+    return localStorage.getItem('floatingChat_hidden') === 'true';
+  });
+
+  const handleHide = () => {
+    setIsHidden(true);
+    localStorage.setItem('floatingChat_hidden', 'true');
+    closeNotificationPanel();
+    if (openWindow) closeChatWindow();
+  };
+
+  const handleShow = () => {
+    setIsHidden(false);
+    localStorage.setItem('floatingChat_hidden', 'false');
+  };
+
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Close notification panel when clicking outside
@@ -51,6 +67,20 @@ const FloatingChat: React.FC = () => {
 
   // Don't render anything if not authenticated
   if (!isAuthenticated) return null;
+
+  if (isHidden) {
+    return (
+      <div className={styles.floatingChatContainer}>
+        <button 
+          className={styles.miniChevron} 
+          onClick={handleShow}
+          title="Show Chat"
+        >
+          <span className="material-symbols-outlined">chevron_left</span>
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.floatingChatContainer} ref={containerRef}>
@@ -84,6 +114,7 @@ const FloatingChat: React.FC = () => {
         isPulse={isPulse}
         isActive={isNotificationPanelOpen}
         onClick={toggleNotificationPanel}
+        onHide={handleHide}
       />
     </div>
   );
