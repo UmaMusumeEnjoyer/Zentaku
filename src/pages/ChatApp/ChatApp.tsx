@@ -40,11 +40,17 @@ const ChatMessenger: React.FC = () => {
   if (error) return <div style={{ color: 'var(--text-primary)' }}>{error.message || t('ChatApp:errorLoadingData')}</div>;
 
   const handleSend = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && inputValue.trim()) {
-      sendMessage(inputValue);
-      setInputValue('');
-      if (activeRoom) {
-        socketService.emit('typing.stopped', { channelId: activeRoom.id });
+    if (e.nativeEvent.isComposing) return;
+    
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      const trimmedValue = inputValue.trim();
+      if (trimmedValue) {
+        sendMessage(trimmedValue);
+        setInputValue('');
+        if (activeRoom) {
+          socketService.emit('typing.stopped', { channelId: activeRoom.id });
+        }
       }
     }
   };

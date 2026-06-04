@@ -48,13 +48,15 @@ const FloatingChatWindow: React.FC<FloatingChatWindowProps> = ({
   }, [isMinimized]);
 
   const handleSend = () => {
-    if (!inputValue.trim()) return;
-    onSendMessage(inputValue);
+    const trimmed = inputValue.trim();
+    if (!trimmed) return;
+    onSendMessage(trimmed);
     setInputValue('');
     onTyping(false);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.nativeEvent.isComposing) return;
     if (e.key === 'Enter') {
       e.preventDefault();
       handleSend();

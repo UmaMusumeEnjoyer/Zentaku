@@ -203,10 +203,24 @@ export const useChatMessenger = (): UseChatMessengerReturn => {
         if (!rooms) return null;
         return rooms.map(room => {
           if (room.id === channelId) {
-            // Check if message already exists (optimistic UI)
-            if (!room.messages.some(m => m.id === incomingMsg.id || m.content === incomingMsg.content && m.sender.id === incomingMsg.sender.id)) {
-              return { ...room, messages: [...room.messages, incomingMsg] };
-            }
+            // 1. Remove temp optimistic message if it matches this incoming socket message
+            let newMessages = room.messages.filter(m => {
+              const isTempMatch = m.id.startsWith('temp-') && m.content === incomingMsg.content && m.sender.id === incomingMsg.sender.id;
+              return !isTempMatch;
+            });
+
+            // 2. Add the real incoming message
+            newMessages.push(incomingMsg);
+
+            // 3. Absolute Unique Filter (prevent React "same key" error)
+            const uniqueIds = new Set();
+            newMessages = newMessages.filter(m => {
+              if (uniqueIds.has(m.id)) return false;
+              uniqueIds.add(m.id);
+              return true;
+            });
+
+            return { ...room, messages: newMessages };
           }
           return room;
         });
@@ -285,7 +299,18 @@ export const useChatMessenger = (): UseChatMessengerReturn => {
       // Update temp id to real id if possible
       const realData = response.data?.data || response.data;
       if (realData?.id) {
-         // Optionally update the ID in state to avoid duplicates if socket event arrives late
+        const updateRealId = (rooms: ChatRoom[] | null) => {
+          return rooms?.map(r => r.id === activeRoomId ? {
+            ...r,
+            messages: r.messages.map(m => m.id === tempId ? { ...m, id: String(realData.id) } : m)
+          } : r) || null;
+        };
+        
+        if (chatRooms?.some(r => r.id === activeRoomId)) {
+          setChatRooms(updateRealId);
+        } else {
+          setPrivateRooms(updateRealId);
+        }
       }
       socketService.emit('read.cursor.update', { channelId: activeRoomId, lastReadMessageId: realData?.id || tempId });
     } catch (err: any) {
