@@ -17,19 +17,35 @@
   display: flex;
   flex: 1;
   overflow: hidden;
-  /* Đảm bảo chiều cao full trừ đi padding-top */
   height: 100%; 
+  gap: 16px; /* Add gap between components */
+  padding: 16px; /* Add padding from screen edges */
+  background-color: var(--bg-app); /* Ensure background is theme-aware */
 }
 
 /* Left Sidebar (Dynamic) */
 .leftSidebar {
   background-color: var(--bg-panel);
-  border-right: 1px solid var(--border-subtle);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); /* Subtle shadow for floating effect */
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
-  transition: width 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   padding-bottom: 16px;
+  height: 100%;
+  position: relative;
+  overflow: visible;
+}
+
+.collapsed {
+  width: 0 !important;
+  min-width: 0 !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
 }
 
 /* Viewer Left Sidebar: Small Icons */
@@ -48,7 +64,7 @@
 .sidebarContent {
   flex: 1; /* Đẩy content lên trên để chừa chỗ cho nút Switch Role ở dưới */
   width: 100%;
-  
+  overflow-y: auto;
 }
 
 .sidebarItem {
@@ -162,8 +178,58 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  background-color: #000;
-  overflow: hidden;
+  background-color: #050505; /* Deep black for video area */
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  min-height: 0;
+}
+
+/* Toggle Buttons on Sidebars */
+.toggleBtnLeft, .toggleBtnRight {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 50;
+  width: 24px;
+  height: 64px;
+  background-color: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  padding: 0;
+}
+
+.toggleBtnLeft:hover, .toggleBtnRight:hover {
+  background-color: var(--bg-hover);
+}
+
+/* Left Sidebar Button */
+.toggleBtnLeft {
+  right: -12px; /* Hangs in the gap */
+  border-radius: 0 6px 6px 0;
+}
+.collapsed .toggleBtnLeft {
+  right: -24px; /* Pull it out fully when collapsed */
+  border-left: 1px solid var(--border-subtle);
+}
+
+/* Right Sidebar Button */
+.toggleBtnRight {
+  left: -12px; /* Hangs in the gap */
+  border-radius: 6px 0 0 6px;
+}
+.collapsed .toggleBtnRight {
+  left: -24px;
+  border-right: 1px solid var(--border-subtle);
 }
 
 .videoPlayer {
@@ -237,10 +303,16 @@
 .rightSidebar {
   width: 340px;
   background-color: var(--bg-panel);
-  border-left: 1px solid var(--border-subtle);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); /* Subtle shadow */
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
+  height: 100%;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: visible;
 }
 
 .chatHeader {

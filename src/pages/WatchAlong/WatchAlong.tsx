@@ -6,6 +6,7 @@ import { VideoPlayer } from '../AnimeWatchPage/components/VideoPlayer';
 import { animeService, streamingService } from '@umamusumeenjoyer/shared-logic';
 import type { Episode } from '../AnimeWatchPage/WatchPage.types';
 import { useTranslation } from 'react-i18next';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const WatchAlongPage: React.FC = () => {
   const { t } = useTranslation(['WatchAlong', 'WatchPage']);
@@ -23,9 +24,11 @@ const WatchAlongPage: React.FC = () => {
   const [chatMessage, setChatMessage] = useState('');
   const [episodes, setEpisodes] = useState<Episode[]>([]);
   const [currentEpisode, setCurrentEpisode] = useState<Episode | null>(null);
-  const [animeData, setAnimeData] = useState<any>(null);
+  const [animeData, setAnimeData] = useState<Record<string, unknown> | null>(null);
   const [fetchingStream, setFetchingStream] = useState(false);
   const [isTheaterMode, setIsTheaterMode] = useState(false);
+  const [showLeftSidebar, setShowLeftSidebar] = useState(true);
+  const [showRightSidebar, setShowRightSidebar] = useState(true);
 
   const displayStreamData = originalStreamData;
 
@@ -41,7 +44,7 @@ const WatchAlongPage: React.FC = () => {
           setAnimeData(animeRes.data);
 
           const rawEpisodes = Array.isArray(episodesRes.data) ? episodesRes.data : episodesRes.data?.episodes || [];
-          let mappedEpisodes: Episode[] = rawEpisodes.map((ep: any) => ({
+          let mappedEpisodes: Episode[] = rawEpisodes.map((ep: { id?: string; episodeId?: string; number: number; title?: string; thumbnail?: string; }) => ({
             id: ep.id || ep.episodeId || String(ep.number),
             number: ep.number,
             title: ep.title || `${t('WatchPage:episode')} ${ep.number}`,
@@ -90,8 +93,9 @@ const WatchAlongPage: React.FC = () => {
   return (
     <div className={styles.container}>
       <div className={styles.contentWrapper}>
-        <aside className={`${styles.leftSidebar} ${styles.owner}`}>
-          <div className={styles.sidebarContent}>
+        <aside className={`${styles.leftSidebar} ${isHost ? styles.owner : styles.viewer} ${!showLeftSidebar ? styles.collapsed : ''}`}>
+          {showLeftSidebar && (
+            <div className={styles.sidebarContent}>
 
 
             {/* Host Section */}
@@ -180,7 +184,16 @@ const WatchAlongPage: React.FC = () => {
                 </div>
               );
             })()}
-          </div>
+            </div>
+          )}
+          
+          <button 
+            className={styles.toggleBtnLeft} 
+            onClick={() => setShowLeftSidebar(!showLeftSidebar)}
+            title={showLeftSidebar ? "Hide Users" : "Show Users"}
+          >
+            {showLeftSidebar ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
+          </button>
         </aside>
 
         <main className={styles.mainArea}>
@@ -202,7 +215,7 @@ const WatchAlongPage: React.FC = () => {
                   const data = res.data;
                   const innerData = data.data;
                   const videoUrl = innerData?.streamLinks?.[0] || data.video || (data.sources && data.sources[0]?.url) || '';
-                  const subUrl = innerData?.subtitles?.find((s: any) => s.lang === 'en' || s.lang?.toLowerCase() === 'english')?.url || data.sub || null;
+                  const subUrl = innerData?.subtitles?.find((s: { lang?: string; url: string }) => s.lang === 'en' || s.lang?.toLowerCase() === 'english')?.url || data.sub || null;
                   const referer = data.referer || data.headers?.Referer || null;
                   if (videoUrl) {
                     actions.changeEpisode(videoUrl, episode.number, subUrl, referer);
@@ -225,7 +238,7 @@ const WatchAlongPage: React.FC = () => {
                     const res = await streamingService.getEpisodeSources(room?.settings?.anilistId, nextEp.number);
                     const data = res.data;
                     const videoUrl = data.data?.streamLinks?.[0] || data.video || (data.sources && data.sources[0]?.url) || '';
-                    const subUrl = data.data?.subtitles?.find((s: any) => s.lang === 'en' || s.lang?.toLowerCase() === 'english')?.url || data.sub || null;
+                    const subUrl = data.data?.subtitles?.find((s: { lang?: string; url: string }) => s.lang === 'en' || s.lang?.toLowerCase() === 'english')?.url || data.sub || null;
                     const referer = data.referer || data.headers?.Referer || null;
                     if (videoUrl) {
                       actions.changeEpisode(videoUrl, nextEp.number, subUrl, referer);
@@ -248,7 +261,7 @@ const WatchAlongPage: React.FC = () => {
                     const res = await streamingService.getEpisodeSources(room?.settings?.anilistId, prevEp.number);
                     const data = res.data;
                     const videoUrl = data.data?.streamLinks?.[0] || data.video || (data.sources && data.sources[0]?.url) || '';
-                    const subUrl = data.data?.subtitles?.find((s: any) => s.lang === 'en' || s.lang?.toLowerCase() === 'english')?.url || data.sub || null;
+                    const subUrl = data.data?.subtitles?.find((s: { lang?: string; url: string }) => s.lang === 'en' || s.lang?.toLowerCase() === 'english')?.url || data.sub || null;
                     const referer = data.referer || data.headers?.Referer || null;
                     if (videoUrl) {
                       actions.changeEpisode(videoUrl, prevEp.number, subUrl, referer);
@@ -271,35 +284,20 @@ const WatchAlongPage: React.FC = () => {
             {/* Note: In a real app, we would sync remotePlaybackState with VideoPlayer here */}
           </div>
 
-          <div className={styles.streamInfo}>
-            <div className={styles.infoHeader}>
-              <div>
-                <h1 className={styles.title}>{animeData?.title?.userPreferred || t('WatchAlong:watchPartyRoom')}</h1>
-                <div className={styles.host}>
-                  {t('WatchAlong:hostId')} {room.hostId}
-                  {currentEpisode && ` • ${t('WatchPage:episode')} ${currentEpisode.number}`}
-                </div>
-              </div>
-              <div style={{ textAlign: 'right' }}>
-                <div style={{ color: 'red', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 4 }}>
-                  <span style={{ width: 8, height: 8, background: 'red', borderRadius: '50%' }}></span>
-                  {t('WatchAlong:live')}
-                </div>
-              </div>
-            </div>
-          </div>
         </main>
 
-        <aside className={styles.rightSidebar}>
-          <div className={styles.chatHeader}>
-            <span>{t('WatchAlong:roomChat')}</span>
-          </div>
+        <aside className={`${styles.rightSidebar} ${!showRightSidebar ? styles.collapsed : ''}`}>
+          {showRightSidebar && (
+            <>
+              <div className={styles.chatHeader}>
+                <span>{t('WatchAlong:roomChat')}</span>
+              </div>
 
           <div className={styles.chatList}>
             <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', textAlign: 'center', padding: 8 }}>
               {t('WatchAlong:welcomeMessage')}
             </div>
-            {room?.messages?.map((msg: any) => (
+            {room?.messages?.map((msg: { id: string; senderName: string; createdAt: string | number | Date; content: string }) => (
               <div key={msg.id} style={{ marginBottom: 12, wordBreak: 'break-word' }}>
                 <strong style={{ color: 'var(--primary)', fontSize: '0.9rem' }}>{msg.senderName}</strong>
                 <span style={{ fontSize: '0.75rem', color: 'gray', marginLeft: 8 }}>
@@ -344,6 +342,16 @@ const WatchAlongPage: React.FC = () => {
               }}>{t('WatchAlong:chatBtn')}</button>
             </div>
           </div>
+          </>
+          )}
+          
+          <button 
+            className={styles.toggleBtnRight} 
+            onClick={() => setShowRightSidebar(!showRightSidebar)}
+            title={showRightSidebar ? "Hide Chat" : "Show Chat"}
+          >
+            {showRightSidebar ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
+          </button>
         </aside>
       </div>
     </div>
