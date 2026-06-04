@@ -156,13 +156,7 @@ const AuthPage: React.FC = () => {
           <form onSubmit={handleLoginSubmit}>
             <h1>{t('Auth:signin.title')}</h1>
             
-            <div className={styles.socialIcons}>
-              {/* ... (Icons giữ nguyên) ... */}
-              <a href="#" className="icon"><FontAwesomeIcon icon={faGooglePlusG} /></a>
-              <a href="#" className="icon"><FontAwesomeIcon icon={faFacebookF} /></a>
-              <a href="#" className="icon"><FontAwesomeIcon icon={faGithub} /></a>
-              <a href="#" className="icon"><FontAwesomeIcon icon={faLinkedinIn} /></a>
-            </div>
+
             
             <span>{t('Auth:signin.divider')}</span>
             
