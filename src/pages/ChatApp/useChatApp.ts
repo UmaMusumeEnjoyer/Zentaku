@@ -67,7 +67,9 @@ export const useChatMessenger = (): UseChatMessengerReturn => {
             allChannels.push({
               id: String(ch.id),
               type: ch.type || 'server',
-              name: ch.name || `Channel ${ch.id}`,
+              name: (comm.name && ch.name === 'general') 
+                ? comm.name.replace(/^Chat:\s*/, '') 
+                : (ch.name || `Channel ${ch.id}`),
               description: ch.description || '',
               members: [], 
               messages: [],

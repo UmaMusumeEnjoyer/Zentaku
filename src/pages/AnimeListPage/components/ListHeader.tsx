@@ -113,7 +113,7 @@ const ListHeader: React.FC<ListHeaderProps> = ({ listInfo, listId }) => {
         </button>
 
         {/* NÚT 3: TẠO / VÀO NHÓM CHAT */}
-        {(listInfo.channelId || listInfo.is_owner) && (
+        {(listInfo.is_owner || (listInfo.isMember && listInfo.channelId)) && (
           <button
             className={`${styles.actionBtn} ${styles.chatBtn}`}
             onClick={handleChatClick}

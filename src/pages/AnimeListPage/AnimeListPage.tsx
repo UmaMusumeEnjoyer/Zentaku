@@ -89,7 +89,10 @@ const AnimeListPage: React.FC = () => {
               is_private: listInfo.privacy === 'private',
               is_owner: listInfo.isOwner,
               color: listInfo.color,
-              bannerImage: listInfo.bannerImage
+              bannerImage: listInfo.bannerImage,
+              communityId: listInfo.communityId,
+              channelId: listInfo.channelId,
+              isMember: !!currentPermission
             } as any} 
             listId={id || ''} 
           />
