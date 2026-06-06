@@ -132,7 +132,7 @@
 /* Responsive */
 @media (max-width: 768px) {
   .requestModal {
-    width: 95%;
+    width: 85%;
     max-width: none;
   }
 

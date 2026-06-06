@@ -119,9 +119,9 @@
 
 @media (max-width: 768px) {
   .likersModal {
-    width: 90%;
+    width: 85%;
     /* Giới hạn chiều cao theo màn hình thay vì px cứng */
-    max-height: 80vh; 
+    max-height: 70vh; 
     display: flex;
     flex-direction: column;
   }

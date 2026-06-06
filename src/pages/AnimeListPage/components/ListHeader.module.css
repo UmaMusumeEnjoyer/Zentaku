@@ -4,9 +4,26 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  align-items: flex-start;
   gap: 16px;
   margin-bottom: 24px;
+}
+
+.withBanner {
+  background-size: cover;
+  background-position: center;
+  padding: 80px 32px 32px 32px;
+  border-radius: 16px;
+  color: white;
+  align-items: flex-end;
+  min-height: 440px;
+}
+
+.noBanner {
+  padding: 0;
+  border-radius: 0;
+  color: var(--text-primary);
+  align-items: flex-start;
+  min-height: auto;
 }
 
 .headerText {
@@ -140,6 +157,11 @@
     flex-direction: column;
     gap: 12px;
     margin-bottom: 20px;
+  }
+
+  .withBanner {
+    min-height: 250px;
+    padding: 30px 16px 16px 16px;
   }
 
   .headerText {

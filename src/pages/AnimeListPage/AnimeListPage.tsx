@@ -72,6 +72,7 @@ const AnimeListPage: React.FC = () => {
   } = useAnimeListPage(id || '', location.state, navigate);
   
   const [viewMode, setViewMode] = React.useState<'grid' | 'list'>('grid');
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = React.useState(false);
   
   if (loading) {
     return <AnimeListPageSkeleton />;
@@ -106,23 +107,33 @@ const AnimeListPage: React.FC = () => {
                 />
               </div>
 
+              {/* View Toggle */}
               <div className={styles.viewToggle}>
-                <button 
+                <button
                   className={`${styles.toggleBtn} ${viewMode === 'grid' ? styles.active : ''}`}
                   onClick={() => setViewMode('grid')}
-                  title={t('animeListPage.viewGrid', 'Grid View')}
+                  title="Grid View"
                 >
                   <span className="material-symbols-outlined">grid_view</span>
                 </button>
-                <button 
+                <button
                   className={`${styles.toggleBtn} ${viewMode === 'list' ? styles.active : ''}`}
                   onClick={() => setViewMode('list')}
-                  title={t('animeListPage.viewList', 'List View')}
+                  title="List View"
                 >
                   <span className="material-symbols-outlined">view_list</span>
                 </button>
               </div>
 
+              {/* [NEW] Mobile Sidebar Button */}
+              <button 
+                className={`${styles.btn} ${styles.btnSecondary} ${styles.mobileSidebarBtn}`}
+                onClick={() => setIsMobileSidebarOpen(true)}
+                title={t('animeListPage.sidebarActions.manage') || "Members & Settings"}
+              >
+                <span className="material-symbols-outlined">group</span>
+              </button>
+              
               <div className={styles.actionButtons}>
                 {listInfo.isOwner ? (
                   <>
@@ -230,7 +241,12 @@ const AnimeListPage: React.FC = () => {
           </div>
         </main>
 
-        <div className="sidebar-area">
+        <div className={`sidebar-area ${styles.sidebarWrapper} ${isMobileSidebarOpen ? styles.isOpen : ''}`}>
+          
+          {/* [NEW] Mobile Sidebar Header */}
+          <div className={styles.mobileSidebarHeader}>
+            <h3>{t('animeListPage.sidebarActions.manage') || "Members"}</h3>
+          </div>
 
           <Sidebar
             members={members}
@@ -274,6 +290,11 @@ const AnimeListPage: React.FC = () => {
             />
           )}
         </div>
+
+        {/* [NEW] Mobile Sidebar Overlay */}
+        {isMobileSidebarOpen && (
+          <div className={styles.mobileSidebarOverlay} onClick={() => setIsMobileSidebarOpen(false)} />
+        )}
       </div>
 
       <AddAnimeModal

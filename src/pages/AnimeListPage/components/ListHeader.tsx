@@ -36,22 +36,10 @@ const ListHeader: React.FC<ListHeaderProps> = ({ listInfo, listId }) => {
     backgroundImage: hasBanner
       ? `linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.8)), url(${bannerStr.startsWith('http') || bannerStr.startsWith('/') ? bannerStr : `https://${bannerStr}`})`
       : 'none',
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    padding: hasBanner ? '80px 32px 32px 32px' : '0',
-    borderRadius: hasBanner ? '16px' : '0',
-    color: hasBanner ? 'white' : 'var(--text-primary)',
-    display: 'flex',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    alignItems: hasBanner ? 'flex-end' : 'flex-start',
-    gap: '16px',
-    marginBottom: '24px',
-    minHeight: hasBanner ? '440px' : 'auto'
   };
 
   return (
-    <div style={headerStyle}>
+    <div className={`${styles.pageHeader} ${hasBanner ? styles.withBanner : styles.noBanner}`} style={headerStyle}>
       <div className={styles.headerText}>
         <h1 className={styles.pageTitle} style={{ color: hasBanner ? 'white' : 'var(--text-primary)' }}>
           {listInfo.list_name}

@@ -163,7 +163,7 @@
 @media (max-width: 768px) {
   .summarySection {
     display: grid;
-    grid-template-columns: 140px 1fr;
+    grid-template-columns: 165px 1fr; /* Tăng từ 140px lên 165px */
     grid-auto-rows: min-content;
     align-items: start;
     margin-top: -80px; 
@@ -176,7 +176,7 @@
   .summaryLeft {
     grid-column: 1 / 2;
     grid-row: 1 / 4; /* Trải dài để ôm phần Poster và nút bấm Add */
-    width: 140px;
+    width: 165px; /* Tăng từ 140px lên 165px */
     margin: 0;
   }
   

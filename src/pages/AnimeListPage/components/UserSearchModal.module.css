@@ -136,10 +136,10 @@
 /* Responsive */
 @media (max-width: 768px) {
   .userModalContent {
-    width: 95%; 
+    width: 85%; 
     max-width: none;
-    height: 90vh; 
-    border-radius: 8px;
+    height: 70vh; 
+    border-radius: 12px;
   }
 
   .userModalHeader {
