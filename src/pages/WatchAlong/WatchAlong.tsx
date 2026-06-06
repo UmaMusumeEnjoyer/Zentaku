@@ -7,9 +7,11 @@ import { animeService, streamingService } from '@umamusumeenjoyer/shared-logic';
 import type { Episode } from '../AnimeWatchPage/WatchPage.types';
 import { useTranslation } from 'react-i18next';
 import { ChevronLeft, ChevronRight, UserMinus, User, Star } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
 
 const WatchAlongPage: React.FC = () => {
   const { t } = useTranslation(['WatchAlong', 'WatchPage']);
+  const { user } = useAuth();
   const { room, isHost, isLoading, error, remotePlaybackState, streamData: originalStreamData, actions } = useWatchAlong();
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -328,15 +330,17 @@ const WatchAlongPage: React.FC = () => {
             <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', textAlign: 'center', padding: 8 }}>
               {t('WatchAlong:welcomeMessage')}
             </div>
-            {room?.messages?.map((msg: { id: string; senderName: string; createdAt: string | number | Date; content: string }) => (
+            {room?.messages?.map((msg: { id: string; senderName: string; createdAt: string | number | Date; content: string }) => {
+              const isMyMessage = user && msg.senderName === user.username;
+              return (
               <div key={msg.id} className={styles.messageWrapper}>
-                <span className={styles.username}>{msg.senderName}</span>
+                <span className={`${styles.username} ${isMyMessage ? styles.myMessageSender : ''}`}>{msg.senderName}</span>
                 <span className={styles.timestamp}>
                   {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </span>
                 <div className={styles.message}>{msg.content}</div>
               </div>
-            ))}
+            )})}
             <div ref={messagesEndRef} />
           </div>
 

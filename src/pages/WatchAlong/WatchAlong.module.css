@@ -357,6 +357,10 @@
   cursor: pointer;
 }
 
+.myMessageSender {
+  color: var(--accent-color); /* Màu xanh hoặc màu theo theme hiện tại */
+}
+
 .chatInputArea {
   padding: 16px;
   border-top: 1px solid var(--border-subtle);
