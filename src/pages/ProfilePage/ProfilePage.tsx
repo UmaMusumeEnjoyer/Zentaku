@@ -18,7 +18,6 @@ import {
   ProfileSidebarSkeleton,
   ProfileBannerSkeleton,
   AnimeListsSkeleton,
-  FavoritesSkeleton,
   ActivityFeedSkeleton,
   SectionTitleSkeleton
 } from './ProfileSkeletons'; // Điều chỉnh path nếu cần
@@ -284,27 +283,6 @@ const ProfilePage: React.FC = () => {
               </>
             )}
 
-            {/* --- TAB: FAVORITES --- */}
-            {activeTab === 'Favorites' && (
-              <div className={styles.favoritesContainer}>
-                <div className={styles.sectionHeader}>
-                  <h2 className={styles.sectionTitle}>{t('favorites.title')}</h2>
-                </div>
-
-                {/* [CHANGE] Logic Loading Favorites */}
-                {favLoading ? (
-                  <FavoritesSkeleton />
-                ) : (
-                  <div className={styles.animeGrid6}>
-                    {favoriteList.map((anime) => (
-                      <div key={anime.id || anime.anilist_id} className={styles.gridItem}>
-                        <AnimeCard anime={anime} />
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
 
             {/* --- TAB: SOCIAL --- */}
             {activeTab === 'Social' && (
@@ -316,17 +294,17 @@ const ProfilePage: React.FC = () => {
                 {socialLoading ? (
                   <SectionTitleSkeleton width={300} />
                 ) : (
-                  <div style={{ display: 'flex', gap: '40px', flexWrap: 'wrap' }}>
+                  <div className={styles.socialLayout}>
                     {/* Followers Column */}
-                    <div style={{ flex: '1 1 300px' }}>
-                      <h3 style={{ marginBottom: '15px', color: 'var(--text-secondary)' }}>
+                    <div className={styles.socialColumn}>
+                      <h3 className={styles.socialSubTitle}>
                         {t('social.followers_count', { count: followers.length })}
                       </h3>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                      <div className={styles.socialList}>
                         {followers.map((f: any) => (
-                          <div key={f.id} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px', backgroundColor: 'var(--bg-secondary)', borderRadius: '8px', cursor: 'pointer' }} onClick={() => navigate(`/user/${f.username}`)}>
-                            <img src={getAvatarUrl(f.avatar)} alt="avatar" style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }} />
-                            <span style={{ fontWeight: 'bold' }}>{f.displayName || f.username}</span>
+                          <div key={f.id} className={styles.socialCard} onClick={() => navigate(`/user/${f.username}`)}>
+                            <img src={getAvatarUrl(f.avatar)} alt="avatar" className={styles.socialAvatar} />
+                            <span className={styles.socialName}>{f.displayName || f.username}</span>
                           </div>
                         ))}
                         {followers.length === 0 && <div className={styles.emptyText}>{t('social.no_followers')}</div>}
@@ -334,15 +312,15 @@ const ProfilePage: React.FC = () => {
                     </div>
 
                     {/* Following Column */}
-                    <div style={{ flex: '1 1 300px' }}>
-                      <h3 style={{ marginBottom: '15px', color: 'var(--text-secondary)' }}>
+                    <div className={styles.socialColumn}>
+                      <h3 className={styles.socialSubTitle}>
                         {t('social.following_count', { count: following.length })}
                       </h3>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                      <div className={styles.socialList}>
                         {following.map((f: any) => (
-                          <div key={f.id} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px', backgroundColor: 'var(--bg-secondary)', borderRadius: '8px', cursor: 'pointer' }} onClick={() => navigate(`/user/${f.username}`)}>
-                            <img src={getAvatarUrl(f.avatar)} alt="avatar" style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }} />
-                            <span style={{ fontWeight: 'bold' }}>{f.displayName || f.username}</span>
+                          <div key={f.id} className={styles.socialCard} onClick={() => navigate(`/user/${f.username}`)}>
+                            <img src={getAvatarUrl(f.avatar)} alt="avatar" className={styles.socialAvatar} />
+                            <span className={styles.socialName}>{f.displayName || f.username}</span>
                           </div>
                         ))}
                         {following.length === 0 && <div className={styles.emptyText}>{t('social.no_following')}</div>}
