@@ -185,6 +185,11 @@
   margin-top: 0.25rem;
 }
 
+.myMessageSender {
+  color: #0084ff; /* Xanh dương nổi bật */
+  font-weight: 700;
+}
+
 .inputArea {
   padding: 0 1rem 1.5rem 1rem;
   background-color: var(--bg-app);
@@ -218,7 +223,8 @@
   flex-shrink: 0;
   overflow-y: auto;
   padding: 1.5rem 0.75rem;
-  display: none;
+  display: flex;
+  flex-direction: column;
 }
 
 .memberCategory {
@@ -230,12 +236,117 @@
   padding: 0 0.5rem;
 }
 
-@media (min-width: 1024px) {
-  .sidebarRight { display: flex; flex-direction: column; }
+/* =========================================
+   MOBILE DRAWER STYLES
+   ========================================= */
+
+.sidebarOverlay {
+  display: none;
+  position: fixed;
+  top: 70px;
+  left: 0;
+  width: 100vw;
+  height: calc(100vh - 70px);
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 30;
+  transition: opacity 0.3s ease;
+}
+
+.mobileMenuBtn, .mobileMembersBtn {
+  display: none;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  cursor: pointer;
+  padding: 4px;
+  align-items: center;
+  justify-content: center;
+}
+
+.headerTitleGroup {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+}
+
+.emptyStateContainer {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+}
+
+.btnOpenSidebar {
+  padding: 10px 20px;
+  background-color: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+@media (max-width: 1024px) {
+  .sidebarRight {
+    position: fixed;
+    top: 70px;
+    right: 0;
+    height: calc(100% - 70px);
+    transform: translateX(100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 40;
+    box-shadow: -4px 0 15px rgba(0, 0, 0, 0.1);
+  }
+  .sidebarRightOpen {
+    transform: translateX(0);
+  }
 }
 
 @media (max-width: 768px) {
-  .sidebarLeft { width: 80px; }
-  .chatItemInfo { display: none; }
-  .sidebarHeaderTitle { display: none; }
+  .sidebarLeft {
+    position: fixed;
+    top: 70px;
+    left: 0;
+    height: calc(100% - 70px);
+    width: 280px; /* Chiều rộng hợp lý cho drawer */
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 40;
+    box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .sidebarLeftOpen {
+    transform: translateX(0);
+  }
+
+  .sidebarOverlay {
+    display: block;
+  }
+
+  .chatItemInfo {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .sidebarHeaderTitle {
+    display: block;
+  }
+
+  .mobileMenuBtn {
+    display: flex;
+    margin-right: 12px;
+  }
+
+  .mobileMembersBtn {
+    display: flex;
+    margin-left: 12px;
+  }
+
+  .chatHeader {
+    padding: 0 12px;
+  }
 }

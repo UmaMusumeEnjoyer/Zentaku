@@ -4,13 +4,17 @@ import { useChatMessenger } from './useChatApp';
 import styles from './ChatApp.module.css';
 import ChatMessengerSkeleton from './ChatAppSkeleton';
 import { socketService } from '@umamusumeenjoyer/shared-logic';
+import { useAuth } from '../../context/AuthContext';
 
 const ChatMessenger: React.FC = () => {
   const { t } = useTranslation(['ChatApp']);
   const { chatRooms, privateRooms, activeRoom, loading, error, setActiveRoomId, sendMessage, typingUsers, loadMoreMessages, isLoadingMore } = useChatMessenger();
+  const { user } = useAuth();
   const [inputValue, setInputValue] = useState('');
   const [activeTab, setActiveTab] = useState<'dm' | 'community'>('dm');
-  
+  const [isLeftSidebarOpen, setIsLeftSidebarOpen] = useState(false);
+  const [isRightSidebarOpen, setIsRightSidebarOpen] = useState(false);
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messageAreaRef = useRef<HTMLDivElement>(null);
   const previousScrollHeightRef = useRef<number>(0);
@@ -72,8 +76,16 @@ const ChatMessenger: React.FC = () => {
 
   return (
     <div className={styles.layout}>
+      {/* Overlay for Mobile */}
+      {(isLeftSidebarOpen || isRightSidebarOpen) && (
+        <div 
+          className={styles.sidebarOverlay} 
+          onClick={() => { setIsLeftSidebarOpen(false); setIsRightSidebarOpen(false); }}
+        />
+      )}
+
       {/* Left Sidebar: Room List */}
-      <aside className={styles.sidebarLeft}>
+      <aside className={`${styles.sidebarLeft} ${isLeftSidebarOpen ? styles.sidebarLeftOpen : ''}`}>
         <div className={styles.sidebarHeader}>
           <h1 className={styles.sidebarHeaderTitle}>{t('ChatApp:chatsTitle')}</h1>
           <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
@@ -96,7 +108,10 @@ const ChatMessenger: React.FC = () => {
             <div 
               key={room.id} 
               className={`${styles.chatItem} ${activeRoom?.id === room.id ? styles.chatItemActive : ''}`}
-              onClick={() => setActiveRoomId(room.id)}
+              onClick={() => {
+                setActiveRoomId(room.id);
+                setIsLeftSidebarOpen(false);
+              }}
             >
               <div className={styles.avatarContainer}>
                 <img src={room.avatar || 'https://i.pravatar.cc/150'} alt="avatar" className={styles.avatar} />
@@ -121,29 +136,41 @@ const ChatMessenger: React.FC = () => {
         {activeRoom ? (
           <>
             <header className={styles.chatHeader}>
-              <h2 className={styles.chatHeaderTitle}>{activeRoom.name}</h2>
-              {activeRoom.description && (
-                <p className={styles.chatHeaderDesc}>{activeRoom.description}</p>
+              <button className={styles.mobileMenuBtn} onClick={() => setIsLeftSidebarOpen(true)}>
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+              </button>
+              <div className={styles.headerTitleGroup}>
+                <h2 className={styles.chatHeaderTitle}>{activeRoom.name}</h2>
+                {activeRoom.description && (
+                  <p className={styles.chatHeaderDesc}>{activeRoom.description}</p>
+                )}
+              </div>
+              {activeTab === 'community' && (
+                <button className={styles.mobileMembersBtn} onClick={() => setIsRightSidebarOpen(true)}>
+                  <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                </button>
               )}
             </header>
 
             <div className={styles.messageArea} ref={messageAreaRef} onScroll={handleScroll}>
               <div style={{ marginTop: 'auto' }}></div>
               {isLoadingMore && <div style={{ textAlign: 'center', padding: '10px', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Loading older messages...</div>}
-              {activeRoom.messages.map(msg => (
+              {activeRoom.messages.map(msg => {
+                const isMyMessage = user && String(msg.sender.id) === String(user.id);
+                return (
                 <div key={msg.id} className={styles.messageRow}>
                   <div className={styles.avatarContainer}>
                     <img src={msg.sender.avatar} alt="avatar" className={styles.avatar} />
                   </div>
                   <div className={styles.messageContent}>
                     <div className={styles.messageMeta}>
-                      <span className={styles.messageSender}>{msg.sender.name}</span>
+                      <span className={`${styles.messageSender} ${isMyMessage ? styles.myMessageSender : ''}`}>{msg.sender.name}</span>
                       <span className={styles.messageTime}>{msg.timestamp}</span>
                     </div>
                     <div className={styles.messageText}>{msg.content}</div>
                   </div>
                 </div>
-              ))}
+              )})}
               {typingUsers.length > 0 && (
                 <div className={styles.messageRow} style={{ opacity: 0.7 }}>
                   <div className={styles.messageContent}>
@@ -168,15 +195,18 @@ const ChatMessenger: React.FC = () => {
             </div>
           </>
         ) : (
-          <div style={{ display: 'flex', flex: 1, alignItems: 'center', justifyContent: 'center', color: 'var(--text-secondary)' }}>
-            {t('ChatApp:selectChatToStart')}
+          <div className={styles.emptyStateContainer}>
+            <button className={styles.btnOpenSidebar} onClick={() => setIsLeftSidebarOpen(true)}>
+               ☰ {t('ChatApp:openChatList') || "Mở danh sách Chat"}
+            </button>
+            <div style={{marginTop: 10}}>{t('ChatApp:selectChatToStart')}</div>
           </div>
         )}
       </main>
 
       {/* Right Sidebar: Members */}
       {activeTab === 'community' && activeRoom && (
-        <aside className={styles.sidebarRight}>
+        <aside className={`${styles.sidebarRight} ${isRightSidebarOpen ? styles.sidebarRightOpen : ''}`}>
           <div>
             <h3 className={styles.memberCategory}>{t('ChatApp:online')} — {onlineMembers.length}</h3>
             <div className={styles.chatList}>
