@@ -2,11 +2,12 @@
 
 .userGroupSection {
   margin-bottom: 40px;
-  background-color: var(--bg-subtle);
+  background-color: var(--bg-panel);
   padding: 20px;
   border-radius: 12px;
   border: 1px solid var(--border-subtle);
-  transition: background-color 0.2s;
+  transition: background-color 0.2s, border-color 0.2s;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .userGroupHeader {

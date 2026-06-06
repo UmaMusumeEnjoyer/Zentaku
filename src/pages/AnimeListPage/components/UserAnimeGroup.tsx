@@ -17,7 +17,8 @@ const UserAnimeGroup: React.FC<UserAnimeGroupProps> = ({
   onOpenAddModal, 
   onToggleDeleteMode, 
   onConfirmDelete, 
-  onSelectAnime 
+  onSelectAnime,
+  viewMode = 'grid'
 }) => {
   const { t } = useTranslation(['userAnimeGroup']);
   
