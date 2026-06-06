@@ -15,10 +15,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ animeData, animeId }) => {
   const [isSynopsisExpanded, setIsSynopsisExpanded] = useState(false);
 
   const anime = useMemo(() => ({
-    id: animeId || animeData?.id,
+    id: animeId || animeData?.idAnilist || animeData?.id,
     cover_image: animeData?.coverImage?.large || animeData?.coverImage || animeData?.cover_image,
     name_romaji: animeData?.title?.romaji || animeData?.name_romaji,
-    desc: animeData?.desc
+    desc: animeData?.description || animeData?.desc
   }), [animeId, animeData?.id, animeData?.coverImage, animeData?.cover_image, animeData?.title, animeData?.name_romaji, animeData?.desc]);
 
   const {
@@ -52,9 +52,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ animeData, animeId }) => {
     ? `${animeData.season} ${animeData.seasonYear || animeData.season_year}` 
     : 'Unknown';
   
-  const studio = animeData?.studios && animeData.studios.length > 0 
-    ? animeData.studios[0] 
-    : 'Unknown';
+  const studio = animeData?.studio 
+    || (animeData?.studios && animeData.studios.length > 0 ? animeData.studios[0] : 'Unknown');
 
   const genres = animeData?.genres || [];
 
@@ -91,7 +90,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ animeData, animeId }) => {
               </div>
               <div className={styles.metaItem}>
                   <span className={styles.metaLabel}>Format:</span>
-                  <span className={styles.metaValue}>{animeData.format || animeData.airing_format || 'Unknown'}</span>
+                  <span className={styles.metaValue}>{animeData.format || animeData.type || animeData.airing_format || 'Unknown'}</span>
               </div>
           </div>
 
@@ -142,7 +141,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ animeData, animeId }) => {
               <h3 className={styles.synopsisTitle}>Synopsis</h3>
               <p 
                 className={`${styles.synopsisText} ${isSynopsisExpanded ? styles.synopsisExpanded : styles.synopsisCollapsed}`}
-                dangerouslySetInnerHTML={{ __html: animeData.desc || 'No synopsis available.' }}
+                dangerouslySetInnerHTML={{ __html: animeData.description || animeData.desc || 'No synopsis available.' }}
               />
               <button 
                 className={styles.seeMoreBtn}
