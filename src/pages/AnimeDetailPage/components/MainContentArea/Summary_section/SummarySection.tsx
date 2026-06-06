@@ -6,9 +6,17 @@ import styles from './SummarySection.module.css';
 import type { SummarySectionProps } from '@umamusumeenjoyer/shared-logic';
 import { useSummarySection } from '@umamusumeenjoyer/shared-logic';
 import { useTranslation } from 'react-i18next';
+import { FaInfoCircle, FaPlay, FaUsers, FaUserTie } from 'react-icons/fa';
 
 // Danh sách các nút chức năng
 const NAV_ITEMS = ['Overview', 'Watch', 'Characters', 'Staff'];
+
+const NAV_ICONS: Record<string, React.ReactNode> = {
+  Overview: <FaInfoCircle />,
+  Watch: <FaPlay />,
+  Characters: <FaUsers />,
+  Staff: <FaUserTie />
+};
 
 const SummarySection: React.FC<SummarySectionProps> = ({ anime, hasBanner, activeTab, setActiveTab }) => {
   const { t, i18n } = useTranslation(['AnimeModal', 'common']); 
@@ -101,15 +109,20 @@ const SummarySection: React.FC<SummarySectionProps> = ({ anime, hasBanner, activ
 
           {/* [NEW] Navigation Buttons */}
           <div className={styles.navBar}>
-            {NAV_ITEMS.map((item) => (
-              <button 
-                key={item} 
-                className={`${styles.navItem} ${activeTab === item ? styles.active : ''}`}
-                onClick={() => handleNavClick(item)} // [4] Gắn hàm xử lý vào đây
-              >
-                {t(`AnimeModal:navBar.${item}`) }
-              </button>
-            ))}
+            {NAV_ITEMS.map((item) => {
+              const isWatch = item === 'Watch';
+              const isActive = activeTab === item;
+              return (
+                <button 
+                  key={item} 
+                  className={`${styles.navItem} ${isWatch ? styles.navItemWatch : ''} ${isActive ? styles.active : ''}`}
+                  onClick={() => handleNavClick(item)} 
+                >
+                  <span className={styles.navIcon}>{NAV_ICONS[item]}</span>
+                  <span className={styles.navText}>{t(`AnimeModal:navBar.${item}`)}</span>
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>
