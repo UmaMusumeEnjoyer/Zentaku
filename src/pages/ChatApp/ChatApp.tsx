@@ -88,16 +88,16 @@ const ChatMessenger: React.FC = () => {
       <aside className={`${styles.sidebarLeft} ${isLeftSidebarOpen ? styles.sidebarLeftOpen : ''}`}>
         <div className={styles.sidebarHeader}>
           <h1 className={styles.sidebarHeaderTitle}>{t('ChatApp:chatsTitle')}</h1>
-          <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
+          <div className={styles.tabGroup}>
             <button 
               onClick={() => setActiveTab('dm')}
-              style={{ flex: 1, padding: '5px', background: activeTab === 'dm' ? 'var(--primary-color)' : 'transparent', color: 'white', border: '1px solid var(--border-color)', borderRadius: '4px', cursor: 'pointer' }}
+              className={`${styles.tabBtn} ${activeTab === 'dm' ? styles.tabBtnActive : ''}`}
             >
               {t('ChatApp:directTab')}
             </button>
             <button 
               onClick={() => setActiveTab('community')}
-              style={{ flex: 1, padding: '5px', background: activeTab === 'community' ? 'var(--primary-color)' : 'transparent', color: 'white', border: '1px solid var(--border-color)', borderRadius: '4px', cursor: 'pointer' }}
+              className={`${styles.tabBtn} ${activeTab === 'community' ? styles.tabBtnActive : ''}`}
             >
               {t('ChatApp:groupsTab')}
             </button>
@@ -146,8 +146,14 @@ const ChatMessenger: React.FC = () => {
                 )}
               </div>
               {activeTab === 'community' && (
-                <button className={styles.mobileMembersBtn} onClick={() => setIsRightSidebarOpen(true)}>
-                  <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                <button 
+                  className={styles.infoToggleBtn} 
+                  onClick={() => setIsRightSidebarOpen(!isRightSidebarOpen)}
+                  title={t('ChatApp:toggleMembers') || 'Members Info'}
+                >
+                  <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+                  </svg>
                 </button>
               )}
             </header>
@@ -165,16 +171,27 @@ const ChatMessenger: React.FC = () => {
                 }
                 
                 return (
-                <div key={msg.id} className={styles.messageRow}>
-                  <div className={styles.avatarContainer}>
-                    <img src={msg.sender.avatar} alt="avatar" className={styles.avatar} />
-                  </div>
-                  <div className={styles.messageContent}>
-                    <div className={styles.messageMeta}>
-                      <span className={`${styles.messageSender} ${isMyMessage ? styles.myMessageSender : ''}`} style={{ color: isMyMessage ? '#3b82f6' : nameColor }}>{msg.sender.name}</span>
-                      <span className={styles.messageTime}>{msg.timestamp}</span>
+                <div key={msg.id} className={`${styles.messageRow} ${isMyMessage ? styles.myMessageRow : ''}`}>
+                  {!isMyMessage && (
+                    <div className={styles.avatarContainer}>
+                      <img src={msg.sender.avatar} alt="avatar" className={styles.avatar} />
                     </div>
-                    <div className={styles.messageText}>{msg.content}</div>
+                  )}
+                  <div className={`${styles.messageContent} ${isMyMessage ? styles.myMessageContent : ''}`}>
+                    {!isMyMessage && (
+                      <div className={styles.messageMeta}>
+                        <span className={styles.messageSender} style={{ color: nameColor }}>{msg.sender.name}</span>
+                        <span className={styles.messageTime}>{msg.timestamp}</span>
+                      </div>
+                    )}
+                    <div className={`${styles.messageBubble} ${isMyMessage ? styles.myMessageBubble : ''}`}>
+                      <div className={styles.messageText}>{msg.content}</div>
+                    </div>
+                    {isMyMessage && (
+                      <div className={styles.messageMetaRight}>
+                        <span className={styles.messageTime}>{msg.timestamp}</span>
+                      </div>
+                    )}
                   </div>
                 </div>
               )})}
@@ -211,9 +228,13 @@ const ChatMessenger: React.FC = () => {
         )}
       </main>
 
-      {/* Right Sidebar: Members */}
-      {activeTab === 'community' && activeRoom && (
-        <aside className={`${styles.sidebarRight} ${isRightSidebarOpen ? styles.sidebarRightOpen : ''}`}>
+      {/* Right Sidebar: Members (Hidden behind toggle) */}
+      {activeTab === 'community' && activeRoom && isRightSidebarOpen && (
+        <aside className={styles.sidebarRight}>
+          <div className={styles.sidebarRightHeader}>
+            <h3 className={styles.sidebarRightTitle}>{t('ChatApp:members') || 'Thành viên'}</h3>
+            <button className={styles.closeSidebarBtn} onClick={() => setIsRightSidebarOpen(false)}>✕</button>
+          </div>
           <div>
             <h3 className={styles.memberCategory}>{t('ChatApp:online')} — {onlineMembers.length}</h3>
             <div className={styles.chatList}>
@@ -236,7 +257,7 @@ const ChatMessenger: React.FC = () => {
               <h3 className={styles.memberCategory}>{t('ChatApp:offline')} — {offlineMembers.length}</h3>
               <div className={styles.chatList}>
                 {offlineMembers.map(member => (
-                  <div key={member.id} className={styles.chatItem} style={{ opacity: 0.5 }}>
+                  <div key={member.id} className={styles.chatItem} style={{ opacity: 0.6 }}>
                     <div className={styles.avatarContainer}>
                       <img src={member.avatar} alt="avatar" className={styles.avatar} style={{ filter: 'grayscale(1)' }} />
                       <span className={`${styles.statusIndicator} ${styles.statusOffline}`}></span>
