@@ -162,7 +162,14 @@
 
 @media (max-width: 768px) {
   .animeSearchPage {
+    padding-top: 90px; /* Tránh bị Header che khuất */
+    padding-left: 0;
+    padding-right: 0;
     padding-bottom: 30px;
+  }
+
+  .hideOnMobile {
+    display: none !important;
   }
 
   .container {

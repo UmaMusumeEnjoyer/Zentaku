@@ -1,10 +1,10 @@
 // src/pages/AnimeSearch/components/FilterBar.tsx
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 // [CHANGE] Import styles from module
 import styles from './FilterBar.module.css';
-import { FaSearch, FaSyncAlt } from 'react-icons/fa';
+import { FaSearch, FaSyncAlt, FaFilter, FaTimes } from 'react-icons/fa';
 import { 
   filterData, 
   GENRE_I18N_MAP,
@@ -26,12 +26,14 @@ const FilterBar: React.FC<FilterBarProps> = ({ onSearch, activeFilters }) => {
     handleKeyDown,
   } = useFilterBar({ onSearch, activeFilters: activeFilters??undefined});
 
+  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
+
   return (
     // [CHANGE] Use styles.filterBar and data-theme attribute
     <div className={styles.filterBar} data-theme={theme}>
       {/* 1. SEARCH */}
       <div className={`${styles.filterGroup} ${styles.filterSearch}`}>
-        <label>{t('filterBar.labels.search')}</label>
+        <label className={styles.searchLabelDesktop}>{t('filterBar.labels.search')}</label>
         <div className={styles.searchBox}>
           <input
             type="text"
@@ -44,8 +46,25 @@ const FilterBar: React.FC<FilterBarProps> = ({ onSearch, activeFilters }) => {
           <div className={styles.searchBtn} onClick={handleSearchAction}>
             <FaSearch />
           </div>
+          <button 
+            className={styles.mobileFilterBtn} 
+            onClick={() => setIsMobileFilterOpen(true)}
+            aria-label="Open Filters"
+          >
+            <FaFilter />
+          </button>
         </div>
       </div>
+
+      <div className={`${styles.filterOptionsWrapper} ${isMobileFilterOpen ? styles.isOpen : ''}`}>
+        
+        {/* Mobile Header cho Bottom Sheet */}
+        <div className={styles.mobileFilterHeader}>
+          <h3>{t('filterBar.labels.filters') || 'Bộ lọc'}</h3>
+          <button className={styles.closeFilterBtn} onClick={() => setIsMobileFilterOpen(false)}>
+            <FaTimes />
+          </button>
+        </div>
 
       {/* 2. GENRES */}
       <div className={`${styles.filterGroup} ${styles.filterGenres}`}>
@@ -149,8 +168,8 @@ const FilterBar: React.FC<FilterBarProps> = ({ onSearch, activeFilters }) => {
         </select>
       </div>
 
-      {/* 8. CLEAR BUTTON */}
-      <div className={styles.filterGroup} style={{ display: 'flex', alignItems: 'flex-end' }}>
+      {/* 8. CLEAR BUTTON & MOBILE APPLY */}
+      <div className={`${styles.filterGroup} ${styles.filterActionsGroup}`}>
         <button 
           onClick={handleClear}
           className={styles.btnClearFilter}
@@ -159,7 +178,24 @@ const FilterBar: React.FC<FilterBarProps> = ({ onSearch, activeFilters }) => {
           <FaSyncAlt style={{ marginRight: '5px' }} /> 
           {t('filterBar.buttons.clear')}
         </button>
+        
+        <button 
+          onClick={() => setIsMobileFilterOpen(false)}
+          className={styles.btnApplyFilterMobile}
+        >
+          {t('filterBar.buttons.apply') || 'Áp dụng'}
+        </button>
       </div>
+
+      </div>{/* End .filterOptionsWrapper */}
+
+      {/* Overlay cho Mobile */}
+      {isMobileFilterOpen && (
+        <div 
+          className={styles.mobileFilterOverlay} 
+          onClick={() => setIsMobileFilterOpen(false)} 
+        />
+      )}
     </div>
   );
 };

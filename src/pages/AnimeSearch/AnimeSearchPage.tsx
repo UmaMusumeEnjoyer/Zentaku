@@ -37,7 +37,9 @@ const AnimeSearchPage: React.FC = () => {
 
   return (
     <div className={styles.animeSearchPage}>
-      <HeroSection slides={heroList} />
+      <div className={styles.hideOnMobile}>
+        <HeroSection slides={heroList} />
+      </div>
       
       <FilterBar onSearch={handleSearch} activeFilters={currentFilters} />
 
