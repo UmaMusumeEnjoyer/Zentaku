@@ -330,8 +330,13 @@ const WatchAlongPage: React.FC = () => {
             <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', textAlign: 'center', padding: 8 }}>
               {t('WatchAlong:welcomeMessage')}
             </div>
-            {room?.messages?.map((msg: { id: string; senderName: string; createdAt: string | number | Date; content: string }) => {
-              const isMyMessage = user && msg.senderName === user.username;
+            {room?.messages?.map((msg: any) => {
+              const isMyMessage = user && (
+                msg.senderName === user.username || 
+                msg.senderName === user.displayName || 
+                msg.userId === user.id || 
+                msg.senderId === user.id
+              );
               return (
               <div key={msg.id} className={styles.messageWrapper}>
                 <span className={`${styles.username} ${isMyMessage ? styles.myMessageSender : ''}`}>{msg.senderName}</span>

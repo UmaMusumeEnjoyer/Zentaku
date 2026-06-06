@@ -87,6 +87,11 @@ export const useFloatingChat = () => {
   const loadedRoomsRef = useRef<Set<string>>(new Set());
   const messageTimestamps = useRef<number[]>([]);
   const joinedRoomRef = useRef<string | null>(null);
+  const roomsRef = useRef<FloatingRoom[]>([]);
+
+  useEffect(() => {
+    roomsRef.current = rooms;
+  }, [rooms]);
 
   const isAuthenticated = !!user;
   const totalUnread = Array.from(unreadCounts.values()).reduce((sum, c) => sum + c, 0);
@@ -188,6 +193,10 @@ export const useFloatingChat = () => {
     const unsubMessageCreated = socketService.on('message.created', (data: any) => {
       const channelId = String(data.channelId);
 
+      // Validate if this message belongs to one of our private rooms
+      const hasRoom = roomsRef.current.some(r => r.id === channelId);
+      if (!hasRoom) return; // Ignore messages from WatchAlong or other community channels
+
       const incomingMsg: FloatingMessage = {
         id: String(data.id),
         sender: {
@@ -203,9 +212,6 @@ export const useFloatingChat = () => {
 
       // Update room messages if loaded
       setRooms(prev => {
-        const hasRoom = prev.some(r => r.id === channelId);
-        if (!hasRoom) return prev; // message for a room we don't have (community channel etc.)
-
         return prev.map(room => {
           if (room.id !== channelId) return room;
 
