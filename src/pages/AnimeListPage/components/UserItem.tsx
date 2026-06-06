@@ -5,6 +5,7 @@ import type { UserItemProps } from '@umamusumeenjoyer/shared-logic';
 
 // Import CSS Module
 import styles from './UserItem.module.css';
+import { useNavigate } from 'react-router-dom';
 
 const BACKEND_DOMAIN = import.meta.env.VITE_BACKEND_DOMAIN;
 const DEFAULT_AVATAR = import.meta.env.VITE_DEFAULT_AVATAR_URL;
@@ -24,10 +25,16 @@ const UserItem: React.FC<UserItemProps> = ({
     DEFAULT_AVATAR,
     BACKEND_DOMAIN
   );
+  
+  const navigate = useNavigate();
+
+  const handleUserClick = () => {
+    navigate(`/user/${user.username}`);
+  };
 
   return (
     <div className={`${styles.userItem} ${isCurrentUser ? styles.currentUser : ''}`}>
-      <div className={styles.userInfo}>
+      <div className={styles.userInfo} onClick={handleUserClick} style={{ cursor: 'pointer' }}>
         <img src={displayAvatar} alt={user.username} className={styles.userAvatar} />
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
