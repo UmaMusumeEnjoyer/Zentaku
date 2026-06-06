@@ -230,12 +230,13 @@
 .videoPlayer {
   flex : 1;
   width: 100%;
-  background-color: #000;
+  background-color: transparent;
   position: relative;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: stretch;
+  justify-content: stretch;
   min-height: 0;
+  padding: 16px;
 }
 
 .videoOverlay {
@@ -391,9 +392,173 @@
   cursor: pointer;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
+/* Mobile Controls & Tabs (Hidden on Desktop) */
+.mobileTabs {
+  display: none;
+}
+
+.landscapeChatToggle {
+  display: none;
+}
+
+.closeOverlayBtn {
+  display: none;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* =========================================
+   RESPONSIVE: MOBILE PORTRAIT (1A)
+   ========================================= */
+@media (max-width: 768px) and (orientation: portrait) {
+  .contentWrapper {
+    flex-direction: column;
+    padding: 0;
+    gap: 0;
+  }
+
+  .mainArea {
+    flex: 1;
+    width: 100%;
+    border-radius: 0;
+    order: 1;
+  }
+
+  .mainAreaHasTabOpen {
+    flex: none !important;
+    aspect-ratio: 16/9;
+  }
+
+  .toggleBtnLeft, .toggleBtnRight {
+    display: none; /* Ẩn nút gập trên desktop */
+  }
+
+  /* Mobile Tabs */
+  .mobileTabs {
+    display: flex;
+    background-color: var(--bg-panel);
+    border-bottom: 1px solid var(--border-subtle);
+    order: 2;
+  }
+
+  .mobileTabBtn {
+    flex: 1;
+    padding: 12px 0;
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+  }
+
+  .mobileTabBtn.active {
+    color: var(--accent-color);
+    border-bottom-color: var(--accent-color);
+  }
+
+  .hideOnMobilePortrait {
+    display: none !important;
+  }
+
   .leftSidebar, .rightSidebar {
-    display: none; 
+    width: 100%;
+    flex: 1;
+    border-radius: 0;
+    border: none;
+    border-top: none;
+  }
+  
+  .leftSidebar {
+    order: 3;
+  }
+  
+  .rightSidebar {
+    order: 4;
+  }
+
+  .videoPlayer {
+    padding: 0;
+  }
+}
+
+/* =========================================
+   RESPONSIVE: MOBILE LANDSCAPE (2A)
+   ========================================= */
+@media (max-width: 900px) and (orientation: landscape) {
+  .contentWrapper {
+    padding: 0;
+    gap: 0;
+  }
+
+  .mainArea {
+    flex: 1;
+    border-radius: 0;
+  }
+
+  .toggleBtnLeft, .toggleBtnRight {
+    display: none;
+  }
+
+  .hideOnMobileLandscape {
+    display: none !important;
+  }
+
+  .videoPlayer {
+    padding: 0;
+  }
+
+  /* Landscape Chat Toggle */
+  .landscapeChatToggle {
+    display: block;
+    position: absolute;
+    top: 80px; /* Dưới header 1 chút */
+    right: 10px;
+    z-index: 50;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    backdrop-filter: blur(4px);
+  }
+
+  /* Right Sidebar as Overlay */
+  .rightSidebar {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 320px;
+    max-width: 60vw;
+    background-color: rgba(15, 15, 15, 0.85) !important;
+    backdrop-filter: blur(8px);
+    z-index: 100;
+    border-radius: 0;
+    border: none;
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .rightSidebar.landscapeOverlayOpen {
+    display: flex !important;
+  }
+
+  .closeOverlayBtn {
+    display: block;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    z-index: 101;
   }
 }

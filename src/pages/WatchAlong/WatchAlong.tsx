@@ -29,6 +29,8 @@ const WatchAlongPage: React.FC = () => {
   const [isTheaterMode, setIsTheaterMode] = useState(false);
   const [showLeftSidebar, setShowLeftSidebar] = useState(true);
   const [showRightSidebar, setShowRightSidebar] = useState(true);
+  const [mobileTab, setMobileTab] = useState<'chat' | 'members' | 'none'>('none');
+  const [isOverlayChatOpen, setIsOverlayChatOpen] = useState(false);
 
   const displayStreamData = originalStreamData;
 
@@ -93,7 +95,16 @@ const WatchAlongPage: React.FC = () => {
   return (
     <div className={styles.container}>
       <div className={styles.contentWrapper}>
-        <aside className={`${styles.leftSidebar} ${isHost ? styles.owner : styles.viewer} ${!showLeftSidebar ? styles.collapsed : ''}`}>
+        
+        {/* Nút bật Chat mờ mờ trên Landscape Mobile */}
+        <button 
+          className={`${styles.landscapeChatToggle} ${isOverlayChatOpen ? styles.hidden : ''}`}
+          onClick={() => setIsOverlayChatOpen(true)}
+        >
+          Hiện Chat
+        </button>
+
+        <aside className={`${styles.leftSidebar} ${isHost ? styles.owner : styles.viewer} ${!showLeftSidebar ? styles.collapsed : ''} ${mobileTab !== 'members' ? styles.hideOnMobilePortrait : ''} ${styles.hideOnMobileLandscape}`}>
           {showLeftSidebar && (
             <div className={styles.sidebarContent}>
 
@@ -196,7 +207,7 @@ const WatchAlongPage: React.FC = () => {
           </button>
         </aside>
 
-        <main className={styles.mainArea}>
+        <main className={`${styles.mainArea} ${mobileTab !== 'none' ? styles.mainAreaHasTabOpen : ''}`}>
           <div className={styles.videoPlayer}>
             <VideoPlayer
               streamData={displayStreamData}
@@ -280,13 +291,33 @@ const WatchAlongPage: React.FC = () => {
               onPlay={(time) => actions.play(time)}
               onPause={(time) => actions.pause(time)}
               onSeek={(time) => actions.seek(time)}
+              hideControlsOnMobile={mobileTab !== 'none'}
             />
             {/* Note: In a real app, we would sync remotePlaybackState with VideoPlayer here */}
           </div>
 
         </main>
 
-        <aside className={`${styles.rightSidebar} ${!showRightSidebar ? styles.collapsed : ''}`}>
+        {/* Mobile Tabs Toggle Bar (Chỉ hiện trên Portrait khi đang xem list tab) */}
+        <div className={styles.mobileTabs}>
+          <button 
+            className={`${styles.mobileTabBtn} ${mobileTab === 'chat' ? styles.active : ''}`} 
+            onClick={() => setMobileTab(mobileTab === 'chat' ? 'none' : 'chat')}
+          >
+            {mobileTab === 'chat' ? (t('WatchAlong:closeChat') || 'Đóng Chat') : (t('WatchAlong:roomChat') || 'Chat')}
+          </button>
+          <button 
+            className={`${styles.mobileTabBtn} ${mobileTab === 'members' ? styles.active : ''}`} 
+            onClick={() => setMobileTab(mobileTab === 'members' ? 'none' : 'members')}
+          >
+            {mobileTab === 'members' ? (t('WatchAlong:closeMembers') || 'Đóng Members') : (t('WatchAlong:viewers') || 'Members')}
+          </button>
+        </div>
+
+        <aside className={`${styles.rightSidebar} ${!showRightSidebar ? styles.collapsed : ''} ${mobileTab !== 'chat' ? styles.hideOnMobilePortrait : ''} ${isOverlayChatOpen ? styles.landscapeOverlayOpen : ''}`}>
+          {/* Nút đóng Chat Overlay trên Landscape */}
+          <button className={styles.closeOverlayBtn} onClick={() => setIsOverlayChatOpen(false)}>×</button>
+
           {showRightSidebar && (
             <>
               <div className={styles.chatHeader}>
