@@ -581,3 +581,76 @@
     display: none;
   }
 }
+
+@media (max-width: 768px) {
+  .headerControls {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1rem;
+  }
+
+  .calendarContainer {
+    padding: 0 1rem 1rem;
+  }
+
+  /* Ẩn tiêu đề các thứ trong tuần */
+  .weekGrid {
+    display: none;
+  }
+
+  /* Chuyển lưới thành 1 cột (Danh sách dọc) */
+  .daysGrid {
+    grid-template-columns: 1fr;
+    grid-auto-rows: auto;
+    overflow-y: auto;
+  }
+
+  .dayCell {
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 1rem;
+    gap: 1rem;
+    border-right: none;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .dayNumberHeader {
+    flex-direction: column;
+    align-items: center;
+    width: 40px;
+    flex-shrink: 0;
+  }
+
+  .selectedIndicator {
+    display: none; /* Ẩn mũi tên xuống vì trên Mobile không còn phù hợp */
+  }
+
+  .eventList {
+    flex: 1;
+    margin-top: 0;
+    gap: 0.5rem;
+  }
+
+  .eventDot {
+    font-size: 11px;
+    padding: 0.35rem 0.5rem;
+    white-space: normal;
+    word-break: break-word;
+  }
+
+  /* Biến Detail Panel thành Bottom Sheet dính dưới cùng màn hình */
+  .detailPanel {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: 0;
+    z-index: 1000;
+    border-radius: 1.25rem 1.25rem 0 0;
+    border-top: 4px solid var(--btn-primary-bg);
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.4);
+    animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
