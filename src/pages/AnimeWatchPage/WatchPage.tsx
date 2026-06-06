@@ -28,6 +28,7 @@ const WatchPage: React.FC = () => {
   const navigate = useNavigate();
   const [isTheaterMode, setIsTheaterMode] = useState(false);
   const [creatingRoom, setCreatingRoom] = useState(false);
+  const [mobileTab, setMobileTab] = useState<'episodes' | 'info'>('episodes');
   const { t } = useTranslation(['WatchPage']);
 
   const handleCreateWatchParty = async () => {
@@ -87,11 +88,34 @@ const WatchPage: React.FC = () => {
             onCreateWatchParty={handleCreateWatchParty}
             creatingRoom={creatingRoom}
             canCreateWatchParty={!loadingStream && !!streamData?.videoUrl}
+            hideControlsOnMobile={mobileTab === 'info'}
           />
 
         </div>
 
-        {!isTheaterMode && <Sidebar animeData={animeData} animeId={animeId} />}
+        {/* Mobile Tabs */}
+        {!isTheaterMode && (
+          <div className={styles.mobileTabs}>
+            <button 
+              className={`${styles.mobileTabBtn} ${mobileTab === 'episodes' ? styles.mobileTabBtnActive : ''}`}
+              onClick={() => setMobileTab('episodes')}
+            >
+              {t('WatchPage:episodesLabel')} & Server
+            </button>
+            <button 
+              className={`${styles.mobileTabBtn} ${mobileTab === 'info' ? styles.mobileTabBtnActive : ''}`}
+              onClick={() => setMobileTab('info')}
+            >
+              {t('WatchPage:animeInfo')}
+            </button>
+          </div>
+        )}
+
+        {!isTheaterMode && (
+          <div className={`${styles.sidebarWrapper} ${mobileTab === 'episodes' ? styles.hideOnMobile : ''}`}>
+            <Sidebar animeData={animeData} animeId={animeId} />
+          </div>
+        )}
 
       </main>
     </div>

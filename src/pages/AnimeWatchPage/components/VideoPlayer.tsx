@@ -54,6 +54,7 @@ interface VideoPlayerProps {
   onCreateWatchParty?: () => void;
   creatingRoom?: boolean;
   canCreateWatchParty?: boolean;
+  hideControlsOnMobile?: boolean;
 }
 
 // Helper set CSS var
@@ -513,6 +514,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
   onCreateWatchParty,
   creatingRoom,
   canCreateWatchParty,
+  hideControlsOnMobile = false,
 }) => {
     const { t } = useTranslation(['WatchPage']);
     // Autoplay State
@@ -659,7 +661,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
 
       {/* 3. Main Controls Group: Episode List & Servers - Ẩn trong theater mode */}
       {!isTheaterMode && (
-        <div className={styles.controlsGroup}>
+        <div className={`${styles.controlsGroup} ${hideControlsOnMobile ? styles.hideOnMobile : ''}`}>
           {/* Episode List */}
           <div className={styles.controlPanel}>
             <div className={styles.panelHeader}>

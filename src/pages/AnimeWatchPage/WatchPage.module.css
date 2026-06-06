@@ -36,6 +36,56 @@
   }
 }
 
+@media (max-width: 768px) {
+  .container {
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 60px;
+  }
+  
+  .mainLayout {
+    gap: 0;
+  }
+  
+  .hideOnMobile {
+    display: none !important;
+  }
+
+  .sidebarWrapper {
+    padding: 1rem;
+  }
+  
+  .mobileTabs {
+    display: flex;
+    background-color: var(--bg-panel);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  
+  .mobileTabBtn {
+    flex: 1;
+    padding: 0.8rem;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--text-secondary);
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .mobileTabBtnActive {
+    color: var(--btn-primary-bg);
+    border-bottom-color: var(--btn-primary-bg);
+  }
+}
+
+@media (min-width: 769px) {
+  .mobileTabs {
+    display: none !important;
+  }
+}
+
 /* --- Video Player Section --- */
 .videoWrapper {
   display: flex;
