@@ -71,6 +71,8 @@ const AnimeListPage: React.FC = () => {
     handleRemoveMember,
   } = useAnimeListPage(id || '', location.state, navigate);
   
+  const [viewMode, setViewMode] = React.useState<'grid' | 'list'>('grid');
+  
   if (loading) {
     return <AnimeListPageSkeleton />;
   }
@@ -92,15 +94,63 @@ const AnimeListPage: React.FC = () => {
           />
 
           <div className={styles.filterBarSticky}>
-            <div className={styles.searchWrapper}>
-              <span className={`material-symbols-outlined ${styles.searchIcon}`}>search</span>
-              <input
-                type="text"
-                className={styles.searchInput}
-                placeholder={t('animeListPage.searchPlaceholder')}
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
+            <div className={styles.toolbar}>
+              <div className={styles.searchWrapper}>
+                <span className={`material-symbols-outlined ${styles.searchIcon}`}>search</span>
+                <input
+                  type="text"
+                  className={styles.searchInput}
+                  placeholder={t('animeListPage.searchPlaceholder')}
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
+
+              <div className={styles.viewToggle}>
+                <button 
+                  className={`${styles.toggleBtn} ${viewMode === 'grid' ? styles.active : ''}`}
+                  onClick={() => setViewMode('grid')}
+                  title={t('animeListPage.viewGrid', 'Grid View')}
+                >
+                  <span className="material-symbols-outlined">grid_view</span>
+                </button>
+                <button 
+                  className={`${styles.toggleBtn} ${viewMode === 'list' ? styles.active : ''}`}
+                  onClick={() => setViewMode('list')}
+                  title={t('animeListPage.viewList', 'List View')}
+                >
+                  <span className="material-symbols-outlined">view_list</span>
+                </button>
+              </div>
+
+              <div className={styles.actionButtons}>
+                {listInfo.isOwner ? (
+                  <>
+                    <button className={`${styles.btn} ${styles.btnSecondary}`} onClick={handleEditListClick}>
+                      {t('animeListPage.sidebarActions.editDetails')}
+                    </button>
+                    <button className={`${styles.btn} ${styles.btnDanger}`} onClick={handleDeleteList}>
+                      {t('animeListPage.sidebarActions.deleteList')}
+                    </button>
+                  </>
+                ) : isViewer ? (
+                  <button
+                    className={`${styles.btn} ${styles.btnPrimary} btn-icon`}
+                    onClick={handleOpenEditRequest}
+                  >
+                    <span className="material-symbols-outlined">edit_note</span>
+                    {t('animeListPage.sidebarActions.requestEdit')}
+                  </button>
+                ) : !currentPermission && (
+                  <button
+                    className={`${styles.btn} ${styles.btnJoinRequest} btn-icon`}
+                    onClick={handleOpenJoinRequest}
+                  >
+                    <span className="material-symbols-outlined">person_add</span>
+                    {t('animeListPage.sidebarActions.joinRequest')}
+                  </button>
+                )}
+              </div>
             </div>
           </div>
 
@@ -158,6 +208,7 @@ const AnimeListPage: React.FC = () => {
                         onToggleDeleteMode={toggleDeleteMode}
                         onConfirmDelete={handleConfirmDelete}
                         onSelectAnime={handleSelectAnime}
+                        viewMode={viewMode}
                       />
                     );
                   })}
@@ -180,34 +231,6 @@ const AnimeListPage: React.FC = () => {
         </main>
 
         <div className="sidebar-area">
-          <div className={`${styles.actionButtons} ${styles.sidebarActions}`}>
-            {listInfo.isOwner ? (
-              <>
-                <button className={`${styles.btn} ${styles.btnSecondary}`} onClick={handleEditListClick}>
-                  {t('animeListPage.sidebarActions.editDetails')}
-                </button>
-                <button className={`${styles.btn} ${styles.btnDanger}`} onClick={handleDeleteList}>
-                  {t('animeListPage.sidebarActions.deleteList')}
-                </button>
-              </>
-            ) : isViewer ? (
-              <button
-                className={`${styles.btn} ${styles.btnPrimary} btn-icon`}
-                onClick={handleOpenEditRequest}
-              >
-                <span className="material-symbols-outlined">edit_note</span>
-                {t('animeListPage.sidebarActions.requestEdit')}
-              </button>
-            ) : !currentPermission && (
-              <button
-                className={`${styles.btn} ${styles.btnJoinRequest} btn-icon`}
-                onClick={handleOpenJoinRequest}
-              >
-                <span className="material-symbols-outlined">person_add</span>
-                {t('animeListPage.sidebarActions.joinRequest')}
-              </button>
-            )}
-          </div>
 
           <Sidebar
             members={members}

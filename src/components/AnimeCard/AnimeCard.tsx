@@ -17,9 +17,10 @@ import {
 
 interface AnimeCardProps {
   anime: AnimeData;
+  viewMode?: 'grid' | 'list';
 }
 
-const AnimeCard: React.FC<AnimeCardProps> = ({ anime }) => {
+const AnimeCard: React.FC<AnimeCardProps> = ({ anime, viewMode = 'grid' }) => {
   // const { theme } = useTheme(); -> Đã xóa
   const { i18n } = useTranslation();
   
@@ -38,7 +39,7 @@ const AnimeCard: React.FC<AnimeCardProps> = ({ anime }) => {
   return (
     <Link to={`/anime/${linkId}`} className={styles['anime-card-link']}>
       {/* 4. Xóa class logic theo theme, chỉ dùng class gốc từ module */}
-      <div className={styles['anime-card']} title={title}>
+      <div className={`${styles['anime-card']} ${viewMode === 'list' ? styles['list-view'] : ''}`} title={title}>
         <img 
           src={anime.coverImage?.large || anime.coverImage?.medium || ''} 
           alt={title} 

@@ -17,7 +17,7 @@
   max-width: 1440px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr) 320px;
   gap: 32px;
 }
 
@@ -86,16 +86,53 @@
   padding: 8px 0 16px;
 }
 
+/* Toolbar Styles */
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
 .searchWrapper {
+  flex: 1;
   position: relative;
   display: flex;
   align-items: center;
   background-color: var(--bg-subtle);
   border-radius: 8px;
   height: 48px;
-  margin-bottom: 16px;
   border: 1px solid var(--border-subtle);
   padding: 0;
+  min-width: 250px;
+}
+
+.viewToggle {
+  display: flex;
+  background-color: var(--bg-subtle);
+  border-radius: 8px;
+  padding: 4px;
+  border: 1px solid var(--border-subtle);
+}
+
+.toggleBtn {
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 10px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.toggleBtn.active {
+  background-color: var(--bg-panel);
+  color: var(--text-primary);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
 }
 
 .searchWrapper:focus-within {

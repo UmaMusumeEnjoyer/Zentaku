@@ -114,8 +114,8 @@ const UserAnimeGroup: React.FC<UserAnimeGroupProps> = ({
         )}
       </div>
 
-      {/* Grid hiển thị Anime */}
-      <div className={styles.animeGridRow}>
+      {/* Grid/List hiển thị Anime */}
+      <div className={viewMode === 'list' ? styles.animeListRow : styles.animeGridRow}>
         {displayedAnime.map((anime) => {
           const animeId = getAnimeId(anime);
           const isSelected = isAnimeSelected(animeId);
@@ -131,7 +131,7 @@ const UserAnimeGroup: React.FC<UserAnimeGroupProps> = ({
               onClick={() => deleteMode && hasEditPermission && onSelectAnime(animeId)}
             >
               <div className={styles.gridItem}>
-                <AnimeCard anime={anime} />
+                <AnimeCard anime={anime} viewMode={viewMode} />
               </div>
               
               {deleteMode && hasEditPermission && (
