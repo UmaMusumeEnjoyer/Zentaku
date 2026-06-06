@@ -117,7 +117,7 @@ const ListHeader: React.FC<ListHeaderProps> = ({ listInfo, listId }) => {
           <button
             className={`${styles.actionBtn} ${styles.chatBtn}`}
             onClick={handleChatClick}
-            title={listInfo.channelId ? 'Vào nhóm chat' : 'Tạo nhóm chat'}
+            title={listInfo.channelId ? t('listHeader.enterChatTitle', 'Vào nhóm chat') : t('listHeader.createChatTitle', 'Tạo nhóm chat')}
             style={{
               color: hasBanner ? 'white' : 'var(--text-primary)',
               borderColor: hasBanner ? 'rgba(255,255,255,0.2)' : 'var(--border-subtle)'
@@ -127,7 +127,7 @@ const ListHeader: React.FC<ListHeaderProps> = ({ listInfo, listId }) => {
               forum
             </span>
             <span className={styles.chatLabel} style={{ color: hasBanner ? 'rgba(255,255,255,0.8)' : 'inherit', marginLeft: '8px' }}>
-              {listInfo.channelId ? 'Vào Chat' : 'Tạo Chat'}
+              {listInfo.channelId ? t('listHeader.enterChat', 'Vào Chat') : t('listHeader.createChat', 'Tạo Chat')}
             </span>
           </button>
         )}
