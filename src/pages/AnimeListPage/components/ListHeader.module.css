@@ -129,6 +129,24 @@
   border-radius: 4px 20px 20px 4px;
 }
 
+/* --- NÚT 3: CHAT BUTTON --- */
+.chatBtn {
+  gap: 6px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-left: 1px solid var(--border-subtle);
+  border-radius: 4px 20px 20px 4px;
+}
+
+.chatBtn:hover {
+  background-color: var(--bg-subtle);
+  color: var(--text-primary);
+}
+
+.chatIcon {
+  font-size: 1.25rem;
+}
+
 /* Chỉ Owner mới có hiệu ứng hover/click ở nút này */
 .clickable:hover {
   background-color: var(--bg-subtle);

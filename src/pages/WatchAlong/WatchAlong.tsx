@@ -339,7 +339,7 @@ const WatchAlongPage: React.FC = () => {
               );
               return (
               <div key={msg.id} className={styles.messageWrapper}>
-                <span className={`${styles.username} ${isMyMessage ? styles.myMessageSender : ''}`}>{msg.senderName}</span>
+                <span className={`${styles.username} ${isMyMessage ? styles.myMessageSender : ''}`} style={{ color: isMyMessage ? '#3b82f6' : undefined }}>{msg.senderName}</span>
                 <span className={styles.timestamp}>
                   {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </span>

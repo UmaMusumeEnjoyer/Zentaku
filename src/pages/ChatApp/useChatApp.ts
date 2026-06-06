@@ -71,6 +71,8 @@ export const useChatMessenger = (): UseChatMessengerReturn => {
               description: ch.description || '',
               members: [], 
               messages: [],
+              communityId: String(comm.id),
+              roles: {},
             });
           });
         }
@@ -159,6 +161,27 @@ export const useChatMessenger = (): UseChatMessengerReturn => {
         
         // Mark as loaded successfully
         loadedRoomsRef.current.add(activeRoomId);
+
+        // Fetch roles if community
+        if (isCommunity) {
+          const room = chatRooms?.find(r => r.id === activeRoomId);
+          if (room?.communityId && (!room.roles || Object.keys(room.roles).length === 0)) {
+            try {
+              const rolesRes = await chatService.getCommunityMembers(room.communityId);
+              const membersData = Array.isArray(rolesRes.data) ? rolesRes.data : rolesRes.data?.data || [];
+              const rolesMap: Record<string, string> = {};
+              membersData.forEach((m: any) => {
+                if (m.userId && m.role) {
+                  rolesMap[String(m.userId)] = m.role;
+                }
+              });
+              
+              setChatRooms(prev => prev?.map(r => r.id === activeRoomId ? { ...r, roles: rolesMap } : r) || null);
+            } catch (roleErr) {
+              console.error('Failed to fetch community roles', roleErr);
+            }
+          }
+        }
 
       } catch (err) {
         console.error('Failed to fetch messages for room', activeRoomId, err);

@@ -157,6 +157,13 @@ const ChatMessenger: React.FC = () => {
               {isLoadingMore && <div style={{ textAlign: 'center', padding: '10px', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Loading older messages...</div>}
               {activeRoom.messages.map(msg => {
                 const isMyMessage = user && String(msg.sender.id) === String(user.id);
+                let nameColor = 'var(--text-primary)';
+                if (activeRoom.roles) {
+                  const role = activeRoom.roles[msg.sender.id];
+                  if (role === 'OWNER' || role === 'ADMIN') nameColor = '#ef4444'; // Red
+                  else if (role === 'MODERATOR' || role === 'EDITOR') nameColor = '#10b981'; // Green
+                }
+                
                 return (
                 <div key={msg.id} className={styles.messageRow}>
                   <div className={styles.avatarContainer}>
@@ -164,7 +171,7 @@ const ChatMessenger: React.FC = () => {
                   </div>
                   <div className={styles.messageContent}>
                     <div className={styles.messageMeta}>
-                      <span className={`${styles.messageSender} ${isMyMessage ? styles.myMessageSender : ''}`}>{msg.sender.name}</span>
+                      <span className={`${styles.messageSender} ${isMyMessage ? styles.myMessageSender : ''}`} style={{ color: isMyMessage ? '#3b82f6' : nameColor }}>{msg.sender.name}</span>
                       <span className={styles.messageTime}>{msg.timestamp}</span>
                     </div>
                     <div className={styles.messageText}>{msg.content}</div>

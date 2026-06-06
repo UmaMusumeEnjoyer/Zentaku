@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { useListHeader } from '@umamusumeenjoyer/shared-logic';
 import type { ListHeaderProps } from '@umamusumeenjoyer/shared-logic';
 import LikersModal from './LikersModal';
+import { useNavigate } from 'react-router-dom';
+import { listService } from '@umamusumeenjoyer/shared-logic';
 
 // Import CSS Module
 import styles from './ListHeader.module.css';
@@ -20,6 +22,25 @@ const ListHeader: React.FC<ListHeaderProps> = ({ listInfo, listId }) => {
     handleViewLikers,
     handleCloseLikersModal,
   } = useListHeader(listId, listInfo.is_owner);
+
+  const navigate = useNavigate();
+
+  const handleChatClick = async () => {
+    if (listInfo.channelId) {
+      navigate(`/chat?channelId=${listInfo.channelId}`);
+    } else if (listInfo.is_owner) {
+      try {
+        const res = await listService.createChat(listId);
+        const data = res.data?.data || res.data;
+        if (data.channelId) {
+          navigate(`/chat?channelId=${data.channelId}`);
+        }
+      } catch (err) {
+        console.error('Failed to create chat', err);
+        alert('Có lỗi xảy ra khi tạo nhóm chat');
+      }
+    }
+  };
 
   const bannerStr = listInfo.bannerImage || '';
   const isColor = bannerStr.startsWith('#');
@@ -90,6 +111,26 @@ const ListHeader: React.FC<ListHeaderProps> = ({ listInfo, listId }) => {
           <span className={styles.countNumber} style={{ color: hasBanner ? 'white' : 'var(--text-primary)' }}>{likeCount}</span>
           <span className={styles.countLabel} style={{ color: hasBanner ? 'rgba(255,255,255,0.8)' : 'inherit' }}>{t('listHeader.likesLabel')}</span>
         </button>
+
+        {/* NÚT 3: TẠO / VÀO NHÓM CHAT */}
+        {(listInfo.channelId || listInfo.is_owner) && (
+          <button
+            className={`${styles.actionBtn} ${styles.chatBtn}`}
+            onClick={handleChatClick}
+            title={listInfo.channelId ? 'Vào nhóm chat' : 'Tạo nhóm chat'}
+            style={{
+              color: hasBanner ? 'white' : 'var(--text-primary)',
+              borderColor: hasBanner ? 'rgba(255,255,255,0.2)' : 'var(--border-subtle)'
+            }}
+          >
+            <span className={`material-symbols-outlined ${styles.chatIcon}`} style={{ color: hasBanner ? 'white' : 'var(--primary-color)' }}>
+              forum
+            </span>
+            <span className={styles.chatLabel} style={{ color: hasBanner ? 'rgba(255,255,255,0.8)' : 'inherit', marginLeft: '8px' }}>
+              {listInfo.channelId ? 'Vào Chat' : 'Tạo Chat'}
+            </span>
+          </button>
+        )}
       </div>
 
       <LikersModal

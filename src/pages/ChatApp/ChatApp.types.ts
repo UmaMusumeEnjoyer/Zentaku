@@ -22,6 +22,8 @@ export interface ChatRoom {
   avatar?: string;
   members: User[];
   messages: Message[];
+  communityId?: string;
+  roles?: Record<string, string>;
   unreadCount?: number;
   nextCursor?: string | null;
   hasMore?: boolean;
