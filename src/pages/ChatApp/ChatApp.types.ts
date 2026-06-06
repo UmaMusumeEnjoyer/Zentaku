@@ -27,6 +27,7 @@ export interface ChatRoom {
   unreadCount?: number;
   nextCursor?: string | null;
   hasMore?: boolean;
+  isMuted?: boolean;
 }
 
 export interface UseChatMessengerReturn {
@@ -40,4 +41,5 @@ export interface UseChatMessengerReturn {
   typingUsers: string[];
   loadMoreMessages: () => Promise<void>;
   isLoadingMore: boolean;
+  toggleMuteCommunity: (communityId: string, isMuted: boolean) => Promise<void>;
 }

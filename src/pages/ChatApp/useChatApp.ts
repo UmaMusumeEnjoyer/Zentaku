@@ -71,6 +71,7 @@ export const useChatMessenger = (): UseChatMessengerReturn => {
                 ? comm.name.replace(/^Chat:\s*/, '') 
                 : (ch.name || `Channel ${ch.id}`),
               description: ch.description || '',
+              avatar: comm.icon || 'https://i.pravatar.cc/150',
               members: [], 
               messages: [],
               communityId: String(comm.id),
@@ -387,5 +388,36 @@ export const useChatMessenger = (): UseChatMessengerReturn => {
     }
   }, [activeRoom, chatRooms, privateRooms, isLoadingMore]);
 
-  return { chatRooms, privateRooms, activeRoom, loading, error, setActiveRoomId, sendMessage, typingUsers, loadMoreMessages, isLoadingMore };
+  const toggleMuteCommunity = async (communityId: string, isMuted: boolean) => {
+    try {
+      await chatService.toggleMuteCommunity(communityId, isMuted);
+      // Cập nhật state
+      setChatRooms(prev => {
+        if (!prev) return prev;
+        return prev.map(room => {
+          if (room.communityId === communityId) {
+            return { ...room, isMuted };
+          }
+          return room;
+        });
+      });
+    } catch (e) {
+      console.error('Failed to toggle mute community', e);
+    }
+  };
+
+
+  return {
+    chatRooms,
+    privateRooms,
+    activeRoom,
+    loading,
+    error,
+    setActiveRoomId,
+    sendMessage,
+    typingUsers,
+    loadMoreMessages,
+    isLoadingMore,
+    toggleMuteCommunity,
+  };
 };

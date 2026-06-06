@@ -82,6 +82,8 @@ const NotificationToast: React.FC = () => {
         return 'chat_bubble';
       case NotificationType.ANIME_AIRING:
         return 'live_tv';
+      case NotificationType.LIST_INTERACTION:
+        return 'list_alt';
       default:
         return 'notifications';
     }
@@ -99,7 +101,21 @@ const NotificationToast: React.FC = () => {
           role="alert"
         >
           <div className={styles.toastIcon}>
-            <span className="material-symbols-outlined">{getIcon(toast.notification.type)}</span>
+            {toast.notification.type === NotificationType.LIST_INTERACTION && toast.notification.metadata?.listBanner ? (
+              <img 
+                src={toast.notification.metadata.listBanner} 
+                alt="list banner" 
+                style={{ width: '40px', height: '40px', objectFit: 'cover', borderRadius: '50%' }} 
+              />
+            ) : toast.notification.type === NotificationType.LIST_INTERACTION && toast.notification.metadata?.actorAvatar ? (
+              <img 
+                src={toast.notification.metadata.actorAvatar} 
+                alt="actor avatar" 
+                style={{ width: '40px', height: '40px', objectFit: 'cover', borderRadius: '50%' }} 
+              />
+            ) : (
+              <span className="material-symbols-outlined">{getIcon(toast.notification.type)}</span>
+            )}
           </div>
           <div className={styles.toastContent}>
             <p className={styles.toastTitle}>{toast.notification.title}</p>

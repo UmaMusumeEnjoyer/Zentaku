@@ -39,6 +39,8 @@ const NotificationBell: React.FC = () => {
       navigate(`/chat`);
     } else if (notification.type === NotificationType.ANIME_AIRING && notification.metadata?.animeId) {
       navigate(`/anime/${notification.metadata.animeId}`);
+    } else if (notification.type === NotificationType.LIST_INTERACTION && notification.metadata?.listId) {
+      navigate(`/lists/${notification.metadata.listId}`);
     }
 
     setIsOpen(false);
@@ -50,6 +52,8 @@ const NotificationBell: React.FC = () => {
         return 'chat_bubble';
       case NotificationType.ANIME_AIRING:
         return 'live_tv';
+      case NotificationType.LIST_INTERACTION:
+        return 'list_alt';
       default:
         return 'notifications';
     }
@@ -122,9 +126,23 @@ const NotificationBell: React.FC = () => {
                   tabIndex={0}
                 >
                   <div className={styles.notificationIcon}>
-                    <span className="material-symbols-outlined">
-                      {getNotificationIcon(notification.type)}
-                    </span>
+                    {notification.type === NotificationType.LIST_INTERACTION && notification.metadata?.listBanner ? (
+                      <img 
+                        src={notification.metadata.listBanner} 
+                        alt="list banner" 
+                        style={{ width: '40px', height: '40px', objectFit: 'cover', borderRadius: '50%' }} 
+                      />
+                    ) : notification.type === NotificationType.LIST_INTERACTION && notification.metadata?.actorAvatar ? (
+                      <img 
+                        src={notification.metadata.actorAvatar} 
+                        alt="actor avatar" 
+                        style={{ width: '40px', height: '40px', objectFit: 'cover', borderRadius: '50%' }} 
+                      />
+                    ) : (
+                      <span className="material-symbols-outlined">
+                        {getNotificationIcon(notification.type)}
+                      </span>
+                    )}
                   </div>
                   <div className={styles.notificationContent}>
                     <p className={styles.notificationTitle}>{notification.title}</p>
