@@ -41,10 +41,15 @@ const NotificationToast: React.FC = () => {
 
   const showToast = useCallback(
     (notification: NotificationItem) => {
-      const id = `toast-${notification.id}-${Date.now()}`;
-      const newToast: ToastItem = { id, notification, exiting: false };
-
       setToasts((prev) => {
+        // Prevent duplicate toasts for the same notification ID
+        if (prev.some((t) => String(t.notification.id) === String(notification.id))) {
+          return prev;
+        }
+
+        const id = `toast-${notification.id}-${Date.now()}`;
+        const newToast: ToastItem = { id, notification, exiting: false };
+        
         const updated = [newToast, ...prev];
         // Remove oldest if exceeding max
         if (updated.length > MAX_TOASTS) {
@@ -55,12 +60,13 @@ const NotificationToast: React.FC = () => {
             timersRef.current.delete(removed.id);
           }
         }
+
+        // Auto-dismiss
+        const timer = setTimeout(() => removeToast(id), TOAST_DURATION);
+        timersRef.current.set(id, timer);
+
         return updated;
       });
-
-      // Auto-dismiss
-      const timer = setTimeout(() => removeToast(id), TOAST_DURATION);
-      timersRef.current.set(id, timer);
     },
     [removeToast]
   );
@@ -113,8 +119,25 @@ const NotificationToast: React.FC = () => {
                 alt="actor avatar" 
                 style={{ width: '40px', height: '40px', objectFit: 'cover', borderRadius: '50%' }} 
               />
+            ) : toast.notification.type === NotificationType.LIST_INTERACTION ? (
+              <div style={{
+                width: '40px', 
+                height: '40px', 
+                borderRadius: '50%', 
+                backgroundColor: `hsl(${(String(toast.notification.metadata?.listId || toast.notification.id).charCodeAt(0) * 137) % 360}, 70%, 60%)`,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: 'white',
+                fontWeight: 'bold',
+                fontSize: '18px'
+              }}>
+                {String(toast.notification.metadata?.listName || 'L').charAt(0).toUpperCase()}
+              </div>
             ) : (
-              <span className="material-symbols-outlined">{getIcon(toast.notification.type)}</span>
+              <span className="material-symbols-outlined">
+                {getIcon(toast.notification.type)}
+              </span>
             )}
           </div>
           <div className={styles.toastContent}>

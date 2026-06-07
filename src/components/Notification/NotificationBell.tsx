@@ -40,7 +40,7 @@ const NotificationBell: React.FC = () => {
     } else if (notification.type === NotificationType.ANIME_AIRING && notification.metadata?.animeId) {
       navigate(`/anime/${notification.metadata.animeId}`);
     } else if (notification.type === NotificationType.LIST_INTERACTION && notification.metadata?.listId) {
-      navigate(`/lists/${notification.metadata.listId}`);
+      navigate(`/list/${notification.metadata.listId}`);
     }
 
     setIsOpen(false);
@@ -73,6 +73,26 @@ const NotificationBell: React.FC = () => {
     return `${diffDay}d ago`;
   };
 
+  // Lọc trùng lặp (nếu user click liên tục tạo nhiều bản ghi ở Backend hoặc bị spam)
+  const uniqueNotificationsAll = Array.from(
+    new Map(
+      notifications.map((n) => {
+        const metaKey = n.metadata?.channelId || n.metadata?.listId || n.metadata?.animeId || '';
+        const key = `${n.type}-${n.title}-${n.body || ''}-${metaKey}`;
+        return [key, n];
+      })
+    ).values()
+  );
+  
+  const uniqueNotifications = uniqueNotificationsAll.slice(0, 20);
+
+  // Tính số lượng duplicate trong list hiện tại để trừ đi khỏi unreadCount
+  let displayUnreadCount = unreadCount;
+  if (notifications.length > 0) {
+    const duplicatesRemoved = notifications.length - uniqueNotificationsAll.length;
+    displayUnreadCount = Math.max(0, unreadCount - duplicatesRemoved);
+  }
+
   return (
     <div className={styles.bellContainer} ref={dropdownRef}>
       <button
@@ -82,9 +102,9 @@ const NotificationBell: React.FC = () => {
         id="notification-bell"
       >
         <span className="material-symbols-outlined">notifications</span>
-        {unreadCount > 0 && (
+        {displayUnreadCount > 0 && (
           <span className={styles.badge}>
-            {unreadCount > 99 ? '99+' : unreadCount}
+            {displayUnreadCount > 99 ? '99+' : displayUnreadCount}
           </span>
         )}
       </button>
@@ -93,7 +113,7 @@ const NotificationBell: React.FC = () => {
         <div className={styles.dropdown}>
           <div className={styles.dropdownHeader}>
             <h3>Notifications</h3>
-            {unreadCount > 0 && (
+            {displayUnreadCount > 0 && (
               <button
                 className={styles.markAllReadBtn}
                 onClick={() => markAllAsRead()}
@@ -102,20 +122,17 @@ const NotificationBell: React.FC = () => {
               </button>
             )}
           </div>
-
+          
           <div className={styles.dropdownBody}>
             {isLoading && notifications.length === 0 ? (
-              <div className={styles.emptyState}>
-                <span className="material-symbols-outlined">hourglass_empty</span>
-                <p>Loading...</p>
-              </div>
-            ) : notifications.length === 0 ? (
+              <div className={styles.loadingState}>Loading...</div>
+            ) : uniqueNotifications.length === 0 ? (
               <div className={styles.emptyState}>
                 <span className="material-symbols-outlined">notifications_off</span>
                 <p>No notifications yet</p>
               </div>
             ) : (
-              notifications.slice(0, 20).map((notification) => (
+              uniqueNotifications.map((notification) => (
                 <div
                   key={notification.id}
                   className={`${styles.notificationItem} ${
@@ -138,6 +155,21 @@ const NotificationBell: React.FC = () => {
                         alt="actor avatar" 
                         style={{ width: '40px', height: '40px', objectFit: 'cover', borderRadius: '50%' }} 
                       />
+                    ) : notification.type === NotificationType.LIST_INTERACTION ? (
+                      <div style={{
+                        width: '40px', 
+                        height: '40px', 
+                        borderRadius: '50%', 
+                        backgroundColor: `hsl(${(String(notification.metadata?.listId || notification.id).charCodeAt(0) * 137) % 360}, 70%, 60%)`,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: 'white',
+                        fontWeight: 'bold',
+                        fontSize: '18px'
+                      }}>
+                        {String(notification.metadata?.listName || 'L').charAt(0).toUpperCase()}
+                      </div>
                     ) : (
                       <span className="material-symbols-outlined">
                         {getNotificationIcon(notification.type)}

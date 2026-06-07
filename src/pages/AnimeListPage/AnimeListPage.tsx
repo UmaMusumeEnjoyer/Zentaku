@@ -42,6 +42,8 @@ const AnimeListPage: React.FC = () => {
     showRequestModal,
     requestType,
     isSubmittingRequest,
+    hasRequestedJoin,
+    hasRequestedEdit,
     deleteMode,
     selectedAnimeIds,
     isDeleting,
@@ -148,21 +150,35 @@ const AnimeListPage: React.FC = () => {
                     </button>
                   </>
                 ) : isViewer ? (
-                  <button
-                    className={`${styles.btn} ${styles.btnPrimary} btn-icon`}
-                    onClick={handleOpenEditRequest}
-                  >
-                    <span className="material-symbols-outlined">edit_note</span>
-                    {t('animeListPage.sidebarActions.requestEdit')}
-                  </button>
+                  !hasRequestedEdit ? (
+                    <button
+                      className={`${styles.btn} ${styles.btnPrimary} btn-icon`}
+                      onClick={handleOpenEditRequest}
+                    >
+                      <span className="material-symbols-outlined">edit_note</span>
+                      {t('animeListPage.sidebarActions.requestEdit')}
+                    </button>
+                  ) : (
+                    <button className={`${styles.btn} ${styles.btnSecondary} btn-icon`} disabled style={{ opacity: 0.7, cursor: 'not-allowed' }}>
+                      <span className="material-symbols-outlined">pending</span>
+                      Edit Requested
+                    </button>
+                  )
                 ) : !currentPermission && (
-                  <button
-                    className={`${styles.btn} ${styles.btnJoinRequest} btn-icon`}
-                    onClick={handleOpenJoinRequest}
-                  >
-                    <span className="material-symbols-outlined">person_add</span>
-                    {t('animeListPage.sidebarActions.joinRequest')}
-                  </button>
+                  !hasRequestedJoin ? (
+                    <button
+                      className={`${styles.btn} ${styles.btnJoinRequest} btn-icon`}
+                      onClick={handleOpenJoinRequest}
+                    >
+                      <span className="material-symbols-outlined">person_add</span>
+                      {t('animeListPage.sidebarActions.joinRequest')}
+                    </button>
+                  ) : (
+                    <button className={`${styles.btn} ${styles.btnSecondary} btn-icon`} disabled style={{ opacity: 0.7, cursor: 'not-allowed' }}>
+                      <span className="material-symbols-outlined">pending</span>
+                      Join Requested
+                    </button>
+                  )
                 )}
               </div>
             </div>
