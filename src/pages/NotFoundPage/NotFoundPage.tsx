@@ -1,9 +1,11 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import styles from './NotFoundPage.module.css';
 
 const NotFoundPage: React.FC = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation(['NotFound']);
 
 
   const handleGoHome = () => {
@@ -23,28 +25,28 @@ const NotFoundPage: React.FC = () => {
         />
 
         {/* 404 Text */}
-        <div className={styles.centerNumber}>404</div>
+        <div className={styles.centerNumber}>{t('NotFound:title')}</div>
 
         {/* Name Tag */}
         <div className={styles.nameTag}>
-          404 Page Not Found-Chan
+          {t('NotFound:nameTag')}
         </div>
 
         {/* Dialogue Box */}
         <div className={styles.dialogueBox}>
           <div className={styles.dialogueText}>
             <div className={styles.dialogueLine}>
-              You: Oh, hi 404-chan, have you seen my page?
+              {t('NotFound:dialogue.user')}
             </div>
             <div className={styles.dialogueLine}>
-              404-Chan: 404-chan? Calling me by my first name... I... I didn't realise we were so close user-kun...
+              {t('NotFound:dialogue.chan')}
             </div>
           </div>
 
           <div className={styles.choicesContainer}>
 
             <button className={styles.choiceBtn} onClick={handleGoHome}>
-              Leave, and go home
+              {t('NotFound:buttons.goHome')}
             </button>
           </div>
         </div>

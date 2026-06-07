@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import styles from './FloatingChat.module.css';
 import { useFloatingChat } from './useFloatingChat';
 import FloatingChatIcon from './FloatingChatIcon';
@@ -25,6 +26,8 @@ const FloatingChat: React.FC = () => {
     sendMessage,
     emitTyping,
   } = useFloatingChat();
+
+  const { t } = useTranslation(['ChatApp']);
 
   const [isHidden, setIsHidden] = useState<boolean>(() => {
     return localStorage.getItem('floatingChat_hidden') === 'true';
@@ -74,7 +77,7 @@ const FloatingChat: React.FC = () => {
         <button 
           className={styles.miniChevron} 
           onClick={handleShow}
-          title="Show Chat"
+          title={t('ChatApp:showChat')}
         >
           <span className="material-symbols-outlined">chevron_left</span>
         </button>

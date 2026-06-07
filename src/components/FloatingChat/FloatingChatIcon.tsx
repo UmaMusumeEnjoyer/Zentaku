@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import styles from './FloatingChat.module.css';
 
 interface FloatingChatIconProps {
@@ -16,6 +17,7 @@ const FloatingChatIcon: React.FC<FloatingChatIconProps> = ({
   onClick,
   onHide,
 }) => {
+  const { t } = useTranslation(['ChatApp']);
   const iconClasses = [
     styles.floatingIcon,
     isActive ? styles.floatingIconActive : '',
@@ -30,7 +32,7 @@ const FloatingChatIcon: React.FC<FloatingChatIconProps> = ({
           e.stopPropagation();
           onHide();
         }} 
-        title="Hide Chat"
+        title={t('ChatApp:hideChat')}
       >
         <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>close</span>
       </button>
@@ -38,8 +40,8 @@ const FloatingChatIcon: React.FC<FloatingChatIconProps> = ({
         id="floating-chat-icon"
         className={iconClasses}
         onClick={onClick}
-        aria-label="Chat messages"
-        title="Messages"
+        aria-label={t('ChatApp:messages')}
+        title={t('ChatApp:messages')}
       >
         <span className={`material-symbols-outlined ${styles.iconSymbol}`}>
           chat_bubble

@@ -118,7 +118,7 @@ const FloatingChatWindow: React.FC<FloatingChatWindowProps> = ({
           <div className={styles.messagesArea} ref={messageAreaRef}>
             {room.isLoadingMessages ? (
               <div className={styles.loadingMessages}>
-                <span className={styles.loadingDots}>Loading</span>
+                <span className={styles.loadingDots}>{t('ChatApp:loading')}</span>
               </div>
             ) : (
               <>
@@ -178,7 +178,7 @@ const FloatingChatWindow: React.FC<FloatingChatWindowProps> = ({
               className={styles.sendBtn}
               onClick={handleSend}
               disabled={!inputValue.trim()}
-              aria-label="Send"
+              aria-label={t('ChatApp:send')}
             >
               <span className={`material-symbols-outlined ${styles.sendBtnIcon}`}>
                 send

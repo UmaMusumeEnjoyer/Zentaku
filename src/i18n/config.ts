@@ -45,7 +45,8 @@ import {
   WatchAlongEn, WatchAlongJp,
   ChatAppEn, ChatAppJp,
   NovelReaderEn, NovelReaderJp,
-  notificationEn, notificationJp
+  notificationEn, notificationJp,
+  notFoundEn, notFoundJp
 } from '@umamusumeenjoyer/shared-logic';
 
 
@@ -102,7 +103,8 @@ i18n
         WatchAlong: WatchAlongEn,
         ChatApp: ChatAppEn,
         NovelReader: NovelReaderEn,
-        notification: notificationEn
+        notification: notificationEn,
+        NotFound: notFoundEn
       },
       jp: {
         common: commonJp,
@@ -146,7 +148,8 @@ i18n
         WatchAlong: WatchAlongJp,
         ChatApp: ChatAppJp,
         NovelReader: NovelReaderJp,
-        notification: notificationJp
+        notification: notificationJp,
+        NotFound: notFoundJp
       },
     },
     lng: localStorage.getItem('language') || DEFAULT_LANG,
@@ -160,7 +163,7 @@ i18n
       , 'EditProfileModal', 'ProfilePagePage', 'ActivityFeed'
       , 'addAnimeModal', 'editListModal', 'likersModal', 'listHeader', 'requestList', 'requestModal', 'sidebar'
       , 'userAnimeGroup', 'userItem', 'userSearchModal', 'animeListPage', 'ScheduleDashboard'
-      , 'MangaReader', 'WatchPage', 'WatchAlong', 'ChatApp', 'NovelReader', 'notification'
+      , 'MangaReader', 'WatchPage', 'WatchAlong', 'ChatApp', 'NovelReader', 'notification', 'NotFound'
     ],
     interpolation: {
       escapeValue: false,
