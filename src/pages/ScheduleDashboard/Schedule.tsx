@@ -32,10 +32,11 @@ const AnimeSchedule: React.FC = () => {
     selectedDayEvents, 
     isLoading, 
     error, 
+    viewMode,
     actions 
   } = useAnimeSchedule();
 
-  if (isLoading) return <AnimeScheduleSkeleton />;
+  if (isLoading && !data) return <AnimeScheduleSkeleton />;
   if (error || !data) return <div className="p-8 text-center text-red-500">Error: {error?.message}</div>;
 
   return (
@@ -46,11 +47,11 @@ const AnimeSchedule: React.FC = () => {
           <div className={styles.navSection}>
             <h4>{t('navigation')}</h4>
             <div className={styles.navLinks}>
-              <a href="#" className={styles.navItem}>
+              <a href="#" className={`${styles.navItem} ${viewMode === 'weekly' ? styles.navItemActive : ''}`} onClick={(e) => { e.preventDefault(); actions.setViewMode('weekly'); }}>
                 <span className="material-symbols-outlined">calendar_view_week</span>
                 {t('weekly')}
               </a>
-              <a href="#" className={`${styles.navItem} ${styles.navItemActive}`}>
+              <a href="#" className={`${styles.navItem} ${viewMode === 'monthly' ? styles.navItemActive : ''}`} onClick={(e) => { e.preventDefault(); actions.setViewMode('monthly'); }}>
                 <span className="material-symbols-outlined">calendar_month</span>
                 {t('monthlySchedule')}
               </a>
@@ -60,49 +61,37 @@ const AnimeSchedule: React.FC = () => {
               </a>
             </div>
           </div>
-          <div className={styles.navSection}>
-            <h4>{t('quickAccess')}</h4>
-            <div className={styles.quickAccessItem}>
-              <div className={styles.seasonBadge} style={{backgroundColor: 'rgba(59, 130, 246, 0.1)', color: '#3b82f6'}}>S2</div>
-              <span style={{color: 'var(--text-secondary)', fontSize: '0.875rem'}}>Spy x Family</span>
-            </div>
-            <div className={styles.quickAccessItem}>
-              <div className={styles.seasonBadge} style={{backgroundColor: 'rgba(239, 68, 68, 0.1)', color: '#ef4444'}}>S1</div>
-              <span style={{color: 'var(--text-secondary)', fontSize: '0.875rem'}}>Chainsaw Man</span>
-            </div>
-          </div>
         </div>
-        
-        {data.updates.hasNew && (
-          <div className={styles.updateCard}>
-            <p className={styles.updateTitle}>{t('newUpdate')}</p>
-            <p className={styles.updateMessage}>{data.updates.message}</p>
-          </div>
-        )}
       </aside>
 
       {/* Main Content */}
       <main className={styles.mainContent}>
         <div className={styles.headerControls}>
           <div>
-            <h1 className={styles.monthTitle}>{data.month} {data.year}</h1>
+            <h1 className={styles.monthTitle}>
+              {viewMode === 'weekly' && data.days.length > 0 
+                ? `${data.days[0].date.toLocaleDateString(i18n.language === 'jp' ? 'ja-JP' : 'en-US', { month: 'short', day: 'numeric' })} - ${data.days[6].date.toLocaleDateString(i18n.language === 'jp' ? 'ja-JP' : 'en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`
+                : `${data.month} ${data.year}`}
+            </h1>
             <div className={styles.localTime}>
               <span className="material-symbols-outlined" style={{fontSize: '0.875rem'}}>public</span>
               <span>{t('localTime')}</span>
             </div>
           </div>
           <div className={styles.navButtons}>
-            <button onClick={actions.handlePrevMonth} className={styles.iconBtn}>
+            <button onClick={actions.handlePrev} className={styles.iconBtn}>
               <span className="material-symbols-outlined">chevron_left</span>
             </button>
-            <button className={styles.todayBtn} onClick={() => actions.handleSelectDate(new Date())}>{t('today')}</button>
-            <button onClick={actions.handleNextMonth} className={styles.iconBtn}>
+            <button className={styles.todayBtn} onClick={() => actions.handleGoToToday()}>
+              {viewMode === 'monthly' ? t('thisMonth') : t('thisWeek')}
+            </button>
+            <button onClick={actions.handleNext} className={styles.iconBtn}>
               <span className="material-symbols-outlined">chevron_right</span>
             </button>
           </div>
         </div>
 
-        <div className={styles.calendarContainer}>
+        <div className={styles.calendarContainer} style={{ opacity: isLoading ? 0.6 : 1, transition: 'opacity 0.2s' }}>
           <div className={styles.calendarCard}>
             {/* Week Header */}
             <div className={styles.weekGrid}>
@@ -112,7 +101,7 @@ const AnimeSchedule: React.FC = () => {
             </div>
             
             {/* Days Grid */}
-            <div className={styles.daysGrid}>
+            <div className={`${styles.daysGrid} ${viewMode === 'weekly' ? styles.weeklyGrid : ''}`}>
               {data.days.map((day, idx) => {
                 const isSelected = selectedDate?.toDateString() === day.date.toDateString();
                 return (
@@ -129,7 +118,7 @@ const AnimeSchedule: React.FC = () => {
                       {isSelected && <span className={`material-symbols-outlined ${styles.selectedIndicator}`}>keyboard_double_arrow_down</span>}
                     </div>
                     <div className={styles.eventList}>
-                      {day.events.slice(0, 2).map(evt => (
+                      {day.events.slice(0, viewMode === 'weekly' ? 5 : 2).map(evt => (
                         <div key={evt.id} className={styles.eventDot} style={{borderLeftColor: evt.color || 'var(--btn-primary-bg)'}}>
                           {evt.title}
                         </div>
@@ -198,13 +187,6 @@ const AnimeSchedule: React.FC = () => {
               </div>
             </div>
           ))}
-        </div>
-        <div className={styles.alertBox}>
-          <div className={styles.alertHeader}>
-            <span className={`material-symbols-outlined ${styles.alertIcon}`}>warning</span>
-            <p className={styles.alertTitle}>{t('scheduleAlerts')}</p>
-          </div>
-          <p className={styles.alertMessage}>"Attack on Titan Final Part" airing is delayed by 1 hour.</p>
         </div>
       </aside>
     </div>

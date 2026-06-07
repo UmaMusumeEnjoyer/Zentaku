@@ -35,6 +35,26 @@ const generateEmptyCalendar = (year: number, month: number): CalendarDay[] => {
   return days;
 };
 
+const generateEmptyWeek = (currentDate: Date): CalendarDay[] => {
+  const days: CalendarDay[] = [];
+  const todayStr = new Date().toDateString();
+  const dayIndex = (currentDate.getDay() + 6) % 7; // Mon start
+  const monday = new Date(currentDate);
+  monday.setDate(monday.getDate() - dayIndex);
+
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(monday);
+    d.setDate(monday.getDate() + i);
+    days.push({
+      date: d,
+      isCurrentMonth: true,
+      isToday: d.toDateString() === todayStr,
+      events: []
+    });
+  }
+  return days;
+};
+
 // Helper to format time (e.g. seconds to "HH:MM:SS" or "Xd HH:MM:SS")
 export const formatTimeUntil = (seconds: number): string => {
   if (seconds < 0) return '00:00:00';
@@ -53,21 +73,39 @@ export const useAnimeSchedule = (): UseAnimeScheduleReturn => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
   const [data, setData] = useState<ScheduleData | null>(null);
+  const [viewMode, setViewMode] = useState<'monthly' | 'weekly'>('monthly');
 
   const fetchData = async () => {
     setIsLoading(true);
     setError(null);
     try {
-      const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-      const endOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0, 23, 59, 59);
-      const startUnix = Math.floor(startOfMonth.getTime() / 1000);
-      const endUnix = Math.floor(endOfMonth.getTime() / 1000);
+      let startOfRange: Date;
+      let endOfRange: Date;
+      
+      if (viewMode === 'monthly') {
+        startOfRange = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+        endOfRange = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0, 23, 59, 59);
+      } else {
+        const dayIndex = (currentDate.getDay() + 6) % 7;
+        startOfRange = new Date(currentDate);
+        startOfRange.setDate(startOfRange.getDate() - dayIndex);
+        startOfRange.setHours(0, 0, 0, 0);
+        
+        endOfRange = new Date(startOfRange);
+        endOfRange.setDate(startOfRange.getDate() + 6);
+        endOfRange.setHours(23, 59, 59, 999);
+      }
+
+      const startUnix = Math.floor(startOfRange.getTime() / 1000);
+      const endUnix = Math.floor(endOfRange.getTime() / 1000);
 
       const response = await animeService.getAnimeSchedule(startUnix, endUnix);
       const { calendarEvents = [], upNextEvents = [] } = response.data || {};
 
       // 1. Generate empty calendar days
-      const days = generateEmptyCalendar(currentDate.getFullYear(), currentDate.getMonth());
+      const days = viewMode === 'monthly'
+        ? generateEmptyCalendar(currentDate.getFullYear(), currentDate.getMonth())
+        : generateEmptyWeek(currentDate);
 
       // 2. Map calendarEvents to their respective days
       calendarEvents.forEach((edge: any) => {
@@ -135,7 +173,7 @@ export const useAnimeSchedule = (): UseAnimeScheduleReturn => {
 
   useEffect(() => {
     fetchData();
-  }, [currentDate.getMonth(), currentDate.getFullYear()]);
+  }, [currentDate.getTime(), viewMode]);
 
   const selectedDayEvents = useMemo(() => {
     if (!data || !selectedDate) return [];
@@ -145,12 +183,29 @@ export const useAnimeSchedule = (): UseAnimeScheduleReturn => {
   }, [data, selectedDate]);
 
   const actions = {
-    handlePrevMonth: () => setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1)),
-    handleNextMonth: () => setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1)),
+    handlePrev: () => {
+      if (viewMode === 'monthly') {
+        setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1));
+      } else {
+        setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - 7));
+      }
+    },
+    handleNext: () => {
+      if (viewMode === 'monthly') {
+        setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1));
+      } else {
+        setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 7));
+      }
+    },
+    handleGoToToday: () => {
+      setCurrentDate(new Date());
+      setSelectedDate(new Date());
+    },
     handleSelectDate: (date: Date) => setSelectedDate(date),
     handleCloseDetail: () => setSelectedDate(null),
-    handleRetry: fetchData
+    handleRetry: fetchData,
+    setViewMode
   };
 
-  return { data, selectedDate, selectedDayEvents, isLoading, error, actions };
+  return { data, selectedDate, selectedDayEvents, isLoading, error, viewMode, actions };
 };

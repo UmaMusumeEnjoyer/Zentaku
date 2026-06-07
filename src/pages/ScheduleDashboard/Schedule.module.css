@@ -86,25 +86,6 @@
   font-weight: 700;
 }
 
-.updateCard {
-  background-color: rgba(0, 168, 137, 0.05);
-  border: 1px solid rgba(0, 168, 137, 0.2);
-  border-radius: 0.75rem;
-  padding: 1rem;
-}
-
-.updateTitle {
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: var(--btn-primary-bg);
-  margin-bottom: 0.25rem;
-}
-
-.updateMessage {
-  font-size: 10px;
-  color: var(--text-secondary);
-  line-height: 1.6;
-}
 
 /* --- Main Content --- */
 .mainContent {
@@ -223,6 +204,31 @@
   flex: 1;
   grid-auto-rows: 1fr;
   overflow: hidden;
+}
+
+.weeklyGrid {
+  /* Khi ở chế độ Tuần, lưới chỉ có 1 hàng nhưng ô vuông sẽ cao hơn */
+}
+
+.weeklyGrid .eventList {
+  overflow-y: auto;
+  gap: 6px;
+  padding-right: 4px; /* Tránh thanh cuộn che mất chữ */
+}
+
+.weeklyGrid .eventList::-webkit-scrollbar {
+  width: 4px;
+}
+.weeklyGrid .eventList::-webkit-scrollbar-thumb {
+  background: var(--border-subtle);
+  border-radius: 4px;
+}
+
+.weeklyGrid .eventDot {
+  font-size: 12px;
+  padding: 0.375rem 0.5rem;
+  white-space: normal;
+  word-break: break-word;
 }
 
 .dayCell {
@@ -505,39 +511,6 @@
   margin-top: 0.125rem;
 }
 
-.alertBox {
-  background-color: var(--bg-panel);
-  border: 1px solid var(--border-subtle);
-  border-radius: 0.75rem;
-  padding: 1.25rem;
-  margin-top: auto;
-}
-
-.alertHeader {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
-}
-
-.alertIcon {
-  color: #eab308; /* Yellow-500 */
-  font-size: 0.875rem;
-}
-
-.alertTitle {
-  font-size: 0.75rem;
-  font-weight: 800;
-  color: var(--text-primary);
-  text-transform: uppercase;
-}
-
-.alertMessage {
-  font-size: 11px;
-  color: var(--text-secondary);
-  font-style: italic;
-  margin: 0;
-}
 
 /* --- Skeleton Utilities --- */
 .skeletonGroup {
