@@ -150,7 +150,7 @@ const Header: React.FC = () => {
                 aria-label="Search users or anime"
               >
                 <span className="material-symbols-outlined">search</span>
-                <span className={styles.placeholder}>Search users...</span>
+                <span className={styles.placeholder}>{t('Header:accessibility.search_placeholder')}</span>
                 <kbd className={styles.shortcut}>Ctrl K</kbd>
               </div>
             </>
