@@ -113,6 +113,7 @@ const AnimeSearchPage: React.FC = () => {
               <SectionGrid 
                 title={t('sections.allTimePopular')}
                 data={allTimePopular} 
+                onViewAll={() => handleViewAllClick('ALL_TIME_POPULAR')}
               />
             </>
           )
