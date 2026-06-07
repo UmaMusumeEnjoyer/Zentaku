@@ -8,6 +8,10 @@ interface SystemHealth {
     status: string;
     pingMs: number;
   };
+  animeServer: {
+    status: string;
+    pingMs: number;
+  };
   cpu: {
     loadAvg1m: number;
     cores: number;
@@ -72,8 +76,15 @@ const AdminDashboard: React.FC = () => {
           <div className={styles.cardSub}>Ping: {health.db.pingMs}ms</div>
         </div>
         <div className={styles.card}>
+          <div className={styles.cardTitle}>Anime Server</div>
+          <div className={`${styles.cardValue} ${health.animeServer.status === 'up' ? styles.statusUp : styles.statusDown}`}>
+            {health.animeServer.status.toUpperCase()}
+          </div>
+          <div className={styles.cardSub}>Ping: {health.animeServer.pingMs}ms</div>
+        </div>
+        <div className={styles.card}>
           <div className={styles.cardTitle}>CPU Load</div>
-          <div className={styles.cardValue}>{health.cpu.loadAvg1m.toFixed(2)}</div>
+          <div className={styles.cardValue}>{health.cpu.loadAvg1m.toFixed(2)}%</div>
           <div className={styles.cardSub}>{health.cpu.cores} Cores Available</div>
         </div>
         <div className={styles.card}>
