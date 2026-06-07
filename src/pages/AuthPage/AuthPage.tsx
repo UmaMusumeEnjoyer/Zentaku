@@ -2,8 +2,6 @@
 import React from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import styles from './AuthPage.module.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGooglePlusG, faFacebookF, faGithub, faLinkedinIn } from '@fortawesome/free-brands-svg-icons';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 

@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { initSharedLogic, useNotificationSocket } from '@umamusumeenjoyer/shared-logic';
 import type { NotificationItem } from '@umamusumeenjoyer/shared-logic';
 import './App.css';
@@ -26,6 +26,7 @@ import ChatMessenger from './pages/ChatApp/ChatApp';
 import FloatingChat from './components/FloatingChat/FloatingChat';
 import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
 import NotificationToast from './components/Notification/NotificationToast';
+import AdminDashboard from './pages/AdminDashboard/AdminDashboard';
 
 // Xác định API base URL dựa trên environment
 const isDevelopment = import.meta.env.DEV;
@@ -90,6 +91,57 @@ const NotificationSetup = () => {
   return null;
 };
 
+const AppContent = () => {
+  const { user } = useAuth();
+  const isSuperAdmin = (user as any)?.systemRole === 'SUPER_ADMIN';
+
+  if (isSuperAdmin) {
+    return (
+      <>
+        <Header />
+        <main>
+          <Routes>
+            <Route path="/admin/dashboard" element={<AdminDashboard />} />
+            <Route path="*" element={<Navigate to="/admin/dashboard" replace />} />
+          </Routes>
+        </main>
+      </>
+    );
+  }
+
+  return (
+    <>
+      <NotificationSetup />
+      <Header />
+      <FloatingChat />
+      <NotificationToast />
+      <main>
+        <Routes>
+          <Route path="/" element={<HomeRoute />} />
+          <Route path="/news/:id" element={<NewsDetailPage />} />
+          <Route path="/character/:id" element={<CharacterPage />} />
+          <Route path="/anime/:id" element={<AnimeDetailPage />} />
+          <Route path="/anime/:id/watch" element={<AnimeWatchPage />}/>
+          <Route path="/login" element={<AuthPage />} />
+          <Route path="/signup" element={<AuthPage />} />
+          <Route path="/staff/:id" element={<StaffPage />} />
+          <Route path="/browse" element={<AnimeSearchPage />} />
+          <Route path="/animelist" element={<AnimeListSearchPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/user/:username" element={<ProfilePage />} />
+          <Route path="/list/:id" element={<AnimeListPage />} />
+          <Route path="/watch-along" element={<WatchAlongPage />} />
+          <Route path="/watch-along/:roomId" element={<WatchAlongPage />} />
+          <Route path="/manga/:id/read/:chapterId?" element={<MangaReader />} />
+          <Route path="/novel/:id/read/:chapterId?" element={<LightNovelReader />} />
+          <Route path="/chat" element={<ChatMessenger />} />
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </main>
+    </>
+  );
+};
+
 function App() {
   useEffect(() => {
     // --- Thay đổi Tiêu đề (Title) ---
@@ -112,33 +164,7 @@ function App() {
   return (
       <Router>
         <AuthProvider>
-          <NotificationSetup />
-          <Header />
-          <FloatingChat />
-          <NotificationToast />
-          <main>
-            <Routes>
-              <Route path="/" element={<HomeRoute />} />
-              <Route path="/news/:id" element={<NewsDetailPage />} />
-              <Route path="/character/:id" element={<CharacterPage />} />
-              <Route path="/anime/:id" element={<AnimeDetailPage />} />
-              <Route path="/anime/:id/watch" element={<AnimeWatchPage />}/>
-              <Route path="/login" element={<AuthPage />} />
-              <Route path="/signup" element={<AuthPage />} />
-              <Route path="/staff/:id" element={<StaffPage />} />
-              <Route path="/browse" element={<AnimeSearchPage />} />
-              <Route path="/animelist" element={<AnimeListSearchPage />} />
-              <Route path="/profile" element={<ProfilePage />} />
-              <Route path="/user/:username" element={<ProfilePage />} />
-              <Route path="/list/:id" element={<AnimeListPage />} />
-              <Route path="/watch-along" element={<WatchAlongPage />} />
-              <Route path="/watch-along/:roomId" element={<WatchAlongPage />} />
-              <Route path="/manga/:id/read/:chapterId?" element={<MangaReader />} />
-              <Route path="/novel/:id/read/:chapterId?" element={<LightNovelReader />} />
-              <Route path="/chat" element={<ChatMessenger />} />
-              <Route path="*" element={<NotFoundPage />} />
-            </Routes>
-          </main>
+          <AppContent />
         </AuthProvider>
       </Router>
   );

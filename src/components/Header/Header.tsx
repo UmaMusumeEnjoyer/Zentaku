@@ -201,6 +201,12 @@ const Header: React.FC = () => {
                     <Link to="/profile" className={styles.dropdownItem} onClick={toggleDropdown}>
                       {t('Header:user_menu.profile')}
                     </Link>
+
+                    {(user as any)?.systemRole === 'SUPER_ADMIN' && (
+                      <Link to="/admin/dashboard" className={styles.dropdownItem} onClick={toggleDropdown}>
+                        Admin Dashboard
+                      </Link>
+                    )}
                     
 
                     <button className={styles.dropdownItem} onClick={openSettingsModal}>
