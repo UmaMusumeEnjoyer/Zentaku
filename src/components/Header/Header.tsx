@@ -71,6 +71,7 @@ const Header: React.FC = () => {
 
 
   const isAuthenticated = !!user;
+  const isSuperAdmin = (user as any)?.systemRole === 'SUPER_ADMIN';
   const hasToken = localStorage.getItem('accessToken');
   const isUserLoading = !user && hasToken;
 
@@ -135,24 +136,28 @@ const Header: React.FC = () => {
         </div>
 
         <nav className={styles.headerCenter}>
-          <Link to="/">{t('Header:navigation.home')}</Link>
-          <Link to="/browse">{t('Header:navigation.browse')}</Link>
-          {isAuthenticated && (
+          {!isSuperAdmin && (
             <>
-              <Link to="/animelist">{t('Header:navigation.anime_list')}</Link>
-              <Link to="/profile">{t('Header:navigation.profile')}</Link>
+              <Link to="/">{t('Header:navigation.home')}</Link>
+              <Link to="/browse">{t('Header:navigation.browse')}</Link>
+              {isAuthenticated && (
+                <>
+                  <Link to="/animelist">{t('Header:navigation.anime_list')}</Link>
+                  <Link to="/profile">{t('Header:navigation.profile')}</Link>
 
-              {/* COMMAND PALETTE TRIGGER */}
-              <div 
-                className={styles.commandPaletteTrigger} 
-                onClick={() => setIsSearchModalOpen(true)}
-                role="button"
-                aria-label="Search users or anime"
-              >
-                <span className="material-symbols-outlined">search</span>
-                <span className={styles.placeholder}>{t('Header:accessibility.search_placeholder')}</span>
-                <kbd className={styles.shortcut}>Ctrl K</kbd>
-              </div>
+                  {/* COMMAND PALETTE TRIGGER */}
+                  <div 
+                    className={styles.commandPaletteTrigger} 
+                    onClick={() => setIsSearchModalOpen(true)}
+                    role="button"
+                    aria-label="Search users or anime"
+                  >
+                    <span className="material-symbols-outlined">search</span>
+                    <span className={styles.placeholder}>{t('Header:accessibility.search_placeholder')}</span>
+                    <kbd className={styles.shortcut}>Ctrl K</kbd>
+                  </div>
+                </>
+              )}
             </>
           )}
         </nav>
@@ -185,24 +190,28 @@ const Header: React.FC = () => {
 
                 {isDropdownOpen && (
                   <div className={styles.dropdownMenu}>
-                    <div className={styles.mobileNavGroup}>
-                      <Link to="/" className={styles.dropdownItem} onClick={toggleDropdown}>
-                        {t('Header:navigation.home')}
-                      </Link>
-                      <Link to="/browse" className={styles.dropdownItem} onClick={toggleDropdown}>
-                        {t('Header:navigation.browse')}
-                      </Link>
-                      <Link to="/animelist" className={styles.dropdownItem} onClick={toggleDropdown}>
-                        {t('Header:navigation.anime_list')}
-                      </Link>
-                      <div className={styles.dropdownDivider}></div>
-                    </div>
+                    {!isSuperAdmin && (
+                      <>
+                        <div className={styles.mobileNavGroup}>
+                          <Link to="/" className={styles.dropdownItem} onClick={toggleDropdown}>
+                            {t('Header:navigation.home')}
+                          </Link>
+                          <Link to="/browse" className={styles.dropdownItem} onClick={toggleDropdown}>
+                            {t('Header:navigation.browse')}
+                          </Link>
+                          <Link to="/animelist" className={styles.dropdownItem} onClick={toggleDropdown}>
+                            {t('Header:navigation.anime_list')}
+                          </Link>
+                          <div className={styles.dropdownDivider}></div>
+                        </div>
 
-                    <Link to="/profile" className={styles.dropdownItem} onClick={toggleDropdown}>
-                      {t('Header:user_menu.profile')}
-                    </Link>
+                        <Link to="/profile" className={styles.dropdownItem} onClick={toggleDropdown}>
+                          {t('Header:user_menu.profile')}
+                        </Link>
+                      </>
+                    )}
 
-                    {(user as any)?.systemRole === 'SUPER_ADMIN' && (
+                    {isSuperAdmin && (
                       <Link to="/admin/dashboard" className={styles.dropdownItem} onClick={toggleDropdown}>
                         Admin Dashboard
                       </Link>

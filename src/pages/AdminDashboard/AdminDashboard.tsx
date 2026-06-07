@@ -27,7 +27,7 @@ const AdminDashboard: React.FC = () => {
   const fetchHealth = async () => {
     try {
       const response = await apiClient.get('/admin/health');
-      setHealth(response.data.data);
+      setHealth(response.data);
       setError(null);
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to fetch system health');
