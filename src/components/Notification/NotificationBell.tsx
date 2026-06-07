@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useNotificationStore, NotificationType } from '@umamusumeenjoyer/shared-logic';
 import type { NotificationItem } from '@umamusumeenjoyer/shared-logic';
 import styles from './Notification.module.css';
@@ -10,6 +11,7 @@ const NotificationBell: React.FC = () => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const { t } = useTranslation(['notification']);
 
   const notifications = useNotificationStore((s) => s.notifications);
   const unreadCount = useNotificationStore((s) => s.unreadCount);
@@ -67,10 +69,10 @@ const NotificationBell: React.FC = () => {
     const diffHour = Math.floor(diffMs / 3600000);
     const diffDay = Math.floor(diffMs / 86400000);
 
-    if (diffMin < 1) return 'Just now';
-    if (diffMin < 60) return `${diffMin}m ago`;
-    if (diffHour < 24) return `${diffHour}h ago`;
-    return `${diffDay}d ago`;
+    if (diffMin < 1) return t('time.justNow');
+    if (diffMin < 60) return t('time.minutesAgo', { count: diffMin });
+    if (diffHour < 24) return t('time.hoursAgo', { count: diffHour });
+    return t('time.daysAgo', { count: diffDay });
   };
 
   // Lọc trùng lặp (nếu user click liên tục tạo nhiều bản ghi ở Backend hoặc bị spam)
@@ -112,24 +114,24 @@ const NotificationBell: React.FC = () => {
       {isOpen && (
         <div className={styles.dropdown}>
           <div className={styles.dropdownHeader}>
-            <h3>Notifications</h3>
+            <h3>{t('title')}</h3>
             {displayUnreadCount > 0 && (
               <button
                 className={styles.markAllReadBtn}
                 onClick={() => markAllAsRead()}
               >
-                Mark all read
+                {t('markAllRead')}
               </button>
             )}
           </div>
           
           <div className={styles.dropdownBody}>
             {isLoading && notifications.length === 0 ? (
-              <div className={styles.loadingState}>Loading...</div>
+              <div className={styles.loadingState}>{t('loading')}</div>
             ) : uniqueNotifications.length === 0 ? (
               <div className={styles.emptyState}>
                 <span className="material-symbols-outlined">notifications_off</span>
-                <p>No notifications yet</p>
+                <p>{t('empty')}</p>
               </div>
             ) : (
               uniqueNotifications.map((notification) => (
