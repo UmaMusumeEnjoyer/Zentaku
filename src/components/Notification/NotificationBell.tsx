@@ -143,38 +143,67 @@ const NotificationBell: React.FC = () => {
                   tabIndex={0}
                 >
                   <div className={styles.notificationIcon}>
-                    {notification.type === NotificationType.LIST_INTERACTION && notification.metadata?.listBanner ? (
-                      <img 
-                        src={notification.metadata.listBanner} 
-                        alt="list banner" 
-                        style={{ width: '40px', height: '40px', objectFit: 'cover', borderRadius: '50%' }} 
-                      />
-                    ) : notification.type === NotificationType.LIST_INTERACTION && notification.metadata?.actorAvatar ? (
-                      <img 
-                        src={notification.metadata.actorAvatar} 
-                        alt="actor avatar" 
-                        style={{ width: '40px', height: '40px', objectFit: 'cover', borderRadius: '50%' }} 
-                      />
-                    ) : notification.type === NotificationType.LIST_INTERACTION ? (
-                      <div style={{
-                        width: '40px', 
-                        height: '40px', 
-                        borderRadius: '50%', 
-                        backgroundColor: `hsl(${(String(notification.metadata?.listId || notification.id).charCodeAt(0) * 137) % 360}, 70%, 60%)`,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'white',
-                        fontWeight: 'bold',
-                        fontSize: '18px'
-                      }}>
-                        {String(notification.metadata?.listName || 'L').charAt(0).toUpperCase()}
-                      </div>
-                    ) : (
-                      <span className="material-symbols-outlined">
-                        {getNotificationIcon(notification.type)}
-                      </span>
-                    )}
+                    {(() => {
+                      const isPromote = notification.metadata?.actionType === 'PROMOTE';
+                      const isDemote = notification.metadata?.actionType === 'DEMOTE';
+                      const isPermissionChange = isPromote || isDemote;
+
+                      let imageUrl = null;
+                      if (isPermissionChange) {
+                        imageUrl = notification.metadata?.actorAvatar;
+                      } else {
+                        imageUrl = notification.metadata?.listBanner || notification.metadata?.actorAvatar;
+                      }
+
+                      if (notification.type === NotificationType.LIST_INTERACTION && imageUrl) {
+                        return (
+                          <img 
+                            src={imageUrl} 
+                            alt="notification icon" 
+                            style={{ width: '40px', height: '40px', objectFit: 'cover', borderRadius: '50%' }} 
+                          />
+                        );
+                      }
+
+                      if (notification.type === NotificationType.LIST_INTERACTION) {
+                        if (isPromote) {
+                          return (
+                            <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: '#e8f5e9', color: '#4caf50', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                              <span className="material-symbols-outlined">workspace_premium</span>
+                            </div>
+                          );
+                        }
+                        if (isDemote) {
+                          return (
+                            <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: '#ffebee', color: '#f44336', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                              <span className="material-symbols-outlined">person_remove</span>
+                            </div>
+                          );
+                        }
+                        return (
+                          <div style={{
+                            width: '40px', 
+                            height: '40px', 
+                            borderRadius: '50%', 
+                            backgroundColor: `hsl(${(String(notification.metadata?.listId || notification.id).charCodeAt(0) * 137) % 360}, 70%, 60%)`,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: 'white',
+                            fontWeight: 'bold',
+                            fontSize: '18px'
+                          }}>
+                            {String(notification.metadata?.listName || 'L').charAt(0).toUpperCase()}
+                          </div>
+                        );
+                      }
+
+                      return (
+                        <span className="material-symbols-outlined">
+                          {getNotificationIcon(notification.type)}
+                        </span>
+                      );
+                    })()}
                   </div>
                   <div className={styles.notificationContent}>
                     <p className={styles.notificationTitle}>{notification.title}</p>

@@ -107,38 +107,67 @@ const NotificationToast: React.FC = () => {
           role="alert"
         >
           <div className={styles.toastIcon}>
-            {toast.notification.type === NotificationType.LIST_INTERACTION && toast.notification.metadata?.listBanner ? (
-              <img 
-                src={toast.notification.metadata.listBanner} 
-                alt="list banner" 
-                style={{ width: '40px', height: '40px', objectFit: 'cover', borderRadius: '50%' }} 
-              />
-            ) : toast.notification.type === NotificationType.LIST_INTERACTION && toast.notification.metadata?.actorAvatar ? (
-              <img 
-                src={toast.notification.metadata.actorAvatar} 
-                alt="actor avatar" 
-                style={{ width: '40px', height: '40px', objectFit: 'cover', borderRadius: '50%' }} 
-              />
-            ) : toast.notification.type === NotificationType.LIST_INTERACTION ? (
-              <div style={{
-                width: '40px', 
-                height: '40px', 
-                borderRadius: '50%', 
-                backgroundColor: `hsl(${(String(toast.notification.metadata?.listId || toast.notification.id).charCodeAt(0) * 137) % 360}, 70%, 60%)`,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'white',
-                fontWeight: 'bold',
-                fontSize: '18px'
-              }}>
-                {String(toast.notification.metadata?.listName || 'L').charAt(0).toUpperCase()}
-              </div>
-            ) : (
-              <span className="material-symbols-outlined">
-                {getIcon(toast.notification.type)}
-              </span>
-            )}
+            {(() => {
+              const isPromote = toast.notification.metadata?.actionType === 'PROMOTE';
+              const isDemote = toast.notification.metadata?.actionType === 'DEMOTE';
+              const isPermissionChange = isPromote || isDemote;
+
+              let imageUrl = null;
+              if (isPermissionChange) {
+                imageUrl = toast.notification.metadata?.actorAvatar;
+              } else {
+                imageUrl = toast.notification.metadata?.listBanner || toast.notification.metadata?.actorAvatar;
+              }
+
+              if (toast.notification.type === NotificationType.LIST_INTERACTION && imageUrl) {
+                return (
+                  <img 
+                    src={imageUrl} 
+                    alt="notification icon" 
+                    style={{ width: '40px', height: '40px', objectFit: 'cover', borderRadius: '50%' }} 
+                  />
+                );
+              }
+
+              if (toast.notification.type === NotificationType.LIST_INTERACTION) {
+                if (isPromote) {
+                  return (
+                    <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: '#e8f5e9', color: '#4caf50', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <span className="material-symbols-outlined">workspace_premium</span>
+                    </div>
+                  );
+                }
+                if (isDemote) {
+                  return (
+                    <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: '#ffebee', color: '#f44336', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <span className="material-symbols-outlined">person_remove</span>
+                    </div>
+                  );
+                }
+                return (
+                  <div style={{
+                    width: '40px', 
+                    height: '40px', 
+                    borderRadius: '50%', 
+                    backgroundColor: `hsl(${(String(toast.notification.metadata?.listId || toast.notification.id).charCodeAt(0) * 137) % 360}, 70%, 60%)`,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: 'white',
+                    fontWeight: 'bold',
+                    fontSize: '18px'
+                  }}>
+                    {String(toast.notification.metadata?.listName || 'L').charAt(0).toUpperCase()}
+                  </div>
+                );
+              }
+
+              return (
+                <span className="material-symbols-outlined">
+                  {getIcon(toast.notification.type)}
+                </span>
+              );
+            })()}
           </div>
           <div className={styles.toastContent}>
             <p className={styles.toastTitle}>{toast.notification.title}</p>
