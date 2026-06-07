@@ -37,7 +37,7 @@ export interface UseAnimeScheduleReturn {
   selectedDayEvents: AnimeInfo[];
   isLoading: boolean;
   error: Error | null;
-  viewMode: 'monthly' | 'weekly';
+  viewMode: 'monthly' | 'weekly' | 'following';
   actions: {
     handlePrev: () => void;
     handleNext: () => void;
@@ -45,6 +45,6 @@ export interface UseAnimeScheduleReturn {
     handleSelectDate: (date: Date) => void;
     handleCloseDetail: () => void;
     handleRetry: () => void;
-    setViewMode: (mode: 'monthly' | 'weekly') => void;
+    setViewMode: (mode: 'monthly' | 'weekly' | 'following') => void;
   };
 }

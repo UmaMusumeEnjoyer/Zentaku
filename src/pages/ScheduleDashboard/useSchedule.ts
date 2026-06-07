@@ -73,7 +73,7 @@ export const useAnimeSchedule = (): UseAnimeScheduleReturn => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
   const [data, setData] = useState<ScheduleData | null>(null);
-  const [viewMode, setViewMode] = useState<'monthly' | 'weekly'>('monthly');
+  const [viewMode, setViewMode] = useState<'monthly' | 'weekly' | 'following'>('monthly');
 
   const fetchData = async () => {
     setIsLoading(true);

@@ -3,14 +3,15 @@ import { useWatchAlong } from './useWatchAlong';
 import styles from './WatchAlong.module.css';
 import WatchAlongSkeleton from './WatchAlongSkeleton';
 import { VideoPlayer } from '../AnimeWatchPage/components/VideoPlayer';
-import { animeService, streamingService } from '@umamusumeenjoyer/shared-logic';
+import { animeService, streamingService, useSummarySection } from '@umamusumeenjoyer/shared-logic';
+import EditorModal from '../../components/AnimeModal/EditorModal';
 import type { Episode } from '../AnimeWatchPage/WatchPage.types';
 import { useTranslation } from 'react-i18next';
 import { ChevronLeft, ChevronRight, UserMinus, User, Star } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
 const WatchAlongPage: React.FC = () => {
-  const { t } = useTranslation(['WatchAlong', 'WatchPage']);
+  const { t } = useTranslation(['WatchAlong', 'WatchPage', 'AnimeModal']);
   const { user } = useAuth();
   const { room, isHost, isLoading, error, remotePlaybackState, streamData: originalStreamData, actions } = useWatchAlong();
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -35,6 +36,36 @@ const WatchAlongPage: React.FC = () => {
   const [isOverlayChatOpen, setIsOverlayChatOpen] = useState(false);
 
   const displayStreamData = originalStreamData;
+
+  const animeDataForModal = React.useMemo(() => {
+    if (!animeData && !room?.settings?.anilistId) return null;
+    return {
+      id: room?.settings?.anilistId || (animeData as any)?.idAnilist || (animeData as any)?.id,
+      cover_image: (animeData as any)?.coverImage?.large || (animeData as any)?.coverImage || (animeData as any)?.cover_image,
+      name_romaji: (animeData as any)?.title?.romaji || (animeData as any)?.name_romaji,
+      desc: (animeData as any)?.description || (animeData as any)?.desc
+    };
+  }, [animeData, room?.settings?.anilistId]);
+
+  const {
+    isModalOpen,
+    currentStatusData,
+    watchStatus,
+    isLoadingStatus,
+    isFollowing,
+    handleBtnClick,
+    handleCloseModal,
+    handleSave,
+    handleDelete
+  } = useSummarySection(animeDataForModal || ({} as any));
+
+  const buttonLabel = React.useMemo(() => {
+    if (isLoadingStatus) return 'Loading...';
+    if (isFollowing && watchStatus) {
+      return t(`AnimeModal:status_options.${watchStatus}`);
+    }
+    return t('AnimeModal:status_options.default') || 'Add to List';
+  }, [isLoadingStatus, isFollowing, watchStatus, t]);
 
   useEffect(() => {
     if (room?.settings?.anilistId) {
@@ -110,6 +141,28 @@ const WatchAlongPage: React.FC = () => {
           {showLeftSidebar && (
             <div className={styles.sidebarContent}>
 
+              {/* Anime Info Card */}
+              {animeDataForModal && (
+                <div className={styles.animeInfoCard}>
+                  <div className={styles.animeCardHeader}>
+                    <img 
+                      src={animeDataForModal.cover_image} 
+                      alt={animeDataForModal.name_romaji} 
+                      className={styles.animeCardImage} 
+                    />
+                    <div className={styles.animeCardTitle} title={animeDataForModal.name_romaji}>
+                      {animeDataForModal.name_romaji}
+                    </div>
+                  </div>
+                  <button 
+                    className={`${styles.addToListBtn} ${isFollowing ? styles.following : ''}`}
+                    onClick={handleBtnClick}
+                    disabled={isLoadingStatus}
+                  >
+                    {buttonLabel}
+                  </button>
+                </div>
+              )}
 
             {/* Host Section */}
             {(() => {
@@ -394,6 +447,15 @@ const WatchAlongPage: React.FC = () => {
           </button>
         </aside>
       </div>
+
+      <EditorModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        anime={animeDataForModal as any}
+        initialData={currentStatusData}
+        onSave={handleSave}
+        onDelete={handleDelete}
+      />
     </div>
   );
 };

@@ -57,6 +57,66 @@
   padding-top: 16px;
 }
 
+/* Anime Info Card inside Left Sidebar */
+.animeInfoCard {
+  padding: 0 16px;
+  margin-bottom: 24px;
+}
+
+.animeCardHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.animeCardImage {
+  width: 48px;
+  height: 64px;
+  border-radius: 6px;
+  object-fit: cover;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.animeCardTitle {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.3;
+}
+
+.addToListBtn {
+  width: 100%;
+  padding: 8px;
+  border-radius: 6px;
+  background-color: var(--accent-color);
+  color: #fff;
+  border: none;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.addToListBtn:hover {
+  opacity: 0.9;
+}
+
+.addToListBtn.following {
+  background-color: var(--bg-subtle);
+  color: var(--text-primary);
+  border: 1px solid var(--border-subtle);
+}
+
+.addToListBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .sidebarItem {
   margin-bottom: 12px;
   cursor: pointer;

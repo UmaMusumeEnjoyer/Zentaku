@@ -10,7 +10,7 @@ const AnimeSection: React.FC<AnimeSectionProps> = ({ title, animeList, allowNoti
   // const { theme } = useTheme(); // CSS Variable tự động handle theme, không cần prop data-theme
   const { t } = useTranslation(['AnimeSection']);
   
-  const INITIAL_DISPLAY_COUNT = 7;
+  const INITIAL_DISPLAY_COUNT = 6;
   const [isExpanded, setIsExpanded] = useState(false);
 
   const {
