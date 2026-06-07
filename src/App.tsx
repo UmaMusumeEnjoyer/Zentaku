@@ -76,19 +76,16 @@ const HomeRoute = () => {
 const NotificationSetup = () => {
   const { user } = useAuth();
 
-  useNotificationSocket(
-    user
-      ? {
-          onNewNotification: (notification: NotificationItem) => {
-            // Trigger toast via global function exposed by NotificationToast
-            const showToast = (window as any).__showNotificationToast;
-            if (showToast) {
-              showToast(notification);
-            }
-          },
-        }
-      : undefined
-  );
+  useNotificationSocket({
+    isAuthenticated: !!user,
+    onNewNotification: (notification: NotificationItem) => {
+      // Trigger toast via global function exposed by NotificationToast
+      const showToast = (window as any).__showNotificationToast;
+      if (showToast) {
+        showToast(notification);
+      }
+    },
+  });
 
   return null;
 };
