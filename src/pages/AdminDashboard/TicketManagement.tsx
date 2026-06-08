@@ -13,8 +13,8 @@ const TicketManagement: React.FC = () => {
     try {
       setLoading(true);
       const res = await supportService.getAdminTickets({ status: filterStatus });
-      if (res.data.success) {
-        setTickets(res.data.data.data);
+      if (res.data && res.data.data) {
+        setTickets(res.data.data);
       }
     } catch (error) {
       toast.error('Failed to load tickets');
