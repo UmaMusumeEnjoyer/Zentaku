@@ -4,6 +4,12 @@
   overflow-x: auto;
   padding-bottom: 20px;
   min-height: 60vh;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+.board::-webkit-scrollbar {
+  display: none; /* Chrome/Safari/Opera */
 }
 
 .column {
@@ -68,19 +74,10 @@
   flex: 1;
   overflow-y: auto;
   min-height: 150px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
-/* Custom Scrollbar for columns */
 .columnBody::-webkit-scrollbar {
-  width: 6px;
-}
-.columnBody::-webkit-scrollbar-track {
-  background: transparent;
-}
-.columnBody::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
-}
-.columnBody::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.2);
+  display: none;
 }
