@@ -76,3 +76,34 @@
 .error {
   color: #f87171;
 }
+
+.tabsContainer {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.tabButton {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #aaa;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.tabButton:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.activeTab {
+  background: rgba(140, 82, 255, 0.2);
+  border-color: #8c52ff;
+  color: #fff;
+  box-shadow: 0 0 15px rgba(140, 82, 255, 0.2);
+}

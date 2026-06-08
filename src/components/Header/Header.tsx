@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { useHeader, userService } from '@umamusumeenjoyer/shared-logic';
 // Import hook logic hoạt hình mới tạo
 import { useHeaderAnimation } from './useHeaderAnimation';
+import TicketModal from '../TicketModal/TicketModal';
 import GlobalSearchModal from '../GlobalSearch/GlobalSearch';
 import NotificationBell from '../Notification/NotificationBell';
 
@@ -39,6 +40,7 @@ const Header: React.FC = () => {
   // 1. Hook xử lý UI Animation (Local ViewModel)
   // Logic: Ẩn/Hiện khi scroll + Trong suốt ở trang chỉ định
   const { isVisible, isTransparent, animationHandlers } = useHeaderAnimation();
+  const [isTicketModalOpen, setIsTicketModalOpen] = useState(false);
 
   // Notification Preferences State
   const [emailNoti, setEmailNoti] = React.useState(true);
@@ -222,6 +224,16 @@ const Header: React.FC = () => {
                       {t('Header:user_menu.settings')}
                     </button>
 
+                    <button 
+                      className={styles.dropdownItem} 
+                      onClick={() => {
+                        setIsTicketModalOpen(true);
+                        toggleDropdown();
+                      }}
+                    >
+                      Report a Bug
+                    </button>
+
                     <button
                       onClick={() => {
                         handleLogout();
@@ -249,6 +261,8 @@ const Header: React.FC = () => {
       </header>
 
       {/* Settings Modal */}
+      <TicketModal isOpen={isTicketModalOpen} onClose={() => setIsTicketModalOpen(false)} />
+
       {isSettingsModalOpen && (
         <div className={styles.settingsModalOverlay} onClick={closeSettingsModal}>
           <div className={styles.settingsModalContent} data-theme={theme} onClick={(e) => e.stopPropagation()}>

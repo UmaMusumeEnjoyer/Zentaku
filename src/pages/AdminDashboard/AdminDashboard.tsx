@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styles from './AdminDashboard.module.css';
 import { apiClient } from '@umamusumeenjoyer/shared-logic';
+import TicketManagement from './TicketManagement';
 
 interface SystemHealth {
   uptime: number;
@@ -25,6 +26,7 @@ interface SystemHealth {
 }
 
 const AdminDashboard: React.FC = () => {
+  const [activeTab, setActiveTab] = useState<'health' | 'tickets'>('health');
   const [health, setHealth] = useState<SystemHealth | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -51,48 +53,70 @@ const AdminDashboard: React.FC = () => {
     return `${h}h ${m}m ${s}s`;
   };
 
-  if (error) {
-    return <div className={styles.error}>Error: {error}</div>;
-  }
-
-  if (!health) {
-    return <div className={styles.loading}>Loading system health...</div>;
-  }
-
   return (
     <div className={styles.dashboardContainer}>
       <h1 className={styles.title}>System Control Center</h1>
-      <div className={styles.metricsGrid}>
-        <div className={styles.card}>
-          <div className={styles.cardTitle}>System Uptime</div>
-          <div className={styles.cardValue}>{formatUptime(health.uptime)}</div>
-          <div className={styles.cardSub}>Node.js Process</div>
-        </div>
-        <div className={styles.card}>
-          <div className={styles.cardTitle}>Database Status</div>
-          <div className={`${styles.cardValue} ${health.db.status === 'up' ? styles.statusUp : styles.statusDown}`}>
-            {health.db.status.toUpperCase()}
-          </div>
-          <div className={styles.cardSub}>Ping: {health.db.pingMs}ms</div>
-        </div>
-        <div className={styles.card}>
-          <div className={styles.cardTitle}>Anime Server</div>
-          <div className={`${styles.cardValue} ${health.animeServer.status === 'up' ? styles.statusUp : styles.statusDown}`}>
-            {health.animeServer.status.toUpperCase()}
-          </div>
-          <div className={styles.cardSub}>Ping: {health.animeServer.pingMs}ms</div>
-        </div>
-        <div className={styles.card}>
-          <div className={styles.cardTitle}>CPU Load</div>
-          <div className={styles.cardValue}>{health.cpu.loadAvg1m.toFixed(2)}%</div>
-          <div className={styles.cardSub}>{health.cpu.cores} Cores Available</div>
-        </div>
-        <div className={styles.card}>
-          <div className={styles.cardTitle}>Memory Usage</div>
-          <div className={styles.cardValue}>{health.memory.usagePercent}%</div>
-          <div className={styles.cardSub}>{health.memory.usedGb}GB / {health.memory.totalGb}GB</div>
-        </div>
+      
+      <div className={styles.tabsContainer}>
+        <button 
+          className={`${styles.tabButton} ${activeTab === 'health' ? styles.activeTab : ''}`}
+          onClick={() => setActiveTab('health')}
+        >
+          System Health
+        </button>
+        <button 
+          className={`${styles.tabButton} ${activeTab === 'tickets' ? styles.activeTab : ''}`}
+          onClick={() => setActiveTab('tickets')}
+        >
+          Support Tickets
+        </button>
       </div>
+
+      {activeTab === 'health' && (
+        <>
+          {error ? (
+            <div className={styles.error}>Error: {error}</div>
+          ) : !health ? (
+            <div className={styles.loading}>Loading system health...</div>
+          ) : (
+            <div className={styles.metricsGrid}>
+              <div className={styles.card}>
+                <div className={styles.cardTitle}>System Uptime</div>
+                <div className={styles.cardValue}>{formatUptime(health.uptime)}</div>
+                <div className={styles.cardSub}>Node.js Process</div>
+              </div>
+              <div className={styles.card}>
+                <div className={styles.cardTitle}>Database Status</div>
+                <div className={`${styles.cardValue} ${health.db.status === 'up' ? styles.statusUp : styles.statusDown}`}>
+                  {health.db.status.toUpperCase()}
+                </div>
+                <div className={styles.cardSub}>Ping: {health.db.pingMs}ms</div>
+              </div>
+              <div className={styles.card}>
+                <div className={styles.cardTitle}>Anime Server</div>
+                <div className={`${styles.cardValue} ${health.animeServer.status === 'up' ? styles.statusUp : styles.statusDown}`}>
+                  {health.animeServer.status.toUpperCase()}
+                </div>
+                <div className={styles.cardSub}>Ping: {health.animeServer.pingMs}ms</div>
+              </div>
+              <div className={styles.card}>
+                <div className={styles.cardTitle}>CPU Load</div>
+                <div className={styles.cardValue}>{health.cpu.loadAvg1m.toFixed(2)}%</div>
+                <div className={styles.cardSub}>{health.cpu.cores} Cores Available</div>
+              </div>
+              <div className={styles.card}>
+                <div className={styles.cardTitle}>Memory Usage</div>
+                <div className={styles.cardValue}>{health.memory.usagePercent}%</div>
+                <div className={styles.cardSub}>{health.memory.usedGb}GB / {health.memory.totalGb}GB</div>
+              </div>
+            </div>
+          )}
+        </>
+      )}
+
+      {activeTab === 'tickets' && (
+        <TicketManagement />
+      )}
     </div>
   );
 };
