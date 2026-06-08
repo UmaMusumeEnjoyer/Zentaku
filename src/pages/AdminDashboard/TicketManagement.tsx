@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styles from './TicketManagement.module.css';
-import { supportService, SupportTicket, TicketStatus } from '@umamusumeenjoyer/shared-logic';
+import { supportService, TicketStatus } from '@umamusumeenjoyer/shared-logic';
+import type { SupportTicket } from '@umamusumeenjoyer/shared-logic';
 import { toast } from 'react-toastify';
 
 const TicketManagement: React.FC = () => {
