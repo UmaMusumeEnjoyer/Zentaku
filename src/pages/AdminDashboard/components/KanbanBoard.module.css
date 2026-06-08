@@ -1,0 +1,86 @@
+.board {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  padding-bottom: 20px;
+  min-height: 60vh;
+}
+
+.column {
+  flex: 1;
+  min-width: 280px;
+  max-width: 350px;
+  background: rgba(20, 20, 25, 0.4);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  transition: background 0.2s ease;
+}
+
+.column.dragOver {
+  background: rgba(255, 255, 255, 0.08);
+  border-style: dashed;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.columnHeader {
+  padding: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.columnTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.statusDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.statusDot.pending { background-color: #f59e0b; box-shadow: 0 0 8px #f59e0b; }
+.statusDot.in_progress { background-color: #3b82f6; box-shadow: 0 0 8px #3b82f6; }
+.statusDot.resolved { background-color: #10b981; box-shadow: 0 0 8px #10b981; }
+.statusDot.closed { background-color: #6b7280; }
+
+.count {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  color: #ddd;
+}
+
+.columnBody {
+  padding: 16px;
+  flex: 1;
+  overflow-y: auto;
+  min-height: 150px;
+}
+
+/* Custom Scrollbar for columns */
+.columnBody::-webkit-scrollbar {
+  width: 6px;
+}
+.columnBody::-webkit-scrollbar-track {
+  background: transparent;
+}
+.columnBody::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+.columnBody::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}

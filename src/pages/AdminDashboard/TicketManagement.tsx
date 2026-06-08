@@ -3,8 +3,13 @@ import styles from './TicketManagement.module.css';
 import { supportService, TicketStatus } from '@umamusumeenjoyer/shared-logic';
 import type { SupportTicket } from '@umamusumeenjoyer/shared-logic';
 import { toast } from 'react-toastify';
+import KanbanBoard from './components/KanbanBoard';
+import { FaTable, FaColumns } from 'react-icons/fa';
+
+type ViewMode = 'table' | 'kanban';
 
 const TicketManagement: React.FC = () => {
+  const [viewMode, setViewMode] = useState<ViewMode>('kanban');
   const [tickets, setTickets] = useState<SupportTicket[]>([]);
   const [loading, setLoading] = useState(true);
   const [filterStatus, setFilterStatus] = useState<string>('');
@@ -58,7 +63,27 @@ const TicketManagement: React.FC = () => {
         </select>
       </div>
 
-      <div className={styles.tableWrapper}>
+      <div className={styles.controls}>
+        <div className={styles.viewToggle}>
+          <button 
+            className={`${styles.toggleBtn} ${viewMode === 'table' ? styles.active : ''}`}
+            onClick={() => setViewMode('table')}
+            title="Table View"
+          >
+            <FaTable />
+          </button>
+          <button 
+            className={`${styles.toggleBtn} ${viewMode === 'kanban' ? styles.active : ''}`}
+            onClick={() => setViewMode('kanban')}
+            title="Kanban View"
+          >
+            <FaColumns />
+          </button>
+        </div>
+      </div>
+
+      {viewMode === 'table' ? (
+        <div className={styles.tableWrapper}>
         <table className={styles.table}>
           <thead>
             <tr>
@@ -107,6 +132,9 @@ const TicketManagement: React.FC = () => {
           </tbody>
         </table>
       </div>
+      ) : (
+        <KanbanBoard tickets={tickets} onStatusChange={handleStatusChange} />
+      )}
     </div>
   );
 };
