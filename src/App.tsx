@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { useEffect, useMemo } from 'react';
+import { createBrowserRouter, RouterProvider, Outlet, Navigate } from 'react-router-dom';
 import { initSharedLogic, useNotificationSocket } from '@umamusumeenjoyer/shared-logic';
 import type { NotificationItem } from '@umamusumeenjoyer/shared-logic';
 import './App.css';
@@ -97,56 +97,74 @@ const NotificationSetup = () => {
   return null;
 };
 
+const AdminLayout = () => (
+  <>
+    <Header />
+    <main>
+      <Outlet />
+    </main>
+  </>
+);
+
+const UserLayout = () => (
+  <>
+    <NotificationSetup />
+    <Header />
+    <FloatingChat />
+    <NotificationToast />
+    <main>
+      <Outlet />
+    </main>
+  </>
+);
+
 const AppContent = () => {
   const { user } = useAuth();
   const isSuperAdmin = (user as any)?.systemRole === 'SUPER_ADMIN';
 
-  if (isSuperAdmin) {
-    return (
-      <>
-        <Header />
-        <main>
-          <Routes>
-            <Route path="/admin/dashboard" element={<AdminDashboard />} />
-            <Route path="*" element={<Navigate to="/admin/dashboard" replace />} />
-          </Routes>
-        </main>
-      </>
-    );
-  }
+  const router = useMemo(() => {
+    if (isSuperAdmin) {
+      return createBrowserRouter([
+        {
+          element: <AdminLayout />,
+          children: [
+            { path: "/admin/dashboard", element: <AdminDashboard /> },
+            { path: "*", element: <Navigate to="/admin/dashboard" replace /> }
+          ]
+        }
+      ]);
+    }
 
-  return (
-    <>
-      <NotificationSetup />
-      <Header />
-      <FloatingChat />
-      <NotificationToast />
-      <main>
-        <Routes>
-          <Route path="/" element={<HomeRoute />} />
-          <Route path="/news/:id" element={<NewsDetailPage />} />
-          <Route path="/character/:id" element={<CharacterPage />} />
-          <Route path="/anime/:id" element={<AnimeDetailPage />} />
-          <Route path="/anime/:id/watch" element={<AnimeWatchPage />}/>
-          <Route path="/login" element={<AuthPage />} />
-          <Route path="/signup" element={<AuthPage />} />
-          <Route path="/staff/:id" element={<StaffPage />} />
-          <Route path="/browse" element={<AnimeSearchPage />} />
-          <Route path="/animelist" element={<AnimeListSearchPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/user/:username" element={<ProfilePage />} />
-          <Route path="/list/:id" element={<AnimeListPage />} />
-          <Route path="/watch-along" element={<WatchAlongPage />} />
-          <Route path="/watch-along/:roomId" element={<WatchAlongPage />} />
-          <Route path="/manga/:id/read/:chapterId?" element={<MangaReader />} />
-          <Route path="/novel/:id/read/:chapterId?" element={<LightNovelReader />} />
-          <Route path="/chat" element={<ChatMessenger />} />
-          <Route path="/verify-email" element={<VerifyEmailPage />} />
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
-      </main>
-    </>
-  );
+    return createBrowserRouter([
+      {
+        element: <UserLayout />,
+        children: [
+          { path: "/", element: <HomeRoute /> },
+          { path: "/news/:id", element: <NewsDetailPage /> },
+          { path: "/character/:id", element: <CharacterPage /> },
+          { path: "/anime/:id", element: <AnimeDetailPage /> },
+          { path: "/anime/:id/watch", element: <AnimeWatchPage />},
+          { path: "/login", element: <AuthPage /> },
+          { path: "/signup", element: <AuthPage /> },
+          { path: "/staff/:id", element: <StaffPage /> },
+          { path: "/browse", element: <AnimeSearchPage /> },
+          { path: "/animelist", element: <AnimeListSearchPage /> },
+          { path: "/profile", element: <ProfilePage /> },
+          { path: "/user/:username", element: <ProfilePage /> },
+          { path: "/list/:id", element: <AnimeListPage /> },
+          { path: "/watch-along", element: <WatchAlongPage /> },
+          { path: "/watch-along/:roomId", element: <WatchAlongPage /> },
+          { path: "/manga/:id/read/:chapterId?", element: <MangaReader /> },
+          { path: "/novel/:id/read/:chapterId?", element: <LightNovelReader /> },
+          { path: "/chat", element: <ChatMessenger /> },
+          { path: "/verify-email", element: <VerifyEmailPage /> },
+          { path: "*", element: <NotFoundPage /> }
+        ]
+      }
+    ]);
+  }, [isSuperAdmin]);
+
+  return <RouterProvider router={router} />;
 };
 
 function App() {
@@ -169,11 +187,9 @@ function App() {
   }, []);
 
   return (
-      <Router>
-        <AuthProvider>
-          <AppContent />
-        </AuthProvider>
-      </Router>
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   );
 }
 

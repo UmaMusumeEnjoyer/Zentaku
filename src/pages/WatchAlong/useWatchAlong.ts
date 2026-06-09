@@ -3,6 +3,7 @@ import { useWatchAlongLogic } from '@umamusumeenjoyer/shared-logic';
 import { useAuth } from '../../context/AuthContext';
 import { useCallback } from 'react';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 
 export const useWatchAlong = () => {
   const { roomId } = useParams<{ roomId: string }>();
@@ -12,6 +13,7 @@ export const useWatchAlong = () => {
 
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { t } = useTranslation(['WatchAlong']);
   
   const currentUserId = user?.id?.toString() || null;
 
@@ -23,7 +25,15 @@ export const useWatchAlong = () => {
     navigate('/');
   }, [navigate]);
 
-  const logic = useWatchAlongLogic(roomId || '', currentUserId, handleKicked);
+  const handleRoomClosed = useCallback(() => {
+    toast.error(t('WatchAlong:roomClosedMessage') || 'Phòng xem chung đã bị đóng bởi Host.', {
+      position: 'top-right',
+      autoClose: 5000,
+    });
+    navigate('/');
+  }, [navigate, t]);
+
+  const logic = useWatchAlongLogic(roomId || '', currentUserId, handleKicked, handleRoomClosed);
 
   // We need streamData for the VideoPlayer.
   // For now, we will construct it from room's currentSourceUrl.

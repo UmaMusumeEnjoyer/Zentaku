@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useWatchAlong } from './useWatchAlong';
+import { useBlocker } from 'react-router-dom';
 import styles from './WatchAlong.module.css';
 import WatchAlongSkeleton from './WatchAlongSkeleton';
 import { VideoPlayer } from '../AnimeWatchPage/components/VideoPlayer';
@@ -23,6 +24,26 @@ const WatchAlongPage: React.FC = () => {
   useEffect(() => {
     scrollToBottom();
   }, [room?.messages]);
+
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (isHost) {
+        e.preventDefault();
+        e.returnValue = ''; // This triggers the browser's default warning
+      }
+    };
+    
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [isHost]);
+
+  // Handle soft navigation warnings for host
+  const blocker = useBlocker(
+    ({ currentLocation, nextLocation }) =>
+      isHost && currentLocation.pathname !== nextLocation.pathname
+  );
 
   const [chatMessage, setChatMessage] = useState('');
   const [episodes, setEpisodes] = useState<Episode[]>([]);
@@ -476,8 +497,8 @@ const WatchAlongPage: React.FC = () => {
                 }
               }}>{t('WatchAlong:chatBtn')}</button>
             </div>
-          </div>
-          </>
+        </div>
+      </>
           )}
           
           <button 
@@ -498,6 +519,33 @@ const WatchAlongPage: React.FC = () => {
         onSave={handleSave}
         onDelete={handleDelete}
       />
+
+      {/* Host Navigation Warning Modal */}
+      {blocker.state === 'blocked' && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modalContent}>
+            <h3>Cảnh báo chuyển trang</h3>
+            <p>Bạn có chắc chắn muốn rời đi? Phòng xem chung này sẽ bị giải tán và toàn bộ người xem sẽ bị trở về trang chủ.</p>
+            <div className={styles.modalActions}>
+              <button 
+                className={styles.cancelBtn} 
+                onClick={() => blocker.reset && blocker.reset()}
+              >
+                Hủy
+              </button>
+              <button 
+                className={styles.confirmBtn} 
+                onClick={() => {
+                  actions.leaveRoom();
+                  if (blocker.proceed) blocker.proceed();
+                }}
+              >
+                Xác nhận rời đi
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
