@@ -20,7 +20,7 @@ export default defineConfig(({ mode }) => {
           rewrite: (path) => path.replace(/^\/api/, '/api')
         },
         '/movies': {
-          target: 'http://localhost:3636',
+          target: env.VITE_FILM_SERVER_URL || 'http://localhost:3636',
           changeOrigin: true,
           secure: false,
         },

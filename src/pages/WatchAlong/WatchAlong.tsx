@@ -285,12 +285,13 @@ const WatchAlongPage: React.FC = () => {
                   const referer = data.referer || data.headers?.Referer || null;
                   
                   const currentHost = window.location.hostname;
-                  if (videoUrl && videoUrl.includes(':3636')) {
+                  const filmPort = import.meta.env.VITE_FILM_SERVER_PORT || '3636';
+                  if (videoUrl && videoUrl.includes(`:${filmPort}`)) {
                     videoUrl = videoUrl.substring(videoUrl.indexOf('/movies'));
                   } else if (videoUrl && videoUrl.includes('localhost')) {
                     videoUrl = videoUrl.replace('localhost', currentHost).replace('127.0.0.1', currentHost);
                   }
-                  if (subUrl && subUrl.includes(':3636')) {
+                  if (subUrl && subUrl.includes(`:${filmPort}`)) {
                     subUrl = subUrl.substring(subUrl.indexOf('/movies'));
                   } else if (subUrl && subUrl.includes('localhost')) {
                     subUrl = subUrl.replace('localhost', currentHost).replace('127.0.0.1', currentHost);
@@ -321,12 +322,13 @@ const WatchAlongPage: React.FC = () => {
                     const referer = data.referer || data.headers?.Referer || null;
                     
                     const currentHost = window.location.hostname;
-                    if (videoUrl && videoUrl.includes(':3636')) {
+                    const filmPort = import.meta.env.VITE_FILM_SERVER_PORT || '3636';
+                    if (videoUrl && videoUrl.includes(`:${filmPort}`)) {
                       videoUrl = videoUrl.substring(videoUrl.indexOf('/movies'));
                     } else if (videoUrl && videoUrl.includes('localhost')) {
                       videoUrl = videoUrl.replace('localhost', currentHost).replace('127.0.0.1', currentHost);
                     }
-                    if (subUrl && subUrl.includes(':3636')) {
+                    if (subUrl && subUrl.includes(`:${filmPort}`)) {
                       subUrl = subUrl.substring(subUrl.indexOf('/movies'));
                     } else if (subUrl && subUrl.includes('localhost')) {
                       subUrl = subUrl.replace('localhost', currentHost).replace('127.0.0.1', currentHost);
@@ -357,12 +359,13 @@ const WatchAlongPage: React.FC = () => {
                     const referer = data.referer || data.headers?.Referer || null;
                     
                     const currentHost = window.location.hostname;
-                    if (videoUrl && videoUrl.includes(':3636')) {
+                    const filmPort = import.meta.env.VITE_FILM_SERVER_PORT || '3636';
+                    if (videoUrl && videoUrl.includes(`:${filmPort}`)) {
                       videoUrl = videoUrl.substring(videoUrl.indexOf('/movies'));
                     } else if (videoUrl && videoUrl.includes('localhost')) {
                       videoUrl = videoUrl.replace('localhost', currentHost).replace('127.0.0.1', currentHost);
                     }
-                    if (subUrl && subUrl.includes(':3636')) {
+                    if (subUrl && subUrl.includes(`:${filmPort}`)) {
                       subUrl = subUrl.substring(subUrl.indexOf('/movies'));
                     } else if (subUrl && subUrl.includes('localhost')) {
                       subUrl = subUrl.replace('localhost', currentHost).replace('127.0.0.1', currentHost);
