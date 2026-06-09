@@ -18,12 +18,12 @@ export const useWatchAlong = () => {
   const currentUserId = user?.id?.toString() || null;
 
   const handleKicked = useCallback(() => {
-    toast.error('Bạn đã bị kick khỏi phòng xem chung này.', {
+    toast.error(t('WatchAlong:kickedMessage', 'Bạn đã bị kick khỏi phòng xem chung này.'), {
       position: 'top-right',
       autoClose: 5000,
     });
     navigate('/');
-  }, [navigate]);
+  }, [navigate, t]);
 
   const handleRoomClosed = useCallback(() => {
     toast.error(t('WatchAlong:roomClosedMessage') || 'Phòng xem chung đã bị đóng bởi Host.', {

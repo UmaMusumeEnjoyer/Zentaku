@@ -537,14 +537,14 @@ const WatchAlongPage: React.FC = () => {
       {blocker.state === 'blocked' && (
         <div className={styles.modalOverlay}>
           <div className={styles.modalContent}>
-            <h3>Cảnh báo chuyển trang</h3>
-            <p>Bạn có chắc chắn muốn rời đi? Phòng xem chung này sẽ bị giải tán và toàn bộ người xem sẽ bị trở về trang chủ.</p>
+            <h3>{t('WatchAlong:leaveWarning.title', 'Cảnh báo chuyển trang')}</h3>
+            <p>{t('WatchAlong:leaveWarning.message', 'Bạn có chắc chắn muốn rời đi? Phòng xem chung này sẽ bị giải tán và toàn bộ người xem sẽ bị trở về trang chủ.')}</p>
             <div className={styles.modalActions}>
               <button 
                 className={styles.cancelBtn} 
                 onClick={() => blocker.reset && blocker.reset()}
               >
-                Hủy
+                {t('WatchAlong:leaveWarning.cancel', 'Hủy')}
               </button>
               <button 
                 className={styles.confirmBtn} 
@@ -553,7 +553,7 @@ const WatchAlongPage: React.FC = () => {
                   if (blocker.proceed) blocker.proceed();
                 }}
               >
-                Xác nhận rời đi
+                {t('WatchAlong:leaveWarning.confirm', 'Xác nhận rời đi')}
               </button>
             </div>
           </div>

@@ -4,6 +4,8 @@ import { initSharedLogic, useNotificationSocket } from '@umamusumeenjoyer/shared
 import type { NotificationItem } from '@umamusumeenjoyer/shared-logic';
 import './App.css';
 import './i18n/config'; // Import i18n configuration
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Header from './components/Header/Header';
 import HomePage from './pages/HomePage/HomePage';
@@ -188,6 +190,7 @@ function App() {
 
   return (
     <AuthProvider>
+      <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} />
       <AppContent />
     </AuthProvider>
   );

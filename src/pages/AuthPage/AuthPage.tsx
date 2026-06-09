@@ -2,7 +2,7 @@
 import React from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import styles from './AuthPage.module.css';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { useAuthPage } from '@umamusumeenjoyer/shared-logic';
@@ -56,7 +56,6 @@ const AuthPage: React.FC = () => {
 
   return (
     <div className={styles.authPageWrapper}>
-      <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} />
       
       <div className={`${styles.container} ${isActive ? styles.active : ''}`} id="container">
         
