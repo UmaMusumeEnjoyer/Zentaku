@@ -40,6 +40,16 @@ const ChatMessenger: React.FC = () => {
     }
   }, [activeRoom?.messages]);
 
+  useEffect(() => {
+    if (activeRoom) {
+      if (activeRoom.type === 'dm') {
+        setActiveTab('dm');
+      } else {
+        setActiveTab('community');
+      }
+    }
+  }, [activeRoom?.id, activeRoom?.type]);
+
   if (loading) return <ChatMessengerSkeleton />;
   if (error) return <div style={{ color: 'var(--text-primary)' }}>{error.message || t('ChatApp:errorLoadingData')}</div>;
 
