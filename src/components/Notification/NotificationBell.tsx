@@ -38,7 +38,7 @@ const NotificationBell: React.FC = () => {
 
     // Navigate based on type
     if (notification.type === NotificationType.MESSAGE && notification.metadata?.channelId) {
-      navigate(`/chat`);
+      navigate(`/chat?channelId=${notification.metadata.channelId}`);
     } else if (notification.type === NotificationType.ANIME_AIRING && notification.metadata?.animeId) {
       navigate(`/anime/${notification.metadata.animeId}`);
     } else if (notification.type === NotificationType.LIST_INTERACTION && notification.metadata?.listId) {
