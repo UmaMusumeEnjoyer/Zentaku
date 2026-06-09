@@ -19,6 +19,11 @@ export default defineConfig(({ mode }) => {
           secure: false,
           rewrite: (path) => path.replace(/^\/api/, '/api')
         },
+        '/movies': {
+          target: 'http://localhost:3636',
+          changeOrigin: true,
+          secure: false,
+        },
         '/uploads': {
           target: env.VITE_BACKEND_DOMAIN,
           changeOrigin: true,

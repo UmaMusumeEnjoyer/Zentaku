@@ -285,10 +285,14 @@ const WatchAlongPage: React.FC = () => {
                   const referer = data.referer || data.headers?.Referer || null;
                   
                   const currentHost = window.location.hostname;
-                  if (videoUrl && videoUrl.includes('localhost')) {
+                  if (videoUrl && videoUrl.includes(':3636')) {
+                    videoUrl = videoUrl.substring(videoUrl.indexOf('/movies'));
+                  } else if (videoUrl && videoUrl.includes('localhost')) {
                     videoUrl = videoUrl.replace('localhost', currentHost).replace('127.0.0.1', currentHost);
                   }
-                  if (subUrl && subUrl.includes('localhost')) {
+                  if (subUrl && subUrl.includes(':3636')) {
+                    subUrl = subUrl.substring(subUrl.indexOf('/movies'));
+                  } else if (subUrl && subUrl.includes('localhost')) {
                     subUrl = subUrl.replace('localhost', currentHost).replace('127.0.0.1', currentHost);
                   }
 
@@ -317,10 +321,14 @@ const WatchAlongPage: React.FC = () => {
                     const referer = data.referer || data.headers?.Referer || null;
                     
                     const currentHost = window.location.hostname;
-                    if (videoUrl && videoUrl.includes('localhost')) {
+                    if (videoUrl && videoUrl.includes(':3636')) {
+                      videoUrl = videoUrl.substring(videoUrl.indexOf('/movies'));
+                    } else if (videoUrl && videoUrl.includes('localhost')) {
                       videoUrl = videoUrl.replace('localhost', currentHost).replace('127.0.0.1', currentHost);
                     }
-                    if (subUrl && subUrl.includes('localhost')) {
+                    if (subUrl && subUrl.includes(':3636')) {
+                      subUrl = subUrl.substring(subUrl.indexOf('/movies'));
+                    } else if (subUrl && subUrl.includes('localhost')) {
                       subUrl = subUrl.replace('localhost', currentHost).replace('127.0.0.1', currentHost);
                     }
 
@@ -349,10 +357,14 @@ const WatchAlongPage: React.FC = () => {
                     const referer = data.referer || data.headers?.Referer || null;
                     
                     const currentHost = window.location.hostname;
-                    if (videoUrl && videoUrl.includes('localhost')) {
+                    if (videoUrl && videoUrl.includes(':3636')) {
+                      videoUrl = videoUrl.substring(videoUrl.indexOf('/movies'));
+                    } else if (videoUrl && videoUrl.includes('localhost')) {
                       videoUrl = videoUrl.replace('localhost', currentHost).replace('127.0.0.1', currentHost);
                     }
-                    if (subUrl && subUrl.includes('localhost')) {
+                    if (subUrl && subUrl.includes(':3636')) {
+                      subUrl = subUrl.substring(subUrl.indexOf('/movies'));
+                    } else if (subUrl && subUrl.includes('localhost')) {
                       subUrl = subUrl.replace('localhost', currentHost).replace('127.0.0.1', currentHost);
                     }
 
