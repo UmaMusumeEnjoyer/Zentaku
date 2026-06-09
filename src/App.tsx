@@ -27,6 +27,7 @@ import FloatingChat from './components/FloatingChat/FloatingChat';
 import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
 import NotificationToast from './components/Notification/NotificationToast';
 import AdminDashboard from './pages/AdminDashboard/AdminDashboard';
+import VerifyEmailPage from './pages/VerifyEmailPage/VerifyEmailPage';
 
 // Xác định API base URL dựa trên environment
 const isDevelopment = import.meta.env.DEV;
@@ -140,6 +141,7 @@ const AppContent = () => {
           <Route path="/manga/:id/read/:chapterId?" element={<MangaReader />} />
           <Route path="/novel/:id/read/:chapterId?" element={<LightNovelReader />} />
           <Route path="/chat" element={<ChatMessenger />} />
+          <Route path="/verify-email" element={<VerifyEmailPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </main>

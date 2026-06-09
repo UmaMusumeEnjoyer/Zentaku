@@ -13,13 +13,9 @@ import { useTranslation } from 'react-i18next';
 const AuthPage: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
   const { login } = useAuth();
-  
   const { t } = useTranslation(['Auth']);
-
   const initialPath = location.pathname === '/signup' ? 'signup' : 'login';
-  const verificationToken = searchParams.get('token');
 
   const loginCallback = async (email: string, password: string) => {
     return await login({ email, password });
@@ -55,8 +51,7 @@ const AuthPage: React.FC = () => {
       onNavigateToLogin: () => navigate('/login'),
       loginCallback,
     },
-    initialPath,
-    verificationToken
+    initialPath
   );
 
   return (

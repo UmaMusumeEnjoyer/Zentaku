@@ -1,0 +1,186 @@
+/* src/pages/VerifyEmailPage/VerifyEmailPage.module.css */
+
+.wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 60px); /* Assuming header height */
+  background-color: var(--bg-app);
+  font-family: 'Montserrat', sans-serif;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Glassmorphism Background Orbs */
+.wrapper::before,
+.wrapper::after {
+  content: '';
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  filter: blur(100px);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.wrapper::before {
+  background: var(--accent-color, #3b82f6);
+  top: 10%;
+  left: 20%;
+  opacity: 0.15;
+}
+
+.wrapper::after {
+  background: #8b5cf6;
+  bottom: 10%;
+  right: 20%;
+  opacity: 0.15;
+}
+
+.card {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 450px;
+  padding: 40px 30px;
+  background-color: var(--bg-panel);
+  /* Glassmorphism effect */
+  background: color-mix(in srgb, var(--bg-panel) 80%, transparent);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-subtle);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  color: var(--text-primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  animation: slideUp 0.5s ease-out;
+}
+
+.iconContainer {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-subtle);
+  font-size: 40px;
+  margin-bottom: 8px;
+  box-shadow: inset 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.iconLoading {
+  animation: spin 1.5s linear infinite;
+  color: #3b82f6; /* Brand color */
+}
+
+.iconSuccess {
+  color: #10b981; /* Green */
+  animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.iconError {
+  color: #ef4444; /* Red */
+  animation: shake 0.5s ease-in-out;
+}
+
+.title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.5px;
+}
+
+.message {
+  margin: 0;
+  font-size: 15px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.button {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  background-color: #3578E5; /* Brand color matching AuthPage */
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(53, 120, 229, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 10px;
+}
+
+.button:hover {
+  background-color: #2a62bc;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(53, 120, 229, 0.4);
+}
+
+.button:active {
+  transform: translateY(0);
+}
+
+.buttonSecondary {
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  box-shadow: none;
+}
+
+.buttonSecondary:hover {
+  background: var(--bg-subtle);
+  border-color: var(--text-secondary);
+  box-shadow: none;
+}
+
+/* Animations */
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes spin {
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes popIn {
+  0% { transform: scale(0.5); opacity: 0; }
+  80% { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  50% { transform: translateX(6px); }
+  75% { transform: translateX(-6px); }
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .card {
+    padding: 30px 20px;
+  }
+  
+  .iconContainer {
+    width: 64px;
+    height: 64px;
+    font-size: 32px;
+  }
+  
+  .title {
+    font-size: 20px;
+  }
+}
