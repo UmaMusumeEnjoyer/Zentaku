@@ -27,11 +27,27 @@ export const useWatchAlong = () => {
 
   // We need streamData for the VideoPlayer.
   // For now, we will construct it from room's currentSourceUrl.
-  const streamData = logic.room?.currentSourceUrl ? {
-    videoUrl: logic.room.currentSourceUrl,
-    subUrl: logic.room.settings?.subUrl || null,
-    referer: logic.room.settings?.referer || 'https://megacloud.blog/',
-    requiresProxy: !logic.room.currentSourceUrl.includes('localhost') && !logic.room.currentSourceUrl.includes('filmserver')
+  let processedVideoUrl = logic.room?.currentSourceUrl || '';
+  let processedSubUrl = logic.room?.settings?.subUrl || null;
+  
+  const currentHost = window.location.hostname;
+  if (processedVideoUrl && processedVideoUrl.includes(':3636')) {
+    processedVideoUrl = processedVideoUrl.substring(processedVideoUrl.indexOf('/movies'));
+  } else if (processedVideoUrl && processedVideoUrl.includes('localhost')) {
+    processedVideoUrl = processedVideoUrl.replace('localhost', currentHost).replace('127.0.0.1', currentHost);
+  }
+  
+  if (processedSubUrl && processedSubUrl.includes(':3636')) {
+    processedSubUrl = processedSubUrl.substring(processedSubUrl.indexOf('/movies'));
+  } else if (processedSubUrl && processedSubUrl.includes('localhost')) {
+    processedSubUrl = processedSubUrl.replace('localhost', currentHost).replace('127.0.0.1', currentHost);
+  }
+
+  const streamData = processedVideoUrl ? {
+    videoUrl: processedVideoUrl,
+    subUrl: processedSubUrl,
+    referer: logic.room?.settings?.referer || 'https://megacloud.blog/',
+    requiresProxy: !processedVideoUrl.includes('localhost') && !processedVideoUrl.includes('filmserver') && !processedVideoUrl.startsWith('/movies')
   } : null;
 
   return {
