@@ -27,27 +27,27 @@ export const useWatchAlong = () => {
 
   // We need streamData for the VideoPlayer.
   // For now, we will construct it from room's currentSourceUrl.
-  let processedVideoUrl = logic.room?.currentSourceUrl || '';
-  let processedSubUrl = logic.room?.settings?.subUrl || null;
-  
+  let videoUrl = logic.room?.currentSourceUrl || '';
+  let subUrl = logic.room?.settings?.subUrl || null;
+
   const currentHost = window.location.hostname;
-  if (processedVideoUrl && processedVideoUrl.includes(':3636')) {
-    processedVideoUrl = processedVideoUrl.substring(processedVideoUrl.indexOf('/movies'));
-  } else if (processedVideoUrl && processedVideoUrl.includes('localhost')) {
-    processedVideoUrl = processedVideoUrl.replace('localhost', currentHost).replace('127.0.0.1', currentHost);
+  if (videoUrl && videoUrl.includes(':3636')) {
+    videoUrl = videoUrl.substring(videoUrl.indexOf('/movies'));
+  } else if (videoUrl && videoUrl.includes('localhost')) {
+    videoUrl = videoUrl.replace('localhost', currentHost).replace('127.0.0.1', currentHost);
   }
   
-  if (processedSubUrl && processedSubUrl.includes(':3636')) {
-    processedSubUrl = processedSubUrl.substring(processedSubUrl.indexOf('/movies'));
-  } else if (processedSubUrl && processedSubUrl.includes('localhost')) {
-    processedSubUrl = processedSubUrl.replace('localhost', currentHost).replace('127.0.0.1', currentHost);
+  if (subUrl && subUrl.includes(':3636')) {
+    subUrl = subUrl.substring(subUrl.indexOf('/movies'));
+  } else if (subUrl && subUrl.includes('localhost')) {
+    subUrl = subUrl.replace('localhost', currentHost).replace('127.0.0.1', currentHost);
   }
 
-  const streamData = processedVideoUrl ? {
-    videoUrl: processedVideoUrl,
-    subUrl: processedSubUrl,
+  const streamData = videoUrl ? {
+    videoUrl,
+    subUrl,
     referer: logic.room?.settings?.referer || 'https://megacloud.blog/',
-    requiresProxy: !processedVideoUrl.includes('localhost') && !processedVideoUrl.includes('filmserver') && !processedVideoUrl.startsWith('/movies')
+    requiresProxy: !videoUrl.includes('localhost') && !videoUrl.includes('filmserver') && !videoUrl.startsWith('/movies')
   } : null;
 
   return {
