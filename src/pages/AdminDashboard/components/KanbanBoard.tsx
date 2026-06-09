@@ -3,6 +3,7 @@ import styles from './KanbanBoard.module.css';
 import type { SupportTicket } from '@umamusumeenjoyer/shared-logic';
 import { TicketStatus } from '@umamusumeenjoyer/shared-logic';
 import KanbanCard from './KanbanCard';
+import { useTranslation } from 'react-i18next';
 
 interface KanbanBoardProps {
   tickets: SupportTicket[];
@@ -10,13 +11,14 @@ interface KanbanBoardProps {
 }
 
 const COLUMNS = [
-  { id: TicketStatus.PENDING, title: 'Pending', className: styles.pending },
-  { id: TicketStatus.IN_PROGRESS, title: 'In Progress', className: styles.in_progress },
-  { id: TicketStatus.RESOLVED, title: 'Resolved', className: styles.resolved },
-  { id: TicketStatus.CLOSED, title: 'Closed', className: styles.closed },
+  { id: TicketStatus.PENDING, titleKey: 'statusPending', className: styles.pending },
+  { id: TicketStatus.IN_PROGRESS, titleKey: 'statusInProgress', className: styles.in_progress },
+  { id: TicketStatus.RESOLVED, titleKey: 'statusResolved', className: styles.resolved },
+  { id: TicketStatus.CLOSED, titleKey: 'statusClosed', className: styles.closed },
 ];
 
 const KanbanBoard: React.FC<KanbanBoardProps> = ({ tickets, onStatusChange }) => {
+  const { t } = useTranslation('AdminDashboard');
   const [dragOverColumn, setDragOverColumn] = useState<TicketStatus | null>(null);
 
   const handleDragStart = (e: React.DragEvent<HTMLDivElement>, id: string) => {
@@ -64,7 +66,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ tickets, onStatusChange }) =>
             <div className={styles.columnHeader}>
               <h3 className={styles.columnTitle}>
                 <span className={`${styles.statusDot} ${col.className}`}></span>
-                {col.title}
+                {t(col.titleKey)}
               </h3>
               <span className={styles.count}>{columnTickets.length}</span>
             </div>

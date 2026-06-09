@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styles from './AdminDashboard.module.css';
 import { apiClient } from '@umamusumeenjoyer/shared-logic';
 import TicketManagement from './TicketManagement';
+import { useTranslation } from 'react-i18next';
 
 interface SystemHealth {
   uptime: number;
@@ -26,6 +27,7 @@ interface SystemHealth {
 }
 
 const AdminDashboard: React.FC = () => {
+  const { t } = useTranslation('AdminDashboard');
   const [activeTab, setActiveTab] = useState<'health' | 'tickets'>('health');
   const [health, setHealth] = useState<SystemHealth | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -36,7 +38,7 @@ const AdminDashboard: React.FC = () => {
       setHealth(response.data);
       setError(null);
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to fetch system health');
+      setError(err.response?.data?.message ? t('error', { message: err.response.data.message }) : t('error', { message: 'Failed to fetch system health' }));
     }
   };
 
@@ -55,57 +57,57 @@ const AdminDashboard: React.FC = () => {
 
   return (
     <div className={styles.dashboardContainer}>
-      <h1 className={styles.title}>System Control Center</h1>
+      <h1 className={styles.title}>{t('systemControlCenter')}</h1>
       
       <div className={styles.tabsContainer}>
         <button 
           className={`${styles.tabButton} ${activeTab === 'health' ? styles.activeTab : ''}`}
           onClick={() => setActiveTab('health')}
         >
-          System Health
+          {t('systemHealth')}
         </button>
         <button 
           className={`${styles.tabButton} ${activeTab === 'tickets' ? styles.activeTab : ''}`}
           onClick={() => setActiveTab('tickets')}
         >
-          Support Tickets
+          {t('supportTickets')}
         </button>
       </div>
 
       {activeTab === 'health' && (
         <>
           {error ? (
-            <div className={styles.error}>Error: {error}</div>
+            <div className={styles.error}>{error}</div>
           ) : !health ? (
-            <div className={styles.loading}>Loading system health...</div>
+            <div className={styles.loading}>{t('loadingHealth')}</div>
           ) : (
             <div className={styles.metricsGrid}>
               <div className={styles.card}>
-                <div className={styles.cardTitle}>System Uptime</div>
+                <div className={styles.cardTitle}>{t('systemUptime')}</div>
                 <div className={styles.cardValue}>{formatUptime(health.uptime)}</div>
-                <div className={styles.cardSub}>Node.js Process</div>
+                <div className={styles.cardSub}>{t('nodeJsProcess')}</div>
               </div>
               <div className={styles.card}>
-                <div className={styles.cardTitle}>Database Status</div>
+                <div className={styles.cardTitle}>{t('databaseStatus')}</div>
                 <div className={`${styles.cardValue} ${health.db.status === 'up' ? styles.statusUp : styles.statusDown}`}>
                   {health.db.status.toUpperCase()}
                 </div>
-                <div className={styles.cardSub}>Ping: {health.db.pingMs}ms</div>
+                <div className={styles.cardSub}>{t('ping', { ms: health.db.pingMs })}</div>
               </div>
               <div className={styles.card}>
-                <div className={styles.cardTitle}>Anime Server</div>
+                <div className={styles.cardTitle}>{t('animeServer')}</div>
                 <div className={`${styles.cardValue} ${health.animeServer.status === 'up' ? styles.statusUp : styles.statusDown}`}>
                   {health.animeServer.status.toUpperCase()}
                 </div>
-                <div className={styles.cardSub}>Ping: {health.animeServer.pingMs}ms</div>
+                <div className={styles.cardSub}>{t('ping', { ms: health.animeServer.pingMs })}</div>
               </div>
               <div className={styles.card}>
-                <div className={styles.cardTitle}>CPU Load</div>
+                <div className={styles.cardTitle}>{t('cpuLoad')}</div>
                 <div className={styles.cardValue}>{health.cpu.loadAvg1m.toFixed(2)}%</div>
-                <div className={styles.cardSub}>{health.cpu.cores} Cores Available</div>
+                <div className={styles.cardSub}>{t('coresAvailable', { cores: health.cpu.cores })}</div>
               </div>
               <div className={styles.card}>
-                <div className={styles.cardTitle}>Memory Usage</div>
+                <div className={styles.cardTitle}>{t('memoryUsage')}</div>
                 <div className={styles.cardValue}>{health.memory.usagePercent}%</div>
                 <div className={styles.cardSub}>{health.memory.usedGb}GB / {health.memory.totalGb}GB</div>
               </div>

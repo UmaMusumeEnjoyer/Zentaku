@@ -5,10 +5,12 @@ import type { SupportTicket } from '@umamusumeenjoyer/shared-logic';
 import { toast } from 'react-toastify';
 import KanbanBoard from './components/KanbanBoard';
 import { FaTable, FaColumns } from 'react-icons/fa';
+import { useTranslation } from 'react-i18next';
 
 type ViewMode = 'table' | 'kanban';
 
 const TicketManagement: React.FC = () => {
+  const { t } = useTranslation('AdminDashboard');
   const [viewMode, setViewMode] = useState<ViewMode>('kanban');
   const [tickets, setTickets] = useState<SupportTicket[]>([]);
   const [loading, setLoading] = useState(true);
@@ -22,7 +24,7 @@ const TicketManagement: React.FC = () => {
         setTickets(res.data.data);
       }
     } catch (error) {
-      toast.error('Failed to load tickets');
+      toast.error(t('failedToLoad'));
     } finally {
       setLoading(false);
     }
@@ -35,31 +37,31 @@ const TicketManagement: React.FC = () => {
   const handleStatusChange = async (id: string, newStatus: TicketStatus) => {
     try {
       await supportService.updateTicketStatus(id, { status: newStatus });
-      toast.success('Ticket status updated');
+      toast.success(t('statusUpdated'));
       fetchTickets();
     } catch (error) {
-      toast.error('Failed to update status');
+      toast.error(t('failedToUpdate'));
     }
   };
 
   if (loading) {
-    return <div className={styles.loading}>Loading tickets...</div>;
+    return <div className={styles.loading}>{t('loadingTickets')}</div>;
   }
 
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h2>Support Tickets</h2>
+        <h2>{t('supportTickets')}</h2>
         <select 
           value={filterStatus} 
           onChange={(e) => setFilterStatus(e.target.value)}
           className={styles.filterSelect}
         >
-          <option value="">All Statuses</option>
-          <option value={TicketStatus.PENDING}>Pending</option>
-          <option value={TicketStatus.IN_PROGRESS}>In Progress</option>
-          <option value={TicketStatus.RESOLVED}>Resolved</option>
-          <option value={TicketStatus.CLOSED}>Closed</option>
+          <option value="">{t('allStatuses')}</option>
+          <option value={TicketStatus.PENDING}>{t('statusPending')}</option>
+          <option value={TicketStatus.IN_PROGRESS}>{t('statusInProgress')}</option>
+          <option value={TicketStatus.RESOLVED}>{t('statusResolved')}</option>
+          <option value={TicketStatus.CLOSED}>{t('statusClosed')}</option>
         </select>
       </div>
 
@@ -68,14 +70,14 @@ const TicketManagement: React.FC = () => {
           <button 
             className={`${styles.toggleBtn} ${viewMode === 'table' ? styles.active : ''}`}
             onClick={() => setViewMode('table')}
-            title="Table View"
+            title={t('tableView')}
           >
             <FaTable />
           </button>
           <button 
             className={`${styles.toggleBtn} ${viewMode === 'kanban' ? styles.active : ''}`}
             onClick={() => setViewMode('kanban')}
-            title="Kanban View"
+            title={t('kanbanView')}
           >
             <FaColumns />
           </button>
@@ -87,31 +89,35 @@ const TicketManagement: React.FC = () => {
         <table className={styles.table}>
           <thead>
             <tr>
-              <th>ID</th>
-              <th>User</th>
-              <th>Category</th>
-              <th>Title</th>
-              <th>Description</th>
-              <th>Status</th>
-              <th>Actions</th>
+              <th>{t('tableId')}</th>
+              <th>{t('tableUser')}</th>
+              <th>{t('tableCategory')}</th>
+              <th>{t('tableTitle')}</th>
+              <th>{t('tableDescription')}</th>
+              <th>{t('tableStatus')}</th>
+              <th>{t('tableActions')}</th>
             </tr>
           </thead>
           <tbody>
             {tickets.length === 0 ? (
               <tr>
-                <td colSpan={7} className={styles.empty}>No tickets found</td>
+                <td colSpan={7} className={styles.empty}>{t('noTicketsFound')}</td>
               </tr>
             ) : (
               tickets.map((ticket) => (
                 <tr key={ticket.id}>
                   <td>#{ticket.id.toString().padStart(4, '0')}</td>
-                  <td>{ticket.user?.username || 'Unknown'}</td>
+                  <td>{ticket.user?.username || t('unknownUser')}</td>
                   <td><span className={styles.badge}>{ticket.category}</span></td>
                   <td>{ticket.title}</td>
                   <td className={styles.description}>{ticket.description}</td>
                   <td>
                     <span className={`${styles.badge} ${styles['status-' + ticket.status]}`}>
-                      {ticket.status}
+                      {t(
+                        ticket.status === TicketStatus.PENDING ? 'statusPending' :
+                        ticket.status === TicketStatus.IN_PROGRESS ? 'statusInProgress' :
+                        ticket.status === TicketStatus.RESOLVED ? 'statusResolved' : 'statusClosed'
+                      )}
                     </span>
                   </td>
                   <td>
@@ -120,10 +126,10 @@ const TicketManagement: React.FC = () => {
                       onChange={(e) => handleStatusChange(ticket.id, e.target.value as TicketStatus)}
                       className={styles.actionSelect}
                     >
-                      <option value={TicketStatus.PENDING}>Pending</option>
-                      <option value={TicketStatus.IN_PROGRESS}>In Progress</option>
-                      <option value={TicketStatus.RESOLVED}>Resolve</option>
-                      <option value={TicketStatus.CLOSED}>Close</option>
+                      <option value={TicketStatus.PENDING}>{t('statusPending')}</option>
+                      <option value={TicketStatus.IN_PROGRESS}>{t('statusInProgress')}</option>
+                      <option value={TicketStatus.RESOLVED}>{t('actionResolve')}</option>
+                      <option value={TicketStatus.CLOSED}>{t('actionClose')}</option>
                     </select>
                   </td>
                 </tr>

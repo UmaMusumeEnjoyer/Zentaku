@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styles from './KanbanCard.module.css';
 import type { SupportTicket } from '@umamusumeenjoyer/shared-logic';
 import { FaUserCircle } from 'react-icons/fa';
+import { useTranslation } from 'react-i18next';
 
 interface KanbanCardProps {
   ticket: SupportTicket;
@@ -9,6 +10,7 @@ interface KanbanCardProps {
 }
 
 const KanbanCard: React.FC<KanbanCardProps> = ({ ticket, onDragStart }) => {
+  const { t } = useTranslation('AdminDashboard');
   const [isDragging, setIsDragging] = useState(false);
 
   const handleDragStart = (e: React.DragEvent<HTMLDivElement>) => {
@@ -38,7 +40,7 @@ const KanbanCard: React.FC<KanbanCardProps> = ({ ticket, onDragStart }) => {
       <div className={styles.footer}>
         <div className={styles.user}>
           <FaUserCircle className={styles.userIcon} />
-          <span>{ticket.user?.username || 'Unknown'}</span>
+          <span>{ticket.user?.username || t('unknownUser')}</span>
         </div>
       </div>
     </div>
