@@ -3,6 +3,7 @@ import { useWatchAlong } from './useWatchAlong';
 import { useBlocker } from 'react-router-dom';
 import styles from './WatchAlong.module.css';
 import WatchAlongSkeleton from './WatchAlongSkeleton';
+import InviteModal from './InviteModal';
 import { VideoPlayer } from '../AnimeWatchPage/components/VideoPlayer';
 import { animeService, streamingService, useSummarySection } from '@umamusumeenjoyer/shared-logic';
 import EditorModal from '../../components/AnimeModal/EditorModal';
@@ -55,6 +56,7 @@ const WatchAlongPage: React.FC = () => {
   const [showRightSidebar, setShowRightSidebar] = useState(true);
   const [mobileTab, setMobileTab] = useState<'chat' | 'members' | 'none'>('none');
   const [isOverlayChatOpen, setIsOverlayChatOpen] = useState(false);
+  const [showInviteModal, setShowInviteModal] = useState(false);
 
   const displayStreamData = originalStreamData;
 
@@ -267,6 +269,34 @@ const WatchAlongPage: React.FC = () => {
                     <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', textAlign: 'center', marginTop: '20px' }}>
                       {t('WatchAlong:waitingForOthers')}
                     </div>
+                  )}
+
+                  {/* Invite Button - Host only */}
+                  {isHost && (
+                    <button
+                      onClick={() => setShowInviteModal(true)}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '8px',
+                        width: '100%',
+                        marginTop: '16px',
+                        padding: '10px 16px',
+                        background: 'linear-gradient(135deg, #a78bfa, #7c3aed)',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '10px',
+                        fontSize: '13px',
+                        fontWeight: 500,
+                        cursor: 'pointer',
+                        transition: 'all 0.2s ease',
+                      }}
+                      className={styles.inviteButton}
+                    >
+                      <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>group_add</span>
+                      {t('WatchAlong:inviteFriends', 'Mời bạn bè')}
+                    </button>
                   )}
                 </div>
               );
@@ -546,6 +576,15 @@ const WatchAlongPage: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* Invite Modal */}
+      <InviteModal
+        isOpen={showInviteModal}
+        onClose={() => setShowInviteModal(false)}
+        currentUserId={currentUserId!}
+        roomParticipantIds={room?.participants?.map(p => p.userId) || []}
+        onInvite={actions.inviteFriend}
+      />
     </div>
   );
 };

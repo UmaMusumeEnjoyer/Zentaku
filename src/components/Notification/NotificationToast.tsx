@@ -90,6 +90,8 @@ const NotificationToast: React.FC = () => {
         return 'live_tv';
       case NotificationType.LIST_INTERACTION:
         return 'list_alt';
+      case NotificationType.WATCH_PARTY_INVITE:
+        return 'groups';
       default:
         return 'notifications';
     }
@@ -159,6 +161,16 @@ const NotificationToast: React.FC = () => {
                   }}>
                     {String(toast.notification.metadata?.listName || 'L').charAt(0).toUpperCase()}
                   </div>
+                );
+              }
+
+              if (toast.notification.type === NotificationType.WATCH_PARTY_INVITE && toast.notification.metadata?.hostAvatar) {
+                return (
+                  <img 
+                    src={toast.notification.metadata.hostAvatar as string} 
+                    alt="host avatar" 
+                    style={{ width: '40px', height: '40px', objectFit: 'cover', borderRadius: '50%' }} 
+                  />
                 );
               }
 

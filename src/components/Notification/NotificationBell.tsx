@@ -45,6 +45,8 @@ const NotificationBell: React.FC = () => {
       navigate(`/list/${notification.metadata.listId}`);
     } else if (notification.type === NotificationType.NEW_FOLLOWER && notification.metadata?.followerUsername) {
       navigate(`/user/${notification.metadata.followerUsername}`);
+    } else if (notification.type === NotificationType.WATCH_PARTY_INVITE && notification.metadata?.chatChannelId) {
+      navigate(`/chat?channelId=${notification.metadata.chatChannelId}`);
     }
 
     setIsOpen(false);
@@ -60,6 +62,8 @@ const NotificationBell: React.FC = () => {
         return 'list_alt';
       case NotificationType.NEW_FOLLOWER:
         return 'person_add';
+      case NotificationType.WATCH_PARTY_INVITE:
+        return 'groups';
       default:
         return 'notifications';
     }
@@ -207,6 +211,16 @@ const NotificationBell: React.FC = () => {
                           <img 
                             src={notification.metadata.followerAvatar as string} 
                             alt="follower avatar" 
+                            style={{ width: '40px', height: '40px', objectFit: 'cover', borderRadius: '50%' }} 
+                          />
+                        );
+                      }
+
+                      if (notification.type === NotificationType.WATCH_PARTY_INVITE && notification.metadata?.hostAvatar) {
+                        return (
+                          <img 
+                            src={notification.metadata.hostAvatar as string} 
+                            alt="host avatar" 
                             style={{ width: '40px', height: '40px', objectFit: 'cover', borderRadius: '50%' }} 
                           />
                         );
