@@ -264,7 +264,7 @@ const ProfilePage: React.FC = () => {
                   <div className={styles.customListsContainer} style={{ marginTop: '40px' }}>
                     <div className={styles.sectionHeader}>
                       <h2 className={styles.sectionTitle}>
-                        {t('anime_list.joined_lists') || 'Joined Lists'}
+                        {t('anime_list.joined_lists')}
                       </h2>
                     </div>
 
@@ -286,12 +286,12 @@ const ProfilePage: React.FC = () => {
                               </h3>
                               <p className={styles.listDesc} style={list.bannerImage && !list.bannerImage.startsWith('#') ? { color: 'rgba(255,255,255,0.8)' } : {}}>{list.description}</p>
                               <div className={styles.listMeta} style={list.bannerImage && !list.bannerImage.startsWith('#') ? { color: 'rgba(255,255,255,0.9)' } : {}}>
-                                By {list.owner?.username || 'Unknown'}
+                                By {list.ownerUsername || list.owner?.username || 'Unknown'}
                               </div>
                             </div>
                           );
                         })}
-                        {joinedLists.length === 0 && <div className={styles.emptyText}>{t('anime_list.empty.no_joined_lists') || 'No joined lists found'}</div>}
+                        {joinedLists.length === 0 && <div className={styles.emptyText}>{t('anime_list.empty.no_joined_lists')}</div>}
                       </div>
                     )}
                   </div>
