@@ -71,7 +71,7 @@ export const useChatMessenger = (): UseChatMessengerReturn => {
                 ? comm.name.replace(/^Chat:\s*/, '') 
                 : (ch.name || `Channel ${ch.id}`),
               description: ch.description || '',
-              avatar: comm.icon || 'https://i.pravatar.cc/150',
+              avatar: comm.icon || '',
               members: [], 
               messages: [],
               communityId: String(comm.id),

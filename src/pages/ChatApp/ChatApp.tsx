@@ -104,7 +104,12 @@ const ChatMessenger: React.FC = () => {
           </div>
         </div>
         <div className={styles.chatList}>
-          {currentList?.map(room => (
+          {currentList?.map(room => {
+            const avatar = room.avatar;
+            const isColor = avatar && avatar.startsWith('#');
+            const imgSrc = avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(room.name)}&background=random`;
+            
+            return (
             <div 
               key={room.id} 
               className={`${styles.chatItem} ${activeRoom?.id === room.id ? styles.chatItemActive : ''}`}
@@ -114,7 +119,31 @@ const ChatMessenger: React.FC = () => {
               }}
             >
               <div className={styles.avatarContainer}>
-                <img src={room.avatar || 'https://i.pravatar.cc/150'} alt="avatar" className={styles.avatar} />
+                {isColor ? (
+                  <div 
+                    className={styles.avatar} 
+                    style={{ 
+                      backgroundColor: avatar, 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      justifyContent: 'center', 
+                      color: 'white', 
+                      fontWeight: 'bold', 
+                      fontSize: '20px' 
+                    }}
+                  >
+                    {room.name.charAt(0).toUpperCase()}
+                  </div>
+                ) : (
+                  <img 
+                    src={imgSrc} 
+                    alt="avatar" 
+                    className={styles.avatar} 
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(room.name)}&background=random`;
+                    }}
+                  />
+                )}
                 <span className={`${styles.statusIndicator} ${styles.statusOnline}`}></span>
               </div>
               <div className={styles.chatItemInfo}>
@@ -122,7 +151,7 @@ const ChatMessenger: React.FC = () => {
                 <p className={styles.chatItemLastMsg}>{room.messages[room.messages.length - 1]?.content || t('ChatApp:noMessagesYet')}</p>
               </div>
             </div>
-          ))}
+          )})}
           {currentList?.length === 0 && (
             <div style={{ padding: '20px', textAlign: 'center', color: 'var(--text-secondary)' }}>
               {t('ChatApp:noConversations')}
