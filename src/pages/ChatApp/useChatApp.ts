@@ -39,8 +39,8 @@ export const useChatMessenger = (): UseChatMessengerReturn => {
   
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const initialChannelId = queryParams.get('channelId');
-
+  const rawChannelId = queryParams.get('channelId');
+  const initialChannelId = (rawChannelId && rawChannelId !== 'undefined' && rawChannelId !== 'null') ? rawChannelId : null;
   // Rate Limiting for Send Message (5 msgs/sec)
   const messageTimestamps = useRef<number[]>([]);
 
@@ -60,24 +60,28 @@ export const useChatMessenger = (): UseChatMessengerReturn => {
         const allChannels: ChatRoom[] = [];
         
         for (const comm of communities) {
-          const chanRes = await chatService.getCommunityChannels(comm.id);
-          const channels = Array.isArray(chanRes.data) ? chanRes.data : chanRes.data?.data || [];
-          
-          channels.forEach((ch: any) => {
-            allChannels.push({
-              id: String(ch.id),
-              type: ch.type || 'server',
-              name: (comm.name && ch.name === 'general') 
-                ? comm.name.replace(/^Chat:\s*/, '') 
-                : (ch.name || `Channel ${ch.id}`),
-              description: ch.description || '',
-              avatar: comm.icon || '',
-              members: [], 
-              messages: [],
-              communityId: String(comm.id),
-              roles: {},
+          try {
+            const chanRes = await chatService.getCommunityChannels(comm.id);
+            const channels = Array.isArray(chanRes.data) ? chanRes.data : chanRes.data?.data || [];
+            
+            channels.forEach((ch: any) => {
+              allChannels.push({
+                id: String(ch.id),
+                type: ch.type || 'server',
+                name: (comm.name && ch.name === 'general') 
+                  ? comm.name.replace(/^Chat:\s*/, '') 
+                  : (ch.name || `Channel ${ch.id}`),
+                description: ch.description || '',
+                avatar: comm.icon || '',
+                members: [], 
+                messages: [],
+                communityId: String(comm.id),
+                roles: {},
+              });
             });
-          });
+          } catch (err: any) {
+            console.warn(`Bỏ qua community ${comm.id} do lỗi phân quyền hoặc không thể truy cập:`, err);
+          }
         }
         setChatRooms(allChannels);
 

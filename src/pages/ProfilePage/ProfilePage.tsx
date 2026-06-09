@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './ProfilePage.module.css';
-import { useProfilePage, type UserProfile } from '@umamusumeenjoyer/shared-logic';
+import { useProfilePage, type UserProfile, chatService } from '@umamusumeenjoyer/shared-logic';
 import { useTheme } from '../../context/ThemeContext';
 import { useTranslation } from 'react-i18next';
 import { useAuth as useAuthContext } from '../../context/AuthContext';
@@ -64,11 +64,15 @@ const ProfilePage: React.FC = () => {
   const handleMessage = async () => {
     try {
       if (!userProfile?.id) return;
-      // Make sure you import chatService if not already imported
-      const { chatService } = await import('@umamusumeenjoyer/shared-logic');
       const res = await chatService.createOrGetPrivateChannel(userProfile.id);
       const data = res.data?.data || res.data;
-      navigate(`/chat?channelId=${data.id}`);
+      const targetId = data?.id || data?.channelId;
+      
+      if (targetId) {
+        navigate(`/chat?channelId=${targetId}`);
+      } else {
+        console.error('Failed to find channel ID in response:', res);
+      }
     } catch (err) {
       console.error('Failed to create/get DM', err);
     }
