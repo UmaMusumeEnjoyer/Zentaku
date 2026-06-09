@@ -37,7 +37,10 @@ const ProfilePage: React.FC = () => {
     getDisplayName, getAvatarUrl, formatDateJoined,
     activeTab, handleTabChange,
     totalContributions, setTotalContributions, selectedDate, handleDateSelect,
-    customLists, listsLoading, likedLists, likedListsLoading, handleListClick,
+    customLists, listsLoading, 
+    likedLists, likedListsLoading, 
+    joinedLists, joinedListsLoading,
+    handleListClick,
     favoriteList, favLoading,
     showEditModal, setShowEditModal, handleUpdateSuccess,
     showCreateModal, setShowCreateModal, newListData, creating,
@@ -235,21 +238,66 @@ const ProfilePage: React.FC = () => {
                     <AnimeListsSkeleton />
                   ) : (
                     <div className={styles.customListGrid}>
-                      {customLists.map(list => (
-                        <div key={list.list_id} className={styles.customListCard} onClick={() => handleListClick(list)}>
-                          <h3 className={styles.listName}>
-                            {list.list_name}
-                            {list.is_private && <PrivateBadge />}
-                          </h3>
-                          <p className={styles.listDesc}>{list.description}</p>
-                        </div>
-                      ))}
+                      {customLists.map(list => {
+                        const bgStyle = list.bannerImage && list.bannerImage.startsWith('#')
+                          ? { backgroundColor: list.bannerImage }
+                          : list.bannerImage
+                            ? { backgroundImage: `linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0.2)), url(${getAvatarUrl(list.bannerImage)})`, backgroundSize: 'cover', backgroundPosition: 'center', color: '#fff' }
+                            : {};
+                        return (
+                          <div key={list.list_id} className={styles.customListCard} style={bgStyle} onClick={() => handleListClick(list)}>
+                            <h3 className={styles.listName} style={list.bannerImage && !list.bannerImage.startsWith('#') ? { color: '#fff' } : {}}>
+                              {list.list_name}
+                              {list.is_private && <PrivateBadge />}
+                            </h3>
+                            <p className={styles.listDesc} style={list.bannerImage && !list.bannerImage.startsWith('#') ? { color: 'rgba(255,255,255,0.8)' } : {}}>{list.description}</p>
+                          </div>
+                        );
+                      })}
                       {customLists.length === 0 && <div className={styles.emptyText}>{t('anime_list.empty.no_lists')}</div>}
                     </div>
                   )}
                 </div>
 
-                {/* 2. Liked Lists */}
+                {/* 2. Joined Lists */}
+                {(isOwnProfile || userProfile?.is_own_profile) && (
+                  <div className={styles.customListsContainer} style={{ marginTop: '40px' }}>
+                    <div className={styles.sectionHeader}>
+                      <h2 className={styles.sectionTitle}>
+                        {t('anime_list.joined_lists') || 'Joined Lists'}
+                      </h2>
+                    </div>
+
+                    {joinedListsLoading ? (
+                      <AnimeListsSkeleton />
+                    ) : (
+                      <div className={styles.customListGrid}>
+                        {joinedLists.map(list => {
+                          const bgStyle = list.bannerImage && list.bannerImage.startsWith('#')
+                            ? { backgroundColor: list.bannerImage }
+                            : list.bannerImage
+                              ? { backgroundImage: `linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0.2)), url(${getAvatarUrl(list.bannerImage)})`, backgroundSize: 'cover', backgroundPosition: 'center', color: '#fff' }
+                              : {};
+                          return (
+                            <div key={list.list_id} className={styles.customListCard} style={bgStyle} onClick={() => handleListClick(list)}>
+                              <h3 className={styles.listName} style={list.bannerImage && !list.bannerImage.startsWith('#') ? { color: '#fff' } : {}}>
+                                {list.list_name}
+                                {list.is_private && <PrivateBadge />}
+                              </h3>
+                              <p className={styles.listDesc} style={list.bannerImage && !list.bannerImage.startsWith('#') ? { color: 'rgba(255,255,255,0.8)' } : {}}>{list.description}</p>
+                              <div className={styles.listMeta} style={list.bannerImage && !list.bannerImage.startsWith('#') ? { color: 'rgba(255,255,255,0.9)' } : {}}>
+                                By {list.owner?.username || 'Unknown'}
+                              </div>
+                            </div>
+                          );
+                        })}
+                        {joinedLists.length === 0 && <div className={styles.emptyText}>{t('anime_list.empty.no_joined_lists') || 'No joined lists found'}</div>}
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* 3. Liked Lists */}
                 {(isOwnProfile || userProfile?.is_own_profile) && (
                   <div className={styles.customListsContainer} style={{ marginTop: '40px' }}>
                     <div className={styles.sectionHeader}>
@@ -263,18 +311,25 @@ const ProfilePage: React.FC = () => {
                       <AnimeListsSkeleton />
                     ) : (
                       <div className={styles.customListGrid}>
-                        {likedLists.map(list => (
-                          <div key={list.list_id} className={styles.customListCard} onClick={() => handleListClick(list)}>
-                            <h3 className={styles.listName}>
-                              {list.list_name}
-                              {list.is_private && <PrivateBadge />}
-                            </h3>
-                            <p className={styles.listDesc}>{list.description}</p>
-                            <div className={styles.listMeta}>
-                              {t('anime_list.likes_count', { count: list.like_count })}
+                        {likedLists.map(list => {
+                          const bgStyle = list.bannerImage && list.bannerImage.startsWith('#')
+                            ? { backgroundColor: list.bannerImage }
+                            : list.bannerImage
+                              ? { backgroundImage: `linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0.2)), url(${getAvatarUrl(list.bannerImage)})`, backgroundSize: 'cover', backgroundPosition: 'center', color: '#fff' }
+                              : {};
+                          return (
+                            <div key={list.list_id} className={styles.customListCard} style={bgStyle} onClick={() => handleListClick(list)}>
+                              <h3 className={styles.listName} style={list.bannerImage && !list.bannerImage.startsWith('#') ? { color: '#fff' } : {}}>
+                                {list.list_name}
+                                {list.is_private && <PrivateBadge />}
+                              </h3>
+                              <p className={styles.listDesc} style={list.bannerImage && !list.bannerImage.startsWith('#') ? { color: 'rgba(255,255,255,0.8)' } : {}}>{list.description}</p>
+                              <div className={styles.listMeta} style={list.bannerImage && !list.bannerImage.startsWith('#') ? { color: 'rgba(255,255,255,0.9)' } : {}}>
+                                {t('anime_list.likes_count', { count: list.like_count })}
+                              </div>
                             </div>
-                          </div>
-                        ))}
+                          );
+                        })}
                         {likedLists.length === 0 && <div className={styles.emptyText}>{t('anime_list.empty.no_liked_lists')}</div>}
                       </div>
                     )}
