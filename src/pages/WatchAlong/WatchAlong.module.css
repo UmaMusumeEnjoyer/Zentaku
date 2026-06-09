@@ -228,6 +228,28 @@
   margin: 0 auto;
 }
 
+.inviteButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  margin-top: 16px;
+  padding: 10px 16px;
+  background-color: #4f46e5;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.inviteButton:hover {
+  background-color: #4338ca;
+}
+
 /* Main Video Area */
 .mainArea {
   flex: 1;

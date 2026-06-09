@@ -108,8 +108,7 @@ const InviteModal: React.FC<InviteModalProps> = ({
         {/* Header */}
         <div className={styles.header}>
           <h3>
-            <span className={`material-symbols-outlined ${styles.headerIcon}`}>group_add</span>
-            {t('inviteModal.title', 'Mời bạn bè xem cùng')}
+            {t('inviteModal.title', 'Invite Friends')}
           </h3>
           <button className={styles.closeBtn} onClick={onClose}>
             <span className="material-symbols-outlined">close</span>
@@ -123,7 +122,7 @@ const InviteModal: React.FC<InviteModalProps> = ({
             <input
               className={styles.searchInput}
               type="text"
-              placeholder={t('inviteModal.searchPlaceholder', 'Tìm kiếm bạn bè...')}
+              placeholder={t('inviteModal.searchPlaceholder', 'Search friends...')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               autoFocus
@@ -142,8 +141,8 @@ const InviteModal: React.FC<InviteModalProps> = ({
               <span className="material-symbols-outlined">person_search</span>
               <p>
                 {searchQuery
-                  ? t('inviteModal.noResults', 'Không tìm thấy người dùng')
-                  : t('inviteModal.noFollowing', 'Bạn chưa follow ai')}
+                  ? t('inviteModal.noResults', 'No users found')
+                  : t('inviteModal.noFollowing', 'You are not following anyone')}
               </p>
             </div>
           ) : (
@@ -170,11 +169,11 @@ const InviteModal: React.FC<InviteModalProps> = ({
                   </div>
                   {isInRoom ? (
                     <span className={styles.inRoomLabel}>
-                      {t('inviteModal.inRoom', 'Đang trong phòng')}
+                      {t('inviteModal.inRoom', 'In Room')}
                     </span>
                   ) : isInvited ? (
                     <button className={styles.inviteBtn} disabled>
-                      {t('inviteModal.invited', 'Đã mời')}
+                      {t('inviteModal.invited', 'Invited')}
                     </button>
                   ) : (
                     <button
@@ -183,8 +182,8 @@ const InviteModal: React.FC<InviteModalProps> = ({
                       disabled={isInviting}
                     >
                       {isInviting
-                        ? t('inviteModal.inviting', 'Đang mời...')
-                        : t('inviteModal.invite', 'Mời')}
+                        ? t('inviteModal.inviting', 'Inviting...')
+                        : t('inviteModal.invite', 'Invite')}
                     </button>
                   )}
                 </div>

@@ -275,23 +275,6 @@ const WatchAlongPage: React.FC = () => {
                   {isHost && (
                     <button
                       onClick={() => setShowInviteModal(true)}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: '8px',
-                        width: '100%',
-                        marginTop: '16px',
-                        padding: '10px 16px',
-                        background: 'linear-gradient(135deg, #a78bfa, #7c3aed)',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '10px',
-                        fontSize: '13px',
-                        fontWeight: 500,
-                        cursor: 'pointer',
-                        transition: 'all 0.2s ease',
-                      }}
                       className={styles.inviteButton}
                     >
                       <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>group_add</span>
