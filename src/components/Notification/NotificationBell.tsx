@@ -105,9 +105,7 @@ const NotificationBell: React.FC = () => {
       >
         <span className="material-symbols-outlined">notifications</span>
         {displayUnreadCount > 0 && (
-          <span className={styles.badge}>
-            {displayUnreadCount > 99 ? '99+' : displayUnreadCount}
-          </span>
+          <span className={styles.badge} />
         )}
       </button>
 
