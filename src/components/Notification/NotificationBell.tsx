@@ -43,6 +43,8 @@ const NotificationBell: React.FC = () => {
       navigate(`/anime/${notification.metadata.animeId}`);
     } else if (notification.type === NotificationType.LIST_INTERACTION && notification.metadata?.listId) {
       navigate(`/list/${notification.metadata.listId}`);
+    } else if (notification.type === NotificationType.NEW_FOLLOWER && notification.metadata?.followerUsername) {
+      navigate(`/user/${notification.metadata.followerUsername}`);
     }
 
     setIsOpen(false);
@@ -56,6 +58,8 @@ const NotificationBell: React.FC = () => {
         return 'live_tv';
       case NotificationType.LIST_INTERACTION:
         return 'list_alt';
+      case NotificationType.NEW_FOLLOWER:
+        return 'person_add';
       default:
         return 'notifications';
     }
@@ -198,6 +202,16 @@ const NotificationBell: React.FC = () => {
                         );
                       }
 
+                      if (notification.type === NotificationType.NEW_FOLLOWER && notification.metadata?.followerAvatar) {
+                        return (
+                          <img 
+                            src={notification.metadata.followerAvatar as string} 
+                            alt="follower avatar" 
+                            style={{ width: '40px', height: '40px', objectFit: 'cover', borderRadius: '50%' }} 
+                          />
+                        );
+                      }
+
                       return (
                         <span className="material-symbols-outlined">
                           {getNotificationIcon(notification.type)}
@@ -206,9 +220,17 @@ const NotificationBell: React.FC = () => {
                     })()}
                   </div>
                   <div className={styles.notificationContent}>
-                    <p className={styles.notificationTitle}>{notification.title}</p>
-                    {notification.body && (
-                      <p className={styles.notificationBody}>{notification.body}</p>
+                    <p className={styles.notificationTitle}>
+                      {notification.type === NotificationType.NEW_FOLLOWER 
+                        ? t('newFollowerTitle') 
+                        : notification.title}
+                    </p>
+                    {(notification.body || notification.type === NotificationType.NEW_FOLLOWER) && (
+                      <p className={styles.notificationBody}>
+                        {notification.type === NotificationType.NEW_FOLLOWER 
+                          ? t('newFollowerBody', { name: notification.metadata?.followerName || notification.metadata?.followerUsername })
+                          : notification.body}
+                      </p>
                     )}
                     <span className={styles.notificationTime}>
                       {getTimeAgo(notification.createdAt)}
