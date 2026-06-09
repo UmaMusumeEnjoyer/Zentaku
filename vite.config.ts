@@ -28,6 +28,11 @@ export default defineConfig(({ mode }) => {
           target: env.VITE_BACKEND_DOMAIN,
           changeOrigin: true,
           secure: false,
+        },
+        '/socket.io': {
+          target: env.VITE_BACKEND_DOMAIN || 'http://localhost:3500',
+          ws: true,
+          changeOrigin: true,
         }
       }
     },
