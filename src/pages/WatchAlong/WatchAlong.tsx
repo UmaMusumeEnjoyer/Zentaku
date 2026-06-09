@@ -280,9 +280,18 @@ const WatchAlongPage: React.FC = () => {
                   const res = await streamingService.getEpisodeSources(room?.settings?.anilistId, episode.number);
                   const data = res.data;
                   const innerData = data.data;
-                  const videoUrl = innerData?.streamLinks?.[0] || data.video || (data.sources && data.sources[0]?.url) || '';
-                  const subUrl = innerData?.subtitles?.find((s: { lang?: string; url: string }) => s.lang === 'en' || s.lang?.toLowerCase() === 'english')?.url || data.sub || null;
+                  let videoUrl = innerData?.streamLinks?.[0] || data.video || (data.sources && data.sources[0]?.url) || '';
+                  let subUrl = innerData?.subtitles?.find((s: { lang?: string; url: string }) => s.lang === 'en' || s.lang?.toLowerCase() === 'english')?.url || data.sub || null;
                   const referer = data.referer || data.headers?.Referer || null;
+                  
+                  const currentHost = window.location.hostname;
+                  if (videoUrl && videoUrl.includes('localhost')) {
+                    videoUrl = videoUrl.replace('localhost', currentHost).replace('127.0.0.1', currentHost);
+                  }
+                  if (subUrl && subUrl.includes('localhost')) {
+                    subUrl = subUrl.replace('localhost', currentHost).replace('127.0.0.1', currentHost);
+                  }
+
                   if (videoUrl) {
                     actions.changeEpisode(videoUrl, episode.number, subUrl, referer);
                   }
@@ -303,9 +312,18 @@ const WatchAlongPage: React.FC = () => {
                   try {
                     const res = await streamingService.getEpisodeSources(room?.settings?.anilistId, nextEp.number);
                     const data = res.data;
-                    const videoUrl = data.data?.streamLinks?.[0] || data.video || (data.sources && data.sources[0]?.url) || '';
-                    const subUrl = data.data?.subtitles?.find((s: { lang?: string; url: string }) => s.lang === 'en' || s.lang?.toLowerCase() === 'english')?.url || data.sub || null;
+                    let videoUrl = data.data?.streamLinks?.[0] || data.video || (data.sources && data.sources[0]?.url) || '';
+                    let subUrl = data.data?.subtitles?.find((s: { lang?: string; url: string }) => s.lang === 'en' || s.lang?.toLowerCase() === 'english')?.url || data.sub || null;
                     const referer = data.referer || data.headers?.Referer || null;
+                    
+                    const currentHost = window.location.hostname;
+                    if (videoUrl && videoUrl.includes('localhost')) {
+                      videoUrl = videoUrl.replace('localhost', currentHost).replace('127.0.0.1', currentHost);
+                    }
+                    if (subUrl && subUrl.includes('localhost')) {
+                      subUrl = subUrl.replace('localhost', currentHost).replace('127.0.0.1', currentHost);
+                    }
+
                     if (videoUrl) {
                       actions.changeEpisode(videoUrl, nextEp.number, subUrl, referer);
                     }
@@ -326,9 +344,18 @@ const WatchAlongPage: React.FC = () => {
                   try {
                     const res = await streamingService.getEpisodeSources(room?.settings?.anilistId, prevEp.number);
                     const data = res.data;
-                    const videoUrl = data.data?.streamLinks?.[0] || data.video || (data.sources && data.sources[0]?.url) || '';
-                    const subUrl = data.data?.subtitles?.find((s: { lang?: string; url: string }) => s.lang === 'en' || s.lang?.toLowerCase() === 'english')?.url || data.sub || null;
+                    let videoUrl = data.data?.streamLinks?.[0] || data.video || (data.sources && data.sources[0]?.url) || '';
+                    let subUrl = data.data?.subtitles?.find((s: { lang?: string; url: string }) => s.lang === 'en' || s.lang?.toLowerCase() === 'english')?.url || data.sub || null;
                     const referer = data.referer || data.headers?.Referer || null;
+                    
+                    const currentHost = window.location.hostname;
+                    if (videoUrl && videoUrl.includes('localhost')) {
+                      videoUrl = videoUrl.replace('localhost', currentHost).replace('127.0.0.1', currentHost);
+                    }
+                    if (subUrl && subUrl.includes('localhost')) {
+                      subUrl = subUrl.replace('localhost', currentHost).replace('127.0.0.1', currentHost);
+                    }
+
                     if (videoUrl) {
                       actions.changeEpisode(videoUrl, prevEp.number, subUrl, referer);
                     }

@@ -96,11 +96,19 @@ export const useWatchPage = () => {
         
         // Flexible mapping to handle unknown BE schema + Zentaku_BE explicit schema
         const innerData = data.data;
-        const videoUrl = innerData?.streamLinks?.[0] || data.video || (data.sources && data.sources[0]?.url) || '';
-        const subUrl = innerData?.subtitles?.find((s: any) => s.lang === 'en' || s.lang?.toLowerCase() === 'english')?.url || data.sub || (data.subtitles && data.subtitles.find((s: any) => s.lang?.toLowerCase() === 'english')?.url) || null;
+        let videoUrl = innerData?.streamLinks?.[0] || data.video || (data.sources && data.sources[0]?.url) || '';
+        let subUrl = innerData?.subtitles?.find((s: any) => s.lang === 'en' || s.lang?.toLowerCase() === 'english')?.url || data.sub || (data.subtitles && data.subtitles.find((s: any) => s.lang?.toLowerCase() === 'english')?.url) || null;
         const referer = data.referer || data.headers?.Referer || null;
         
         const isFilmServer = innerData?.meta?.source === 'filmserver';
+
+        const currentHost = window.location.hostname;
+        if (videoUrl && videoUrl.includes('localhost')) {
+          videoUrl = videoUrl.replace('localhost', currentHost).replace('127.0.0.1', currentHost);
+        }
+        if (subUrl && subUrl.includes('localhost')) {
+          subUrl = subUrl.replace('localhost', currentHost).replace('127.0.0.1', currentHost);
+        }
 
         if (!videoUrl) throw new Error(t('WatchPage:errorVideoLinkNotFound'));
 

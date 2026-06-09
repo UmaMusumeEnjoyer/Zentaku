@@ -34,7 +34,12 @@ const API_BASE_URL = isDevelopment
   ? '/api' // Development: sử dụng Vite proxy
   : import.meta.env.VITE_API_BASE_URL ; // Production: gọi trực tiếp
 
-const VITE_BACKEND_DOMAIN =  import.meta.env.VITE_BACKEND_DOMAIN ; // Production: gọi trực tiếp
+let VITE_BACKEND_DOMAIN = import.meta.env.VITE_BACKEND_DOMAIN;
+if (isDevelopment) {
+  // Tự động nhận diện IP của máy chủ thay vì dùng localhost tĩnh
+  const currentHost = window.location.hostname;
+  VITE_BACKEND_DOMAIN = `http://${currentHost}:3500`;
+}
 
 // Log để debug
 
