@@ -173,13 +173,22 @@ export const useChatMessenger = (): UseChatMessengerReturn => {
               const rolesRes = await chatService.getCommunityMembers(room.communityId);
               const membersData = Array.isArray(rolesRes.data) ? rolesRes.data : rolesRes.data?.data || [];
               const rolesMap: Record<string, string> = {};
+              const mappedMembers: User[] = [];
               membersData.forEach((m: any) => {
                 if (m.userId && m.role) {
                   rolesMap[String(m.userId)] = m.role;
                 }
+                if (m.user) {
+                  mappedMembers.push({
+                    id: String(m.user.id || m.userId),
+                    name: m.user.displayName || m.user.username || 'Unknown',
+                    avatar: m.user.avatar || 'https://i.pravatar.cc/150',
+                    status: 'online' // Or offline based on actual socket state if available
+                  });
+                }
               });
               
-              setChatRooms(prev => prev?.map(r => r.id === activeRoomId ? { ...r, roles: rolesMap } : r) || null);
+              setChatRooms(prev => prev?.map(r => r.id === activeRoomId ? { ...r, roles: rolesMap, members: mappedMembers } : r) || null);
             } catch (roleErr) {
               console.error('Failed to fetch community roles', roleErr);
             }

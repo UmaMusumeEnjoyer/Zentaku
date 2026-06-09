@@ -283,41 +283,53 @@ const ChatMessenger: React.FC = () => {
             <h3 className={styles.sidebarRightTitle}>{t('ChatApp:members') || 'Thành viên'}</h3>
             <button className={styles.closeSidebarBtn} onClick={() => setIsRightSidebarOpen(false)}>✕</button>
           </div>
-          <div>
-            <h3 className={styles.memberCategory}>{t('ChatApp:online')} — {onlineMembers.length}</h3>
-            <div className={styles.chatList}>
-              {onlineMembers.map(member => (
-                <div key={member.id} className={styles.chatItem}>
-                  <div className={styles.avatarContainer}>
-                    <img src={member.avatar} alt="avatar" className={styles.avatar} />
-                    <span className={`${styles.statusIndicator} ${styles.statusOnline}`}></span>
+          <div className={styles.membersScrollArea}>
+            {(() => {
+              const members = activeRoom.members || [];
+              const rolesMap = activeRoom.roles || {};
+              
+              const ownersAdmins: typeof members = [];
+              const editorsMods: typeof members = [];
+              const regularMembers: typeof members = [];
+              
+              members.forEach(m => {
+                const role = (rolesMap[m.id] || 'MEMBER').toUpperCase();
+                if (['OWNER', 'ADMIN'].includes(role)) ownersAdmins.push(m);
+                else if (['EDITOR', 'MODERATOR'].includes(role)) editorsMods.push(m);
+                else regularMembers.push(m);
+              });
+              
+              const renderGroup = (title: string, groupMembers: typeof members, color: string) => {
+                if (groupMembers.length === 0) return null;
+                return (
+                  <div style={{ marginBottom: '1.5rem' }}>
+                    <h3 className={styles.memberCategory} style={{ color }}>{title} — {groupMembers.length}</h3>
+                    <div className={styles.chatList}>
+                      {groupMembers.map(member => (
+                        <div key={member.id} className={styles.chatItem}>
+                          <div className={styles.avatarContainer}>
+                            <img src={member.avatar} alt="avatar" className={styles.avatar} />
+                            <span className={`${styles.statusIndicator} ${member.status === 'online' ? styles.statusOnline : styles.statusOffline}`}></span>
+                          </div>
+                          <div className={styles.chatItemInfo}>
+                            <span className={styles.chatItemName} style={{ color }}>{member.name}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                  <div className={styles.chatItemInfo}>
-                    <span className={styles.chatItemName}>{member.name}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
+                );
+              };
+              
+              return (
+                <>
+                  {renderGroup('Owners & Admins', ownersAdmins, '#ef4444')}
+                  {renderGroup('Moderators', editorsMods, '#10b981')}
+                  {renderGroup('Members', regularMembers, 'var(--text-primary)')}
+                </>
+              );
+            })()}
           </div>
-          
-          {offlineMembers.length > 0 && (
-            <div style={{ marginTop: '1rem' }}>
-              <h3 className={styles.memberCategory}>{t('ChatApp:offline')} — {offlineMembers.length}</h3>
-              <div className={styles.chatList}>
-                {offlineMembers.map(member => (
-                  <div key={member.id} className={styles.chatItem} style={{ opacity: 0.6 }}>
-                    <div className={styles.avatarContainer}>
-                      <img src={member.avatar} alt="avatar" className={styles.avatar} style={{ filter: 'grayscale(1)' }} />
-                      <span className={`${styles.statusIndicator} ${styles.statusOffline}`}></span>
-                    </div>
-                    <div className={styles.chatItemInfo}>
-                      <span className={styles.chatItemName}>{member.name}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
         </aside>
       )}
     </div>
