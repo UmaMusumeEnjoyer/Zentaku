@@ -105,9 +105,13 @@ const ChatMessenger: React.FC = () => {
         </div>
         <div className={styles.chatList}>
           {currentList?.map(room => {
-            const avatar = room.avatar;
+            const avatar = room.avatar || '';
             const isColor = avatar && avatar.startsWith('#');
-            const imgSrc = avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(room.name)}&background=random`;
+            let formattedAvatar = avatar;
+            if (avatar && !isColor && !avatar.startsWith('http') && !avatar.startsWith('/') && !avatar.startsWith('data:')) {
+              formattedAvatar = `https://${avatar}`;
+            }
+            const imgSrc = formattedAvatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(room.name)}&background=random`;
             
             return (
             <div 
