@@ -581,7 +581,7 @@ const WatchAlongPage: React.FC = () => {
       <InviteModal
         isOpen={showInviteModal}
         onClose={() => setShowInviteModal(false)}
-        currentUserId={currentUserId!}
+        currentUserId={user?.id?.toString() || ''}
         roomParticipantIds={room?.participants?.map(p => p.userId) || []}
         onInvite={actions.inviteFriend}
       />
