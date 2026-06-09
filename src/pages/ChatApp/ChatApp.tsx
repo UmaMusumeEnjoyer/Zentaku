@@ -323,9 +323,9 @@ const ChatMessenger: React.FC = () => {
               
               return (
                 <>
-                  {renderGroup('Owners & Admins', ownersAdmins, '#ef4444')}
-                  {renderGroup('Moderators', editorsMods, '#10b981')}
-                  {renderGroup('Members', regularMembers, 'var(--text-primary)')}
+                  {renderGroup(t('ChatApp:ownerRole') || 'Owner', ownersAdmins, '#ef4444')}
+                  {renderGroup(t('ChatApp:editorRole') || 'Editor', editorsMods, '#10b981')}
+                  {renderGroup(t('ChatApp:viewerRole') || 'Viewer', regularMembers, 'var(--text-primary)')}
                 </>
               );
             })()}
