@@ -14,6 +14,8 @@ const ChatMessenger: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'dm' | 'community'>('dm');
   const [isLeftSidebarOpen, setIsLeftSidebarOpen] = useState(false);
   const [isRightSidebarOpen, setIsRightSidebarOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isSearchDropdownOpen, setIsSearchDropdownOpen] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messageAreaRef = useRef<HTMLDivElement>(null);
@@ -94,6 +96,14 @@ const ChatMessenger: React.FC = () => {
         />
       )}
 
+      {/* Overlay to close search dropdown when clicking outside */}
+      {isSearchDropdownOpen && (
+        <div 
+          style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 15 }} 
+          onClick={() => setIsSearchDropdownOpen(false)}
+        />
+      )}
+
       {/* Left Sidebar: Room List */}
       <aside className={`${styles.sidebarLeft} ${isLeftSidebarOpen ? styles.sidebarLeftOpen : ''}`}>
         <div className={styles.sidebarHeader}>
@@ -112,7 +122,85 @@ const ChatMessenger: React.FC = () => {
               {t('ChatApp:groupsTab')}
             </button>
           </div>
+          <div className={styles.searchContainer}>
+            <input
+              type="text"
+              placeholder={t('ChatApp:search') || 'Search...'}
+              className={styles.sidebarSearchInput}
+              value={searchQuery}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                setIsSearchDropdownOpen(e.target.value.trim().length > 0);
+              }}
+              onFocus={() => {
+                if (searchQuery.trim().length > 0) setIsSearchDropdownOpen(true);
+              }}
+            />
+            {isSearchDropdownOpen && (
+              <div className={styles.searchDropdown}>
+                {currentList?.filter(room => room.name.toLowerCase().includes(searchQuery.toLowerCase())).length === 0 ? (
+                  <div className={styles.searchDropdownEmpty}>{t('ChatApp:noResults') || 'No results found'}</div>
+                ) : (
+                  currentList?.filter(room => room.name.toLowerCase().includes(searchQuery.toLowerCase())).map(room => {
+                    const avatar = room.avatar || '';
+                    const isColor = avatar && avatar.startsWith('#');
+                    let formattedAvatar = avatar;
+                    if (avatar && !isColor && !avatar.startsWith('http') && !avatar.startsWith('/') && !avatar.startsWith('data:')) {
+                      formattedAvatar = `https://${avatar}`;
+                    }
+                    const imgSrc = formattedAvatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(room.name)}&background=random`;
+                    
+                    return (
+                      <div
+                        key={room.id}
+                        className={styles.searchDropdownItem}
+                        onClick={() => {
+                          setActiveRoomId(room.id);
+                          setSearchQuery('');
+                          setIsSearchDropdownOpen(false);
+                          setIsLeftSidebarOpen(false);
+                        }}
+                      >
+                        <div className={styles.avatarContainer} style={{ width: 24, height: 24, flexShrink: 0 }}>
+                          {isColor ? (
+                            <div 
+                              className={styles.avatar} 
+                              style={{ 
+                                backgroundColor: avatar, 
+                                display: 'flex', 
+                                alignItems: 'center', 
+                                justifyContent: 'center', 
+                                color: 'white', 
+                                fontWeight: 'bold', 
+                                fontSize: '12px',
+                                width: '24px',
+                                height: '24px'
+                              }}
+                            >
+                              {room.name.charAt(0).toUpperCase()}
+                            </div>
+                          ) : (
+                            <img 
+                              src={imgSrc} 
+                              alt="avatar" 
+                              className={styles.avatar} 
+                              style={{ width: '24px', height: '24px' }}
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(room.name)}&background=random`;
+                              }}
+                            />
+                          )}
+                        </div>
+                        <div className={styles.searchDropdownItemName}>{room.name}</div>
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+            )}
+          </div>
         </div>
+
         <div className={styles.chatList}>
           {currentList?.map(room => {
             const avatar = room.avatar || '';

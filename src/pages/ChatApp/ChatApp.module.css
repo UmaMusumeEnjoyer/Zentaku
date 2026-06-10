@@ -63,6 +63,76 @@
   gap: 4px;
 }
 
+/* === Sidebar Search === */
+.searchContainer {
+  position: relative;
+  margin-top: 0.25rem;
+  z-index: 20;
+}
+
+.sidebarSearchInput {
+  width: 100%;
+  background-color: var(--bg-input);
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.sidebarSearchInput::placeholder {
+  color: var(--text-secondary);
+}
+
+.searchDropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  width: 100%;
+  max-height: 250px;
+  overflow-y: auto;
+  background-color: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  padding: 0.25rem 0;
+}
+
+.searchDropdownItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.searchDropdownItem:hover {
+  background-color: var(--bg-subtle);
+}
+
+.searchDropdownItemName {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+}
+
+.searchDropdownEmpty {
+  padding: 0.75rem;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+
 .tabBtn {
   flex: 1;
   padding: 6px 12px;
