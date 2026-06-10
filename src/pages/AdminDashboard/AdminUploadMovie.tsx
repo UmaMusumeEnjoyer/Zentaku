@@ -43,6 +43,7 @@ function formatFileSize(bytes: number): string {
 const AdminUploadMovie: React.FC = () => {
   // Step management
   const [currentStep, setCurrentStep] = useState<Step>('search');
+  const [searchMode, setSearchMode] = useState<'server' | 'new'>('server');
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadResult, setUploadResult] = useState<any>(null);
@@ -52,6 +53,10 @@ const AdminUploadMovie: React.FC = () => {
   const [searchResults, setSearchResults] = useState<AnimeResult[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const searchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Server anime state
+  const [serverAnimes, setServerAnimes] = useState<AnimeResult[]>([]);
+  const [isFetchingServer, setIsFetchingServer] = useState(false);
 
   // Selected anime
   const [selectedAnime, setSelectedAnime] = useState<AnimeResult | null>(null);
@@ -80,8 +85,8 @@ const AdminUploadMovie: React.FC = () => {
     setIsSearching(true);
     try {
       const data = await adminService.searchAnime(query, 1, 12);
-      // Response structure from search endpoint varies, handle both formats
-      const results = data?.media || data?.results || data || [];
+      // Backend returns { success: true, data: { items: [...] } }
+      const results = data?.data?.items || data?.items || [];
       setSearchResults(Array.isArray(results) ? results : []);
     } catch (err) {
       console.error('Search failed:', err);
@@ -214,6 +219,39 @@ const AdminUploadMovie: React.FC = () => {
     setVideoPreviewUrl(null);
   };
 
+  // Fetch existing movies from FilmServer
+  useEffect(() => {
+    if (searchMode === 'server' && serverAnimes.length === 0) {
+      const fetchServerMovies = async () => {
+        setIsFetchingServer(true);
+        try {
+          const moviesObj = await adminService.getMovies();
+          const animeIds = Object.keys(moviesObj).map(Number).filter(id => !isNaN(id));
+          
+          if (animeIds.length > 0) {
+            // Fetch basic info for all these ids in parallel (limit to 20 for performance)
+            const idsToFetch = animeIds.slice(0, 20);
+            const infos = await Promise.all(
+              idsToFetch.map(id => adminService.getAnimeBasicInfo(id).catch(() => null))
+            );
+            
+            const validAnimes: AnimeResult[] = infos
+              .filter(info => info && info.success && info.data)
+              .map(info => info.data);
+            
+            setServerAnimes(validAnimes);
+          }
+        } catch (err) {
+          console.error('Failed to fetch server movies', err);
+        } finally {
+          setIsFetchingServer(false);
+        }
+      };
+      
+      fetchServerMovies();
+    }
+  }, [searchMode]);
+
   // Cleanup on unmount
   useEffect(() => {
     return () => {
@@ -282,66 +320,134 @@ const AdminUploadMovie: React.FC = () => {
       {/* Step 1: Search Anime */}
       {currentStep === 'search' && (
         <div className={styles.searchSection}>
-          <div className={styles.searchInputWrapper}>
-            <span className={styles.searchIcon}>🔍</span>
-            <input
-              id="anime-search-input"
-              type="text"
-              className={styles.searchInput}
-              placeholder="Tìm kiếm anime theo tên..."
-              value={searchQuery}
-              onChange={onSearchChange}
-              autoFocus
-            />
-          </div>
-
-          {isSearching && (
-            <div className={styles.searchLoading}>Đang tìm kiếm...</div>
-          )}
-
-          {!isSearching && searchResults.length === 0 && searchQuery.length >= 2 && (
-            <div className={styles.noResults}>
-              Không tìm thấy kết quả cho "{searchQuery}"
+          <div className={styles.searchModeTabs}>
+            <div 
+              className={`${styles.searchModeTab} ${searchMode === 'server' ? styles.active : ''}`}
+              onClick={() => setSearchMode('server')}
+            >
+              Anime Trên Server
             </div>
+            <div 
+              className={`${styles.searchModeTab} ${searchMode === 'new' ? styles.active : ''}`}
+              onClick={() => setSearchMode('new')}
+            >
+              Tìm Anime Mới
+            </div>
+          </div>
+
+          {searchMode === 'new' && (
+            <>
+              <div className={styles.searchInputWrapper}>
+                <span className={styles.searchIcon}>🔍</span>
+                <input
+                  id="anime-search-input"
+                  type="text"
+                  className={styles.searchInput}
+                  placeholder="Tìm kiếm anime theo tên..."
+                  value={searchQuery}
+                  onChange={onSearchChange}
+                  autoFocus
+                />
+              </div>
+
+              {isSearching && (
+                <div className={styles.searchLoading}>Đang tìm kiếm...</div>
+              )}
+
+              {!isSearching && searchResults.length === 0 && searchQuery.length >= 2 && (
+                <div className={styles.noResults}>
+                  Không tìm thấy kết quả cho "{searchQuery}"
+                </div>
+              )}
+
+              <div className={styles.searchResults}>
+                {searchResults.map((anime) => (
+                  <div
+                    key={anime.id}
+                    className={styles.searchResultItem}
+                    onClick={() => selectAnime(anime)}
+                    id={`anime-result-${anime.id}`}
+                  >
+                    {anime.coverImage?.medium && (
+                      <img
+                        className={styles.resultCover}
+                        src={anime.coverImage.medium}
+                        alt={anime.title?.romaji || ''}
+                        loading="lazy"
+                      />
+                    )}
+                    <div className={styles.resultInfo}>
+                      <div className={styles.resultTitle}>
+                        {anime.title?.english || anime.title?.romaji || 'Unknown'}
+                      </div>
+                      <div className={styles.resultMeta}>
+                        <span>ID: {anime.id}</span>
+                        {anime.format && <span>{anime.format}</span>}
+                        {anime.episodes && <span>{anime.episodes} eps</span>}
+                        {anime.seasonYear && <span>{anime.seasonYear}</span>}
+                      </div>
+                      {anime.genres && anime.genres.length > 0 && (
+                        <div className={styles.resultMeta}>
+                          {anime.genres.slice(0, 4).map((g) => (
+                            <span key={g} className={styles.resultBadge}>{g}</span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
           )}
 
-          <div className={styles.searchResults}>
-            {searchResults.map((anime) => (
-              <div
-                key={anime.id}
-                className={styles.searchResultItem}
-                onClick={() => selectAnime(anime)}
-                id={`anime-result-${anime.id}`}
-              >
-                {anime.coverImage?.medium && (
-                  <img
-                    className={styles.resultCover}
-                    src={anime.coverImage.medium}
-                    alt={anime.title?.romaji || ''}
-                    loading="lazy"
-                  />
-                )}
-                <div className={styles.resultInfo}>
-                  <div className={styles.resultTitle}>
-                    {anime.title?.english || anime.title?.romaji || 'Unknown'}
-                  </div>
-                  <div className={styles.resultMeta}>
-                    <span>ID: {anime.id}</span>
-                    {anime.format && <span>{anime.format}</span>}
-                    {anime.episodes && <span>{anime.episodes} eps</span>}
-                    {anime.seasonYear && <span>{anime.seasonYear}</span>}
-                  </div>
-                  {anime.genres && anime.genres.length > 0 && (
-                    <div className={styles.resultMeta}>
-                      {anime.genres.slice(0, 4).map((g) => (
-                        <span key={g} className={styles.resultBadge}>{g}</span>
-                      ))}
-                    </div>
-                  )}
+          {searchMode === 'server' && (
+            <>
+              {isFetchingServer ? (
+                <div className={styles.searchLoading}>Đang tải danh sách anime từ server...</div>
+              ) : serverAnimes.length === 0 ? (
+                <div className={styles.noResults}>
+                  Chưa có anime nào được lưu trên FilmServer.
                 </div>
-              </div>
-            ))}
-          </div>
+              ) : (
+                <div className={styles.searchResults}>
+                  {serverAnimes.map((anime) => (
+                    <div
+                      key={anime.id}
+                      className={styles.searchResultItem}
+                      onClick={() => selectAnime(anime)}
+                    >
+                      {anime.coverImage?.medium && (
+                        <img
+                          className={styles.resultCover}
+                          src={anime.coverImage.medium}
+                          alt={anime.title?.romaji || ''}
+                          loading="lazy"
+                        />
+                      )}
+                      <div className={styles.resultInfo}>
+                        <div className={styles.resultTitle}>
+                          {anime.title?.english || anime.title?.romaji || 'Unknown'}
+                        </div>
+                        <div className={styles.resultMeta}>
+                          <span>ID: {anime.id}</span>
+                          {anime.format && <span>{anime.format}</span>}
+                          {anime.episodes && <span>{anime.episodes} eps</span>}
+                          {anime.seasonYear && <span>{anime.seasonYear}</span>}
+                        </div>
+                        {anime.genres && anime.genres.length > 0 && (
+                          <div className={styles.resultMeta}>
+                            {anime.genres.slice(0, 4).map((g) => (
+                              <span key={g} className={styles.resultBadge}>{g}</span>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </>
+          )}
         </div>
       )}
 
