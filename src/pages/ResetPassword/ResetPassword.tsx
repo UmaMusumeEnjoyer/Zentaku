@@ -41,7 +41,7 @@ const ResetPassword = () => {
 
     setIsLoading(true);
     try {
-      await authService.resetPassword(token, password);
+      await authService.resetPassword(token, password, confirmPassword);
       toast.success(t('Auth:resetPassword.success'));
       navigate('/login');
     } catch (error: any) {
