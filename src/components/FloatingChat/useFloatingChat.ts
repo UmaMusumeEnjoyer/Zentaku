@@ -276,12 +276,46 @@ export const useFloatingChat = () => {
       }
     });
 
+    const unsubNotification = socketService.on('notification.new', (notification: any) => {
+      if (notification.type === 'MESSAGE' && notification.metadata?.channelId) {
+        const channelId = String(notification.metadata.channelId);
+        const messagePreview = notification.metadata.messagePreview || 'New message';
+
+        setRooms(prev => {
+          const exists = prev.some(r => r.id === channelId);
+          if (!exists) {
+            fetchRooms();
+            return prev;
+          }
+          return prev.map(room => {
+            if (room.id !== channelId) return room;
+            return {
+              ...room,
+              lastMessage: messagePreview,
+              lastMessageTime: formatRelativeTime(Date.now()),
+              lastMessageRawTime: Date.now(),
+            };
+          });
+        });
+
+        setUnreadCounts(prev => {
+          const next = new Map(prev);
+          next.set(channelId, (next.get(channelId) || 0) + 1);
+          return next;
+        });
+
+        setIsPulse(true);
+        setTimeout(() => setIsPulse(false), 1500);
+      }
+    });
+
     return () => {
       unsubMessageCreated();
       unsubTypingStarted();
       unsubTypingStopped();
+      unsubNotification();
     };
-  }, [isAuthenticated, openWindow?.roomId, openWindow?.isMinimized, currentUser.id]);
+  }, [isAuthenticated, openWindow?.roomId, openWindow?.isMinimized, currentUser.id, fetchRooms]);
 
   // ─── Join/Leave Room ───
   useEffect(() => {
