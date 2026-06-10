@@ -44,14 +44,14 @@ const AuthPage: React.FC = () => {
   } = useAuthPage(
     {
       onLoginSuccess: (message) => {
-        toast.success(message);
+        toast.success(t(message));
         navigate('/'); 
       },
-      onLoginError: (message) => toast.error(message),
-      onRegisterSuccess: (message) => toast.success(message),
-      onRegisterError: (message) => toast.error(message),
-      onVerifySuccess: (message) => toast.success(message),
-      onVerifyError: (message) => toast.error(message),
+      onLoginError: (message) => toast.error(t(message)),
+      onRegisterSuccess: (message) => toast.success(t(message)),
+      onRegisterError: (message) => toast.error(t(message)),
+      onVerifySuccess: (message) => toast.success(t(message)),
+      onVerifyError: (message) => toast.error(t(message)),
       onNavigateToSignup: () => navigate('/signup'),
       onNavigateToLogin: () => navigate('/login'),
       loginCallback,
