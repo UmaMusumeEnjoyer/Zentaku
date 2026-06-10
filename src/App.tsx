@@ -131,6 +131,7 @@ const AppContent = () => {
           element: <AdminLayout />,
           children: [
             { path: "/admin/dashboard", element: <AdminDashboard /> },
+            { path: "/chat", element: <ChatMessenger /> },
             { path: "*", element: <Navigate to="/admin/dashboard" replace /> }
           ]
         }
