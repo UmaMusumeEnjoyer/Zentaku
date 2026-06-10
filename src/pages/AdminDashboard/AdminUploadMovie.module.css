@@ -582,3 +582,164 @@
     text-align: center;
   }
 }
+
+/* ==================== MULTI EPISODE SELECTION ==================== */
+.episodeSelectionGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+  gap: 10px;
+  margin-bottom: 20px;
+  max-height: 250px;
+  overflow-y: auto;
+  padding: 4px;
+}
+
+.episodeSelectBtn {
+  padding: 10px 0;
+  border-radius: 8px;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-panel);
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+
+.episodeSelectBtn:hover {
+  border-color: #6366f1;
+}
+
+.episodeSelectBtn.selected {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  border-color: transparent;
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
+}
+
+.manualEpisodeGroup {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px dashed var(--border-subtle);
+}
+
+.manualInputHint {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-top: 6px;
+}
+
+/* ==================== BATCH UPLOAD CARDS ==================== */
+.uploadCardsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 24px;
+  max-height: 60vh;
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+.uploadCard {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.uploadCardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.uploadCardTitle {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.uploadCardStatus {
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+
+.statusPending {
+  background: rgba(107, 114, 128, 0.1);
+  color: #6b7280;
+}
+
+.statusUploading {
+  background: rgba(59, 130, 246, 0.1);
+  color: #3b82f6;
+}
+
+.statusSuccess {
+  background: rgba(34, 197, 94, 0.1);
+  color: #22c55e;
+}
+
+.statusError {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+.uploadDropZones {
+  display: flex;
+  gap: 16px;
+}
+
+.uploadDropZones > div {
+  flex: 1;
+}
+
+.miniDropZone {
+  border: 2px dashed var(--border-subtle);
+  border-radius: 10px;
+  padding: 20px 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.miniDropZone:hover {
+  border-color: #6366f1;
+  background: rgba(99, 102, 241, 0.04);
+}
+
+.miniDropZoneIcon {
+  font-size: 2rem;
+  margin-bottom: 8px;
+}
+
+.miniDropZoneTitle {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.batchProgressContainer {
+  margin-bottom: 24px;
+  padding: 20px;
+  border-radius: 12px;
+  background: var(--bg-panel);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+}
+
+.batchProgressHeader {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
