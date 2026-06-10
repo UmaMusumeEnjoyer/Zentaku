@@ -77,6 +77,15 @@ const ResetPassword = () => {
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
+
+              {/* Password Strength Indicator */}
+              <div className={styles.passwordStrengthContainer}>
+                <div className={`${styles.strengthPill} ${/[A-Z]/.test(password) ? styles.active : ''}`}>A</div>
+                <div className={`${styles.strengthPill} ${/[a-z]/.test(password) ? styles.active : ''}`}>a</div>
+                <div className={`${styles.strengthPill} ${/[0-9]/.test(password) ? styles.active : ''}`}>1</div>
+                <div className={`${styles.strengthPill} ${/[^A-Za-z0-9]/.test(password) ? styles.active : ''}`}>*</div>
+                <div className={`${styles.strengthPill} ${password.length >= 8 ? styles.active : ''}`}>8+</div>
+              </div>
             </div>
 
             <div className={styles.inputGroup}>
