@@ -226,7 +226,9 @@ const AdminUploadMovie: React.FC = () => {
         setIsFetchingServer(true);
         try {
           const moviesObj = await adminService.getMovies();
+          console.log('moviesObj:', moviesObj);
           const animeIds = Object.keys(moviesObj).map(Number).filter(id => !isNaN(id));
+          console.log('animeIds:', animeIds);
           
           if (animeIds.length > 0) {
             // Fetch basic info for all these ids in parallel (limit to 20 for performance)
@@ -236,8 +238,11 @@ const AdminUploadMovie: React.FC = () => {
             );
             
             const validAnimes: AnimeResult[] = infos
-              .filter(info => info && info.id)
-              .map(info => info);
+              .filter(info => info && (info.id || info.idAnilist))
+              .map(info => ({
+                ...info,
+                id: info.id || info.idAnilist
+              }));
             
             setServerAnimes(validAnimes);
           }
