@@ -46,7 +46,7 @@ const AdminUploadMovie: React.FC = () => {
   const [searchMode, setSearchMode] = useState<'server' | 'new'>('server');
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<Record<number, number>>({});
-  const [uploadResult, setUploadResult] = useState<Record<number, any>>({});
+  const [uploadResult, setUploadResult] = useState<Record<number, { status: 'uploading' | 'success' | 'error', data?: any, error?: string }>>({});
   const [isBatchCompleted, setIsBatchCompleted] = useState(false);
 
   // Search state
@@ -127,43 +127,46 @@ const AdminUploadMovie: React.FC = () => {
   };
 
   // ==================== File Handling ====================
-  const handleVideoSelect = (file: File) => {
-    const allowedExts = ['.mp4', '.mkv', '.webm'];
+  const handleVideoSelect = (file: File, ep: number) => {
     const ext = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
-    if (!allowedExts.includes(ext)) {
-      alert(`Invalid video format: ${ext}. Allowed: mp4, mkv, webm`);
+    const validVideoExts = ['.mp4', '.mkv', '.webm'];
+    if (!validVideoExts.includes(ext)) {
+      alert(`Invalid video format: ${ext}. Supported: mp4, mkv, webm.`);
       return;
     }
-    setVideoFile(file);
-
-    // Create preview URL
-    if (videoPreviewUrl) URL.revokeObjectURL(videoPreviewUrl);
     const url = URL.createObjectURL(file);
-    setVideoPreviewUrl(url);
+    setUploadFiles(prev => ({
+      ...prev,
+      [ep]: { ...prev[ep], video: file, previewUrl: url }
+    }));
   };
 
-  const handleSubtitleSelect = (file: File) => {
+  const handleSubtitleSelect = (file: File, ep: number) => {
     const ext = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
     if (ext !== '.vtt') {
       alert(`Invalid subtitle format: ${ext}. Only .vtt is supported.`);
       return;
     }
-    setSubtitleFile(file);
+    setUploadFiles(prev => ({
+      ...prev,
+      [ep]: { ...prev[ep], subtitle: file }
+    }));
   };
 
   const handleDrop = (
     e: React.DragEvent,
-    type: 'video' | 'subtitle'
+    type: 'video' | 'subtitle',
+    ep: number
   ) => {
     e.preventDefault();
     e.stopPropagation();
-    setVideoDragOver(false);
-    setSubtitleDragOver(false);
+    if (type === 'video') setVideoDragOver(null);
+    else setSubtitleDragOver(null);
 
     const files = e.dataTransfer.files;
     if (files.length > 0) {
-      if (type === 'video') handleVideoSelect(files[0]);
-      else handleSubtitleSelect(files[0]);
+      if (type === 'video') handleVideoSelect(files[0], ep);
+      else handleSubtitleSelect(files[0], ep);
     }
   };
 
@@ -172,52 +175,96 @@ const AdminUploadMovie: React.FC = () => {
     e.stopPropagation();
   };
 
+  const handleEpisodeToggle = (ep: number) => {
+    setSelectedEpisodes(prev => 
+      prev.includes(ep) ? prev.filter(e => e !== ep) : [...prev, ep].sort((a,b) => a-b)
+    );
+  };
+
+  const handleManualEpisodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    setManualEpisodeInput(val);
+    
+    // Parse string like '1, 2, 3-5'
+    const eps = new Set<number>();
+    const parts = val.split(',').map(p => p.trim()).filter(Boolean);
+    parts.forEach(part => {
+      if (part.includes('-')) {
+        const [startStr, endStr] = part.split('-');
+        const start = parseInt(startStr);
+        const end = parseInt(endStr);
+        if (!isNaN(start) && !isNaN(end) && start <= end && end - start < 1000) {
+          for(let i = start; i <= end; i++) eps.add(i);
+        }
+      } else {
+        const num = parseInt(part);
+        if (!isNaN(num)) eps.add(num);
+      }
+    });
+    
+    setSelectedEpisodes(Array.from(eps).sort((a,b) => a-b));
+  };
+
   // ==================== Upload Logic ====================
   const handleUpload = async () => {
-    if (!selectedAnime || !episodeNumber) return;
-    if (!videoFile && !subtitleFile) {
-      alert('Please select at least a video or subtitle file.');
+    if (!selectedAnime || selectedEpisodes.length === 0) return;
+    
+    const hasAnyFiles = selectedEpisodes.some(ep => uploadFiles[ep]?.video || uploadFiles[ep]?.subtitle);
+    if (!hasAnyFiles) {
+      alert('Please select at least one video or subtitle file for any episode.');
       return;
     }
 
     setIsUploading(true);
-    setUploadProgress(0);
+    setIsBatchCompleted(false);
 
-    try {
-      const result = await adminService.uploadEpisode({
-        animeId: selectedAnime.id,
-        episodeNumber,
-        videoFile: videoFile || undefined,
-        subtitleFile: subtitleFile || undefined,
-        onUploadProgress: (event) => {
-          if (event.total) {
-            const percent = Math.round((event.loaded * 100) / event.total);
-            setUploadProgress(percent);
-          }
-        },
-      });
+    for (const ep of selectedEpisodes) {
+      const epFiles = uploadFiles[ep];
+      if (!epFiles?.video && !epFiles?.subtitle) {
+        continue; // Skip if no files for this episode
+      }
 
-      setUploadResult(result);
-    } catch (err: any) {
-      alert(`Upload failed: ${err.message || 'Unknown error'}`);
-    } finally {
-      setIsUploading(false);
+      setUploadResult(prev => ({ ...prev, [ep]: { status: 'uploading' } }));
+      
+      try {
+        const result = await adminService.uploadEpisode({
+          animeId: selectedAnime.id,
+          episodeNumber: ep,
+          videoFile: epFiles.video || undefined,
+          subtitleFile: epFiles.subtitle || undefined,
+          onUploadProgress: (event) => {
+            if (event.total) {
+              const percent = Math.round((event.loaded * 100) / event.total);
+              setUploadProgress(prev => ({ ...prev, [ep]: percent }));
+            }
+          },
+        });
+
+        setUploadResult(prev => ({ ...prev, [ep]: { status: 'success', data: result } }));
+      } catch (err: any) {
+        setUploadResult(prev => ({ ...prev, [ep]: { status: 'error', error: err.message || 'Unknown error' } }));
+      }
     }
+
+    setIsUploading(false);
+    setIsBatchCompleted(true);
   };
 
   const resetForm = () => {
     setCurrentStep('search');
     setSelectedAnime(null);
-    setEpisodeNumber(1);
-    setVideoFile(null);
-    setSubtitleFile(null);
-    setUploadProgress(0);
-    setUploadResult(null);
+    setSelectedEpisodes([]);
+    setManualEpisodeInput('');
+    setUploadFiles({});
+    setUploadProgress({});
+    setUploadResult({});
+    setIsBatchCompleted(false);
     setSearchQuery('');
     setSearchResults([]);
     setExistingEpisodes([]);
-    if (videoPreviewUrl) URL.revokeObjectURL(videoPreviewUrl);
-    setVideoPreviewUrl(null);
+    Object.values(uploadFiles).forEach(f => {
+      if (f?.previewUrl) URL.revokeObjectURL(f.previewUrl);
+    });
   };
 
   // Fetch existing movies from FilmServer
@@ -258,12 +305,7 @@ const AdminUploadMovie: React.FC = () => {
     }
   }, [searchMode]);
 
-  // Cleanup on unmount
-  useEffect(() => {
-    return () => {
-      if (videoPreviewUrl) URL.revokeObjectURL(videoPreviewUrl);
-    };
-  }, [videoPreviewUrl]);
+
 
   // ==================== Step Helpers ====================
   const stepIndex = STEPS.findIndex((s) => s.key === currentStep);
@@ -274,30 +316,7 @@ const AdminUploadMovie: React.FC = () => {
     return styles.stepItem;
   };
 
-  // ==================== Render: Success State ====================
-  if (uploadResult) {
-    return (
-      <div className={styles.uploadContainer}>
-        <div className={styles.successMessage}>
-          <div className={styles.successIcon}>🎉</div>
-          <div className={styles.successTitle}>Upload Thành Công!</div>
-          <div className={styles.successSub}>
-            Anime ID: {uploadResult.animeId} — Episode: {uploadResult.episodeNumber}
-          </div>
-          {uploadResult.conversionStatus === 'processing' && (
-            <div className={styles.conversionNote}>
-              ⏳ Video đang được chuyển đổi sang HLS. Quá trình này có thể mất vài phút.
-            </div>
-          )}
-          <div className={styles.buttonGroup}>
-            <button className={styles.btnPrimary} onClick={resetForm}>
-              Upload Tập Khác
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
+
 
   // ==================== Render ====================
   return (
@@ -671,7 +690,7 @@ const AdminUploadMovie: React.FC = () => {
                             </div>
                           )}
                           <input
-                            ref={el => fileInputRefs.current[`video-${ep}`] = el}
+                            ref={(el) => { fileInputRefs.current[`video-${ep}`] = el; }}
                             type="file"
                             accept=".mp4,.mkv,.webm"
                             style={{ display: 'none' }}
@@ -699,7 +718,7 @@ const AdminUploadMovie: React.FC = () => {
                             </div>
                           )}
                           <input
-                            ref={el => fileInputRefs.current[`subtitle-${ep}`] = el}
+                            ref={(el) => { fileInputRefs.current[`subtitle-${ep}`] = el; }}
                             type="file"
                             accept=".vtt"
                             style={{ display: 'none' }}
