@@ -28,7 +28,7 @@
     overflow: hidden;
     width: 768px;
     max-width: 100%;
-    min-height: 520px;
+    min-height: 680px;
     /* REFACTOR: Chữ phụ */
     color: var(--text-secondary);
     transition: all 0.3s ease;
@@ -206,6 +206,7 @@
     top: 0;
     height: 100%;
     transition: all 0.6s ease-in-out;
+    overflow-y: auto;
 }
 
 .signIn {
@@ -340,7 +341,7 @@
     .container {
         width: 100%;
         max-width: 420px;
-        min-height: 550px;
+        min-height: 700px;
         border-radius: 16px;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         margin: 0;
