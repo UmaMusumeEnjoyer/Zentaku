@@ -798,3 +798,39 @@
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+.existingHeaderRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.existingHeaderRow .existingTitle {
+  margin-bottom: 0;
+}
+
+.deleteAllBtn {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.deleteAllBtn:hover {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: rgba(239, 68, 68, 0.4);
+}
+
+.deleteAllBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

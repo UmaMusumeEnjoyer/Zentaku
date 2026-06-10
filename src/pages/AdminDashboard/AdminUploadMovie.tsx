@@ -60,6 +60,7 @@ const AdminUploadMovie: React.FC = () => {
   const [serverSearchQuery, setServerSearchQuery] = useState('');
   const [isFetchingServer, setIsFetchingServer] = useState(false);
   const [isDeletingEpisode, setIsDeletingEpisode] = useState<string | null>(null);
+  const [isDeletingAnime, setIsDeletingAnime] = useState(false);
 
   // Selected anime
   const [selectedAnime, setSelectedAnime] = useState<AnimeResult | null>(null);
@@ -192,6 +193,27 @@ const AdminUploadMovie: React.FC = () => {
       alert('Đã xảy ra lỗi khi xoá tập phim khỏi FilmServer.');
     } finally {
       setIsDeletingEpisode(null);
+    }
+  };
+
+  const handleDeleteAnime = async () => {
+    if (!selectedAnime) return;
+    if (!window.confirm(`⚠️ NGUY HIỂM: Bạn có chắc chắn muốn XÓA TOÀN BỘ bộ anime này khỏi FilmServer?\n(Tất cả ${existingEpisodes.length} tập phim, video và phụ đề sẽ bị xóa vĩnh viễn và không thể khôi phục!)`)) {
+      return;
+    }
+    
+    setIsDeletingAnime(true);
+    try {
+      await adminService.deleteAnime(selectedAnime.id);
+      // Xóa thành công toàn bộ, làm rỗng danh sách tập hiện có
+      setExistingEpisodes([]);
+      setSelectedEpisodes([]);
+      alert('Đã xóa toàn bộ anime khỏi FilmServer thành công.');
+    } catch (err) {
+      console.error('Lỗi khi xoá toàn bộ anime:', err);
+      alert('Đã xảy ra lỗi khi xoá toàn bộ anime khỏi FilmServer.');
+    } finally {
+      setIsDeletingAnime(false);
     }
   };
 
@@ -608,8 +630,17 @@ const AdminUploadMovie: React.FC = () => {
           {/* Existing episodes from FilmServer */}
           {existingEpisodes.length > 0 && (
             <div className={styles.existingEpisodes}>
-              <div className={styles.existingTitle}>
-                Tập đã có trên FilmServer ({existingEpisodes.length})
+              <div className={styles.existingHeaderRow}>
+                <div className={styles.existingTitle}>
+                  Tập đã có trên FilmServer ({existingEpisodes.length})
+                </div>
+                <button 
+                  className={styles.deleteAllBtn}
+                  onClick={handleDeleteAnime}
+                  disabled={isDeletingAnime}
+                >
+                  {isDeletingAnime ? 'Đang xóa...' : '🗑️ Xóa toàn bộ Anime'}
+                </button>
               </div>
               <div className={styles.episodeGrid}>
                 {existingEpisodes.map((ep) => (
