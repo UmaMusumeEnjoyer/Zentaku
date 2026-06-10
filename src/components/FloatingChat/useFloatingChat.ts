@@ -277,9 +277,17 @@ export const useFloatingChat = () => {
     });
 
     const unsubNotification = socketService.on('notification.new', (notification: any) => {
-      if (notification.type?.toLowerCase() === 'message' && notification.metadata?.channelId) {
-        const channelId = String(notification.metadata.channelId);
-        const messagePreview = notification.metadata.messagePreview || 'New message';
+      const type = notification.type?.toLowerCase();
+
+      if (type === 'message' || type === 'watch_party_invite') {
+        const isWatchPartyInvite = type === 'watch_party_invite';
+        const channelId = String(isWatchPartyInvite ? notification.metadata?.chatChannelId : notification.metadata?.channelId);
+        
+        if (!channelId || channelId === 'undefined') return;
+
+        const messagePreview = isWatchPartyInvite 
+          ? (notification.body || 'New watch party invite') 
+          : (notification.metadata?.messagePreview || 'New message');
 
         setRooms(prev => {
           const exists = prev.some(r => r.id === channelId);
