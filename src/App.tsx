@@ -30,6 +30,7 @@ import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
 import NotificationToast from './components/Notification/NotificationToast';
 import AdminDashboard from './pages/AdminDashboard/AdminDashboard';
 import VerifyEmailPage from './pages/VerifyEmailPage/VerifyEmailPage';
+import AdminConversionWidget from './components/AdminConversionWidget/AdminConversionWidget';
 
 // Xác định API base URL dựa trên environment
 const isDevelopment = import.meta.env.DEV;
@@ -105,6 +106,7 @@ const AdminLayout = () => (
     <main>
       <Outlet />
     </main>
+    <AdminConversionWidget />
   </>
 );
 
