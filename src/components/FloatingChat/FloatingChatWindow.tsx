@@ -80,6 +80,39 @@ const FloatingChatWindow: React.FC<FloatingChatWindowProps> = ({
     return room.messages[index].sender.id !== room.messages[index - 1].sender.id;
   };
 
+  const renderMessageContent = (content: string) => {
+    if (!content) return null;
+    const regex = /(?:https?:\/\/[^\s]+)?(\/watch-along\/[a-zA-Z0-9-]+)/g;
+    const elements: React.ReactNode[] = [];
+    let lastIndex = 0;
+    let match;
+    
+    const safeRegex = new RegExp(regex);
+    while ((match = safeRegex.exec(content)) !== null) {
+      if (match.index > lastIndex) {
+        elements.push(<span key={`text-${lastIndex}`}>{content.substring(lastIndex, match.index)}</span>);
+      }
+      const path = match[1];
+      elements.push(
+        <a 
+          key={`link-${match.index}`} 
+          href={path} 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          style={{ color: '#3db4f2', textDecoration: 'underline', fontWeight: 'bold' }}
+        >
+          {t('ChatApp:watchAlongLink') || 'Watchalong Link'}
+        </a>
+      );
+      lastIndex = safeRegex.lastIndex;
+    }
+    if (lastIndex < content.length) {
+      elements.push(<span key={`text-${lastIndex}`}>{content.substring(lastIndex)}</span>);
+    }
+    
+    return elements.length > 0 ? elements : content;
+  };
+
   return (
     <div className={windowClasses} id="floating-chat-window">
       {/* Header – always visible, clickable to toggle minimize */}
@@ -140,7 +173,7 @@ const FloatingChatWindow: React.FC<FloatingChatWindowProps> = ({
                           <div style={{ width: 28, flexShrink: 0 }} />
                         )}
                         <div className={`${styles.msgBubble} ${isOwn ? styles.msgBubbleOwn : styles.msgBubbleOther}`}>
-                          {msg.content}
+                          {renderMessageContent(msg.content)}
                         </div>
                       </div>
                       {/* Timestamp – show on last message of group or last message */}
