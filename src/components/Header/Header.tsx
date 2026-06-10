@@ -132,7 +132,7 @@ const Header: React.FC = () => {
         <div className={styles.headerLeft}>
           <div className={styles.logo}>
             <Link to="/">
-              <img src="/images/app_logo.png" alt="Logo" className={styles.logoImg} />
+              <img src="/zentaku_logo.png" alt="Logo" className={styles.logoImg} />
             </Link>
           </div>
         </div>
