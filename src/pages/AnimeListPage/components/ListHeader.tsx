@@ -42,21 +42,16 @@ const ListHeader: React.FC<ListHeaderProps> = ({ listInfo, listId }) => {
     }
   };
 
-  const bannerStr = listInfo.bannerImage || '';
-  const isColor = bannerStr.startsWith('#');
-  const hasBanner = bannerStr.length > 0 && !isColor;
-
-  // Nếu bannerImage là mã màu (bắt đầu bằng #), ta dùng làm màu nền.
-  // Nếu không, ta fallback về listInfo.color hoặc màu mặc định.
-  const bgColor = isColor
-    ? bannerStr
-    : (listInfo.color || 'var(--bg-panel)');
+  const FALLBACK_BANNER = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_EKkkCeMlmiwTOTcuvq-IgSjufiZ4Rz80Zw&s';
+  const rawBanner = listInfo.bannerImage || '';
+  const isColor = rawBanner.startsWith('#');
+  const finalBanner = (rawBanner === '' || isColor) ? FALLBACK_BANNER : rawBanner;
+  
+  const hasBanner = true;
 
   const headerStyle: React.CSSProperties = {
-    backgroundColor: hasBanner ? 'transparent' : bgColor,
-    backgroundImage: hasBanner
-      ? `linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.8)), url(${bannerStr.startsWith('http') || bannerStr.startsWith('/') ? bannerStr : `https://${bannerStr}`})`
-      : 'none',
+    backgroundColor: 'transparent',
+    backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.8)), url(${finalBanner.startsWith('http') || finalBanner.startsWith('/') ? finalBanner : `https://${finalBanner}`})`
   };
 
   return (

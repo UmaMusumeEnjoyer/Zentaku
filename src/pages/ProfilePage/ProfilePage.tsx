@@ -243,18 +243,22 @@ const ProfilePage: React.FC = () => {
                   ) : (
                     <div className={styles.customListGrid}>
                       {customLists.map(list => {
-                        const bgStyle = list.bannerImage && list.bannerImage.startsWith('#')
-                          ? { backgroundColor: list.bannerImage }
-                          : list.bannerImage
-                            ? { backgroundImage: `linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0.2)), url(${getAvatarUrl(list.bannerImage)})`, backgroundSize: 'cover', backgroundPosition: 'center', color: '#fff' }
-                            : {};
+                        const rawBanner = list.bannerImage || '';
+                        const FALLBACK_BANNER = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_EKkkCeMlmiwTOTcuvq-IgSjufiZ4Rz80Zw&s';
+                        const finalBanner = (rawBanner === '' || rawBanner.startsWith('#')) ? FALLBACK_BANNER : getAvatarUrl(rawBanner);
+                        const bgStyle = {
+                          backgroundImage: `linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0.2)), url(${finalBanner})`,
+                          backgroundSize: 'cover',
+                          backgroundPosition: 'center',
+                          color: '#fff'
+                        };
                         return (
                           <div key={list.list_id} className={styles.customListCard} style={bgStyle} onClick={() => handleListClick(list)}>
-                            <h3 className={styles.listName} style={list.bannerImage && !list.bannerImage.startsWith('#') ? { color: '#fff' } : {}}>
+                            <h3 className={styles.listName} style={{ color: '#fff' }}>
                               {list.list_name}
                               {list.is_private && <PrivateBadge />}
                             </h3>
-                            <p className={styles.listDesc} style={list.bannerImage && !list.bannerImage.startsWith('#') ? { color: 'rgba(255,255,255,0.8)' } : {}}>{list.description}</p>
+                            <p className={styles.listDesc} style={{ color: 'rgba(255,255,255,0.8)' }}>{list.description}</p>
                           </div>
                         );
                       })}
@@ -277,19 +281,23 @@ const ProfilePage: React.FC = () => {
                     ) : (
                       <div className={styles.customListGrid}>
                         {joinedLists.map(list => {
-                          const bgStyle = list.bannerImage && list.bannerImage.startsWith('#')
-                            ? { backgroundColor: list.bannerImage }
-                            : list.bannerImage
-                              ? { backgroundImage: `linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0.2)), url(${getAvatarUrl(list.bannerImage)})`, backgroundSize: 'cover', backgroundPosition: 'center', color: '#fff' }
-                              : {};
+                          const rawBanner = list.bannerImage || '';
+                          const FALLBACK_BANNER = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_EKkkCeMlmiwTOTcuvq-IgSjufiZ4Rz80Zw&s';
+                          const finalBanner = (rawBanner === '' || rawBanner.startsWith('#')) ? FALLBACK_BANNER : getAvatarUrl(rawBanner);
+                          const bgStyle = {
+                            backgroundImage: `linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0.2)), url(${finalBanner})`,
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
+                            color: '#fff'
+                          };
                           return (
                             <div key={list.list_id} className={styles.customListCard} style={bgStyle} onClick={() => handleListClick(list)}>
-                              <h3 className={styles.listName} style={list.bannerImage && !list.bannerImage.startsWith('#') ? { color: '#fff' } : {}}>
+                              <h3 className={styles.listName} style={{ color: '#fff' }}>
                                 {list.list_name}
                                 {list.is_private && <PrivateBadge />}
                               </h3>
-                              <p className={styles.listDesc} style={list.bannerImage && !list.bannerImage.startsWith('#') ? { color: 'rgba(255,255,255,0.8)' } : {}}>{list.description}</p>
-                              <div className={styles.listMeta} style={list.bannerImage && !list.bannerImage.startsWith('#') ? { color: 'rgba(255,255,255,0.9)' } : {}}>
+                              <p className={styles.listDesc} style={{ color: 'rgba(255,255,255,0.8)' }}>{list.description}</p>
+                              <div className={styles.listMeta} style={{ color: 'rgba(255,255,255,0.9)' }}>
                                 By {list.ownerUsername || list.owner?.username || 'Unknown'}
                               </div>
                             </div>
@@ -316,19 +324,23 @@ const ProfilePage: React.FC = () => {
                     ) : (
                       <div className={styles.customListGrid}>
                         {likedLists.map(list => {
-                          const bgStyle = list.bannerImage && list.bannerImage.startsWith('#')
-                            ? { backgroundColor: list.bannerImage }
-                            : list.bannerImage
-                              ? { backgroundImage: `linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0.2)), url(${getAvatarUrl(list.bannerImage)})`, backgroundSize: 'cover', backgroundPosition: 'center', color: '#fff' }
-                              : {};
+                          const rawBanner = list.bannerImage || '';
+                          const FALLBACK_BANNER = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_EKkkCeMlmiwTOTcuvq-IgSjufiZ4Rz80Zw&s';
+                          const finalBanner = (rawBanner === '' || rawBanner.startsWith('#')) ? FALLBACK_BANNER : getAvatarUrl(rawBanner);
+                          const bgStyle = {
+                            backgroundImage: `linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0.2)), url(${finalBanner})`,
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
+                            color: '#fff'
+                          };
                           return (
                             <div key={list.list_id} className={styles.customListCard} style={bgStyle} onClick={() => handleListClick(list)}>
-                              <h3 className={styles.listName} style={list.bannerImage && !list.bannerImage.startsWith('#') ? { color: '#fff' } : {}}>
+                              <h3 className={styles.listName} style={{ color: '#fff' }}>
                                 {list.list_name}
                                 {list.is_private && <PrivateBadge />}
                               </h3>
-                              <p className={styles.listDesc} style={list.bannerImage && !list.bannerImage.startsWith('#') ? { color: 'rgba(255,255,255,0.8)' } : {}}>{list.description}</p>
-                              <div className={styles.listMeta} style={list.bannerImage && !list.bannerImage.startsWith('#') ? { color: 'rgba(255,255,255,0.9)' } : {}}>
+                              <p className={styles.listDesc} style={{ color: 'rgba(255,255,255,0.8)' }}>{list.description}</p>
+                              <div className={styles.listMeta} style={{ color: 'rgba(255,255,255,0.9)' }}>
                                 {t('anime_list.likes_count', { count: list.like_count })}
                               </div>
                             </div>
