@@ -48,7 +48,8 @@ import {
   notificationEn, notificationJp,
   notFoundEn, notFoundJp,
   AdminDashboardEn, AdminDashboardJp,
-  TicketModalEn, TicketModalJp
+  TicketModalEn, TicketModalJp,
+  AdminEn, AdminJp
 } from '@umamusumeenjoyer/shared-logic';
 
 
@@ -108,7 +109,8 @@ i18n
         notification: notificationEn,
         NotFound: notFoundEn,
         AdminDashboard: AdminDashboardEn,
-        TicketModal: TicketModalEn
+        TicketModal: TicketModalEn,
+        Admin: AdminEn
       },
       jp: {
         common: commonJp,
@@ -155,7 +157,8 @@ i18n
         notification: notificationJp,
         NotFound: notFoundJp,
         AdminDashboard: AdminDashboardJp,
-        TicketModal: TicketModalJp
+        TicketModal: TicketModalJp,
+        Admin: AdminJp
       }
     },
     lng: localStorage.getItem('language') || DEFAULT_LANG,

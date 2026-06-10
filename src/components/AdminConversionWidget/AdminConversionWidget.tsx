@@ -3,6 +3,7 @@ import useSWR from 'swr';
 import { adminService } from '@umamusumeenjoyer/shared-logic';
 import { ChevronDown, ChevronUp, Loader2, UploadCloud } from 'lucide-react';
 import styles from './AdminConversionWidget.module.css';
+import { useTranslation } from 'react-i18next';
 
 interface ConversionTask {
   startedAt: string;
@@ -20,6 +21,7 @@ interface UploadTask {
 }
 
 const AdminConversionWidget: React.FC = () => {
+  const { t } = useTranslation(['Admin']);
   const [isMinimized, setIsMinimized] = useState(false);
   const [activeUploads, setActiveUploads] = useState<Record<string, UploadTask>>({});
 
@@ -96,7 +98,7 @@ const AdminConversionWidget: React.FC = () => {
   const totalTasks = activeConversions.length + uploadsList.length;
 
   const formatEta = (seconds?: number) => {
-    if (seconds === undefined || seconds < 0) return 'Đang tính...';
+    if (seconds === undefined || seconds < 0) return t('Admin:conversionWidget.calculating');
     if (seconds < 60) return `${seconds}s`;
     const m = Math.floor(seconds / 60);
     const s = seconds % 60;
@@ -108,12 +110,12 @@ const AdminConversionWidget: React.FC = () => {
       <div className={styles.header}>
         <div className={styles.title}>
           <Loader2 size={16} className={styles.spinner} style={{ animationDuration: totalTasks > 0 ? '1s' : '0s' }} />
-          Đang Xử Lý ({totalTasks})
+          {t('Admin:conversionWidget.processing')} ({totalTasks})
         </div>
         <button 
           className={styles.minimizeBtn} 
           onClick={() => setIsMinimized(!isMinimized)}
-          title={isMinimized ? "Mở rộng" : "Thu gọn"}
+          title={isMinimized ? t('Admin:conversionWidget.expand') : t('Admin:conversionWidget.collapse')}
         >
           {isMinimized ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
         </button>
@@ -123,7 +125,7 @@ const AdminConversionWidget: React.FC = () => {
         <div className={styles.content}>
           {totalTasks === 0 ? (
             <div className={styles.emptyState}>
-              Không có tiến trình nào đang chạy.
+              {t('Admin:conversionWidget.noTasks')}
             </div>
           ) : (
             <>
@@ -133,7 +135,7 @@ const AdminConversionWidget: React.FC = () => {
               <div className={styles.itemHeader}>
                 <div className={styles.animeInfo}>
                   <UploadCloud size={14} style={{ display: 'inline', marginRight: 4, verticalAlign: 'text-bottom' }}/>
-                  Upload Phim {task.animeId} - Tập {task.episodeNumber}
+                  {t('Admin:conversionWidget.uploadTitle')} {task.animeId} - {t('Admin:conversionWidget.episode')} {task.episodeNumber}
                 </div>
                 <div className={styles.percentage}>{task.progress}%</div>
               </div>
@@ -153,7 +155,7 @@ const AdminConversionWidget: React.FC = () => {
               <div key={`conv_${idx}`} className={styles.item}>
                 <div className={styles.itemHeader}>
                   <div className={styles.animeInfo}>
-                    HLS Phim {task.animeId} - Tập {task.episodeNumber}
+                    {t('Admin:conversionWidget.hlsTitle')} {task.animeId} - {t('Admin:conversionWidget.episode')} {task.episodeNumber}
                   </div>
                   <div className={styles.percentage}>{prog.toFixed(1)}%</div>
                 </div>
@@ -164,7 +166,7 @@ const AdminConversionWidget: React.FC = () => {
                   />
                 </div>
                 <div className={styles.eta}>
-                  ETA: {formatEta(task.eta)}
+                  {t('Admin:conversionWidget.eta')}: {formatEta(task.eta)}
                 </div>
               </div>
             );

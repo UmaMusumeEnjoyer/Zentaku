@@ -1,0 +1,114 @@
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  backdrop-filter: blur(4px);
+}
+
+.modalContent {
+  background-color: var(--bg-panel, #2B2D31);
+  border-radius: 12px;
+  padding: 24px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  color: var(--text-primary, #DBDEE1);
+  border: 1px solid var(--border-subtle, #1E1F22);
+  animation: modalFadeIn 0.2s ease;
+  font-family: 'Montserrat', sans-serif;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.modalHeader h2 {
+  margin: 0 0 16px 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.modalBody {
+  margin-bottom: 24px;
+  color: var(--text-secondary, #949BA4);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  white-space: pre-wrap; /* Preserve newlines */
+}
+
+.modalBody p {
+  margin: 0;
+}
+
+.modalFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.cancelBtn, .confirmBtn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.cancelBtn {
+  background-color: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-subtle);
+}
+
+.cancelBtn:hover:not(:disabled) {
+  background-color: var(--bg-subtle, #1E1F22);
+}
+
+.confirmBtn.danger {
+  background-color: #DA373C;
+  color: #fff;
+}
+
+.confirmBtn.danger:hover:not(:disabled) {
+  background-color: #A12828;
+}
+
+.confirmBtn.warning {
+  background-color: #F0B232;
+  color: #fff;
+}
+
+.confirmBtn.warning:hover:not(:disabled) {
+  background-color: #b98925;
+}
+
+.confirmBtn.info {
+  background-color: #3578E5;
+  color: #fff;
+}
+
+.confirmBtn.info:hover:not(:disabled) {
+  background-color: #2a62bc;
+}
+
+.confirmBtn:disabled, .cancelBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

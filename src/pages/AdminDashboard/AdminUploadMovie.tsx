@@ -2,6 +2,9 @@ import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { adminService } from '@umamusumeenjoyer/shared-logic';
 import type { FilmServerEpisode } from '@umamusumeenjoyer/shared-logic';
 import styles from './AdminUploadMovie.module.css';
+import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
+import ConfirmModal from './components/ConfirmModal/ConfirmModal';
 
 // ==================== Types ====================
 interface AnimeResult {
@@ -25,11 +28,7 @@ interface AnimeResult {
 
 type Step = 'search' | 'episode' | 'upload';
 
-const STEPS: { key: Step; label: string }[] = [
-  { key: 'search', label: 'Chọn Anime' },
-  { key: 'episode', label: 'Chọn Tập' },
-  { key: 'upload', label: 'Upload File' },
-];
+
 
 // ==================== Helper ====================
 function formatFileSize(bytes: number): string {
@@ -41,6 +40,28 @@ function formatFileSize(bytes: number): string {
 
 // ==================== Component ====================
 const AdminUploadMovie: React.FC = () => {
+  const { t } = useTranslation(['Admin']);
+
+  const STEPS: { key: Step; label: string }[] = [
+    { key: 'search', label: t('Admin:uploadMovie.steps.search') },
+    { key: 'episode', label: t('Admin:uploadMovie.steps.episode') },
+    { key: 'upload', label: t('Admin:uploadMovie.steps.upload') },
+  ];
+
+  const [confirmModalState, setConfirmModalState] = useState<{
+    isOpen: boolean;
+    title?: string;
+    message: string;
+    type: 'danger' | 'warning' | 'info';
+    onConfirm: () => void;
+  }>({
+    isOpen: false,
+    message: '',
+    type: 'danger',
+    onConfirm: () => {},
+  });
+
+  const closeConfirmModal = () => setConfirmModalState(prev => ({ ...prev, isOpen: false }));
   // Step management
   const [currentStep, setCurrentStep] = useState<Step>('search');
   const [searchMode, setSearchMode] = useState<'server' | 'new'>('server');
@@ -154,7 +175,7 @@ const AdminUploadMovie: React.FC = () => {
     const ext = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
     const validVideoExts = ['.mp4', '.mkv', '.webm'];
     if (!validVideoExts.includes(ext)) {
-      alert(`Invalid video format: ${ext}. Supported: mp4, mkv, webm.`);
+      toast.error(t('Admin:uploadMovie.alerts.invalidVideo', { ext }));
       return;
     }
     const url = URL.createObjectURL(file);
@@ -167,7 +188,7 @@ const AdminUploadMovie: React.FC = () => {
   const handleSubtitleSelect = (file: File, ep: number) => {
     const ext = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
     if (ext !== '.vtt') {
-      alert(`Invalid subtitle format: ${ext}. Only .vtt is supported.`);
+      toast.error(t('Admin:uploadMovie.alerts.invalidSubtitle', { ext }));
       return;
     }
     setUploadFiles(prev => ({
@@ -195,46 +216,51 @@ const AdminUploadMovie: React.FC = () => {
 
   const handleDeleteEpisode = async (epNum: string) => {
     if (!selectedAnime) return;
-    if (!window.confirm(`Bạn có chắc chắn muốn xoá vĩnh viễn tập ${epNum} khỏi server?\n(Dữ liệu video và phụ đề không thể khôi phục)`)) {
-      return;
-    }
-    
-    setIsDeletingEpisode(epNum);
-    try {
-      await adminService.deleteEpisode(selectedAnime.id, Number(epNum));
-      // Refresh list
-      const eps = await adminService.getEpisodes(selectedAnime.id);
-      setExistingEpisodes(eps);
-      
-      // Remove from selected if it was selected
-      setSelectedEpisodes(prev => prev.filter(e => e !== Number(epNum)));
-    } catch (err) {
-      console.error('Lỗi khi xoá tập phim:', err);
-      alert('Đã xảy ra lỗi khi xoá tập phim khỏi FilmServer.');
-    } finally {
-      setIsDeletingEpisode(null);
-    }
+    setConfirmModalState({
+      isOpen: true,
+      message: t('Admin:uploadMovie.alerts.deleteEpisodeConfirm', { epNum }),
+      type: 'danger',
+      onConfirm: async () => {
+        closeConfirmModal();
+        setIsDeletingEpisode(epNum);
+        try {
+          await adminService.deleteEpisode(selectedAnime.id, Number(epNum));
+          const eps = await adminService.getEpisodes(selectedAnime.id);
+          setExistingEpisodes(eps);
+          setSelectedEpisodes(prev => prev.filter(e => e !== Number(epNum)));
+          toast.success(t('Admin:uploadMovie.alerts.deleteEpisodeSuccess', { epNum }));
+        } catch (err) {
+          console.error(err);
+          toast.error(t('Admin:uploadMovie.alerts.deleteEpisodeError'));
+        } finally {
+          setIsDeletingEpisode(null);
+        }
+      }
+    });
   };
 
   const handleDeleteAnime = async () => {
     if (!selectedAnime) return;
-    if (!window.confirm(`⚠️ NGUY HIỂM: Bạn có chắc chắn muốn XÓA TOÀN BỘ bộ anime này khỏi FilmServer?\n(Tất cả ${existingEpisodes.length} tập phim, video và phụ đề sẽ bị xóa vĩnh viễn và không thể khôi phục!)`)) {
-      return;
-    }
-    
-    setIsDeletingAnime(true);
-    try {
-      await adminService.deleteAnime(selectedAnime.id);
-      // Xóa thành công toàn bộ, làm rỗng danh sách tập hiện có
-      setExistingEpisodes([]);
-      setSelectedEpisodes([]);
-      alert('Đã xóa toàn bộ anime khỏi FilmServer thành công.');
-    } catch (err) {
-      console.error('Lỗi khi xoá toàn bộ anime:', err);
-      alert('Đã xảy ra lỗi khi xoá toàn bộ anime khỏi FilmServer.');
-    } finally {
-      setIsDeletingAnime(false);
-    }
+    setConfirmModalState({
+      isOpen: true,
+      message: t('Admin:uploadMovie.alerts.deleteAllConfirm', { count: existingEpisodes.length }),
+      type: 'danger',
+      onConfirm: async () => {
+        closeConfirmModal();
+        setIsDeletingAnime(true);
+        try {
+          await adminService.deleteAnime(selectedAnime.id);
+          setExistingEpisodes([]);
+          setSelectedEpisodes([]);
+          toast.success(t('Admin:uploadMovie.alerts.deleteAllSuccess'));
+        } catch (err) {
+          console.error(err);
+          toast.error(t('Admin:uploadMovie.alerts.deleteAllError'));
+        } finally {
+          setIsDeletingAnime(false);
+        }
+      }
+    });
   };
 
   const handleUpdateSource = async () => {
@@ -248,7 +274,7 @@ const AdminUploadMovie: React.FC = () => {
         videoFile: manageVideoFile,
         subtitleFile: manageSubtitleFile || undefined
       });
-      alert('Tải lên source mới thành công! Tiến trình băm HLS đã được tự động bắt đầu.');
+      toast.success(t('Admin:uploadMovie.alerts.updateSourceSuccess'));
       // Xoá file đã chọn
       setManageVideoFile(null);
       setManageSubtitleFile(null);
@@ -258,7 +284,7 @@ const AdminUploadMovie: React.FC = () => {
       setExistingEpisodes(eps);
     } catch (err) {
       console.error('Lỗi khi cập nhật source:', err);
-      alert('Đã xảy ra lỗi khi tải lên source mới.');
+      toast.error(t('Admin:uploadMovie.alerts.updateSourceError'));
     } finally {
       setIsUpdatingSource(false);
     }
@@ -305,7 +331,7 @@ const AdminUploadMovie: React.FC = () => {
     
     const hasAnyFiles = selectedEpisodes.some(ep => uploadFiles[ep]?.video || uploadFiles[ep]?.subtitle);
     if (!hasAnyFiles) {
-      alert('Please select at least one video or subtitle file for any episode.');
+      toast.warning(t('Admin:uploadMovie.alerts.noFilesSelected'));
       return;
     }
 
@@ -458,13 +484,13 @@ const AdminUploadMovie: React.FC = () => {
               className={`${styles.searchModeTab} ${searchMode === 'server' ? styles.active : ''}`}
               onClick={() => setSearchMode('server')}
             >
-              Anime Trên Server
+              {t('Admin:uploadMovie.search.tabServer')}
             </div>
             <div 
               className={`${styles.searchModeTab} ${searchMode === 'new' ? styles.active : ''}`}
               onClick={() => setSearchMode('new')}
             >
-              Tìm Anime Mới
+              {t('Admin:uploadMovie.search.tabNew')}
             </div>
           </div>
 
@@ -476,7 +502,7 @@ const AdminUploadMovie: React.FC = () => {
                   id="anime-search-input"
                   type="text"
                   className={styles.searchInput}
-                  placeholder="Tìm kiếm anime theo tên..."
+                  placeholder={t('Admin:uploadMovie.search.placeholderNew')}
                   value={searchQuery}
                   onChange={onSearchChange}
                   autoFocus
@@ -484,12 +510,12 @@ const AdminUploadMovie: React.FC = () => {
               </div>
 
               {isSearching && (
-                <div className={styles.searchLoading}>Đang tìm kiếm...</div>
+                <div className={styles.searchLoading}>{t('Admin:uploadMovie.search.loading')}</div>
               )}
 
               {!isSearching && searchResults.length === 0 && searchQuery.length >= 2 && (
                 <div className={styles.noResults}>
-                  Không tìm thấy kết quả cho "{searchQuery}"
+                  {t('Admin:uploadMovie.search.noResultsNew', { query: searchQuery }).split('"')[0]} "{searchQuery}"
                 </div>
               )}
 
@@ -536,10 +562,10 @@ const AdminUploadMovie: React.FC = () => {
           {searchMode === 'server' && (
             <>
               {isFetchingServer ? (
-                <div className={styles.searchLoading}>Đang tải danh sách anime từ server...</div>
+                <div className={styles.searchLoading}>{t('Admin:uploadMovie.search.loadingServer')}</div>
               ) : serverAnimes.length === 0 ? (
                 <div className={styles.noResults}>
-                  Chưa có anime nào được lưu trên FilmServer.
+                  {t('Admin:uploadMovie.search.noResultsServer')}
                 </div>
               ) : (
                 <>
@@ -548,7 +574,7 @@ const AdminUploadMovie: React.FC = () => {
                     <input
                       type="text"
                       className={styles.searchInput}
-                      placeholder="Tìm kiếm anime trên server bằng tên hoặc ID..."
+                      placeholder={t('Admin:uploadMovie.search.placeholderServer')}
                       value={serverSearchQuery}
                       onChange={(e) => setServerSearchQuery(e.target.value)}
                     />
@@ -627,13 +653,13 @@ const AdminUploadMovie: React.FC = () => {
               </div>
             </div>
             <button className={styles.changeAnimeBtn} onClick={() => setCurrentStep('search')}>
-              Thay đổi
+              {t('Admin:uploadMovie.episode.changeAnime')}
             </button>
           </div>
 
           <div className={styles.formGroup}>
             <label className={styles.formLabel}>
-              Chọn Tập Cần Upload ({selectedEpisodes.length} tập đã chọn)
+              {t('Admin:uploadMovie.episode.selectLabel', { count: selectedEpisodes.length })}
             </label>
             
             {/* Grid of buttons if total episodes are known */}
@@ -660,7 +686,7 @@ const AdminUploadMovie: React.FC = () => {
 
             <div className={styles.manualEpisodeGroup}>
               <label className={styles.formLabel} htmlFor="manual-episode-input">
-                Hoặc nhập thủ công (vd: 1, 3, 5-10)
+                {t('Admin:uploadMovie.episode.manualInputLabel')}
               </label>
               <input
                 id="manual-episode-input"
@@ -668,10 +694,10 @@ const AdminUploadMovie: React.FC = () => {
                 className={styles.episodeInput}
                 value={manualEpisodeInput}
                 onChange={handleManualEpisodeChange}
-                placeholder="Ví dụ: 1, 3, 5-10"
+                placeholder={t('Admin:uploadMovie.episode.manualInputPlaceholder')}
               />
               <div className={styles.manualInputHint}>
-                Các tập đã chọn: {selectedEpisodes.length > 0 ? selectedEpisodes.join(', ') : 'Chưa chọn tập nào'}
+                {selectedEpisodes.length > 0 ? t('Admin:uploadMovie.episode.selectedHint', { episodes: selectedEpisodes.join(', ') }) : t('Admin:uploadMovie.episode.noSelectedHint')}
               </div>
             </div>
           </div>
@@ -681,14 +707,14 @@ const AdminUploadMovie: React.FC = () => {
             <div className={styles.existingEpisodes}>
               <div className={styles.existingHeaderRow}>
                 <div className={styles.existingTitle}>
-                  Tập đã có trên FilmServer ({existingEpisodes.length})
+                  {t('Admin:uploadMovie.episode.existingTitle', { count: existingEpisodes.length })}
                 </div>
                 <button 
                   className={styles.deleteAllBtn}
                   onClick={handleDeleteAnime}
                   disabled={isDeletingAnime}
                 >
-                  {isDeletingAnime ? 'Đang xóa...' : '🗑️ Xóa toàn bộ Anime'}
+                  {isDeletingAnime ? t('Admin:uploadMovie.episode.deleteAllBtnLoading') : `🗑️ ${t('Admin:uploadMovie.episode.deleteAllBtn')}`}
                 </button>
               </div>
               <div className={styles.episodeGrid}>
@@ -699,7 +725,7 @@ const AdminUploadMovie: React.FC = () => {
                         ep.hasHls ? styles.episodeTagReady : styles.episodeTagProcessing
                       } ${styles.clickable}`}
                       onClick={() => setManagingEpisode(ep)}
-                      title="Nhấn để Quản lý Source"
+                      title={t('Admin:uploadMovie.episode.manageSourceTitle')}
                     >
                       Ep {ep.episodeNumber} {ep.hasHls ? '✓' : '⏳'}
                     </span>
@@ -707,7 +733,7 @@ const AdminUploadMovie: React.FC = () => {
                       className={styles.deleteEpisodeBtn}
                       onClick={() => handleDeleteEpisode(ep.episodeNumber)}
                       disabled={isDeletingEpisode === ep.episodeNumber}
-                      title="Xóa tập phim"
+                      title={t('Admin:uploadMovie.episode.deleteEpisodeBtnTitle')}
                     >
                       {isDeletingEpisode === ep.episodeNumber ? '...' : '✕'}
                     </button>
@@ -722,14 +748,14 @@ const AdminUploadMovie: React.FC = () => {
               className={styles.btnSecondary}
               onClick={() => setCurrentStep('search')}
             >
-              Quay Lại
+              {t('Admin:uploadMovie.episode.btnBack')}
             </button>
             <button
               className={styles.btnPrimary}
               onClick={() => setCurrentStep('upload')}
               disabled={selectedEpisodes.length === 0}
             >
-              Tiếp Tục
+              {t('Admin:uploadMovie.episode.btnNext')}
             </button>
           </div>
         </div>
@@ -752,7 +778,7 @@ const AdminUploadMovie: React.FC = () => {
                 {selectedAnime.title?.english || selectedAnime.title?.romaji}
               </div>
               <div className={styles.selectedAnimeId}>
-                AniList ID: {selectedAnime.id} — Số tập sẽ upload: {selectedEpisodes.length}
+                {t('Admin:uploadMovie.upload.summary', { id: selectedAnime.id, count: selectedEpisodes.length })}
               </div>
             </div>
           </div>
@@ -760,10 +786,10 @@ const AdminUploadMovie: React.FC = () => {
           {isBatchCompleted ? (
             <div className={styles.successMessage}>
               <div className={styles.successIcon}>✅</div>
-              <div className={styles.successTitle}>Đã upload xong {selectedEpisodes.length} tập!</div>
-              <div className={styles.successSub}>Server đang xử lý chuyển đổi HLS.</div>
+              <div className={styles.successTitle}>{t('Admin:uploadMovie.upload.successTitle', { count: selectedEpisodes.length })}</div>
+              <div className={styles.successSub}>{t('Admin:uploadMovie.upload.successSub')}</div>
               <button className={styles.btnPrimary} onClick={resetForm} style={{ marginTop: '20px' }}>
-                Tiếp tục Upload
+                {t('Admin:uploadMovie.upload.btnContinue')}
               </button>
             </div>
           ) : (
@@ -771,7 +797,7 @@ const AdminUploadMovie: React.FC = () => {
               {isUploading && (
                 <div className={styles.batchProgressContainer}>
                   <div className={styles.batchProgressHeader}>
-                    <span>Tiến trình chung</span>
+                    <span>{t('Admin:uploadMovie.upload.progressHeader')}</span>
                   </div>
                   {selectedEpisodes.map(ep => {
                     const prog = uploadProgress[ep] || 0;
@@ -929,13 +955,13 @@ const AdminUploadMovie: React.FC = () => {
                 <div className={styles.statusRow}>
                   <strong>Trạng thái Video (HLS):</strong> 
                   <span className={managingEpisode.hasHls ? styles.textSuccess : styles.textWarning}>
-                    {managingEpisode.hasHls ? '✅ Đã có' : '⏳ Chưa có / Đang băm'}
+                    {managingEpisode.hasHls ? t('Admin:uploadMovie.episode.hasSource') : t('Admin:uploadMovie.episode.noSourceHls')}
                   </span>
                 </div>
                 <div className={styles.statusRow}>
                   <strong>Phụ đề (VTT):</strong> 
                   <span className={managingEpisode.hasSubtitle ? styles.textSuccess : styles.textDanger}>
-                    {managingEpisode.hasSubtitle ? '✅ Đã có' : '❌ Chưa có'}
+                    {managingEpisode.hasSubtitle ? t('Admin:uploadMovie.episode.hasSource') : t('Admin:uploadMovie.episode.noSourceVtt')}
                   </span>
                 </div>
               </div>
