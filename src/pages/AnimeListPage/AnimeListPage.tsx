@@ -88,7 +88,7 @@ const AnimeListPage: React.FC = () => {
             listInfo={{
               list_name: listInfo.name,
               description: listInfo.description,
-              is_private: listInfo.privacy === 'private',
+              is_private: listInfo.privacy?.toLowerCase() === 'private',
               is_owner: listInfo.isOwner,
               color: listInfo.color,
               bannerImage: listInfo.bannerImage,
@@ -330,7 +330,7 @@ const AnimeListPage: React.FC = () => {
         initialData={{
           list_name: listInfo.name,
           description: listInfo.description,
-          is_private: listInfo.privacy === 'private',
+          is_private: listInfo.privacy?.toLowerCase() === 'private',
           color: (listInfo.bannerImage && listInfo.bannerImage.startsWith('#')) ? listInfo.bannerImage : listInfo.color,
           bannerImage: (listInfo.bannerImage && !listInfo.bannerImage.startsWith('#')) ? listInfo.bannerImage : ''
         }}
