@@ -62,6 +62,12 @@ const AdminUploadMovie: React.FC = () => {
   const [isDeletingEpisode, setIsDeletingEpisode] = useState<string | null>(null);
   const [isDeletingAnime, setIsDeletingAnime] = useState(false);
 
+  // Manage Episode (Replace Source)
+  const [managingEpisode, setManagingEpisode] = useState<FilmServerEpisode | null>(null);
+  const [manageVideoFile, setManageVideoFile] = useState<File | null>(null);
+  const [manageSubtitleFile, setManageSubtitleFile] = useState<File | null>(null);
+  const [isUpdatingSource, setIsUpdatingSource] = useState(false);
+
   // Selected anime
   const [selectedAnime, setSelectedAnime] = useState<AnimeResult | null>(null);
 
@@ -214,6 +220,33 @@ const AdminUploadMovie: React.FC = () => {
       alert('Đã xảy ra lỗi khi xoá toàn bộ anime khỏi FilmServer.');
     } finally {
       setIsDeletingAnime(false);
+    }
+  };
+
+  const handleUpdateSource = async () => {
+    if (!selectedAnime || !managingEpisode || !manageVideoFile) return;
+    
+    setIsUpdatingSource(true);
+    try {
+      await adminService.uploadEpisode(
+        selectedAnime.id,
+        Number(managingEpisode.episodeNumber),
+        manageVideoFile,
+        manageSubtitleFile || undefined
+      );
+      alert('Tải lên source mới thành công! Tiến trình băm HLS đã được tự động bắt đầu.');
+      // Xoá file đã chọn
+      setManageVideoFile(null);
+      setManageSubtitleFile(null);
+      setManagingEpisode(null);
+      // Refetch episodes
+      const eps = await adminService.getEpisodes(selectedAnime.id);
+      setExistingEpisodes(eps);
+    } catch (err) {
+      console.error('Lỗi khi cập nhật source:', err);
+      alert('Đã xảy ra lỗi khi tải lên source mới.');
+    } finally {
+      setIsUpdatingSource(false);
     }
   };
 
@@ -648,7 +681,9 @@ const AdminUploadMovie: React.FC = () => {
                     <span
                       className={`${styles.episodeTag} ${
                         ep.hasHls ? styles.episodeTagReady : styles.episodeTagProcessing
-                      }`}
+                      } ${styles.clickable}`}
+                      onClick={() => setManagingEpisode(ep)}
+                      title="Nhấn để Quản lý Source"
                     >
                       Ep {ep.episodeNumber} {ep.hasHls ? '✓' : '⏳'}
                     </span>
@@ -863,8 +898,73 @@ const AdminUploadMovie: React.FC = () => {
           )}
         </div>
       )}
+
+      {/* EPISODE MANAGER MODAL */}
+      {managingEpisode && (
+        <div className={styles.modalOverlay} onClick={() => setManagingEpisode(null)}>
+          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.modalHeader}>
+              <h3>Quản lý Tập {managingEpisode.episodeNumber}</h3>
+              <button className={styles.closeModalBtn} onClick={() => setManagingEpisode(null)}>✕</button>
+            </div>
+            
+            <div className={styles.modalBody}>
+              <div className={styles.episodeStatusBox}>
+                <div className={styles.statusRow}>
+                  <strong>Trạng thái Video (HLS):</strong> 
+                  <span className={managingEpisode.hasHls ? styles.textSuccess : styles.textWarning}>
+                    {managingEpisode.hasHls ? '✅ Đã có' : '⏳ Chưa có / Đang băm'}
+                  </span>
+                </div>
+                <div className={styles.statusRow}>
+                  <strong>Phụ đề (VTT):</strong> 
+                  <span className={managingEpisode.hasSubtitle ? styles.textSuccess : styles.textDanger}>
+                    {managingEpisode.hasSubtitle ? '✅ Đã có' : '❌ Chưa có'}
+                  </span>
+                </div>
+              </div>
+
+              <div className={styles.updateSourceSection}>
+                <h4>🔄 Cập nhật Source (Ghi đè)</h4>
+                <p className={styles.warningText}>Tính năng này sẽ xóa sạch source cũ và tiến hành băm HLS lại từ đầu với file video mới!</p>
+                
+                <div className={styles.fileInputGroup}>
+                  <label className={styles.formLabel}>Video mới (MP4/MKV):</label>
+                  <input 
+                    type="file" 
+                    className={styles.fileInput}
+                    accept="video/mp4,video/x-mkv,video/mkv,video/webm" 
+                    onChange={(e) => e.target.files && setManageVideoFile(e.target.files[0])} 
+                  />
+                  {manageVideoFile && <div className={styles.fileName}>{manageVideoFile.name}</div>}
+                </div>
+                
+                <div className={styles.fileInputGroup}>
+                  <label className={styles.formLabel}>Phụ đề mới (VTT) - Tùy chọn:</label>
+                  <input 
+                    type="file" 
+                    className={styles.fileInput}
+                    accept=".vtt" 
+                    onChange={(e) => e.target.files && setManageSubtitleFile(e.target.files[0])} 
+                  />
+                  {manageSubtitleFile && <div className={styles.fileName}>{manageSubtitleFile.name}</div>}
+                </div>
+
+                <button 
+                  className={styles.btnPrimary} 
+                  style={{ width: '100%', marginTop: '20px' }}
+                  disabled={!manageVideoFile || isUpdatingSource}
+                  onClick={handleUpdateSource}
+                >
+                  {isUpdatingSource ? 'Đang tải lên và xử lý...' : 'Tải lên & Thay thế Source'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
-};
+}
 
 export default AdminUploadMovie;
