@@ -1,6 +1,6 @@
 .board {
   display: flex;
-  gap: 20px;
+  gap: 16px;
   overflow-x: auto;
   padding-bottom: 20px;
   min-height: 60vh;
@@ -14,8 +14,8 @@
 
 .column {
   flex: 1;
-  min-width: 280px;
-  max-width: 350px;
+  min-width: 200px;
+  /* max-width removed or set to 100% to let flex do the job of sharing space evenly */
   background: rgba(20, 20, 25, 0.4);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
