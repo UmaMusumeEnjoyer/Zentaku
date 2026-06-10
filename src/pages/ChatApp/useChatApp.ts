@@ -102,7 +102,12 @@ export const useChatMessenger = (): UseChatMessengerReturn => {
             name: roomName,
             avatar,
             members: [], 
-            messages: [],
+            messages: ch.lastMessage ? [{
+              id: 'temp-last-' + ch.id,
+              sender: ch.lastMessage.sender || currentUser,
+              content: ch.lastMessage.content,
+              timestamp: formatMessageTime(ch.lastMessage.createdAt)
+            } as Message] : [],
           });
         });
         setPrivateRooms(allPrivate);
