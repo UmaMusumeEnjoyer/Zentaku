@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styles from './AdminDashboard.module.css';
 import { apiClient } from '@umamusumeenjoyer/shared-logic';
 import TicketManagement from './TicketManagement';
+import AdminUploadMovie from './AdminUploadMovie';
 import { useTranslation } from 'react-i18next';
 
 interface SystemHealth {
@@ -28,7 +29,7 @@ interface SystemHealth {
 
 const AdminDashboard: React.FC = () => {
   const { t } = useTranslation('AdminDashboard');
-  const [activeTab, setActiveTab] = useState<'health' | 'tickets'>('health');
+  const [activeTab, setActiveTab] = useState<'health' | 'tickets' | 'upload'>('health');
   const [health, setHealth] = useState<SystemHealth | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -71,6 +72,12 @@ const AdminDashboard: React.FC = () => {
           onClick={() => setActiveTab('tickets')}
         >
           {t('supportTickets')}
+        </button>
+        <button 
+          className={`${styles.tabButton} ${activeTab === 'upload' ? styles.activeTab : ''}`}
+          onClick={() => setActiveTab('upload')}
+        >
+          🎬 Upload Movie
         </button>
       </div>
 
@@ -118,6 +125,10 @@ const AdminDashboard: React.FC = () => {
 
       {activeTab === 'tickets' && (
         <TicketManagement />
+      )}
+
+      {activeTab === 'upload' && (
+        <AdminUploadMovie />
       )}
     </div>
   );
