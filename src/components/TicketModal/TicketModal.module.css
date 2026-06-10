@@ -4,8 +4,9 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -14,17 +15,19 @@
 }
 
 .modalContent {
-  background: rgba(20, 20, 20, 0.85);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--bg-panel, rgba(20, 20, 20, 0.75));
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.15));
   border-radius: 16px;
-  padding: 30px;
+  padding: 32px;
   width: 90%;
   max-width: 500px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(120, 50, 255, 0.2);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(120, 50, 255, 0.15);
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 24px;
   animation: slideUp 0.3s ease;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 .header {
@@ -36,31 +39,35 @@
 .header h2 {
   margin: 0;
   font-size: 24px;
-  color: #fff;
+  color: var(--text-primary, #fff);
   font-weight: 600;
 }
 
 .closeButton {
   background: none;
   border: none;
-  color: #aaa;
-  font-size: 24px;
+  color: var(--text-secondary, #aaa);
+  font-size: 28px;
   cursor: pointer;
-  transition: color 0.2s;
+  transition: color 0.2s, transform 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .closeButton:hover {
-  color: #fff;
+  color: var(--text-primary, #fff);
+  transform: scale(1.1);
 }
 
 .formGroup {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 }
 
 .formGroup label {
-  color: #ccc;
+  color: var(--text-secondary, #ccc);
   font-size: 14px;
   font-weight: 500;
 }
@@ -68,49 +75,70 @@
 .formGroup input,
 .formGroup select,
 .formGroup textarea {
-  background: rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  padding: 12px;
-  color: #fff;
+  background: var(--bg-subtle, rgba(0, 0, 0, 0.2));
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.1));
+  border-radius: 10px;
+  padding: 14px;
+  color: var(--text-primary, #fff);
   font-size: 15px;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
 }
 
 .formGroup input:focus,
 .formGroup select:focus,
 .formGroup textarea:focus {
   outline: none;
+  background: var(--bg-panel, rgba(0, 0, 0, 0.4));
   border-color: #8c52ff;
-  box-shadow: 0 0 0 2px rgba(140, 82, 255, 0.2);
+  box-shadow: 0 0 0 3px rgba(140, 82, 255, 0.25);
 }
 
 .formGroup textarea {
   resize: vertical;
-  min-height: 100px;
+  min-height: 120px;
+  font-family: inherit;
+}
+
+.formGroup select {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%238c52ff%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px top 50%;
+  background-size: 12px auto;
+  padding-right: 40px;
+}
+
+.formGroup select option {
+  background: var(--bg-panel, #1a1a1a);
+  color: var(--text-primary, #fff);
 }
 
 .submitButton {
   background: linear-gradient(135deg, #8c52ff 0%, #5e17eb 100%);
   color: white;
   border: none;
-  border-radius: 8px;
-  padding: 14px;
+  border-radius: 10px;
+  padding: 16px;
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
-  margin-top: 10px;
+  transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+  margin-top: 12px;
 }
 
 .submitButton:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(140, 82, 255, 0.4);
+  box-shadow: 0 6px 20px rgba(140, 82, 255, 0.4);
+}
+
+.submitButton:active:not(:disabled) {
+  transform: translateY(0);
 }
 
 .submitButton:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+  filter: grayscale(0.5);
 }
 
 @keyframes fadeIn {
