@@ -1,5 +1,5 @@
 // src/pages/Auth/AuthPage.tsx
-import React from 'react';
+import React, { useState } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import styles from './AuthPage.module.css';
 import { toast } from 'react-toastify';
@@ -9,6 +9,7 @@ import { useAuthPage } from '@umamusumeenjoyer/shared-logic';
 import { useAuth } from '../../context/AuthContext';
 
 import { useTranslation } from 'react-i18next';
+import { Eye, EyeOff } from 'lucide-react';
 
 const AuthPage: React.FC = () => {
   const location = useLocation();
@@ -16,6 +17,10 @@ const AuthPage: React.FC = () => {
   const { login } = useAuth();
   const { t } = useTranslation(['Auth']);
   const initialPath = location.pathname === '/signup' ? 'signup' : 'login';
+
+  const [showLoginPassword, setShowLoginPassword] = useState(false);
+  const [showRegisterPassword, setShowRegisterPassword] = useState(false);
+  const [showRegisterConfirmPassword, setShowRegisterConfirmPassword] = useState(false);
 
   const loginCallback = async (email: string, password: string) => {
     return await login({ email, password });
@@ -100,16 +105,35 @@ const AuthPage: React.FC = () => {
 
             {/* Password */}
             <div className={styles.inputGroup}>
-              <input 
-                name="password" 
-                type="password" 
-                placeholder={t('Auth:placeholders.password')} 
-                value={registerData.password} 
-                onChange={handleRegisterChange}
-                onBlur={handleRegisterBlur}
-                className={registerErrors.password ? styles.inputError : ''}
-                required 
-              />
+              <div className={styles.passwordInputWrapper}>
+                <input 
+                  name="password" 
+                  type={showRegisterPassword ? "text" : "password"} 
+                  placeholder={t('Auth:placeholders.password')} 
+                  value={registerData.password} 
+                  onChange={handleRegisterChange}
+                  onBlur={handleRegisterBlur}
+                  className={registerErrors.password ? styles.inputError : ''}
+                  required 
+                />
+                <button
+                  type="button"
+                  className={styles.passwordToggleIcon}
+                  onClick={() => setShowRegisterPassword(!showRegisterPassword)}
+                >
+                  {showRegisterPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
+              
+              {/* Password Strength Indicator */}
+              <div className={styles.passwordStrengthContainer}>
+                <div className={`${styles.strengthPill} ${/[A-Z]/.test(registerData.password) ? styles.active : ''}`}>A</div>
+                <div className={`${styles.strengthPill} ${/[a-z]/.test(registerData.password) ? styles.active : ''}`}>a</div>
+                <div className={`${styles.strengthPill} ${/[0-9]/.test(registerData.password) ? styles.active : ''}`}>1</div>
+                <div className={`${styles.strengthPill} ${/[^A-Za-z0-9]/.test(registerData.password) ? styles.active : ''}`}>*</div>
+                <div className={`${styles.strengthPill} ${registerData.password.length >= 8 ? styles.active : ''}`}>8+</div>
+              </div>
+
               {registerErrors.password && (
                 <span className={styles.errorText}>{t(registerErrors.password)}</span>
               )}
@@ -117,16 +141,25 @@ const AuthPage: React.FC = () => {
 
             {/* Confirm Password */}
             <div className={styles.inputGroup}>
-              <input 
-                name="confirm_password" 
-                type="password" 
-                placeholder={t('Auth:placeholders.confirm_password')} 
-                value={registerData.confirm_password} 
-                onChange={handleRegisterChange}
-                onBlur={handleRegisterBlur}
-                className={registerErrors.confirm_password ? styles.inputError : ''}
-                required 
-              />
+              <div className={styles.passwordInputWrapper}>
+                <input 
+                  name="confirm_password" 
+                  type={showRegisterConfirmPassword ? "text" : "password"} 
+                  placeholder={t('Auth:placeholders.confirm_password')} 
+                  value={registerData.confirm_password} 
+                  onChange={handleRegisterChange}
+                  onBlur={handleRegisterBlur}
+                  className={registerErrors.confirm_password ? styles.inputError : ''}
+                  required 
+                />
+                <button
+                  type="button"
+                  className={styles.passwordToggleIcon}
+                  onClick={() => setShowRegisterConfirmPassword(!showRegisterConfirmPassword)}
+                >
+                  {showRegisterConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
               {registerErrors.confirm_password && (
                 <span className={styles.errorText}>{t(registerErrors.confirm_password)}</span>
               )}
@@ -171,16 +204,25 @@ const AuthPage: React.FC = () => {
 
             {/* Password */}
             <div className={styles.inputGroup}>
-              <input 
-                name="password" 
-                type="password" 
-                placeholder={t('Auth:placeholders.password')} 
-                value={loginData.password} 
-                onChange={handleLoginChange}
-                onBlur={handleLoginBlur}
-                className={loginErrors.password ? styles.inputError : ''}
-                required 
-              />
+              <div className={styles.passwordInputWrapper}>
+                <input 
+                  name="password" 
+                  type={showLoginPassword ? "text" : "password"} 
+                  placeholder={t('Auth:placeholders.password')} 
+                  value={loginData.password} 
+                  onChange={handleLoginChange}
+                  onBlur={handleLoginBlur}
+                  className={loginErrors.password ? styles.inputError : ''}
+                  required 
+                />
+                <button
+                  type="button"
+                  className={styles.passwordToggleIcon}
+                  onClick={() => setShowLoginPassword(!showLoginPassword)}
+                >
+                  {showLoginPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
               {loginErrors.password && (
                 <span className={styles.errorText}>{t(loginErrors.password)}</span>
               )}

@@ -510,4 +510,70 @@
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+/* =========================================
+   PASSWORD VISIBILITY AND STRENGTH
+   ========================================= */
+
+.passwordInputWrapper {
+    position: relative;
+    width: 100%;
+    margin: 8px 0; /* Move margin here from input if needed, but wait, input has it. Better to let input have it and position icon relative to wrapper */
+}
+
+/* We need to override the input margin inside the wrapper to avoid layout issues */
+.passwordInputWrapper input[type="password"],
+.passwordInputWrapper input[type="text"] {
+    margin: 0 !important;
+    padding-right: 40px; /* Make space for icon */
+}
+
+.passwordToggleIcon {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease;
+}
+
+.passwordToggleIcon:hover {
+    background: none !important;
+    color: var(--text-primary);
+}
+
+.passwordStrengthContainer {
+    display: flex;
+    justify-content: space-between;
+    gap: 4px;
+    margin-top: 4px;
+    margin-bottom: 8px;
+    width: 100%;
+}
+
+.strengthPill {
+    flex: 1;
+    height: 20px;
+    background-color: #ef4444; /* Red color initially */
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.strengthPill.active {
+    background-color: #10b981; /* Green color when active */
 }
