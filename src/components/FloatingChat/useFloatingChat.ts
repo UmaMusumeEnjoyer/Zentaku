@@ -295,10 +295,36 @@ export const useFloatingChat = () => {
             fetchRooms();
             return prev;
           }
+
+          let fakeMessageContent: string | null = null;
+          if (isWatchPartyInvite && notification.metadata?.channelId) {
+            const inviteLink = `${window.location.origin}/watch-along/${notification.metadata.channelId}`;
+            fakeMessageContent = `🎬 Mời bạn xem anime cùng!\nNhấn vào link để tham gia: ${inviteLink}`;
+          }
+
           return prev.map(room => {
             if (room.id !== channelId) return room;
+            
+            let updatedMessages = room.messages;
+            if (isWatchPartyInvite && fakeMessageContent) {
+               const newMsg: FloatingMessage = {
+                 id: notification.id || `invite-${Date.now()}`,
+                 sender: {
+                   id: 'unknown',
+                   name: notification.metadata?.hostUsername || 'Someone',
+                   avatar: notification.metadata?.hostAvatar || 'https://i.pravatar.cc/150',
+                   status: 'online'
+                 },
+                 content: fakeMessageContent,
+                 timestamp: formatMessageTime(Date.now()),
+                 rawTimestamp: Date.now()
+               };
+               updatedMessages = [...room.messages, newMsg];
+            }
+
             return {
               ...room,
+              messages: updatedMessages,
               lastMessage: messagePreview,
               lastMessageTime: formatRelativeTime(Date.now()),
               lastMessageRawTime: Date.now(),
