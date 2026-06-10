@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 interface KanbanBoardProps {
   tickets: SupportTicket[];
   onStatusChange: (ticketId: string, newStatus: TicketStatus) => void;
+  onMessageUser?: (userId: string) => void;
 }
 
 const COLUMNS = [
@@ -17,7 +18,7 @@ const COLUMNS = [
   { id: TicketStatus.CLOSED, titleKey: 'statusClosed', className: styles.closed },
 ];
 
-const KanbanBoard: React.FC<KanbanBoardProps> = ({ tickets, onStatusChange }) => {
+const KanbanBoard: React.FC<KanbanBoardProps> = ({ tickets, onStatusChange, onMessageUser }) => {
   const { t } = useTranslation('AdminDashboard');
   const [dragOverColumn, setDragOverColumn] = useState<TicketStatus | null>(null);
 
@@ -76,6 +77,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ tickets, onStatusChange }) =>
                   key={ticket.id.toString()} 
                   ticket={ticket} 
                   onDragStart={handleDragStart} 
+                  onMessageUser={onMessageUser}
                 />
               ))}
             </div>
