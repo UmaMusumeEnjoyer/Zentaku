@@ -59,6 +59,7 @@ const AdminUploadMovie: React.FC = () => {
   const [serverAnimes, setServerAnimes] = useState<AnimeResult[]>([]);
   const [serverSearchQuery, setServerSearchQuery] = useState('');
   const [isFetchingServer, setIsFetchingServer] = useState(false);
+  const [isDeletingEpisode, setIsDeletingEpisode] = useState<string | null>(null);
 
   // Selected anime
   const [selectedAnime, setSelectedAnime] = useState<AnimeResult | null>(null);
@@ -168,6 +169,29 @@ const AdminUploadMovie: React.FC = () => {
     if (files.length > 0) {
       if (type === 'video') handleVideoSelect(files[0], ep);
       else handleSubtitleSelect(files[0], ep);
+    }
+  };
+
+  const handleDeleteEpisode = async (epNum: string) => {
+    if (!selectedAnime) return;
+    if (!window.confirm(`Bạn có chắc chắn muốn xoá vĩnh viễn tập ${epNum} khỏi server?\n(Dữ liệu video và phụ đề không thể khôi phục)`)) {
+      return;
+    }
+    
+    setIsDeletingEpisode(epNum);
+    try {
+      await adminService.deleteEpisode(selectedAnime.id, Number(epNum));
+      // Refresh list
+      const eps = await adminService.getEpisodes(selectedAnime.id);
+      setExistingEpisodes(eps);
+      
+      // Remove from selected if it was selected
+      setSelectedEpisodes(prev => prev.filter(e => e !== Number(epNum)));
+    } catch (err) {
+      console.error('Lỗi khi xoá tập phim:', err);
+      alert('Đã xảy ra lỗi khi xoá tập phim khỏi FilmServer.');
+    } finally {
+      setIsDeletingEpisode(null);
     }
   };
 
@@ -589,14 +613,23 @@ const AdminUploadMovie: React.FC = () => {
               </div>
               <div className={styles.episodeGrid}>
                 {existingEpisodes.map((ep) => (
-                  <span
-                    key={ep.episodeNumber}
-                    className={`${styles.episodeTag} ${
-                      ep.hasHls ? styles.episodeTagReady : styles.episodeTagProcessing
-                    }`}
-                  >
-                    Ep {ep.episodeNumber} {ep.hasHls ? '✓' : '⏳'}
-                  </span>
+                  <div key={ep.episodeNumber} className={styles.episodeTagWrapper}>
+                    <span
+                      className={`${styles.episodeTag} ${
+                        ep.hasHls ? styles.episodeTagReady : styles.episodeTagProcessing
+                      }`}
+                    >
+                      Ep {ep.episodeNumber} {ep.hasHls ? '✓' : '⏳'}
+                    </span>
+                    <button
+                      className={styles.deleteEpisodeBtn}
+                      onClick={() => handleDeleteEpisode(ep.episodeNumber)}
+                      disabled={isDeletingEpisode === ep.episodeNumber}
+                      title="Xóa tập phim"
+                    >
+                      {isDeletingEpisode === ep.episodeNumber ? '...' : '✕'}
+                    </button>
+                  </div>
                 ))}
               </div>
             </div>

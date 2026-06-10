@@ -751,3 +751,50 @@
   font-weight: 600;
 }
 
+/* ==================== DELETE EPISODE ==================== */
+.episodeTagWrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  padding-right: 4px;
+  transition: all 0.2s;
+}
+
+.episodeTagWrapper:hover {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 1px rgba(239, 68, 68, 0.2);
+}
+
+.episodeTagWrapper .episodeTag {
+  border: none;
+  background: transparent;
+  margin-bottom: 0;
+}
+
+.deleteEpisodeBtn {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.8rem;
+}
+
+.deleteEpisodeBtn:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+.deleteEpisodeBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
