@@ -52,19 +52,45 @@ const AdminConversionWidget: React.FC = () => {
     };
   }, []);
 
-  // Poll every 3 seconds
+  const [completedConversions, setCompletedConversions] = useState<Set<string>>(new Set());
+
+  // Poll every 1.5 seconds (reduced from 3s)
   const { data } = useSWR(
     '/admin/movies/conversion-status',
     async () => {
       const result = await adminService.getConversionStatus();
       // apiClient đã tự động bóc tách envelope { success, data } của Zentaku_BE
       // nên biến result lúc này chính là object Record chứa các task
-      return (result || {}) as Record<string, ConversionTask>;
+      return (result || {}) as Record<string, ConversionTask & { status?: string }>;
     },
-    { refreshInterval: 3000 }
+    { 
+      refreshInterval: 1500,
+      onSuccess: (newData) => {
+        if (!newData) return;
+        const newCompleted = new Set(completedConversions);
+        Object.values(newData).forEach(task => {
+          const isDone = task.progress! >= 100 || task.status === 'completed';
+          const key = `${task.animeId}_${task.episodeNumber}`;
+          
+          if (isDone && !completedConversions.has(key)) {
+            // Dispatch event to notify upload screen
+            window.dispatchEvent(new CustomEvent('global-conversion-complete', {
+              detail: { animeId: task.animeId, episodeNumber: task.episodeNumber }
+            }));
+            newCompleted.add(key);
+          }
+        });
+        if (newCompleted.size !== completedConversions.size) {
+          setCompletedConversions(newCompleted);
+        }
+      }
+    }
   );
 
-  const activeConversions = data ? Object.values(data) : [];
+  // Lọc bỏ những task đã hoàn thành để ẩn ngay khỏi Widget
+  const activeConversions = data 
+    ? Object.values(data).filter(task => (task.progress || 0) < 100 && task.status !== 'completed')
+    : [];
   const uploadsList = Object.values(activeUploads);
   
   const totalTasks = activeConversions.length + uploadsList.length;

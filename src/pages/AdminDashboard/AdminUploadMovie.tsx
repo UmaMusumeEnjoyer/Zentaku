@@ -135,6 +135,20 @@ const AdminUploadMovie: React.FC = () => {
     }
   };
 
+  // Lắng nghe sự kiện conversion-complete từ Widget để tự động refetch danh sách tập
+  useEffect(() => {
+    const handleConversionComplete = (e: any) => {
+      const { animeId } = e.detail;
+      if (selectedAnime && selectedAnime.id === Number(animeId)) {
+        console.log(`[Auto-Refresh] HLS conversion finished for anime ${animeId}, refetching episodes...`);
+        fetchExistingEpisodes(selectedAnime.id);
+      }
+    };
+
+    window.addEventListener('global-conversion-complete', handleConversionComplete);
+    return () => window.removeEventListener('global-conversion-complete', handleConversionComplete);
+  }, [selectedAnime]);
+
   // ==================== File Handling ====================
   const handleVideoSelect = (file: File, ep: number) => {
     const ext = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
