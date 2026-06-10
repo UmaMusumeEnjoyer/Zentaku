@@ -529,6 +529,12 @@
     padding-right: 40px; /* Make space for icon */
 }
 
+/* Hide native browser password toggle icon (Edge/Chrome) */
+.passwordInputWrapper input::-ms-reveal,
+.passwordInputWrapper input::-ms-clear {
+    display: none !important;
+}
+
 .passwordToggleIcon {
     position: absolute;
     right: 12px;
