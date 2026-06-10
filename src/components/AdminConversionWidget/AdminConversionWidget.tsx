@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import useSWR from 'swr';
 import { adminService } from '@umamusumeenjoyer/shared-logic';
-import { ChevronDown, ChevronUp, Loader2 } from 'lucide-react';
+import { ChevronDown, ChevronUp, Loader2, UploadCloud } from 'lucide-react';
 import styles from './AdminConversionWidget.module.css';
 
 interface ConversionTask {
@@ -13,26 +13,61 @@ interface ConversionTask {
   eta?: number;
 }
 
+interface UploadTask {
+  animeId: string | number;
+  episodeNumber: string | number;
+  progress: number;
+}
+
 const AdminConversionWidget: React.FC = () => {
   const [isMinimized, setIsMinimized] = useState(false);
+  const [activeUploads, setActiveUploads] = useState<Record<string, UploadTask>>({});
+
+  useEffect(() => {
+    const handleProgress = (e: any) => {
+      const { animeId, episodeNumber, progress } = e.detail;
+      const key = `${animeId}_${episodeNumber}`;
+      setActiveUploads(prev => ({
+        ...prev,
+        [key]: { animeId, episodeNumber, progress }
+      }));
+    };
+
+    const handleComplete = (e: any) => {
+      const { animeId, episodeNumber } = e.detail;
+      const key = `${animeId}_${episodeNumber}`;
+      setActiveUploads(prev => {
+        const next = { ...prev };
+        delete next[key];
+        return next;
+      });
+    };
+
+    window.addEventListener('global-upload-progress', handleProgress);
+    window.addEventListener('global-upload-complete', handleComplete);
+
+    return () => {
+      window.removeEventListener('global-upload-progress', handleProgress);
+      window.removeEventListener('global-upload-complete', handleComplete);
+    };
+  }, []);
 
   // Poll every 3 seconds
-  const { data, error } = useSWR(
+  const { data } = useSWR(
     '/admin/movies/conversion-status',
     async () => {
       const result = await adminService.getConversionStatus();
-      return result?.activeConversions as Record<string, ConversionTask> || {};
+      // apiClient đã tự động bóc tách envelope { success, data } của Zentaku_BE
+      // nên biến result lúc này chính là object Record chứa các task
+      return (result || {}) as Record<string, ConversionTask>;
     },
     { refreshInterval: 3000 }
   );
 
-  const activeTasks = data ? Object.values(data) : [];
-
-  // If no tasks and not loading/error, we can hide it completely
-  // But let's show it if there's at least one task or if it recently finished
-  if (activeTasks.length === 0) {
-    return null;
-  }
+  const activeConversions = data ? Object.values(data) : [];
+  const uploadsList = Object.values(activeUploads);
+  
+  const totalTasks = activeConversions.length + uploadsList.length;
 
   const formatEta = (seconds?: number) => {
     if (seconds === undefined || seconds < 0) return 'Đang tính...';
@@ -46,8 +81,8 @@ const AdminConversionWidget: React.FC = () => {
     <div className={styles.widgetContainer}>
       <div className={styles.header}>
         <div className={styles.title}>
-          <Loader2 size={16} className={styles.spinner} />
-          Đang Xử Lý HLS ({activeTasks.length})
+          <Loader2 size={16} className={styles.spinner} style={{ animationDuration: totalTasks > 0 ? '1s' : '0s' }} />
+          Đang Xử Lý ({totalTasks})
         </div>
         <button 
           className={styles.minimizeBtn} 
@@ -60,13 +95,39 @@ const AdminConversionWidget: React.FC = () => {
 
       {!isMinimized && (
         <div className={styles.content}>
-          {activeTasks.map((task, idx) => {
+          {totalTasks === 0 ? (
+            <div className={styles.emptyState}>
+              Không có tiến trình nào đang chạy.
+            </div>
+          ) : (
+            <>
+              {/* Uploads Section */}
+              {uploadsList.map((task, idx) => (
+            <div key={`up_${idx}`} className={styles.item}>
+              <div className={styles.itemHeader}>
+                <div className={styles.animeInfo}>
+                  <UploadCloud size={14} style={{ display: 'inline', marginRight: 4, verticalAlign: 'text-bottom' }}/>
+                  Upload Phim {task.animeId} - Tập {task.episodeNumber}
+                </div>
+                <div className={styles.percentage}>{task.progress}%</div>
+              </div>
+              <div className={styles.progressBar}>
+                <div 
+                  className={styles.progressFill} 
+                  style={{ width: `${task.progress}%`, background: '#10b981' }} 
+                />
+              </div>
+            </div>
+          ))}
+
+          {/* Conversions Section */}
+          {activeConversions.map((task, idx) => {
             const prog = task.progress || 0;
             return (
-              <div key={idx} className={styles.item}>
+              <div key={`conv_${idx}`} className={styles.item}>
                 <div className={styles.itemHeader}>
                   <div className={styles.animeInfo}>
-                    Phim {task.animeId} - Tập {task.episodeNumber}
+                    HLS Phim {task.animeId} - Tập {task.episodeNumber}
                   </div>
                   <div className={styles.percentage}>{prog.toFixed(1)}%</div>
                 </div>
@@ -82,6 +143,8 @@ const AdminConversionWidget: React.FC = () => {
               </div>
             );
           })}
+            </>
+          )}
         </div>
       )}
     </div>

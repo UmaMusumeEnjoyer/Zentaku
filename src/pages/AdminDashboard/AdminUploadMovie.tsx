@@ -57,6 +57,7 @@ const AdminUploadMovie: React.FC = () => {
 
   // Server anime state
   const [serverAnimes, setServerAnimes] = useState<AnimeResult[]>([]);
+  const [serverSearchQuery, setServerSearchQuery] = useState('');
   const [isFetchingServer, setIsFetchingServer] = useState(false);
 
   // Selected anime
@@ -236,9 +237,21 @@ const AdminUploadMovie: React.FC = () => {
             if (event.total) {
               const percent = Math.round((event.loaded * 100) / event.total);
               setUploadProgress(prev => ({ ...prev, [ep]: percent }));
+              
+              window.dispatchEvent(new CustomEvent('global-upload-progress', {
+                detail: {
+                  animeId: selectedAnime.id,
+                  episodeNumber: ep,
+                  progress: percent
+                }
+              }));
             }
           },
         });
+
+        window.dispatchEvent(new CustomEvent('global-upload-complete', {
+          detail: { animeId: selectedAnime.id, episodeNumber: ep }
+        }));
 
         setUploadResult(prev => ({ ...prev, [ep]: { status: 'success', data: result } }));
       } catch (err: any) {
@@ -434,13 +447,34 @@ const AdminUploadMovie: React.FC = () => {
                   Chưa có anime nào được lưu trên FilmServer.
                 </div>
               ) : (
-                <div className={styles.searchResults}>
-                  {serverAnimes.map((anime) => (
-                    <div
-                      key={anime.id}
-                      className={styles.searchResultItem}
-                      onClick={() => selectAnime(anime)}
-                    >
+                <>
+                  <div className={styles.searchInputWrapper}>
+                    <span className={styles.searchIcon}>🔍</span>
+                    <input
+                      type="text"
+                      className={styles.searchInput}
+                      placeholder="Tìm kiếm anime trên server bằng tên hoặc ID..."
+                      value={serverSearchQuery}
+                      onChange={(e) => setServerSearchQuery(e.target.value)}
+                    />
+                  </div>
+                  <div className={styles.searchResults}>
+                    {serverAnimes
+                      .filter(anime => {
+                        if (!serverSearchQuery) return true;
+                        const q = serverSearchQuery.toLowerCase();
+                        return (
+                          anime.title?.english?.toLowerCase().includes(q) ||
+                          anime.title?.romaji?.toLowerCase().includes(q) ||
+                          String(anime.id).includes(q)
+                        );
+                      })
+                      .map((anime) => (
+                      <div
+                        key={anime.id}
+                        className={styles.searchResultItem}
+                        onClick={() => selectAnime(anime)}
+                      >
                       {anime.coverImage?.medium && (
                         <img
                           className={styles.resultCover}
@@ -469,7 +503,8 @@ const AdminUploadMovie: React.FC = () => {
                       </div>
                     </div>
                   ))}
-                </div>
+                  </div>
+                </>
               )}
             </>
           )}
@@ -512,11 +547,14 @@ const AdminUploadMovie: React.FC = () => {
                 {Array.from({ length: selectedAnime.episodes }).map((_, i) => {
                   const ep = i + 1;
                   const isSelected = selectedEpisodes.includes(ep);
+                  const isExisting = existingEpisodes.some(e => Number(e.episodeNumber) === ep);
                   return (
                     <button
                       key={ep}
                       className={`${styles.episodeSelectBtn} ${isSelected ? styles.selected : ''}`}
                       onClick={() => handleEpisodeToggle(ep)}
+                      disabled={isExisting}
+                      title={isExisting ? "Tập này đã có trên server" : `Chọn tập ${ep}`}
                     >
                       {ep}
                     </button>
