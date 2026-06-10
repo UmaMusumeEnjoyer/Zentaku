@@ -277,7 +277,7 @@ export const useFloatingChat = () => {
     });
 
     const unsubNotification = socketService.on('notification.new', (notification: any) => {
-      if (notification.type === 'MESSAGE' && notification.metadata?.channelId) {
+      if (notification.type?.toLowerCase() === 'message' && notification.metadata?.channelId) {
         const channelId = String(notification.metadata.channelId);
         const messagePreview = notification.metadata.messagePreview || 'New message';
 
