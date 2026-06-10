@@ -228,12 +228,12 @@ const AdminUploadMovie: React.FC = () => {
     
     setIsUpdatingSource(true);
     try {
-      await adminService.uploadEpisode(
-        selectedAnime.id,
-        Number(managingEpisode.episodeNumber),
-        manageVideoFile,
-        manageSubtitleFile || undefined
-      );
+      await adminService.uploadEpisode({
+        animeId: selectedAnime.id,
+        episodeNumber: Number(managingEpisode.episodeNumber),
+        videoFile: manageVideoFile,
+        subtitleFile: manageSubtitleFile || undefined
+      });
       alert('Tải lên source mới thành công! Tiến trình băm HLS đã được tự động bắt đầu.');
       // Xoá file đã chọn
       setManageVideoFile(null);
