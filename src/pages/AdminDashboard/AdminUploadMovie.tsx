@@ -375,7 +375,7 @@ const AdminUploadMovie: React.FC = () => {
 
   // Fetch existing movies from FilmServer
   useEffect(() => {
-    if (searchMode === 'server' && serverAnimes.length === 0) {
+    if (searchMode === 'server') {
       const fetchServerMovies = async () => {
         setIsFetchingServer(true);
         try {
@@ -399,6 +399,8 @@ const AdminUploadMovie: React.FC = () => {
               }));
             
             setServerAnimes(validAnimes);
+          } else {
+            setServerAnimes([]);
           }
         } catch (err) {
           console.error('Failed to fetch server movies', err);
