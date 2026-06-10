@@ -11,6 +11,7 @@ import { FcGoogle } from 'react-icons/fc';
 
 import { useTranslation } from 'react-i18next';
 import { Eye, EyeOff } from 'lucide-react';
+import ForgotPasswordModal from './ForgotPasswordModal';
 
 const AuthPage: React.FC = () => {
   const location = useLocation();
@@ -22,6 +23,7 @@ const AuthPage: React.FC = () => {
   const [showLoginPassword, setShowLoginPassword] = useState(false);
   const [showRegisterPassword, setShowRegisterPassword] = useState(false);
   const [showRegisterConfirmPassword, setShowRegisterConfirmPassword] = useState(false);
+  const [isForgotPasswordModalOpen, setIsForgotPasswordModalOpen] = useState(false);
 
   const loginCallback = async (email: string, password: string) => {
     return await login({ email, password });
@@ -261,7 +263,15 @@ const AuthPage: React.FC = () => {
               )}
             </div>
             
-            <a href="#">{t('Auth:signin.forgot_password')}</a>
+            <a 
+              href="#" 
+              onClick={(e) => {
+                e.preventDefault();
+                setIsForgotPasswordModalOpen(true);
+              }}
+            >
+              {t('Auth:signin.forgot_password')}
+            </a>
             
             <button type="submit" disabled={isLoading}>
                 {isLoading ? 'Processing...' : t('Auth:signin.submit')}
@@ -290,6 +300,11 @@ const AuthPage: React.FC = () => {
         </div>
       
       </div>
+      
+      <ForgotPasswordModal 
+        isOpen={isForgotPasswordModalOpen} 
+        onClose={() => setIsForgotPasswordModalOpen(false)} 
+      />
     </div>
   );
 };

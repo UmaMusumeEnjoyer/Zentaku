@@ -30,6 +30,7 @@ import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
 import NotificationToast from './components/Notification/NotificationToast';
 import AdminDashboard from './pages/AdminDashboard/AdminDashboard';
 import VerifyEmailPage from './pages/VerifyEmailPage/VerifyEmailPage';
+import ResetPassword from './pages/ResetPassword/ResetPassword';
 import AdminConversionWidget from './components/AdminConversionWidget/AdminConversionWidget';
 
 // Xác định API base URL dựa trên environment
@@ -163,6 +164,7 @@ const AppContent = () => {
           { path: "/novel/:id/read/:chapterId?", element: <LightNovelReader /> },
           { path: "/chat", element: <ChatMessenger /> },
           { path: "/verify-email", element: <VerifyEmailPage /> },
+          { path: "/reset-password", element: <ResetPassword /> },
           { path: "*", element: <NotFoundPage /> }
         ]
       }
