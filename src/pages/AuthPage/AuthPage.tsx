@@ -5,8 +5,9 @@ import styles from './AuthPage.module.css';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import { useAuthPage } from '@umamusumeenjoyer/shared-logic';
+import { useAuthPage, authService } from '@umamusumeenjoyer/shared-logic';
 import { useAuth } from '../../context/AuthContext';
+import { FcGoogle } from 'react-icons/fc';
 
 import { useTranslation } from 'react-i18next';
 import { Eye, EyeOff } from 'lucide-react';
@@ -25,6 +26,26 @@ const AuthPage: React.FC = () => {
   const loginCallback = async (email: string, password: string) => {
     return await login({ email, password });
   };
+
+  const { loginWithToken } = useAuth();
+  const [searchParams] = useSearchParams();
+
+  React.useEffect(() => {
+    const token = searchParams.get('token');
+    if (token) {
+      // Clear token from URL
+      window.history.replaceState({}, document.title, location.pathname);
+      
+      loginWithToken(token).then((result) => {
+        if (result.success) {
+          toast.success(t(result.message));
+          navigate('/');
+        } else {
+          toast.error(t(result.message));
+        }
+      });
+    }
+  }, [searchParams, loginWithToken, navigate, t, location.pathname]);
 
   const {
     isActive,
@@ -69,6 +90,14 @@ const AuthPage: React.FC = () => {
           <form onSubmit={handleRegisterSubmit}>
             <h1>{t('Auth:signup.title')}</h1>
             
+            <div className={styles.socialIcons}>
+              <a href={authService.getGoogleLoginUrl()} className={styles.icon}>
+                <FcGoogle size={24} />
+              </a>
+            </div>
+            
+            <span>{t('Auth:signin.divider')}</span>
+
             {/* Email */}
             <div className={styles.inputGroup}>
               <input 
@@ -181,7 +210,11 @@ const AuthPage: React.FC = () => {
           <form onSubmit={handleLoginSubmit}>
             <h1>{t('Auth:signin.title')}</h1>
             
-
+            <div className={styles.socialIcons}>
+              <a href={authService.getGoogleLoginUrl()} className={styles.icon}>
+                <FcGoogle size={24} />
+              </a>
+            </div>
             
             <span>{t('Auth:signin.divider')}</span>
             

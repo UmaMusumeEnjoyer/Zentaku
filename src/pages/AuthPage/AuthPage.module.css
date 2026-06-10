@@ -42,11 +42,35 @@
     margin: 20px 0;
 }
 
-.container span {
+.formContainer span {
     font-size: 12px;
 }
 
-.container a {
+.socialIcons {
+    margin: 20px 0;
+    display: flex;
+    justify-content: center;
+}
+
+.socialIcons .icon {
+    border: 1px solid #ccc;
+    border-radius: 20%;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 5px;
+    width: 40px;
+    height: 40px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.socialIcons .icon:hover {
+    background-color: #f5f5f5;
+    transform: scale(1.05);
+}
+
+.formContainer a {
     color: var(--text-secondary);
     font-size: 13px;
     text-decoration: none;
