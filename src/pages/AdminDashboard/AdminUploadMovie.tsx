@@ -236,8 +236,8 @@ const AdminUploadMovie: React.FC = () => {
             );
             
             const validAnimes: AnimeResult[] = infos
-              .filter(info => info && info.success && info.data)
-              .map(info => info.data);
+              .filter(info => info && info.id)
+              .map(info => info);
             
             setServerAnimes(validAnimes);
           }
