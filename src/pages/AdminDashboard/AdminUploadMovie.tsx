@@ -1005,6 +1005,15 @@ const AdminUploadMovie: React.FC = () => {
           </div>
         </div>
       )}
+
+      <ConfirmModal
+        isOpen={confirmModalState.isOpen}
+        title={confirmModalState.title}
+        message={confirmModalState.message}
+        type={confirmModalState.type}
+        onConfirm={confirmModalState.onConfirm}
+        onCancel={closeConfirmModal}
+      />
     </div>
   );
 }
