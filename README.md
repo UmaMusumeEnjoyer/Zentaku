@@ -13,6 +13,7 @@ Zentaku is a complete system divided into three main repositories:
 1. **[Zentaku_BE (Backend)](https://github.com/itsdoanguen/Zentaku)** - The core API service.
 2. **[pbl5_webFE (Web Frontend)](https://github.com/UmaMusumeEnjoyer/Zentaku)** - *You are here!*
 3. **[shared-logic (Shared Library)](https://github.com/UmaMusumeEnjoyer/pbl5_fe_shared-logic)** - Common state and logic shared across clients.
+4. **[FilmServer (HLS Transcoder)](#)** - Local HLS Streaming and Video Conversion service.
 
 ---
 
@@ -23,7 +24,7 @@ Zentaku is a complete system divided into three main repositories:
 - **State Management:** Zustand (via `shared-logic`)
 - **Data Fetching:** SWR & Axios
 - **Media Playback:** Artplayer, React-Player, HLS.js
-- **3D Graphics:** Three.js, React Three Fiber & Drei
+
 - **Internationalization:** i18next & react-i18next
 - **UI & Icons:** Lucide React, FontAwesome
 - **Components:** React Big Calendar, React Toastify
@@ -33,7 +34,6 @@ Zentaku is a complete system divided into three main repositories:
 ## ✨ Key Features
 
 - **High-Performance Video Playback:** Supports HLS streaming and advanced controls using Artplayer and React-Player.
-- **Interactive 3D Elements:** Engaging visual components built with React Three Fiber.
 - **Multilingual Support (i18n):** Seamlessly switch between different languages dynamically.
 - **Dynamic Calendar & Scheduling:** Integrated React Big Calendar for managing events.
 - **Real-time Syncing:** Leverages the shared-logic module for real-time WebSocket communication and state management.

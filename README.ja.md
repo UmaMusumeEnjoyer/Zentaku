@@ -13,6 +13,7 @@ Zentaku は3つの主要なリポジトリに分かれた完全なシステム�
 1. **[Zentaku_BE (バックエンド)](https://github.com/itsdoanguen/Zentaku)** - コアAPIサービス。
 2. **[pbl5_webFE (Webフロントエンド)](https://github.com/UmaMusumeEnjoyer/Zentaku)** - *現在位置！*
 3. **[shared-logic (共有ライブラリ)](https://github.com/UmaMusumeEnjoyer/pbl5_fe_shared-logic)** - クライアント間で共有される共通の状態とロジック。
+4. **[FilmServer (HLS トランスコーダ)](#)** - ローカルのHLSストリーミングおよびビデオ変換サービス。
 
 ---
 
@@ -23,7 +24,7 @@ Zentaku は3つの主要なリポジトリに分かれた完全なシステム�
 - **状態管理:** Zustand (`shared-logic` 経由)
 - **データフェッチ:** SWR & Axios
 - **メディア再生:** Artplayer, React-Player, HLS.js
-- **3D グラフィックス:** Three.js, React Three Fiber & Drei
+
 - **国際化 (i18n):** i18next & react-i18next
 - **UI & アイコン:** Lucide React, FontAwesome
 - **コンポーネント:** React Big Calendar, React Toastify
@@ -33,7 +34,6 @@ Zentaku は3つの主要なリポジトリに分かれた完全なシステム�
 ## ✨ 主な機能
 
 - **高性能ビデオ再生:** Artplayer と React-Player を使用した HLS ストリーミングと高度なコントロールをサポート。
-- **インタラクティブな3D要素:** React Three Fiber で構築された魅力的なビジュアルコンポーネント。
 - **多言語サポート (i18n):** 異なる言語間を動的かつシームレスに切り替え。
 - **動的カレンダーとスケジュール:** イベント管理のために統合された React Big Calendar。
 - **リアルタイム同期:** shared-logic モジュールを活用したリアルタイム WebSocket 通信と状態管理。
