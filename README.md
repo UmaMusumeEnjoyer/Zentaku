@@ -1,73 +1,132 @@
-# React + TypeScript + Vite
+# Zentaku - Web Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+[![English](https://img.shields.io/badge/Language-English-blue)](#) [![日本語](https://img.shields.io/badge/Language-%E6%97%A5%E6%9C%AC%E8%AA%9E-red)](./README.ja.md)
 
-Currently, two official plugins are available:
+This is the Web Frontend application for the **Zentaku** platform, built with React and Vite. It provides a rich, interactive, and responsive user interface for accessing the Zentaku ecosystem.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## 🌐 Project Ecosystem
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Zentaku is a complete system divided into three main repositories:
 
-## Expanding the ESLint configuration
+1. **[Zentaku_BE (Backend)](https://github.com/itsdoanguen/Zentaku)** - The core API service.
+2. **[pbl5_webFE (Web Frontend)](https://github.com/UmaMusumeEnjoyer/Zentaku)** - *You are here!*
+3. **[shared-logic (Shared Library)](https://github.com/UmaMusumeEnjoyer/pbl5_fe_shared-logic)** - Common state and logic shared across clients.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 🛠 Tech Stack
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- **Framework:** React 19 & Vite
+- **Language:** TypeScript
+- **State Management:** Zustand (via `shared-logic`)
+- **Data Fetching:** SWR & Axios
+- **Media Playback:** Artplayer, React-Player, HLS.js
+- **3D Graphics:** Three.js, React Three Fiber & Drei
+- **Internationalization:** i18next & react-i18next
+- **UI & Icons:** Lucide React, FontAwesome
+- **Components:** React Big Calendar, React Toastify
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+---
+
+## ✨ Key Features
+
+- **High-Performance Video Playback:** Supports HLS streaming and advanced controls using Artplayer and React-Player.
+- **Interactive 3D Elements:** Engaging visual components built with React Three Fiber.
+- **Multilingual Support (i18n):** Seamlessly switch between different languages dynamically.
+- **Dynamic Calendar & Scheduling:** Integrated React Big Calendar for managing events.
+- **Real-time Syncing:** Leverages the shared-logic module for real-time WebSocket communication and state management.
+- **Responsive Design:** Optimized for both desktop and mobile web experiences.
+
+---
+
+## 🚀 Installation & Setup
+
+### Prerequisites
+- Node.js (v18+)
+- Ensure the **Backend (Zentaku_BE)** is running for full functionality.
+
+### Steps
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/UmaMusumeEnjoyer/Zentaku.git
+   cd Zentaku/FE/pbl5_webFE
+   ```
+   *(Note: Adjust the `cd` path if you cloned specifically into a different folder structure).*
+
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+   *Note: This project depends on `@umamusumeenjoyer/shared-logic`. Ensure it is correctly installed or linked.*
+
+3. **Environment Setup:**
+   Copy the example environment file:
+   ```bash
+   cp .env.example .env
+   ```
+   *Edit `.env` to point your API URL to the local or production Backend.*
+
+4. **Start the Development Server:**
+   ```bash
+   npm run dev
+   ```
+   The app will be available at `http://localhost:5173` (default Vite port).
+
+---
+
+## 🔑 Environment Variables
+
+Key variables required in `.env`:
+
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `VITE_API_BASE_URL` | The URL of the Backend API | `http://localhost:3000/api` |
+| `VITE_SOCKET_URL` | The URL for WebSocket connections | `http://localhost:3000` |
+
+---
+
+## 📁 Folder Structure
+
+```text
+src/
+├── assets/         # Static images, fonts, icons
+├── components/     # Reusable UI components
+├── hooks/          # Custom React hooks
+├── i18n/           # Translation files and config
+├── pages/          # Route components (Views)
+├── styles/         # Global styles / CSS
+└── App.tsx         # Main application component
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 📸 Demo & Screenshots
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+> **Note to Developer:** Please capture screenshots of your actual web pages and place them in the `docs/images/` directory, then replace the placeholders below.
+
+### 1. Home / Discover Page
+![Home Page](./docs/images/home-page-en.png)
+
+### 2. Anime Streaming Player
+![Anime Player](./docs/images/anime-watch-en.png)
+
+### 3. Anime Schedule Calendar
+![Schedule Calendar](./docs/images/schedule-calendar-en.png)
+
+### 4. Real-time Chat
+![Real-time Chat](./docs/images/real-time-chat-en.png)
+
+### 5. Watch Along
+![Watch Along](./docs/images/watch-along-en.png)
+
+### 6. Admin Dashboard
+![Admin Dashboard](./docs/images/admin-dashboard-en.png)
+
+---
+
+## 📄 License
+
+This project is licensed under the ISC License.
