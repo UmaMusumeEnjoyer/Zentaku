@@ -49,8 +49,17 @@ const AddAnimeModal: React.FC<AddAnimeModalProps> = ({
     return (
       <div key={animeIdStr} className={styles.modalCardWrapper}>
         {anime.media?.recommendedBy && anime.media.recommendedBy.length > 0 && (
-          <div className={styles.recommendationReason} title={`Vì bạn có: ${anime.media.recommendedBy.join(', ')}`}>
-            {anime.media.recommendedBy[0]}
+          <div 
+            className={styles.recommendationReason} 
+            title={
+              anime.media.recommendedBy[0] === 'GENRE_FALLBACK'
+                ? t('addAnimeModal.becauseGenre')
+                : t('addAnimeModal.becauseYouHave', { animes: anime.media.recommendedBy.join(', ') })
+            }
+          >
+            {anime.media.recommendedBy[0] === 'GENRE_FALLBACK' 
+              ? t('addAnimeModal.genreFallback') 
+              : anime.media.recommendedBy[0]}
           </div>
         )}
         <AnimeCard
@@ -143,7 +152,7 @@ const AddAnimeModal: React.FC<AddAnimeModalProps> = ({
                     return (
                       <div key={status} className={styles.modalSection}>
                         <h3 className={styles.sectionTitle}>
-                          {status === 'recommended' ? '✨ Anime gợi ý' : t(`addAnimeModal.sections.${status}`)}
+                          {status === 'recommended' ? t('addAnimeModal.sections.recommended') : t(`addAnimeModal.sections.${status}`)}
                           <span className={styles.countBadge}>{normalizedItems.length}</span>
                         </h3>
 
