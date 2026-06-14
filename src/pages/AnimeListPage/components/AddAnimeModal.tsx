@@ -11,7 +11,8 @@ const AddAnimeModal: React.FC<AddAnimeModalProps> = ({
   isOpen, 
   onClose, 
   onAddAnime, 
-  currentList = [] 
+  currentList = [],
+  listId 
 }) => {
   const { t } = useTranslation(['addAnimeModal']);
   const {
@@ -26,7 +27,7 @@ const AddAnimeModal: React.FC<AddAnimeModalProps> = ({
     handleAddClick,
     getAnimeState,
     mapAnimeData,
-  } = useAddAnimeModal(isOpen, currentList);
+  } = useAddAnimeModal(isOpen, currentList, listId);
 
   const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
     // Kiểm tra class overlay thông qua object styles
@@ -47,6 +48,11 @@ const AddAnimeModal: React.FC<AddAnimeModalProps> = ({
     
     return (
       <div key={animeIdStr} className={styles.modalCardWrapper}>
+        {anime.media?.recommendedBy && anime.media.recommendedBy.length > 0 && (
+          <div className={styles.recommendationReason} title={`Vì bạn có: ${anime.media.recommendedBy.join(', ')}`}>
+            {anime.media.recommendedBy[0]}
+          </div>
+        )}
         <AnimeCard
           anime={{
             ...anime,
@@ -137,7 +143,7 @@ const AddAnimeModal: React.FC<AddAnimeModalProps> = ({
                     return (
                       <div key={status} className={styles.modalSection}>
                         <h3 className={styles.sectionTitle}>
-                          {t(`addAnimeModal.sections.${status}`)}
+                          {status === 'recommended' ? '✨ Anime gợi ý' : t(`addAnimeModal.sections.${status}`)}
                           <span className={styles.countBadge}>{normalizedItems.length}</span>
                         </h3>
 

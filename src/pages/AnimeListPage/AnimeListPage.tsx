@@ -321,6 +321,7 @@ const AnimeListPage: React.FC = () => {
         onClose={() => setShowAddModal(false)}
         onAddAnime={handleAddAnime}
         currentList={allAnimeInList}
+        listId={id}
       />
 
       <EditListModal
